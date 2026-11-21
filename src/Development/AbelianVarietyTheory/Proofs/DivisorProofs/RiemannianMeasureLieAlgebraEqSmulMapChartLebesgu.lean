@@ -197,15 +197,6 @@ def invAdjoint (T : V ≃ₗ[𝕜] W) : V ≃ₗ[𝕜] W :=
   LinearEquiv.ofLinearMap (LinearMap.adjoint (T.symm : W →ₗ[𝕜] V)) (LinearMap.adjoint (T : V →ₗ[𝕜] W))
     (by rw [← LinearMap.adjoint_comp]; simp) (by rw [← LinearMap.adjoint_comp]; simp)
 
-theorem inner_invAdjoint_apply (T : V ≃ₗ[𝕜] W) (x y : V) :
-    ⟪invAdjoint T x, T y⟫_𝕜 = ⟪x, y⟫_𝕜 := by
-  change ⟪LinearMap.adjoint (T.symm : W →ₗ[𝕜] V) x, T y⟫_𝕜 = _
-  rw [LinearMap.adjoint_inner_left]; simp
-
-theorem detNorm_invAdjoint (T : V ≃ₗ[𝕜] W) : detNorm (invAdjoint T) = (detNorm T)⁻¹ :=
-  eq_inv_of_mul_eq_one_left
-    (normDet_mul_normDet_of_inner_eq T.finrank_eq (inner_invAdjoint_apply T))
-
 end NormDet
 
 section Dual

@@ -302,21 +302,6 @@ section Alg
 
 variable {V Z : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup Z] [Module ℂ Z]
 
-theorem isExp_mem {L U : Module.End ℂ V} (hU : IsExp L U) (N : Submodule ℂ V) (hN : ∀ v ∈ N, L v ∈ N) {T : V}
-    (hT : T ∈ N) : U T ∈ N := by
-  rw [← Submodule.Quotient.mk_eq_zero, ← Module.forall_dual_apply_eq_zero_iff ℂ]
-  intro l'
-  have hp : ∀ n : ℕ, (L ^ n) T ∈ N := fun n => by
-    induction n with
-    | zero => simpa using hT
-    | succ n ih => rw [pow_succ', Module.End.mul_apply]; exact hN _ ih
-  have h := hU T (l' ∘ₗ N.mkQ)
-  have e : (fun n : ℕ => ((n.factorial : ℂ))⁻¹ * (l' ∘ₗ N.mkQ) ((L ^ n) T)) = fun _ => 0 := by
-    funext n
-    simp [(Submodule.Quotient.mk_eq_zero N).2 (hp n)]
-  rw [e] at h
-  exact h.unique hasSum_zero
-
 theorem isExp_eig {L U : Module.End ℂ V} (hU : IsExp L U) (q : V →ₗ[ℂ] Z) (L0 : Module.End ℂ Z)
     (h : ∀ v, q (L v) = L0 (q v)) {T : V} {μ : ℂ} (hT : L0 (q T) = μ • q T) : q (U T) = Complex.exp μ • q T := by
   refine sub_eq_zero.1 ((Module.forall_dual_apply_eq_zero_iff ℂ _).1 fun l => ?_)

@@ -1000,13 +1000,6 @@ theorem zchartEquiv_resM (hL : L.IsLB) (i : L.ι) {V W : X.Opens} (h : V ≤ L.U
       resM F h' (zchartEquiv hL n i h s) :=
   chartEquiv_resM _ _ _ h' s
 
-theorem zchartEquiv_change (hL : L.IsLB) (i j : L.ι) {V : X.Opens} (hi : V ≤ L.U i)
-    (hj : V ≤ L.U j) (s : Γ(twistZ F L n, V)) :
-    zchartEquiv hL n i hi s =
-      ((res (le_inf hi hj) (L.g i j) ^ n : Γ(X, V)ˣ) : Γ(X, V)) • zchartEquiv hL n j hj s := by
-  rw [zchartEquiv_apply, zchartEquiv_apply]
-  exact zcoord_rel s i j _ _ _
-
 def zfun (σ : LB.Sec (lbZPow L m)) (i : L.ι) : Γ(X, L.U i) :=
   resG X (le_zidx_U m i) (σ.f (zidx L m i))
 

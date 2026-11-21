@@ -296,9 +296,6 @@ theorem tors_eq_one {ζ : o} (hζ : IsUnit ζ) {s' : S ⟶ Sp o} (c : SiegPre 0 
   obtain ⟨a, rfl⟩ := h2 y hy
   exact (h1 a).2 ⟨0, Subsingleton.elim _ _⟩
 
-def zeroFamLevelZero {ζ : o} (hζ : IsUnit ζ) : SFam 0 0 ζ :=
-  zeroFam 0 ζ fun _ _ c _ => isIso_of_points c.A c.ab fun K _ _ x y => tors_eq_one hζ c K x y (pow_zero y)
-
 theorem isIso_of_count
     (H : ∀ (K : Type) [Field K] [IsAlgClosed K] (B : Over (Sp K)) [GrpObj B] (g n : ℕ), IsAbelianScheme B →
       SmoothOfRelativeDimension g B.hom → (n : K) ≠ 0 →
@@ -545,14 +542,6 @@ theorem isRegularLocalRing_stalk [IsRegularRing o] : IsRegularLocalRing ((powA F
   have : IsRegularRing ((powA F r).left.presheaf.stalk y) :=
     GlobalTheory.ExtendRig.isRegularRing_stalk GlobalTheory.isRegularRing_of_smooth o (toO F r) y
   exact IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
-
-theorem isRegularLocalRing_W_of_isRegularRing [IsRegularRing o] : IsRegularLocalRing (W F y) := by
-  have := isRegularLocalRing_stalk F y
-  exact GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion _
-
-theorem isDomain_W_of_isRegularRing [IsRegularRing o] : IsDomain (W F y) := by
-  have := isRegularLocalRing_W_of_isRegularRing F y
-  exact (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing _).1
 
 theorem existsUnique_factor [IsNoetherianRing o] (V : Type) [CommRing V] [IsLocalRing V]
     [IsAdicComplete (maximalIdeal V) V] (f : Sp V ⟶ (powA F r).left) (hf : f (closedPoint V) = y) :

@@ -224,13 +224,6 @@ theorem IsRapidInf.integrable {X : Type} [MeasurableSpace X] {ν : Measure X} {k
           mul_le_mul_of_nonneg_left (hC _) (norm_nonneg _)
       _ = C * (‖k x‖ * height (γ x) ^ N) := by ring
 
-theorem rspan_ne_bot (π : CuspSub E a) : rspan π ≠ ⊥ := by
-  obtain ⟨φ, hφ, h0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot π.ne_bot
-  intro hb
-  have h := mem_rspan hφ
-  rw [hb, Submodule.mem_bot] at h
-  exact h0 (Subtype.ext h)
-
 theorem rspan_le_leftInv (π : CuspSub E a) : rspan π ≤ SpanModel.leftInv E a := by
   refine rspan_le (fun φ hφ => (π.cusp φ hφ).1.left) (fun F hF h γ g => ?_) fun F hF X _ ν _ k γ _ γ' g => ?_
   · change F (ratGL E a γ * g * h) = F (g * h)
