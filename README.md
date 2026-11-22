@@ -6,51 +6,19 @@ A [Comparator](https://github.com/leanprover/comparator) setup and community bui
 claims a proof of the Riemann Hypothesis, and of GRH for Dirichlet L-functions, announced on
 2026-11-20 at <https://alpo.ge/remark.pdf>.
 
-The first commit, `40e56bab`, is the submitted Lean source exactly as published. Merged pull
-requests have since made the source smaller, mainly by deleting files the proof does not use and
-by shortening proofs. `git diff --stat 40e56bab HEAD -- src` shows every change so far, and the
-[notes](verification/NOTES.md#source) have more detail. For the original, check out `40e56bab` or
-use [riemann-hypothesis-original](https://github.com/homeowmorphism/riemann-hypothesis-original),
-which keeps the published source frozen.
-
-This repository also adds Comparator files and cache infrastructure:
-
-| File | What it is |
-|---|---|
-| [`src/Challenge.lean`](src/Challenge.lean) | the five theorems, stated in a file that imports only Mathlib |
-| [`comparator.json`](comparator.json) | the Comparator config |
-| [`export-targets.txt`](export-targets.txt) | the declarations to export |
-| [`verification/`](verification/NOTES.md) | our notes, and the results once there are some |
-| [`scripts/`](scripts/) | public Lake cache configuration and reproducible bootstrap/publishing tools |
-
-## Using the build cache
-
-Fetch and restore Mathlib and this project's compiled modules:
-
-```bash
-lake exe cache get
-lake build --no-build
-```
-
-The cache settings are in `lakefile.toml`; no user configuration is needed. The first command
-fetches both caches anonymously and extracts the oleans to `.lake/build`. It prefers a successful
-CI build matching the current clean source, configuration, dependency manifest and toolchain;
-documentation-only commits can reuse the same cache. Otherwise it tries the original published
-cache. The second command checks the default build targets without compiling them. The original
-project cache is 4.94 GB and contains portable Lean outputs and generated C. Subsequent ordinary
-builds compile changed modules and their dependents.
-
-The community cache includes outputs from **untrusted pull requests and volunteer machines**.
-Download integrity checks do not verify proofs. Use an independent fresh build when you need
-to trust the result.
-
-The [cache notes](verification/CACHE.md) describe the pinned published archive, the cheaper
-bootstrap that reuses its proofs, and how to produce and publish future caches. For independent
-verification, follow the clean-build instructions below.
+The first commit, `40e56bab`, is the Lean source exactly as it was published. It has been
+changed since. Pull requests have deleted files the proof doesn't use, shortened proofs, and
+ported it from Lean 4.33.1, which it was written for, to newer releases. The five theorem
+statements are still word for word the published ones, and
+`git diff --stat 40e56bab HEAD -- src` lists everything else. If you want the untouched
+original, check out `40e56bab` or use
+[riemann-hypothesis-original](https://github.com/homeowmorphism/riemann-hypothesis-original).
 
 ## What is claimed
 
-| Theorem in `Main.lean` | Statement |
+`src/Main.lean` proves five theorems:
+
+| Theorem | Statement |
 |---|---|
 | `riemannHypothesis` | Mathlib's `RiemannHypothesis` |
 | `riemannZeta_eq_zero_re` | the same, written out |
@@ -58,52 +26,86 @@ verification, follow the clean-build instructions below.
 | `LFunction_eq_zero_re` | every zero of L(χ, s) with 0 < Re s < 1 has Re s = 1/2 |
 | `LFunction_eq_zero_re_of_isPrimitive` | the same, for primitive characters |
 
-## Checking it
+[`src/Challenge.lean`](src/Challenge.lean) states the same five with `sorry` in place of the
+proofs, in a file that imports only Mathlib. Comparator checks that `Main.lean` proves exactly
+those statements, that it uses no axioms other than `propext`, `Quot.sound` and
+`Classical.choice`, and that Lean's kernel and nanoda both accept the proof.
+
+## Getting a build
+
+Compiling the project takes hours on a large machine, so there is a cache of compiled files:
 
 ```bash
-export LEAN_ABORT_ON_PANIC=1   # as Comparator sets it: stop on an internal error, don't continue
-export LAKE_ARTIFACT_CACHE=false   # rebuild the submission even if cache-env.sh was sourced earlier
-export MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4   # Mathlib's current cache server
+lake exe cache get
+lake build --no-build
+```
 
-# 1. Export the challenge. Clean clone at $CLEAN, Lean v4.33.1.
+The first command needs Python 3.11 or newer. It downloads Mathlib's cache and then ours. Ours
+has to match your checkout exactly. It looks for a successful CI build of the same source
+(commits that only change documentation share one) and, failing that, for the baseline build
+pinned in [`scripts/cache-baselines.json`](scripts/cache-baselines.json). If nothing matches,
+it says so and you are left with `lake build`. The second command confirms that there is
+nothing left to compile.
+
+Don't treat the cache as a check of the proof. It contains files built from unreviewed pull
+requests on volunteers' machines, and all the download verifies is that you received what was
+uploaded. If you need to trust the result, build it yourself as described below.
+[CACHE.md](verification/CACHE.md) explains how the cache is made.
+
+## Checking the proof
+
+```bash
+export LEAN_ABORT_ON_PANIC=1        # stop on an internal error, as Comparator does
+export LAKE_ARTIFACT_CACHE=false    # really rebuild, even if cache-env.sh was sourced earlier
+export MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4
+
+# 1. Export the challenge, in a clean clone at $CLEAN.
 cd "$CLEAN"
 lake exe mathlib/cache get
 lake build Challenge
-lake env lean4export Challenge -- $(cat export-targets.txt) > challenge.export
+lake env leanexport Challenge -- $(cat export-targets.txt) > challenge.export
 
-# 2. Build the solution. Second clone, inside a sandbox with no network. Takes hours.
+# 2. Build the solution, in a second clone, inside a sandbox with no network. Takes hours.
 lake exe mathlib/cache get      # before entering the sandbox
-lake build Main         # inside the sandbox
+lake build Main                 # inside the sandbox
 
-# 3. Export the solution. Still inside the sandbox; only solution.export comes out.
-lake env lean4export Main -- $(cat "$CLEAN/export-targets.txt") > solution.export
+# 3. Export the solution, still inside the sandbox.
+lake env leanexport Main -- $(cat "$CLEAN/export-targets.txt") > solution.export
 
-# 4. Judge. Lean v4.36.0, from an empty directory, with the config from the clean clone.
+# 4. Judge, from an empty directory, with the same Lean release.
 lake comparator --config "$CLEAN/comparator.json" \
   --challenge-from-export "$CLEAN/challenge.export" --solution-from-export solution.export
 ```
 
-What to know before running it:
+Compiling the submission runs its code. That is why the challenge is exported first, in a clone
+where none of the submission has been compiled, and why the build and the second export happen
+in a sandbox that only `solution.export` leaves.
 
-- **Two Lean versions.** The project is pinned to Lean `v4.33.1`, and `lake comparator` exists
-  only from Lean 4.35. So the proof is built and exported with `v4.33.1` and judged with
-  `v4.36.0`. The exporter is [lean4export](https://github.com/leanprover/lean4export) at tag
-  `v4.33.0`, built with Lean `v4.33.1`.
-- **Challenge first.** Compiling the submission runs its code, so the challenge is exported
-  where none of that code has been compiled. CI does step 1 on every push and publishes the
-  result as the `challenge-export` artifact. Its sha256 is
-  `bd484ac9886a96f26b1d9a7a59ebd45b7a70d102c015d4f31f9302bbdd6ab2b9`.
-- **Not `lake exe cache get`.** In this repository that command also downloads prebuilt files
-  for the submission itself, and `lake build Main` then compiles nothing. Steps 1 and 2 use
-  `lake exe mathlib/cache get`, which fetches Mathlib only.
-- **Cost.** Hours on a large machine, about 100 GB of disk, and a lot of memory for step 4.
+Steps 1 and 2 use `lake exe mathlib/cache get` on purpose. Plain `lake exe cache get` would also
+download our prebuilt copy of the submission, and `lake build Main` would then compile nothing.
 
-The [notes](verification/NOTES.md) have the details: where the source came from, the Lean
-version and its known kernel fixes, the tools, the sandboxes, the test of these steps, and the
-limits of what a passing run shows.
+All four steps use the Lean release in `lean-toolchain`, which comes with both `leanexport` and
+`lake comparator`. The published source was written for Lean 4.33.1, which has neither, so
+checking `40e56bab` itself takes two toolchains.
+[An older version of this README](https://github.com/leanprover-community/riemann-hypothesis/blob/7cce738ba719a32964ca3822d0994f4c6952c7ae/README.md#checking-it)
+has those steps.
+
+We worked these steps out on the published source and don't have a complete run on the current
+source yet. On the published source the build took hours on a large machine and about 100 GB of
+disk, and judging needs a lot of memory. [NOTES.md](verification/NOTES.md) says where the source
+came from, how the tools and sandboxes are set up and what a passing run does and doesn't show,
+but it still describes the Lean 4.33.1 setup.
+
+## CI
+
+Every push and pull request gets a quick check that `Challenge.lean` compiles against Mathlib
+alone. A full build is too big for GitHub's runners, so pull requests are built on machines
+lent by volunteers, and successful builds go into the cache. If you have a Linux machine with
+plenty of memory and disk to spare, [CI-RUNNERS.md](verification/CI-RUNNERS.md) explains how to
+lend it. The scripts behind all this are in [`scripts/`](scripts/) and
+[`tools/ci_native/`](tools/ci_native/README.md).
 
 ## License
 
 The submission belongs to its author and was published without a license. It is mirrored here
-for verification only: unmodified at commit `40e56bab`, and changed since then as the
-[notes](verification/NOTES.md#source) describe.
+so that it can be checked. Commit `40e56bab` is the unmodified copy.

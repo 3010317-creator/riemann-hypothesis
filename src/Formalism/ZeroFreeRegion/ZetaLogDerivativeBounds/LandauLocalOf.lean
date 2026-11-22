@@ -1,4 +1,8 @@
-import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
+module
+
+public import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
+
+@[expose] public section
 
 open Complex Filter Topology Metric
 
@@ -45,11 +49,11 @@ theorem localZeroExpansionOfFactorization : LandauLocalOf := by
   have hhz₀ : h z₀ ≠ 0 := fun h0 => hf0 (by rw [hfz₀, h0, mul_zero])
   have hPz₀le : ‖∏ ρ ∈ Z, (z₀ - ρ) ^ m ρ‖ ≤ (r / 3) ^ (∑ ρ ∈ Z, m ρ) := by
     rw [norm_prod, ← Finset.prod_pow_eq_pow_sum]
-    exact Finset.prod_le_prod (fun _ _ => by positivity) fun ρ hρ => by
+    exact Finset.prod_le_prod₀ (fun _ _ => by positivity) fun ρ hρ => by
       rw [norm_pow, norm_sub_rev]; exact pow_le_pow_left₀ (norm_nonneg _) (hZball ρ hρ) _
   have hPw : ∀ w : ℂ, ‖w - z₀‖ = r → (2 * r / 3) ^ (∑ ρ ∈ Z, m ρ) ≤ ‖∏ ρ ∈ Z, (w - ρ) ^ m ρ‖ := fun w hw => by
     rw [norm_prod, ← Finset.prod_pow_eq_pow_sum]
-    refine Finset.prod_le_prod (fun _ _ => by positivity) fun ρ hρ => ?_
+    refine Finset.prod_le_prod₀ (fun _ _ => by positivity) fun ρ hρ => ?_
     rw [norm_pow]
     have htri : ‖w - z₀‖ ≤ ‖w - ρ‖ + ‖ρ - z₀‖ := by simpa using norm_add_le (w - ρ) (ρ - z₀)
     exact pow_le_pow_left₀ (by linarith) (by linarith [hZball ρ hρ]) _

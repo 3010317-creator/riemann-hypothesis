@@ -1,7 +1,12 @@
-import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
-import Mathlib.Analysis.Complex.BorelCaratheodory
-import Mathlib.Analysis.Complex.HasPrimitives
-import Mathlib.Analysis.Complex.Liouville
+module
+
+public import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
+public import Mathlib.Analysis.Calculus.LogDeriv
+public import Mathlib.Analysis.Complex.BorelCaratheodory
+public import Mathlib.Analysis.Complex.HasPrimitives
+public import Mathlib.Analysis.Complex.Liouville
+
+@[expose] public section
 
 open Complex Metric
 
@@ -13,21 +18,17 @@ lemma zflb_exists_log {f : ℂ → ℂ} {z₀ : ℂ} {R : ℝ}
     (hf : DifferentiableOn ℂ f (ball z₀ R)) (hne : ∀ z ∈ ball z₀ R, f z ≠ 0) :
     ∃ g : ℂ → ℂ, g z₀ = 0 ∧ (∀ z ∈ ball z₀ R, HasDerivAt g (deriv f z / f z) z) ∧
       ∀ z ∈ ball z₀ R, f z = f z₀ * Complex.exp (g z) := by
-  obtain ⟨G, hG⟩ := ((hf.deriv isOpen_ball).div hf hne).isExactOn_ball
-  refine ⟨fun z => G z - G z₀, by simp, fun z hz => (hG z hz).sub_const _, ?_⟩
-  have hk : ∀ z ∈ ball z₀ R, HasDerivAt (fun w => f w * Complex.exp (-(G w - G z₀))) 0 z := fun z hz => by
-    have hfz := (hf.differentiableAt (isOpen_ball.mem_nhds hz)).hasDerivAt
-    have hgz : HasDerivAt (fun w => -(G w - G z₀)) (-(deriv f z / f z)) z := ((hG z hz).sub_const (G z₀)).neg
-    have h := hfz.mul hgz.cexp
-    have h1 := hne z hz
-    exact (show deriv f z * Complex.exp (-(G z - G z₀)) +
-      f z * (Complex.exp (-(G z - G z₀)) * -(deriv f z / f z)) = 0 by field_simp; ring) ▸ h
+  obtain ⟨g, hg₀, hg⟩ := ((hf.deriv isOpen_ball).div hf hne).isExactOn_ball.with_val_at z₀ 0
+  refine ⟨g, hg₀, hg, ?_⟩
+  have hd : DifferentiableOn ℂ g (ball z₀ R) :=
+    fun z hz => (hg z hz).differentiableAt.differentiableWithinAt
+  obtain ⟨c, _, hc⟩ := (logDeriv_eqOn_iff hf hd.cexp isOpen_ball isPreconnected_ball
+    (fun _ _ => Complex.exp_ne_zero _) hne).mp fun z hz => by
+      simp [logDeriv_apply, (hg z hz).cexp.deriv]
   intro z hz
-  have hconst := isOpen_ball.is_const_of_deriv_eq_zero (convex_ball z₀ R).isPreconnected
-    (fun w hw => (hk w hw).differentiableAt.differentiableWithinAt) (fun w hw => (hk w hw).deriv)
-    hz (mem_ball_self (pos_of_mem_ball hz))
-  simp only [sub_self, neg_zero, Complex.exp_zero, mul_one] at hconst
-  rw [← hconst, mul_assoc, ← Complex.exp_add, neg_add_cancel, Complex.exp_zero, mul_one]
+  have hcenter := hc (mem_ball_self (pos_of_mem_ball hz))
+  have hfc : f z₀ = c := by simpa [hg₀] using hcenter
+  simpa [hfc] using hc hz
 
 theorem logDerivBoundOnBall : LogDerivBound := by
   intro f z₀ R M hR hM hf hne hbd z hz
@@ -37,8 +38,8 @@ theorem logDerivBoundOnBall : LogDerivBound := by
   have hre : ∀ w ∈ ball z₀ R, (g w).re ≤ Real.log M := fun w hw => by
     have h1 := hbd w (ball_subset_closedBall hw)
     rw [hgf w hw, norm_mul, Complex.norm_exp] at h1
-    have h2 : Real.exp (g w).re ≤ M := le_of_not_gt fun h => by linarith [mul_lt_mul_of_pos_left h hf0]
-    exact (Real.log_exp _).symm.trans_le (Real.log_le_log (Real.exp_pos _) h2)
+    exact (Real.le_log_iff_exp_le (lt_of_lt_of_le zero_lt_one hM)).2
+      ((mul_le_mul_iff_right₀ hf0).mp (by simpa only [mul_comm M] using h1))
   have hshift : ∀ v ∈ ball (0 : ℂ) R, z₀ + v ∈ ball z₀ R := fun v hv => by
     simpa [mem_ball, dist_eq_norm] using hv
   have hmain : ∀ A : ℝ, Real.log M < A → ‖deriv f z / f z‖ ≤ 24 * A / R := fun A hA => by
