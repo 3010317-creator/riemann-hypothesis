@@ -43,39 +43,7 @@ theorem measurable_apply_mulF_of_jetLocal (hLeib : Leibniz) (B : Base) {A A' : T
   refine Measurable.div_const (Measurable.mul ?_ (hm p a)) _
   exact Complex.measurable_ofReal.comp ((meas_ld p φ hφ).comp B.G_meas)
 
-theorem lemmaEprimeFromSteps : LemmaEprimeFromSteps := by
-  intro hLeib hCut hL2 hPair h5 h6 B X c M hpos hMeas hJet hPoly hCoef hPol hLoc hBeta
-  obtain ⟨hmu, hmC, hmd, hmS⟩ := hMeas
-  have hI0 : Integrable (LE.sq B X.dw (X.gw X.u)) B.μ := by
-    have := hCoef 0; rwa [dS_zero] at this
-  have hmg : ∀ a, Measurable fun ω => X.gw X.u ω a := by
-    intro a; have := hmS 0 a; rwa [dS_zero] at this
-  have L1 := hL2 hLeib hCut B X.R X.ι X.gw X.u X.dw c M 1 le_rfl hpos hmd hJet hPoly hmS hCoef
-  have L2 := hL2 hLeib hCut B X.R X.ι X.gw X.u X.dw c M 2 (by norm_num) hpos hmd hJet hPoly hmS hCoef
-  have hmT : ∀ (m : ℕ) (ε : ℝ) (a : X.ι), Measurable fun ω => X.gw (mulF B (c.sc ε m) X.u) ω a :=
-    fun m ε a => measurable_apply_mulF_of_jetLocal hLeib B X.gw X.u M hJet hPoly hmS _ (smoothLog_sc c ε m) a
-  have hzero : Tendsto (fun ε : ℝ => ∫ ω, LE.sq B X.dw (fun ω a => X.gw X.u ω a - X.gw X.u ω a) ω ∂B.μ)
-      (𝓝[>] 0) (𝓝 0) := by
-    simp [LE.sq]
-
-  have P2 := hPair B X.ι X.dw (X.gw X.u) (X.gw X.u) (fun _ => X.gw X.u) (fun ε => X.gw (mulF B (c.sc ε 2) X.u))
-    hpos hmd hmg hmg (fun _ a _ => hmg a) (fun ε a _ => hmT 2 ε a) hI0 hI0 (fun _ _ => hI0) L2.1 hzero L2.2
-  have T5 := h5 B X c ⟨hmu, hmC, hmd, hmS⟩ hBeta
-  have hev : (fun ε : ℝ => X.beta (X.Cw X.u) (mulF B (c.sc ε 2) X.u)) =ᶠ[𝓝[>] 0]
-      fun ε : ℝ => ∫ ω, pr B X.dw (X.gw X.u) (X.gw (mulF B (c.sc ε 2) X.u)) ω ∂B.μ := by
-    filter_upwards [self_mem_nhdsWithin] with ε hε
-    exact h6 hCut B X c hJet hPol hLoc ε hε
-  have heq : ∫ ω, pr B X.dw (X.gw X.u) (X.gw X.u) ω ∂B.μ = X.beta (X.Cw X.u) X.u :=
-    tendsto_nhds_unique P2 (T5.congr' hev)
-  refine ⟨hI0, ?_, ?_⟩
-  · rw [← int_pr_self]; exact heq
-  · have P1 := hPair B X.ι X.dw (X.gw X.u) (X.gw X.u) (fun ε => X.gw (mulF B (c.sc ε 1) X.u))
-      (fun ε => X.gw (mulF B (c.sc ε 1) X.u))
-      hpos hmd hmg hmg (fun ε a _ => hmT 1 ε a) (fun ε a _ => hmT 1 ε a) hI0 hI0 L1.1 L1.1 L1.2 L1.2
-    rw [heq] at P1
-    refine P1.congr' ?_
-    filter_upwards [self_mem_nhdsWithin] with ε hε
-    exact (hPol ε ε 1 1 hε hε le_rfl le_rfl).symm
+theorem lemmaEprimeFromSteps : LemmaEprimeFromSteps := LEx2.lemmaEprimeFromSteps
 
 theorem ld_one (q : ℕ) (x : ℝ) : ld q (fun _ => (1:ℝ)) x = if q = 0 then 1 else 0 := by
   unfold ld
@@ -164,36 +132,7 @@ theorem pr_mulF (B : Base) {A : Type} [Fintype A] (wt : B.Ω → A → ℝ) (h u
 
 theorem epStep5 : EpStep5 := LEx2.epStep5
 
-theorem derived_energy_L2 : WeightedIntegrable := by
-  intro B T _ f v C p N hpN hmf hf0 hfb h1 h2
-  have hg : Integrable (fun ω => |C| * ∑ t, (‖v t ω‖ ^ 2 + (B.G ω) ^ (2 * p) * ‖v t ω‖ ^ 2)) B.μ :=
-    (integrable_finset_sum _ fun t _ => (h1 t).add (h2 t)).const_mul _
-  refine hg.mono' hmf.aestronglyMeasurable (Eventually.of_forall fun ω => ?_)
-  rw [Real.norm_eq_abs, abs_of_nonneg (hf0 ω)]
-  refine (hfb ω).trans ?_
-  have hG := B.G_pos ω
-  have hexp : (0:ℝ) ≤ (2 * p : ℝ) - N := by
-    have : (N:ℝ) ≤ 2 * p := by exact_mod_cast hpN
-    linarith
-  have hpow : (B.G ω) ^ ((2 * p : ℝ) - N) ≤ 1 + (B.G ω) ^ (2 * p) := by
-    rcases le_total (B.G ω) 1 with h | h
-    · have := Real.rpow_le_one hG.le h hexp
-      have h' : 0 ≤ (B.G ω) ^ (2 * p) := by positivity
-      linarith
-    · have := Real.rpow_le_rpow_of_exponent_le h (show (2 * p : ℝ) - N ≤ ((2 * p : ℕ) : ℝ) by push_cast; linarith [(Nat.cast_nonneg N : (0:ℝ) ≤ N)])
-      rw [Real.rpow_natCast] at this
-      linarith
-  have hS : 0 ≤ ∑ t, ‖v t ω‖ ^ 2 := Finset.sum_nonneg fun t _ => by positivity
-  have hr : 0 ≤ (B.G ω) ^ ((2 * p : ℝ) - N) := Real.rpow_nonneg hG.le _
-  calc C * (B.G ω) ^ ((2 * p : ℝ) - N) * ∑ t, ‖v t ω‖ ^ 2
-      ≤ |C| * (B.G ω) ^ ((2 * p : ℝ) - N) * ∑ t, ‖v t ω‖ ^ 2 := by
-        gcongr; exact le_abs_self C
-    _ ≤ |C| * (1 + (B.G ω) ^ (2 * p)) * ∑ t, ‖v t ω‖ ^ 2 := by gcongr
-    _ = _ := by
-        rw [mul_assoc, Finset.mul_sum]
-        congr 1
-        refine Finset.sum_congr rfl fun t _ => ?_
-        ring
+theorem derived_energy_L2 : WeightedIntegrable := LEx2.derived_energy_L2
 
 theorem thetaSmooth : ThetaSmooth := by
   intro ε σ hε
@@ -232,28 +171,8 @@ theorem cutBound : CutBound := LEx2.cutBound
 theorem sq_comb_le (B : Base) {A' : Type} [Fintype A'] (wt : B.Ω → A' → ℝ) (hpos : ∀ ω a, 0 ≤ wt ω a)
     (D : ℕ → Fn B A') (M : ℕ) (k : ℕ → B.Ω → ℝ) (K : ℝ) (hK : ∀ p ∈ range (M+1), ∀ ω, |k p ω| ≤ K) (ω : B.Ω) :
     LE.sq B wt (fun ω a => ∑ p ∈ range (M + 1), (k p ω : ℂ) * D p ω a / p.factorial) ω ≤
-      (M + 1) * K ^ 2 * ∑ p ∈ range (M + 1), LE.sq B wt (D p) ω := by
-  unfold LE.sq
-  rw [Finset.sum_comm, Finset.mul_sum]
-  refine Finset.sum_le_sum fun a _ => ?_
-  rw [← Finset.mul_sum]
-  have h1 : ‖∑ p ∈ range (M + 1), (k p ω : ℂ) * D p ω a / p.factorial‖ ≤ ∑ p ∈ range (M+1), K * ‖D p ω a‖ := by
-    refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun p hp => ?_)
-    rw [norm_div, norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_natCast]
-    have hf : (1:ℝ) ≤ p.factorial := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr p.factorial_ne_zero
-    calc |k p ω| * ‖D p ω a‖ / p.factorial ≤ |k p ω| * ‖D p ω a‖ := div_le_self (by positivity) hf
-      _ ≤ K * ‖D p ω a‖ := mul_le_mul_of_nonneg_right (hK p hp ω) (norm_nonneg _)
-  have h2 : (∑ p ∈ range (M+1), K * ‖D p ω a‖) ^ 2 ≤ (M + 1) * ∑ p ∈ range (M+1), (K * ‖D p ω a‖) ^ 2 := by
-    have := sq_sum_le_card_mul_sum_sq (s := range (M+1)) (f := fun p => K * ‖D p ω a‖)
-    simpa using this
-  have h3 : ‖∑ p ∈ range (M + 1), (k p ω : ℂ) * D p ω a / p.factorial‖ ^ 2 ≤
-      (M + 1) * K ^ 2 * ∑ p ∈ range (M+1), ‖D p ω a‖ ^ 2 := by
-    calc _ ≤ (∑ p ∈ range (M+1), K * ‖D p ω a‖) ^ 2 := pow_le_pow_left₀ (norm_nonneg _) h1 2
-      _ ≤ _ := h2
-      _ = _ := by simp_rw [mul_pow]; rw [← Finset.mul_sum]; ring
-  calc wt ω a * _ ≤ wt ω a * ((M + 1) * K ^ 2 * ∑ p ∈ range (M+1), ‖D p ω a‖ ^ 2) :=
-        mul_le_mul_of_nonneg_left h3 (hpos ω a)
-    _ = _ := by ring
+      (M + 1) * K ^ 2 * ∑ p ∈ range (M + 1), LE.sq B wt (D p) ω :=
+  LEx2.sq_comb_le B wt hpos D M k K hK ω
 
 theorem meas_sq (B : Base) {A' : Type} [Fintype A'] (wt : B.Ω → A' → ℝ) (v : Fn B A')
     (h1 : ∀ a, Measurable fun ω => wt ω a) (h2 : ∀ a, Measurable fun ω => v ω a) : Measurable (LE.sq B wt v) := by
@@ -305,26 +224,7 @@ theorem norm_int_pr_le (B : Base) {A : Type} [Fintype A] (wt : B.Ω → A → �
 
 theorem pairLimit : PairLimit := LEx2.pairLimit
 
-theorem limitB : LimitB := by
-  intro hA hL2 hPair hCoef hLeib hCut B N F c hInf hImp hCl Y hY
-  obtain ⟨hM, hPos, hFac, hBN, hMon, hJet⟩ := hImp
-  obtain ⟨hPoly, hp⟩ := hA hCoef B N F hInf hM hPos hFac hBN hMon hCl Y hY
-  have hpos : ∀ ω a, 0 ≤ F.dw Y ω a := fun ω a =>
-    mul_nonneg (pow_nonneg (hPos.1 ω).le N) (hPos.2 Y hY a).le
-  have hmw : ∀ a, Measurable fun ω => F.dw Y ω a := fun a => (hM.1.pow_const N).mul_const _
-  have hmS : ∀ p a, Measurable fun ω => dS B (F.gw Y) F.u p ω a := fun p a => (hp p).1 a
-  have L := hL2 hLeib hCut B F.R F.ι (F.gw Y) F.u (F.dw Y) c (N * (F.r + 1)) 1 le_rfl hpos hmw (hJet Y hY) hPoly
-    hmS (fun p => (hp p).2)
-  have hmg : ∀ a, Measurable fun ω => F.gw Y F.u ω a := by
-    intro a; have := hmS 0 a; rwa [dS_zero] at this
-  have hmT : ∀ (ε : ℝ) a, Measurable fun ω => F.gw Y (mulF B (c.sc ε 1) F.u) ω a :=
-    fun ε a => measurable_apply_mulF_of_jetLocal hLeib B (F.gw Y) F.u _ (hJet Y hY) hPoly hmS _ (smoothLog_sc c ε 1) a
-  have P := hPair B F.ι (F.dw Y) (F.gw Y F.u) (F.gw Y F.u) (fun ε => F.gw Y (mulF B (c.sc ε 1) F.u))
-    (fun ε => F.gw Y (mulF B (c.sc ε 1) F.u)) hpos hmw hmg hmg (fun ε a _ => hmT ε a) (fun ε a _ => hmT ε a)
-    (hCl Y hY) (hCl Y hY) L.1 L.1 L.2 L.2
-  simp_rw [int_pr_self] at P
-  have := (Complex.continuous_re.tendsto _).comp P
-  simpa [Function.comp_def] using this
+theorem limitB : LimitB := LEx2.limitB
 
 theorem lemmaEprime : LemmaEprime :=
   lemmaEprimeFromSteps leibniz cutBound limit_L2 pairLimit epStep5 epStep6
@@ -332,42 +232,7 @@ theorem lemmaEprime : LemmaEprime :=
 theorem ld_zero' (φ : ℝ → ℝ) (x : ℝ) (hx : 0 < x) : ld 0 φ x = φ x := by
   simp [ld, Real.exp_log hx]
 
-theorem fatouStep : FatouStep := by
-  intro hRange hLim B A _ wt v σ K hσ hpos hmw hmv hInt hBd
-  have hsqm : Measurable (LE.sq B wt v) := meas_sq B wt v hmw hmv
-  have hsq0 : ∀ ω, 0 ≤ LE.sq B wt v ω := sq_nonneg' B wt hpos v
-  set e : ℕ → ℝ := fun n => 1 / ((n:ℝ) + 1) with he
-  have he0 : ∀ n, 0 < e n := fun n => by simp only [he]; positivity
-  have hte : Tendsto e atTop (𝓝[>] 0) :=
-    tendsto_nhdsWithin_iff.mpr ⟨tendsto_one_div_add_atTop_nhds_zero_nat, Eventually.of_forall he0⟩
-  have hmth : ∀ ε : ℝ, Measurable fun ω => th ε σ (B.G ω) := fun ε => by
-    unfold th; exact (B.G_meas.div (B.G_meas.add_const ε)).pow_const σ
-  have hlim : ∀ ω, Tendsto (fun n => th (e n) σ (B.G ω) * LE.sq B wt v ω) atTop (𝓝 (LE.sq B wt v ω)) := by
-    intro ω
-    have h := (hLim σ 0 (B.G ω) (B.G_pos ω)).comp hte
-    simp only [Function.comp_def, ld_zero' _ _ (B.G_pos ω), if_true] at h
-    simpa using h.mul_const (LE.sq B wt v ω)
-  have hK0 : 0 ≤ K := by
-    refine le_trans (integral_nonneg fun ω => ?_) (hBd 1 one_pos)
-    exact mul_nonneg (hRange 1 σ _ one_pos hσ (B.G_pos ω)).1.le (hsq0 ω)
-  have hle : ∫⁻ ω, ENNReal.ofReal (LE.sq B wt v ω) ∂B.μ ≤ ENNReal.ofReal K := by
-    calc ∫⁻ ω, ENNReal.ofReal (LE.sq B wt v ω) ∂B.μ
-        = ∫⁻ ω, liminf (fun n => ENNReal.ofReal (th (e n) σ (B.G ω) * LE.sq B wt v ω)) atTop ∂B.μ := by
-          refine lintegral_congr fun ω => ?_
-          exact ((ENNReal.tendsto_ofReal (hlim ω)).liminf_eq).symm
-      _ ≤ liminf (fun n => ∫⁻ ω, ENNReal.ofReal (th (e n) σ (B.G ω) * LE.sq B wt v ω) ∂B.μ) atTop :=
-          lintegral_liminf_le fun n => ((hmth (e n)).mul hsqm).ennreal_ofReal
-      _ ≤ liminf (fun _ : ℕ => ENNReal.ofReal K) atTop := by
-          refine liminf_le_liminf (Eventually.of_forall fun n => ?_)
-          rw [← ofReal_integral_eq_lintegral_ofReal (hInt (e n) (he0 n))
-            (Eventually.of_forall fun ω => mul_nonneg (hRange (e n) σ _ (he0 n) hσ (B.G_pos ω)).1.le (hsq0 ω))]
-          exact ENNReal.ofReal_le_ofReal (hBd (e n) (he0 n))
-      _ = ENNReal.ofReal K := by simp
-  refine ⟨⟨hsqm.aestronglyMeasurable, ?_⟩, ?_⟩
-  · rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall hsq0)]
-    exact lt_of_le_of_lt hle ENNReal.ofReal_lt_top
-  · rw [integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall hsq0) hsqm.aestronglyMeasurable]
-    exact ENNReal.toReal_le_of_le_ofReal hK0 hle
+theorem fatouStep : FatouStep := LEx2.fatouStep
 
 noncomputable def Fk (k : ℕ) (s : ℝ) (t : ℝ) : ℝ := Real.exp (-(k:ℝ) * t) * (1 + Real.exp (-t)) ^ (-s)
 
@@ -411,50 +276,9 @@ theorem Fk_lim (k : ℕ) (s : ℝ) : Tendsto (Fk k s) atTop (𝓝 (if k = 0 then
     simpa using h2.mul h1
 
 theorem Fk_iter_lim (p : ℕ) : ∀ (k : ℕ) (s : ℝ),
-    Tendsto (iteratedDeriv p (Fk k s)) atTop (𝓝 (if p = 0 ∧ k = 0 then 1 else 0)) := by
-  induction p with
-  | zero => intro k s; simpa using Fk_lim k s
-  | succ n ih =>
-    intro k s
-    rw [iteratedDeriv_succ', Fk_deriv]
-    have hadd : iteratedDeriv n (fun t => -(k:ℝ) * Fk k s t + s * Fk (k+1) (s+1) t) =
-        fun t => -(k:ℝ) * iteratedDeriv n (Fk k s) t + s * iteratedDeriv n (Fk (k+1) (s+1)) t := by
-      funext t
-      have c1 : ContDiffAt ℝ n (fun t => -(k:ℝ) * Fk k s t) t :=
-        (contDiff_const.mul ((Fk_contDiff k s).of_le (by exact_mod_cast le_top))).contDiffAt
-      have c2 : ContDiffAt ℝ n (fun t => s * Fk (k+1) (s+1) t) t :=
-        (contDiff_const.mul ((Fk_contDiff (k+1) (s+1)).of_le (by exact_mod_cast le_top))).contDiffAt
-      rw [iteratedDeriv_fun_add c1 c2, iteratedDeriv_const_mul_field, iteratedDeriv_const_mul_field]
-    rw [hadd]
-    have t1 := (ih k s).const_mul (-(k:ℝ))
-    have t2 := (ih (k+1) (s+1)).const_mul s
-    have := t1.add t2
-    have hval : -(k:ℝ) * (if n = 0 ∧ k = 0 then 1 else 0) + s * (if n = 0 ∧ k + 1 = 0 then 1 else 0) =
-        (if n + 1 = 0 ∧ k = 0 then (1:ℝ) else 0) := by
-      by_cases hk : k = 0 <;> simp [hk]
-    rw [hval] at this
-    exact this
+    Tendsto (iteratedDeriv p (Fk k s)) atTop (𝓝 (if p = 0 ∧ k = 0 then 1 else 0)) :=
+  LEx2.Fk_iter_lim p
 
-theorem thetaLimit : ThetaLimit := by
-  intro σ p x hx
-  have hlog : Tendsto (fun ε : ℝ => Real.log x - Real.log ε) (𝓝[>] 0) atTop := by
-    have := Real.tendsto_log_nhdsGT_zero
-    have h2 : Tendsto (fun ε : ℝ => -Real.log ε) (𝓝[>] 0) atTop := tendsto_neg_atBot_atTop.comp this
-    simpa [sub_eq_add_neg] using tendsto_atTop_add_const_left _ (Real.log x) h2
-  have h := (Fk_iter_lim p 0 σ).comp hlog
-  simp only [and_true] at h
-  refine h.congr' ?_
-  filter_upwards [self_mem_nhdsWithin] with ε hε
-  have hε0 : 0 < ε := hε
-  unfold ld
-  have : (fun u : ℝ => th ε σ (Real.exp u)) = fun u : ℝ => Fk 0 σ (u - Real.log ε) := by
-    funext u
-    rw [thetaForm ε σ hε0 u]
-    unfold Fk
-    have : Real.exp (-(u - Real.log ε)) = ε * Real.exp (-u) := by
-      rw [neg_sub, Real.exp_sub, Real.exp_log hε0, Real.exp_neg]; ring
-    rw [this]; simp
-  rw [this, iteratedDeriv_comp_sub_const]
-  rfl
+theorem thetaLimit : ThetaLimit := LEx2.thetaLimit
 
 end Formalism.FourierDecayAlt.P.LEx1
