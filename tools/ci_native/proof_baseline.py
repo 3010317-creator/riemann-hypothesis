@@ -1,4 +1,4 @@
-"""Restore only the fixed unchanged #66 modules, with stock leantar in the sandbox."""
+"""Restore only the policy-pinned unchanged modules, with stock leantar in the sandbox."""
 import gzip
 import json
 from pathlib import Path

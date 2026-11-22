@@ -15,9 +15,9 @@
       "commit": "611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9",
       "dependency_manifest_sha256": "ee003c5c7a9b2b2a82a142b6633916661c07117199dd143d94d1af63910237df",
       "baseline": {
-        "manifest_sha256": "af49e586c8a073ca0de4669cc68e32604a014b00bf574c931b0a47c2d0fe81f9",
-        "map_sha256": "abcc0ec848fc00e4c6fd855eb4ed5c43d5b6773d577d74404cd43748378f6da0",
-        "revision": "2e43e1406f4398c615e1e527eeb3334600726cc4"
+        "manifest_sha256": "651214f93c4c4bb05590ec1b717984f71e5511ddd973a89ca481d1cc1b51b232",
+        "map_sha256": "ac2bd247d281bbbcf648954ac3bee8de4e6881d49cd0d8e705e3f5272a753852",
+        "revision": "9e273ce65776c200fb97b7edaa288d637632bf7d"
       }
     }
   }

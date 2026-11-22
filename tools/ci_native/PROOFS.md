@@ -1,7 +1,7 @@
 `native-proof` lends a registered runner to a ready batch rather than a whole PR.
-The initial policy pins #91's public `9e273ce` snapshot, source `69b331c`, and its
-49,094 affected-module list. Public head `c07c1fd` adds released-main metadata;
-its proof source and raw build configuration match.
+The policy pins #91's `d4663eed` snapshot, source `6123860`, and its 99,240
+affected-module list. The immutable public branch `build-snapshots/pr91-source612`
+retains that exact producer commit when the author's PR branch is rebased.
 
 The coordinator supplies `seed.json` (`snapshot`, `missing`, `input_manifest`,
 `input_archive_sha256`), the sorted worklist, and a dependency ZIP. An operator
@@ -11,8 +11,9 @@ the existing public cache, then dispatches `build-pr.yml` on main with
 Donors need no cloud token or SSH access. The runner group remains restricted
 to this exact main workflow and only the dedicated approved label is eligible.
 
-The runner restores 100,302 unchanged modules from the pinned public #66 cache,
-then current dependency deltas. Stock Lake checks imports with `noBuild=true`
+The runner restores only 50,156 unchanged modules from the pinned public #115 cache,
+excluding all 99,240 affected modules before applying current dependency deltas.
+Stock Lake checks imports with `noBuild=true`
 before compiling explicit targets. Batches have at most 256 targets; small
 machines are refused. Package metadata uses private overlays or private copies.
 
