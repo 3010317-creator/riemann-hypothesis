@@ -1,3 +1,4 @@
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ThetaLimit
 import Formalism.HermitianCurvature.StatementLE
 
 namespace Formalism.FourierDecayAlt.P.LEx1
@@ -82,48 +83,7 @@ theorem ld_one (q : ℕ) (x : ℝ) : ld q (fun _ => (1:ℝ)) x = if q = 0 then 1
   | zero => simp
   | succ n => simp [iteratedDeriv_succ']
 
-theorem epStep6 : EpStep6 := by
-  intro hCut B X c hJet hPol hLoc ε hε
-  obtain ⟨m, cc, hc⟩ := hJet
-  have hε1 : 0 < ε / 8 := by positivity
-  have h1u : mulF B (fun _ => (1:ℝ)) X.u = X.u := by funext ω a; simp [mulF]
-  have hbig : ∀ ω, ε / 8 < B.G ω → ∀ a, X.gw (mulF B (c.sc (ε/8) 1) X.u) ω a = X.gw X.u ω a := by
-    intro ω hω a
-    have e1 := hc (c.sc (ε/8) 1) (smoothLog_sc c _ 1) ω a
-    have e2 := hc (fun _ => (1:ℝ)) (by unfold SmoothLog; exact contDiff_const) ω a
-    rw [h1u] at e2
-    rw [e1, e2]
-    refine Finset.sum_congr rfl fun q _ => ?_
-    obtain ⟨C, hC⟩ := hCut c 1 q le_rfl
-    rw [(hC (ε/8) (B.G ω) hε1 (B.G_pos ω)).2.2 hω, ld_one]
-  have hsmall : ∀ ω, B.G ω ≤ ε / 8 → ∀ a, X.gw (mulF B (c.sc ε 2) X.u) ω a = 0 := by
-    intro ω hω a
-    rw [hc (c.sc ε 2) (smoothLog_sc c _ 2) ω a]
-    refine Finset.sum_eq_zero fun q _ => ?_
-    obtain ⟨C, hC⟩ := hCut c 2 q (by norm_num)
-    rw [(hC ε (B.G ω) hε (B.G_pos ω)).2.1 (by linarith)]; simp
-  have hsc : ∀ ω, B.G ω ≤ ε / 8 → c.sc ε 2 (B.G ω) = 0 := by
-    intro ω hω
-    have : B.G ω / ε ≤ 1 / 2 := by rw [div_le_iff₀ hε]; linarith
-    simp [Cut.sc, c.zero _ this]
-  calc X.beta (X.Cw X.u) (mulF B (c.sc ε 2) X.u)
-      = X.beta (X.Cw (mulF B (c.sc (ε/8) 1) X.u)) (mulF B (c.sc ε 2) X.u) := by
-        unfold EP.beta
-        refine integral_congr_ae (Eventually.of_forall fun ω => ?_)
-        simp only [pr]
-        refine Finset.sum_congr rfl fun a _ => ?_
-        rcases lt_or_ge (ε/8) (B.G ω) with h | h
-        · rw [hLoc (ε/8) ω hε1 h a]
-        · simp [mulF, hsc ω h]
-    _ = ∫ ω, pr B X.dw (X.gw (mulF B (c.sc (ε/8) 1) X.u)) (X.gw (mulF B (c.sc ε 2) X.u)) ω ∂B.μ :=
-        hPol (ε/8) ε 1 2 hε1 hε le_rfl (by norm_num)
-    _ = _ := by
-        refine integral_congr_ae (Eventually.of_forall fun ω => ?_)
-        simp only [pr]
-        refine Finset.sum_congr rfl fun a _ => ?_
-        rcases lt_or_ge (ε/8) (B.G ω) with h | h
-        · rw [hbig ω h a]
-        · simp [hsmall ω h a]
+theorem epStep6 : EpStep6 := LEx2.epStep6
 
 theorem epCoefInt : EpCoefInt := by
   intro h B X p N hpN hpos hMeas hNF q
@@ -179,60 +139,7 @@ theorem smoothLog_rpow (s : ℝ) : SmoothLog (fun y => y ^ s) := by
   exact Real.contDiff_exp.comp (contDiff_const.mul contDiff_id)
 
 open Polynomial in
-theorem leibniz : Leibniz := by
-  intro B A A' T u d hJ hP φ hφ ω a
-  obtain ⟨m, c, hc⟩ := hJ
-  obtain ⟨c', hc'⟩ := hP
-  have hconj : ∀ s : ℝ, conjS B T u s ω a = (mkP m (fun q => c q ω a)).eval (s : ℂ) := by
-    intro s
-    rw [mkP_eval]
-    unfold conjS
-    rw [hc _ (smoothLog_rpow s) ω a, Finset.mul_sum]
-    refine Finset.sum_congr rfl fun q _ => ?_
-    rw [ld_rpow q s _ (B.G_pos ω)]
-    have h1 : (B.G ω) ^ (-s) * (B.G ω) ^ s = 1 := by
-      rw [← Real.rpow_add (B.G_pos ω)]; simp
-    have h2 : (((B.G ω) ^ (-s) : ℝ) : ℂ) * (((B.G ω) ^ s : ℝ) : ℂ) = 1 := by
-      rw [← Complex.ofReal_mul, h1]; simp
-    push_cast
-    linear_combination ((s:ℂ) ^ q * c q ω a) * h2
-  have hPP : mkP m (fun q => c q ω a) = mkP d (fun q => c' q ω a) := by
-    refine Polynomial.eq_of_infinite_eval_eq _ _ ?_
-    refine Set.Infinite.mono (s := Set.range (fun s : ℝ => (s : ℂ))) ?_
-      (Set.infinite_range_of_injective Complex.ofReal_injective)
-    rintro _ ⟨s, rfl⟩
-    show _ = _
-    rw [← hconj s, hc' s ω a, mkP_eval]
-  have hdS : ∀ p, dS B T u p ω a = p.factorial * (mkP m (fun q => c q ω a)).coeff p := by
-    intro p
-    unfold dS
-    simp_rw [hconj]
-    rw [iterDeriv_poly]
-    simp only [Complex.ofReal_zero]
-    rw [← coeff_zero_eq_eval_zero, coeff_iterate_derivative]
-    simp [Nat.descFactorial_self]
-  rw [hc φ hφ ω a]
-  have e1 : ∑ q ∈ range (m + 1), (ld q φ (B.G ω) : ℂ) * c q ω a =
-      ∑ q ∈ range (max m d + 1), (ld q φ (B.G ω) : ℂ) * (mkP m (fun q => c q ω a)).coeff q := by
-    have hs := Finset.sum_subset (s₁ := range (m+1)) (s₂ := range (max m d + 1))
-      (f := fun q => (ld q φ (B.G ω) : ℂ) * (mkP m (fun q => c q ω a)).coeff q)
-      (by intro q hq; simp only [Finset.mem_range] at *; omega)
-      (by intro q _ hq; rw [mkP_coeff, if_neg (by simpa using hq)]; simp)
-    rw [← hs]
-    refine Finset.sum_congr rfl fun q hq => ?_
-    rw [mkP_coeff, if_pos (Finset.mem_range.mp hq)]
-  have e2 : ∑ p ∈ range (d + 1), (ld p φ (B.G ω) : ℂ) * dS B T u p ω a / p.factorial =
-      ∑ q ∈ range (max m d + 1), (ld q φ (B.G ω) : ℂ) * (mkP m (fun q => c q ω a)).coeff q := by
-    have hs := Finset.sum_subset (s₁ := range (d+1)) (s₂ := range (max m d + 1))
-      (f := fun q => (ld q φ (B.G ω) : ℂ) * (mkP m (fun q => c q ω a)).coeff q)
-      (by intro q hq; simp only [Finset.mem_range] at *; omega)
-      (by intro q _ hq; rw [hPP, mkP_coeff, if_neg (by simpa using hq)]; simp)
-    rw [← hs]
-    refine Finset.sum_congr rfl fun q hq => ?_
-    rw [hdS]
-    have : (q.factorial : ℂ) ≠ 0 := by exact_mod_cast q.factorial_ne_zero
-    field_simp
-  rw [e1, e2]
+theorem leibniz : Leibniz := LEx2.leibniz
 
 theorem thetaForm : ThetaForm := by
   intro ε σ hε v
@@ -255,47 +162,7 @@ theorem pr_mulF (B : Base) {A : Type} [Fintype A] (wt : B.Ω → A → ℝ) (h u
   refine Finset.sum_congr rfl fun a _ => ?_
   ring
 
-theorem epStep5 : EpStep5 := by
-  intro B X c hMeas hBeta
-  obtain ⟨hmu, hmC, hmd, hmS⟩ := hMeas
-  obtain ⟨hIu, hIh⟩ := hBeta
-  unfold EP.beta
-  simp_rw [pr_mulF]
-  have hmpr : Measurable fun ω => pr B (fun _ _ => (1:ℝ)) (X.Cw X.u) X.u ω := by
-    unfold pr
-    refine Finset.measurable_sum _ fun a _ => ?_
-    exact (measurable_const.mul (hmC a)).mul (Complex.continuous_conj.measurable.comp (hmu a))
-  have hbd : ∀ ω, ‖pr B (fun _ _ => (1:ℝ)) (X.Cw X.u) X.u ω‖ ≤
-      LE.sq B (fun _ _ => 1) (X.Cw X.u) ω + LE.sq B (fun _ _ => 1) X.u ω := by
-    intro ω
-    unfold pr LE.sq
-    rw [← Finset.sum_add_distrib]
-    refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun a _ => ?_)
-    simp only [Complex.ofReal_one, one_mul, norm_mul, RCLike.norm_conj]
-    nlinarith [sq_nonneg (‖X.Cw X.u ω a‖ - ‖X.u ω a‖), norm_nonneg (X.Cw X.u ω a), norm_nonneg (X.u ω a)]
-  refine tendsto_integral_filter_of_dominated_convergence
-    (fun ω => LE.sq B (fun _ _ => 1) (X.Cw X.u) ω + LE.sq B (fun _ _ => 1) X.u ω) ?_ ?_ (hIh.add hIu) ?_
-  · refine Eventually.of_forall fun ε => ?_
-    refine Measurable.aestronglyMeasurable (Measurable.mul ?_ hmpr)
-    refine Complex.measurable_ofReal.comp ?_
-    unfold Cut.sc
-    exact ((c.smooth.continuous.measurable.comp (B.G_meas.div_const ε)).pow_const 2)
-  · refine Eventually.of_forall fun ε => Eventually.of_forall fun ω => ?_
-    rw [norm_mul]
-    have h1 : ‖((c.sc ε 2 (B.G ω) : ℝ) : ℂ)‖ ≤ 1 := by
-      rw [Complex.norm_real, Real.norm_eq_abs]
-      unfold Cut.sc
-      rw [abs_of_nonneg (by positivity)]
-      exact pow_le_one₀ (c.nonneg _) (c.le_one _)
-    calc _ ≤ 1 * ‖pr B (fun _ _ => (1:ℝ)) (X.Cw X.u) X.u ω‖ :=
-          mul_le_mul_of_nonneg_right h1 (norm_nonneg _)
-      _ ≤ _ := by rw [one_mul]; exact hbd ω
-  · refine Eventually.of_forall fun ω => ?_
-    refine tendsto_const_nhds.congr' ?_
-    have : ∀ᶠ ε : ℝ in 𝓝[>] 0, ε ∈ Set.Ioo 0 (B.G ω) := Ioo_mem_nhdsGT (B.G_pos ω)
-    filter_upwards [this] with ε hε
-    have h1 : 1 ≤ B.G ω / ε := by rw [le_div_iff₀ hε.1]; linarith [hε.2]
-    simp [Cut.sc, c.one _ h1]
+theorem epStep5 : EpStep5 := LEx2.epStep5
 
 theorem derived_energy_L2 : WeightedIntegrable := by
   intro B T _ f v C p N hpN hmf hf0 hfb h1 h2
@@ -360,49 +227,7 @@ theorem iterDeriv_const' (p : ℕ) (k t : ℝ) : iteratedDeriv p (fun _ : ℝ =>
   | zero => simp
   | succ n => simp [iteratedDeriv_succ']
 
-theorem cutBound : CutBound := by
-  intro c m p hm
-  set h : ℝ → ℝ := fun t => c.χ (Real.exp t) ^ m with hh
-  have hsm : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) h := (c.smooth.comp Real.contDiff_exp).pow m
-  have hcont : Continuous (iteratedDeriv p h) := hsm.continuous_iteratedDeriv p (by exact_mod_cast le_top)
-  have hlow : ∀ t, t < Real.log (1/2) → iteratedDeriv p h t = 0 := by
-    intro t ht
-    have : h =ᶠ[𝓝 t] fun _ => (0:ℝ) := by
-      filter_upwards [Iio_mem_nhds ht] with s hs
-      have : Real.exp s ≤ 1/2 := by
-        have := Real.exp_lt_exp.mpr hs
-        rw [Real.exp_log (by norm_num)] at this; exact this.le
-      simp only [hh, c.zero _ this]
-      exact zero_pow (by omega)
-    rw [this.iteratedDeriv_eq p, iterDeriv_const']; simp
-  have hhigh : ∀ t, 0 < t → iteratedDeriv p h t = if p = 0 then 1 else 0 := by
-    intro t ht
-    have : h =ᶠ[𝓝 t] fun _ => (1:ℝ) := by
-      filter_upwards [Ioi_mem_nhds ht] with s hs
-      have : 1 ≤ Real.exp s := Real.one_le_exp (le_of_lt hs)
-      simp [hh, c.one _ this]
-    rw [this.iteratedDeriv_eq p, iterDeriv_const']
-  obtain ⟨C0, hC0⟩ := (isCompact_Icc (a := Real.log (1/2)) (b := 0)).exists_bound_of_continuousOn hcont.continuousOn
-  have hbd : ∀ t, |iteratedDeriv p h t| ≤ max C0 1 := by
-    intro t
-    rcases lt_or_ge t (Real.log (1/2)) with h1 | h1
-    · rw [hlow t h1]; simp
-    · rcases lt_or_ge 0 t with h2 | h2
-      · rw [hhigh t h2]; split_ifs <;> simp
-      · exact (hC0 t ⟨h1, h2⟩).trans (le_max_left _ _)
-  have key : ∀ ε x : ℝ, 0 < ε → ld p (c.sc ε m) x = iteratedDeriv p h (Real.log x - Real.log ε) := by
-    intro ε x hε
-    unfold ld
-    have : (fun u : ℝ => c.sc ε m (Real.exp u)) = fun u : ℝ => h (u - Real.log ε) := by
-      funext u; simp only [hh, Cut.sc]; rw [Real.exp_sub, Real.exp_log hε]
-    rw [this, iteratedDeriv_comp_sub_const]
-  refine ⟨max C0 1, fun ε x hε hx => ?_⟩
-  rw [key ε x hε]
-  refine ⟨hbd _, fun hlt => hlow _ ?_, fun hlt => hhigh _ ?_⟩
-  · rw [← Real.log_div hx.ne' hε.ne']
-    refine Real.log_lt_log (by positivity) ?_
-    rw [div_lt_iff₀ hε]; linarith
-  · have := Real.log_lt_log hε hlt; linarith
+theorem cutBound : CutBound := LEx2.cutBound
 
 theorem sq_comb_le (B : Base) {A' : Type} [Fintype A'] (wt : B.Ω → A' → ℝ) (hpos : ∀ ω a, 0 ≤ wt ω a)
     (D : ℕ → Fn B A') (M : ℕ) (k : ℕ → B.Ω → ℝ) (K : ℝ) (hK : ∀ p ∈ range (M+1), ∀ ω, |k p ω| ≤ K) (ω : B.Ω) :
@@ -438,80 +263,7 @@ theorem meas_sq (B : Base) {A' : Type} [Fintype A'] (wt : B.Ω → A' → ℝ) (
 theorem sq_nonneg' (B : Base) {A' : Type} [Fintype A'] (wt : B.Ω → A' → ℝ) (hpos : ∀ ω a, 0 ≤ wt ω a) (v : Fn B A') (ω) :
     0 ≤ LE.sq B wt v ω := Finset.sum_nonneg fun a _ => mul_nonneg (hpos ω a) (by positivity)
 
-theorem limit_L2 : CutoffLimitInL2 := by
-  intro hLeib hCut B A A' _ T u wt c M m hm hpos hmw hJ hP hmS hI
-  choose Cf hCf using fun p => hCut c m p hm
-  set K : ℝ := (∑ p ∈ range (M+1), |Cf p|) + 1 with hKdef
-  have hCK : ∀ p ∈ range (M+1), |Cf p| ≤ K - 1 := by
-    intro p hp
-    have := Finset.single_le_sum (f := fun p => |Cf p|) (fun i _ => abs_nonneg _) hp
-    simp only [hKdef]; linarith
-  have hg : Integrable (fun ω => ((M:ℝ) + 1) * K ^ 2 * ∑ p ∈ range (M + 1), LE.sq B wt (dS B T u p) ω) B.μ :=
-    (integrable_finsetSum _ fun p _ => hI p).const_mul _
-  have hform : ∀ ε : ℝ, T (mulF B (c.sc ε m) u) =
-      fun ω a => ∑ p ∈ range (M + 1), ((ld p (c.sc ε m) (B.G ω) : ℝ) : ℂ) * dS B T u p ω a / p.factorial := by
-    intro ε; funext ω a; exact hLeib B A A' T u M hJ hP _ (smoothLog_sc c ε m) ω a
-  have hmT : ∀ (ε : ℝ) a, Measurable fun ω => T (mulF B (c.sc ε m) u) ω a := by
-    intro ε a
-    rw [hform]
-    refine Finset.measurable_sum _ fun p _ => ?_
-    refine Measurable.div_const (Measurable.mul ?_ (hmS p a)) _
-    exact Complex.measurable_ofReal.comp ((meas_ld p _ (smoothLog_sc c ε m)).comp B.G_meas)
-  have hmTu : ∀ a, Measurable fun ω => T u ω a := by
-    intro a; have := hmS 0 a; rwa [dS_zero] at this
-  constructor
-  · intro ε hε
-    refine hg.mono' (meas_sq B wt _ hmw (hmT ε)).aestronglyMeasurable (Eventually.of_forall fun ω => ?_)
-    rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg' B wt hpos _ ω), hform]
-    refine sq_comb_le B wt hpos (dS B T u) M (fun p ω => ld p (c.sc ε m) (B.G ω)) K ?_ ω
-    intro p hp ω
-    have := (hCf p ε (B.G ω) hε (B.G_pos ω)).1
-    have h2 := hCK p hp
-    linarith [le_abs_self (Cf p)]
-  · have hdiff : ∀ ε : ℝ, (fun ω a => T (mulF B (c.sc ε m) u) ω a - T u ω a) =
-        fun ω a => ∑ p ∈ range (M + 1),
-          ((ld p (c.sc ε m) (B.G ω) - (if p = 0 then 1 else 0) : ℝ) : ℂ) * dS B T u p ω a / p.factorial := by
-      intro ε; funext ω a
-      rw [hform]
-      have : T u ω a = ∑ p ∈ range (M+1), (((if p = 0 then 1 else 0 : ℝ)) : ℂ) * dS B T u p ω a / p.factorial := by
-        rw [Finset.sum_eq_single 0]
-        · simp [dS_zero]
-        · intro p _ hp; simp [hp]
-        · intro h; simp at h
-      rw [this, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun p _ => ?_
-      push_cast; ring
-    suffices key : Tendsto (fun ε : ℝ => ∫ ω, LE.sq B wt (fun ω a => T (mulF B (c.sc ε m) u) ω a - T u ω a) ω ∂B.μ)
-        (𝓝[>] 0) (𝓝 (∫ _ω, (0:ℝ) ∂B.μ)) by simpa using key
-    refine tendsto_integral_filter_of_dominated_convergence
-      (fun ω => ((M:ℝ) + 1) * K ^ 2 * ∑ p ∈ range (M + 1), LE.sq B wt (dS B T u p) ω) ?_ ?_ hg ?_
-    · refine Eventually.of_forall fun ε => ?_
-      exact (meas_sq B wt _ hmw (fun a => (hmT ε a).sub (hmTu a))).aestronglyMeasurable
-    · filter_upwards [self_mem_nhdsWithin] with ε hε
-      refine Eventually.of_forall fun ω => ?_
-      rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg' B wt hpos _ ω), hdiff]
-      refine sq_comb_le B wt hpos (dS B T u) M
-        (fun p ω => ld p (c.sc ε m) (B.G ω) - (if p = 0 then 1 else 0)) K ?_ ω
-      intro p hp ω
-      have h1 := (hCf p ε (B.G ω) hε (B.G_pos ω)).1
-      have h2 := hCK p hp
-      have h3 : |(if p = 0 then (1:ℝ) else 0)| ≤ 1 := by split_ifs <;> simp
-      calc _ ≤ |ld p (c.sc ε m) (B.G ω)| + |(if p = 0 then (1:ℝ) else 0)| := abs_sub _ _
-        _ ≤ K := by linarith [le_abs_self (Cf p)]
-    · refine Eventually.of_forall fun ω => ?_
-      refine tendsto_const_nhds.congr' ?_
-      have : ∀ᶠ ε : ℝ in 𝓝[>] 0, ε ∈ Set.Ioo 0 (B.G ω) := Ioo_mem_nhdsGT (B.G_pos ω)
-      filter_upwards [this] with ε hε
-      rw [hdiff]
-      unfold LE.sq
-      symm
-      refine Finset.sum_eq_zero fun a _ => ?_
-      have : ∑ p ∈ range (M + 1),
-          ((ld p (c.sc ε m) (B.G ω) - (if p = 0 then 1 else 0) : ℝ) : ℂ) * dS B T u p ω a / p.factorial = 0 := by
-        refine Finset.sum_eq_zero fun p _ => ?_
-        rw [(hCf p ε (B.G ω) hε.1 (B.G_pos ω)).2.2 hε.2]; simp
-      beta_reduce
-      rw [this]; simp
+theorem limit_L2 : CutoffLimitInL2 := LEx2.limit_L2
 
 theorem amgm (a b δ : ℝ) (hδ : 0 < δ) : a * b ≤ (a ^ 2 / δ + δ * b ^ 2) / 2 := by
   have h := sq_nonneg (a - δ * b)
@@ -551,76 +303,7 @@ theorem norm_int_pr_le (B : Base) {A : Type} [Fintype A] (wt : B.Ω → A → �
     (Eventually.of_forall fun ω => pr_bound B wt hpos a b δ hδ ω)).trans (le_of_eq ?_)
   rw [integral_div, integral_add' (ha.div_const δ) (hb.const_mul δ), integral_div, integral_const_mul]
 
-theorem pairLimit : PairLimit := by
-  intro B A _ wt v v' f f' hpos hmw hmv hmv' hmf hmf' hIv hIv' hIf hIf' hT hT'
-  set V : ℝ := ∫ ω, LE.sq B wt v ω ∂B.μ
-  set V' : ℝ := ∫ ω, LE.sq B wt v' ω ∂B.μ
-  have hV : 0 ≤ V := integral_nonneg fun ω => sq_nonneg' B wt hpos _ ω
-  have hV' : 0 ≤ V' := integral_nonneg fun ω => sq_nonneg' B wt hpos _ ω
-  have hIsub : ∀ (g w : Fn B A), (∀ a, Measurable fun ω => g ω a) → (∀ a, Measurable fun ω => w ω a) →
-      Integrable (LE.sq B wt g) B.μ → Integrable (LE.sq B wt w) B.μ →
-      Integrable (LE.sq B wt (fun ω a => g ω a - w ω a)) B.μ := by
-    intro g w hg hw hIg hIw
-    refine Integrable.mono' ((hIg.const_mul 2).add (hIw.const_mul 2))
-      (meas_sq B wt _ hmw fun a => (hg a).sub (hw a)).aestronglyMeasurable (Eventually.of_forall fun ω => ?_)
-    rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg' B wt hpos _ ω)]
-    simp only [LE.sq, Pi.add_apply, Finset.mul_sum]
-    rw [← Finset.sum_add_distrib]
-    refine Finset.sum_le_sum fun a _ => ?_
-    have h1 : ‖g ω a - w ω a‖ ≤ ‖g ω a‖ + ‖w ω a‖ := norm_sub_le _ _
-    have h2 : ‖g ω a - w ω a‖ ^ 2 ≤ 2 * ‖g ω a‖ ^ 2 + 2 * ‖w ω a‖ ^ 2 := by
-      nlinarith [norm_nonneg (g ω a - w ω a), sq_nonneg (‖g ω a‖ - ‖w ω a‖), norm_nonneg (g ω a), norm_nonneg (w ω a)]
-    nlinarith [hpos ω a]
-  rw [Metric.tendsto_nhds]
-  intro η hη
-  set δ : ℝ := η / (V + V' + 1) with hδdef
-  have hδ : 0 < δ := by positivity
-  have hsum : Tendsto (fun ε : ℝ => ((∫ ω, LE.sq B wt (fun ω a => f ε ω a - v ω a) ω ∂B.μ) +
-      ∫ ω, LE.sq B wt (fun ω a => f' ε ω a - v' ω a) ω ∂B.μ) * (1 / 2 + 1 / (2 * δ))) (𝓝[>] 0) (𝓝 0) := by
-    have := (hT.add hT').mul_const (1 / 2 + 1 / (2 * δ))
-    simpa using this
-  have hev := (tendsto_order.mp hsum).2 (η / 2) (by positivity)
-  filter_upwards [hev, self_mem_nhdsWithin] with ε hε hpos'
-  have hε0 : 0 < ε := hpos'
-  set a1 : Fn B A := fun ω a => f ε ω a - v ω a
-  set a2 : Fn B A := fun ω a => f' ε ω a - v' ω a
-  have hI1 : Integrable (LE.sq B wt a1) B.μ := hIsub _ _ (fun a => hmf ε a hε0) hmv (hIf ε hε0) hIv
-  have hI2 : Integrable (LE.sq B wt a2) B.μ := hIsub _ _ (fun a => hmf' ε a hε0) hmv' (hIf' ε hε0) hIv'
-  have hm1 : ∀ a, Measurable fun ω => a1 ω a := fun a => (hmf ε a hε0).sub (hmv a)
-  have hm2 : ∀ a, Measurable fun ω => a2 ω a := fun a => (hmf' ε a hε0).sub (hmv' a)
-  have hdec : ∀ ω, pr B wt (f ε) (f' ε) ω - pr B wt v v' ω =
-      pr B wt a1 a2 ω + pr B wt a1 v' ω + pr B wt v a2 ω := by
-    intro ω
-    simp only [pr, a1, a2, map_sub]
-    rw [← Finset.sum_sub_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun a _ => ?_
-    ring
-  have i1 := int_pr B wt hpos a1 a2 hmw hm1 hm2 hI1 hI2
-  have i2 := int_pr B wt hpos a1 v' hmw hm1 hmv' hI1 hIv'
-  have i3 := int_pr B wt hpos v a2 hmw hmv hm2 hIv hI2
-  have i4 := int_pr B wt hpos (f ε) (f' ε) hmw (fun a => hmf ε a hε0) (fun a => hmf' ε a hε0) (hIf ε hε0) (hIf' ε hε0)
-  have i5 := int_pr B wt hpos v v' hmw hmv hmv' hIv hIv'
-  rw [dist_eq_norm, ← integral_sub i4 i5]
-  simp_rw [hdec]
-  have h12 : Integrable (fun ω => pr B wt a1 a2 ω + pr B wt a1 v' ω) B.μ := i1.add i2
-  rw [integral_add h12 i3, integral_add i1 i2]
-  have b1 := norm_int_pr_le B wt hpos a1 a2 hI1 hI2 1 one_pos
-  have b2 := norm_int_pr_le B wt hpos a1 v' hI1 hIv' δ hδ
-  have b3 := norm_int_pr_le B wt hpos v a2 hIv hI2 (1/δ) (by positivity)
-  have hδV : δ * (V + V') < η := by
-    rw [hδdef, div_mul_eq_mul_div, div_lt_iff₀ (by positivity)]
-    nlinarith
-  set E1 : ℝ := ∫ ω, LE.sq B wt a1 ω ∂B.μ
-  set E2 : ℝ := ∫ ω, LE.sq B wt a2 ω ∂B.μ
-  have e3 : V / (1/δ) = δ * V := by field_simp
-  have e4 : (E1 + E2) * (1 / 2 + 1 / (2 * δ)) = (E1 / 1 + 1 * E2) / 2 + E1 / δ / 2 + 1 / δ * E2 / 2 := by
-    field_simp; ring
-  calc _ ≤ ‖∫ ω, pr B wt a1 a2 ω ∂B.μ‖ + ‖∫ ω, pr B wt a1 v' ω ∂B.μ‖ + ‖∫ ω, pr B wt v a2 ω ∂B.μ‖ :=
-        norm_add₃_le
-    _ ≤ (E1 / 1 + 1 * E2) / 2 + (E1 / δ + δ * V') / 2 + (V / (1/δ) + 1/δ * E2) / 2 := by
-        gcongr
-    _ = (E1 + E2) * (1 / 2 + 1 / (2 * δ)) + δ * (V + V') / 2 := by rw [e4, e3]; ring
-    _ < η := by linarith
+theorem pairLimit : PairLimit := LEx2.pairLimit
 
 theorem limitB : LimitB := by
   intro hA hL2 hPair hCoef hLeib hCut B N F c hInf hImp hCl Y hY
