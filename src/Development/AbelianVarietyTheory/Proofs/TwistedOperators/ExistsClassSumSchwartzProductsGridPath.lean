@@ -1,5 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PathArgsOfNotMem
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PathArgsOfNotMem
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
@@ -24,13 +29,13 @@ theorem locArg_eq_locM (B : Frames G) {t : T} {a : Arrow T} (ha : IsGridArrow D.
   · refine ⟨B.β i j, B.β (i + 1) j, fun w => ⟨Fin.cast (rank_vertex G t w (X := (i + 1, j)) ⟨hi, hj⟩),
       Fin.cast (rank_vertex G t w (X := (i, j)) ⟨hi.le, hj⟩), sur _, sur _, fun x r c => ?_⟩⟩
     have e : locArg B t w (.right i j) x = B.coord t w (X := (i, j)) (Y := (i + 1, j)) ⟨hi.le, hj⟩ ⟨hi, hj⟩
-        (x.map fun c => cpt w (toEAf D c)) := dif_pos ⟨hi, hj⟩
+        (x.map fun c => cpt w (toEAf D c)) := dite_eq_left ⟨hi, hj⟩
     rw [e]
     rfl
   · refine ⟨B.β i (j + 1), B.β i j, fun w => ⟨Fin.cast (rank_vertex G t w (X := (i, j)) ⟨hi, hj.le⟩),
       Fin.cast (rank_vertex G t w (X := (i, j + 1)) ⟨hi, hj⟩), sur _, sur _, fun x r c => ?_⟩⟩
     have e : locArg B t w (.down t i j) x = B.coord t w (X := (i, j + 1)) (Y := (i, j)) ⟨hi, hj⟩ ⟨hi, hj.le⟩
-        (x.map fun c => cpt w (toEAf D c)) := dif_pos ⟨hi, hj⟩
+        (x.map fun c => cpt w (toEAf D c)) := dite_eq_left ⟨hi, hj⟩
     rw [e]
     rfl
 
@@ -77,11 +82,10 @@ theorem exists_classSum_schwartzProducts_pathInduction {μ₀ : T} (hL : L.Is μ
       rw [Finset.sum_singleton]
       exact (one_mul _).symm⟩
   | _, .snoc a p, hg, hnd, U, K, hK1, hK2 => by
-    rw [edges_snoc] at hnd
-    obtain ⟨hnd1, -, hdis⟩ := List.nodup_append.1 hnd
-    have hnot : edgeOf a ∉ edges p := fun h => hdis _ h _ (List.mem_singleton_self _) rfl
-    have ha := hg.last
-    obtain ⟨ι₁, s₁, φa, r₁, hφa, hexp⟩ := arrow_sb B ρ hL he n ha
+    rw [edges_snoc, ← List.concat_eq_append, List.nodup_concat] at hnd
+    obtain ⟨hnot, hnd1⟩ := hnd
+    have ha : IsGridArrow D.R.m t a := hg.last
+    obtain ⟨ι₁, s₁, φa, r₁, hφa, hexp⟩ := arrow_sb B ρ hL (t := t) he n (a := a) ha (Y := ArgT G p × U)
       (fun x (z : ArgT G p × U) => K (fun w => Function.update (pathArgs B t w p z.1) (edgeOf a) (locArg B t w a x)) z.2)
       (fun x u (z : ArgT G p × U) hu => by
         have e1 : (fun w => Function.update (pathArgs B t w p z.1) (edgeOf a) (locArg B t w a (x + u))) =

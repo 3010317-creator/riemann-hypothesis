@@ -1,7 +1,11 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.BumpLat
-import Development.WeilBound.CoreStatements.LocalThetaKernels.IwasMain
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.BumpLat
+public import Development.WeilBound.CoreStatements.LocalThetaKernels.IwasMain
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
+
+@[expose] public section
 
 set_option synthInstance.maxHeartbeats 200000
 
@@ -19,7 +23,7 @@ private theorem sgE_mem_Oh_pk {y : TensorProduct F (Fv F v) E} (hy : y ∈ intLo
     change TensorProduct.tmul F (PositivityTheory.ThKH.Iwas.sg v a) (x : E) = TensorProduct.tmul F (PositivityTheory.ThKH.Iwas.sg v a * 1) (x : E)
     rw [mul_one]
   · rw [map_zero]; exact zero_mem _
-  · rw [map_add]; exact add_mem hy hz
+  · rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hy hz
   · rw [map_neg]; exact neg_mem hy
 private theorem sg_one_smul_pk {x : AE F E} (hx : At (evFin F v) x) : PositivityTheory.ThKH.Iwas.sg v 1 • x = x := by
   have h1 := hx (1 - PositivityTheory.ThKH.Iwas.sg v 1) (by rw [map_sub, map_one, ev_sg, sub_self])

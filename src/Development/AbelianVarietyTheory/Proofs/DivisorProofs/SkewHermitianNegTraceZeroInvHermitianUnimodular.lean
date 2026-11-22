@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramHspOf
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ModelLatA
-import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
-import Formalism.LocalToGlobal.IndefiniteReal.DatumLemmas
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramHspOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ModelLatA
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumLemmas
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta
 open IsDedekindDomain NumberField
@@ -109,12 +113,12 @@ theorem psi_mem_iff {M N : Matrix (Fin k) (Fin k) D.host.E} (hNM : N * M = 1)
   rw [mem_latQ, Matrix.mulVec_mulVec, hNM, Matrix.one_mulVec, star_star]
 
 theorem latQ_isLattice {M N : Matrix (Fin k) (Fin k) D.host.E} (hMN : M * N = 1) (hNM : N * M = 1)
-    (L' : Submodule (𝓞 D.host.E) (Fin k → D.host.E)) (hL' : L'.IsLattice D.host.E) :
-    (latQ D N L').IsLattice D.host.E := by
+    (L' : Submodule (𝓞 D.host.E) (Fin k → D.host.E)) (hL' : L'.IsFullLattice D.host.E) :
+    (latQ D N L').IsFullLattice D.host.E := by
   classical
   have hback : ∀ x : Fin k → D.host.E, M *ᵥ star (star (N *ᵥ x)) = x := fun x => by
     rw [star_star, Matrix.mulVec_mulVec, hMN, Matrix.one_mulVec]
-  refine ⟨?_, ?_⟩
+  refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E ?_, span_eq_top := ?_ }
   · obtain ⟨s, hs⟩ := hL'.fg
     refine ⟨s.image (fun a => M *ᵥ star a), le_antisymm ?_ ?_⟩
     · rw [Submodule.span_le]
@@ -165,8 +169,8 @@ theorem latQ_isLattice {M N : Matrix (Fin k) (Fin k) D.host.E} (hMN : M * N = 1)
     rwa [hback] at this
 
 theorem localLattice_isLattice (hP : FactPrincipalDatum) (Λ : Submodule (𝓞 D.host.E) (Fin k → D.host.E))
-    (hΛ : Λ.IsLattice D.host.E) : (lattice₂ D Λ).IsLattice D.host.E := by
-  refine ⟨localLattice_fg D Λ hΛ.fg, ?_⟩
+    (hΛ : Λ.IsFullLattice D.host.E) : (lattice₂ D Λ).IsFullLattice D.host.E := by
+  refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (localLattice_fg D Λ hΛ.fg), span_eq_top := ?_ }
   have h0 : (D.host.AA⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) ≠ 0 :=
     inv_ne_zero (Formalism.L2.Pj.AA_ne_zero hP D)
   obtain ⟨b, hb, hb0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
@@ -199,7 +203,7 @@ theorem det_J_ne_zero_skew (hY : Y.IsSkew D.sp.cm.sig B r s) : Y.J.det ≠ 0 := 
   rw [Matrix.det_smul, hm, h0, map_zero, mul_zero]
 
 theorem skew_to_herm (hY : Y.IsSkew D.sp.cm.sig B r s) :
-    IsUnit Y.J.det ∧ ∃ L : Submodule (𝓞 D.host.E) (Fin d → D.host.E), L.IsLattice D.host.E ∧
+    IsUnit Y.J.det ∧ ∃ L : Submodule (𝓞 D.host.E) (Fin d → D.host.E), L.IsFullLattice D.host.E ∧
       (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)).IsSymm ∧
       (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)).Nondegenerate ∧
       Formalism.HermitianLatticesTheory.IsUnimodular (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)) L := by
@@ -309,7 +313,7 @@ end
 
 theorem GlobalTheory.WeilSchrodingerSkew.main : ∀ (D : D7) (B : Base D.host.F D.host.E), B.IsGood D.sp.cm.sig →
     ∀ (d : ℕ) (Y : Spc D.host.F D.host.E d) (r s : ℕ), Y.IsSkew D.sp.cm.sig B r s →
-      IsUnit Y.J.det ∧ ∃ L : Submodule (𝓞 D.host.E) (Fin d → D.host.E), L.IsLattice D.host.E ∧
+      IsUnit Y.J.det ∧ ∃ L : Submodule (𝓞 D.host.E) (Fin d → D.host.E), L.IsFullLattice D.host.E ∧
         (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)).IsSymm ∧
         (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)).Nondegenerate ∧
         Formalism.HermitianLatticesTheory.IsUnimodular (GlobalTheory.WeilSchrodinger.sesq D (-D.host.xi0 • Y.J⁻¹)) L :=

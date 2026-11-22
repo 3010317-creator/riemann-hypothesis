@@ -1,5 +1,11 @@
-import Mathlib
-import GroundTheory.Brauer.BaseChangeCSA
+module
+
+public import Mathlib
+public import GroundTheory.Brauer.BaseChangeCSA
+
+@[expose] public section
+
+local notation "DistribMulAction.toLinearMap" => DistribSMul.toLinearMap
 
 set_option autoImplicit false
 noncomputable section
@@ -13,7 +19,8 @@ private lemma trace_restrictScalars_rat {F W : Type} [Field F] [NumberField F] [
   classical
   let b := Module.finBasis ℚ F
   let d := Module.finBasis F W
-  rw [LinearMap.trace_eq_matrix_trace ℚ (b.smulTower d), LinearMap.trace_eq_matrix_trace F d,
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [LinearMap.trace_eq_matrix_trace ℚ (b.smulTower d), LinearMap.trace_eq_matrix_trace F d,
     Matrix.trace, Matrix.trace, map_sum, Fintype.sum_prod_type, Finset.sum_comm]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [Algebra.trace_eq_matrix_trace b, Matrix.trace]
@@ -73,7 +80,7 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
       rw [TensorProduct.comm_tmul]
       simp only [G, H, Algebra.TensorProduct.lift_tmul, AlgHom.restrictScalars_apply, ι, Algebra.ofId_apply]
       exact Algebra.commutes z _
-    | add x y hx hy => simp [map_add, hx, hy]
+    | add x y hx hy => simp [map_add (f := _), hx, hy]
   have hG : Function.Injective G := by
     intro x y hxy
     rw [hGH, hGH] at hxy
@@ -99,7 +106,7 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
       simp only [G, Algebra.TensorProduct.lift_tmul, ι, Algebra.ofId_apply, LinearMap.mulLeft_apply]
       show algebraMap ℂ _ z * φ (c * a) = φ c * (algebraMap ℂ _ z * φ a)
       rw [map_mul, ← mul_assoc, ← mul_assoc, Algebra.commutes z (φ c)]
-    | add x y hx hy => simp [map_add, hx, hy, mul_add]
+    | add x y hx hy => simp [map_add (f := _), hx, hy, mul_add]
   rw [← trace_mulLeft_matrix, ← hconj, LinearMap.trace_conj', LinearMap.trace_baseChange]
   rfl
 
@@ -171,8 +178,8 @@ private lemma trace_mul_finrank_eq_finrank_mul_trace {A M : Type} [Ring A] [Alge
   push_cast
   ring
 
-set_option autoImplicit false in
 
+set_option autoImplicit false in
 theorem _root_.GlobalTheory.QTrace.q_trace : ∀ {F A V : Type} [Field F] [NumberField F] [Ring A] [Algebra F A] [FiniteDimensional F A] [Algebra.IsCentral F A]
     [IsSimpleRing A] [AddCommGroup V] [Module ℚ V] [FiniteDimensional ℚ V] (n : ℕ), Module.finrank F A = n ^ 2 →
     ∀ (ρ : A →+* Module.End ℚ V) (ψ : (F →+* ℂ) → (A →+* Matrix (Fin n) (Fin n) ℂ)),

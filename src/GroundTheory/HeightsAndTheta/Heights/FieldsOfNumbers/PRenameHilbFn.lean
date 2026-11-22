@@ -1,6 +1,11 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.StatementsRename
-import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.IntNumRelabel
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.StatementsRename
+public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.IntNumRelabel
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.FieldNumbers
@@ -25,7 +30,7 @@ theorem RenameHilbFn.proof : RenameHilbFn.Statement.{u} := by
   rw [h]
   congr 1
   funext s
-  simp
+  simp [Function.comp_def]
 
 end
 

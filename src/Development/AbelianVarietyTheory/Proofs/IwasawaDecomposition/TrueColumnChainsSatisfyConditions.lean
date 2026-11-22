@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExtUHInjective
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteOrbitsOfFiniteFibres
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.YsAtFiniteNonempty
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepAtZeroFree
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevQFiniteIndexAndRoot
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExtUHInjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteOrbitsOfFiniteFibres
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.YsAtFiniteNonempty
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepAtZeroFree
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevQFiniteIndexAndRoot
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
+
+@[expose] public section
 
 noncomputable section
 
@@ -45,7 +49,7 @@ theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.unrepresented_step_conditions (h :
       exact ⟨m, hm, hk g⟩
     · exact (LevFin.levQ_finiteIndex_and_root I.Ch I.sel (I.tup a) (I.cst a) (I.idx a) I.glob (B.R.m - 2) hX hPr
         (h.idx_ok a) i (hb.1 rfl) b P).2 g
-  · exact fun N hN => (CosetFin.ysAt_finite_nonempty B.R I.sel (I.tup a) (I.cst a) i N hN).1
+  · exact fun N hN => (CosetFin.ysAt_finite_nonempty B.R I.sel (I.tup a) (I.cst a) i N hN.toIsLattice).1
 
 theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.stp_ok (h : I.Ok) (u : B.Word) (a : I.ι) (i : ℕ) : (I.stp u a i).Ok := (h.unrepresented_step_conditions u a i).reRep _
 
@@ -53,19 +57,23 @@ theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.stp_zero_free (h : I.Ok) (u : B.Wo
   GStep.Free.reRep (stepAt_zero_free I.Ch I.sel (I.tup a) (I.cst a) (I.idx a) (I.Tp a) u (base_fields_primes_ok B X).1
     (base_fields_primes_ok B X).2.1 (base_fields_primes_ok B X).2.2.2.2 (h.idx_ok a).zero_G) _
 
-theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.chIn_ok (h : I.Ok) (u : B.Word) (a : I.ι) : (I.chIn u a).Ok where
-  step i := h.stp_ok u a i
-  rho_norm i _ c := by
+theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.chIn_ok (h : I.Ok) (u : B.Word) (a : I.ι) : (I.chIn u a).Ok := by
+  refine
+    { step := h.stp_ok u a
+      rho_norm := ?_
+      rho'_norm := ?_
+      DG_pos := DGam_pos (posStar_of_ok (base_fields_primes_ok B X).1) B.R
+      dvd_DG := ?_ }
+  · intro i _ c
     show ‖((rhoAt I.SQ I.C (I.xi a) i _ : ℂˣ) : ℂ)‖ = 1
     exact norm_rhoAt I.SQ I.C (h.xi_unitary a) i _
-  rho'_norm i _ c := by
+  · intro i _ c
     show ‖((rhoAt' I.SQ I.C (I.xi a) i _ : ℂˣ) : ℂ)‖ = 1
     exact norm_rhoAt' I.SQ I.C (h.xi_unitary a) i _
-  DG_pos := DGam_pos (posStar_of_ok (base_fields_primes_ok B X).1) B.R
-  dvd_DG i hi c := by
+  · intro i hi c
     rcases Nat.eq_zero_or_pos i with rfl | hpos
     · have hf := h.stp_zero_free u a
-      haveI : Subsingleton ((I.stp u a 0).Stab c) :=
+      have : Subsingleton ((I.stp u a 0).Stab c) :=
         ⟨fun x y => Subtype.ext ((hf c.1 x.1 _ x.2).trans (hf c.1 y.1 _ y.2).symm)⟩
       rw [Nat.card_unique]
       exact one_dvd _
@@ -77,7 +85,7 @@ theorem _root_.GlobalTheory.Mem.Col2.ColIn.Ok.idx0 (h : I.Ok) (a : I.ι) : Nonem
 
 theorem rep_L_lattice (u : B.Word) (a : I.ι) (i : ℕ) (c : (I.stp u a i).Cl) :
     Submodule.IsLattice B.fields.E ((I.stp u a i).rep c).1.1.deco.1.L :=
-  ((I.stp u a i).rep c).1.1.deco.2.L_lattice
+  ((I.stp u a i).rep c).1.1.deco.2.L_lattice.toIsLattice
 
 theorem ok_chains : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ u a, (I.chIn u a).Ok ∧ Nonempty (Idx I.sel (I.tup a) (I.idx a) 0) ∧ ∀ i c, Submodule.IsLattice B.fields.E ((I.stp u a i).rep c).1.1.deco.1.L :=
   fun _ h u a => ⟨h.chIn_ok u a, h.idx0 a, fun i c => rep_L_lattice u a i c⟩

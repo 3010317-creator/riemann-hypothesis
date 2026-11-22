@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+
+@[expose] public section
 
 noncomputable section
 
@@ -17,7 +21,7 @@ theorem exists_proj {K M : Type} [Field K] [AddCommGroup M] [Module K M] (U : Su
     ∃ Q : M →ₗ[K] M, (∀ x ∈ U, Q x = 0) ∧ ∀ x, x - Q x ∈ U := by
   obtain ⟨W, hW⟩ := U.exists_isCompl
   refine ⟨LinearMap.id - U.subtype ∘ₗ U.projectionOnto W hW, fun x hx => ?_, fun x => ?_⟩
-  · have := Submodule.linearProjOfIsCompl_apply_left hW ⟨x, hx⟩
+  · have := Submodule.projectionOnto_apply_left hW ⟨x, hx⟩
     simp [this]
   · simp
 
@@ -32,22 +36,18 @@ theorem exists_lattice {O K : Type} [CommRing O] [Field K] [Algebra O K] {n : �
   refine ⟨Q, Λ ⊔ Submodule.span O (Set.range fun j : Fin n => Q (Pi.single j 1)), ⟨?_, ?_⟩, le_sup_left,
     fun x hx => h1 x (Submodule.subset_span hx), fun x hx h0 => ?_⟩
   · exact h.sup (Submodule.fg_span (Set.finite_range _))
-  · rw [eq_top_iff, ← (Pi.basisFun K (Fin n)).span_eq, Submodule.span_le]
-    rintro _ ⟨j, rfl⟩
-    rw [Pi.basisFun_apply, ← sub_add_cancel (Pi.single j 1 : Fin n → K) (Q (Pi.single j 1))]
-    refine add_mem (Submodule.span_mono ?_ (h2 _)) (Submodule.subset_span ?_)
-    · exact fun y hy => Submodule.mem_sup_left hy
-    · exact Submodule.mem_sup_right (Submodule.subset_span ⟨j, rfl⟩)
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
   · obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.1 hx
     have h4 : Q b = b := by
       refine Submodule.span_induction (p := fun b _ => Q b = b) ?_ (map_zero Q) ?_ ?_ hb
       · rintro _ ⟨j, rfl⟩
         exact h3 _
       · intro x y _ _ hx hy
-        rw [map_add, hx, hy]
+        rw [map_add (f := _), hx, hy]
       · intro c x _ hx
         rw [← algebraMap_smul K c x, map_smul, hx]
-    rw [map_add, h1 a (Submodule.subset_span ha), h4, zero_add] at h0
+    rw [map_add (f := _), h1 a (Submodule.subset_span ha), h4, zero_add] at h0
     rwa [h0, add_zero]
 
 theorem map_mulVec_gen {K A : Type} [CommRing K] [CommRing A] (f : K →+* A) {n : ℕ}

@@ -1,5 +1,9 @@
-import CompanionTheory.AutomorphicTheory.ZuckermanCommutation.ZuckermanFunctors.MultOne
-import CompanionTheory.AutomorphicTheory.SchurLimitBounds.SchurOrthogonality.SchurH
+module
+
+public import CompanionTheory.AutomorphicTheory.ZuckermanCommutation.ZuckermanFunctors.MultOne
+public import CompanionTheory.AutomorphicTheory.SchurLimitBounds.SchurOrthogonality.SchurH
+
+@[expose] public section
 
 open Matrix Finset
 open scoped Kronecker
@@ -231,7 +235,7 @@ theorem decV (S : Steps) (Lb : Lib t) (hk : 1 ≤ k) (b : Bool) {μ : Fin (2 * r
     intro f g hf hg'
     obtain ⟨α, β, hab, h0⟩ := m1 _ _ ((he f).1 hf) ((he g).1 hg')
     refine ⟨α, β, hab, e.map_eq_zero_iff.1 ?_⟩
-    rw [map_add, map_smul, map_smul, h0]
+    rw [map_add (f := _), map_smul, map_smul, h0]
 
 theorem decW (S : Steps) (Lb : Lib t) (hk : 1 ≤ k) : ∀ (l : ℕ) {μ : Fin (2 * r + k + 1) → ℝ} {U : URep k r} {h : ℝ},
     U.R.IsDS ε μ → GapAtLeast ε μ h → t _ ε + (((2 * r + k + 1) ^ 2 + 2 : ℕ) : ℝ) + 1 + l < h →
@@ -263,8 +267,12 @@ theorem decW (S : Steps) (Lb : Lib t) (hk : 1 ≤ k) : ∀ (l : ℕ) {μ : Fin (
     rw [Nat.cast_succ m] at ht hD
     let P := {ν : Fin (2 * r + k + 1) → ℝ // IsHCParam ν ∧ GapAtLeast ε ν (h - ((m + 1 : ℕ) : ℝ))}
     have hex : ∀ ν : P, ∃ V : URep k r, V.R.IsDS ε ν.1 := fun ν => by
-      obtain ⟨R', hR'⟩ := Lb.exist k r ε μ ν.1 U.R _ hU ν.2.1 ν.2.2 (by push_cast; linarith)
-      exact ⟨mkU R' hR', hR'⟩
+      have ht' : t _ ε < h - ((m + 1 : ℕ) : ℝ) := by
+        push_cast
+        linarith
+      have hRep : ∃ R' : Rep k r, R'.IsDS ε ν.1 :=
+        Lb.exist k r ε μ ν.1 U.R (h - ((m + 1 : ℕ) : ℝ)) hU ν.2.1 ν.2.2 ht'
+      exact hRep.elim fun R' hR' => ⟨mkU R' hR', hR'⟩
     choose V hV using hex
     have nr : ∀ {ν : Fin (2 * r + k + 1) → ℝ}, (∀ a, ∃ x : ℕ, x ≤ m + 1 ∧ ν a = μ a + x) →
         IsHCParam ν ∧ GapAtLeast ε ν (h - ((m + 1 : ℕ) : ℝ)) := fun hx =>
@@ -284,13 +292,18 @@ theorem decW (S : Steps) (Lb : Lib t) (hk : 1 ≤ k) : ∀ (l : ℕ) {μ : Fin (
           add_le_add (ind_le p.1 a) (by split_ifs <;> simp), by simp [addSet, Pi.single_apply, add_assoc]⟩⟩
     let e : Sub (2 * r + k + 1) (m + 1) → P := fun I => ⟨addSet μ I.1, nr fun a => ⟨_, ind_le I a, by simp [addSet]⟩⟩
     have cs := fun ν : P => (S.casDS S.infChar k r ε _ (V ν) hk (hV ν) (triv k r)).2
-    obtain ⟨hd1, hd2⟩ := S.decTens k r (wedge k r m) (vr k r false) U (S.okWedge k r m) (S.okVr k r false)
-    obtain ⟨io₁, pr₁, D₁, e₁⟩ := hd1 _ _ (fun J => V (pJ J)) (fun p => V (par p)) (fun J => (casG (pJ J).1 : ℂ))
+    have hDecTens := S.decTens
+    unfold DecTens at hDecTens
+    have hTensor := hDecTens k r (wedge k r m) (vr k r false) U (S.okWedge k r m) (S.okVr k r false)
+    rcases hTensor with ⟨hd1, hd2⟩
+    obtain ⟨io₁, pr₁, D₁, e₁⟩ := hd1 (Sub (2 * r + k + 1) m) (Fin (2 * r + k + 1))
+      (fun J => V (pJ J)) (fun p => V (par p)) (fun J => (casG (pJ J).1 : ℂ))
       (decW S Lb hk m hU hg (by linarith) (fun a c hac => by linarith [hD a c hac]) _ fun J => hV (pJ J))
       (fun J => decV S Lb hk false (hV (pJ J)) (near hU.1 hg hD m (by linarith) (hJ J)).2.1 (by linarith) _
         fun s => hV (par (J, s)))
       fun J => cs (pJ J)
-    obtain ⟨io₂, pr₂, D₂, e₂⟩ := hd2 _ _ (fun s => V (ps s)) (fun p => V (par p)) (fun s => (casG (ps s).1 : ℂ))
+    obtain ⟨io₂, pr₂, D₂, e₂⟩ := hd2 (Sub (2 * r + k + 1) m) (Fin (2 * r + k + 1))
+      (fun s => V (ps s)) (fun p => V (par p)) (fun s => (casG (ps s).1 : ℂ))
       (decV S Lb hk false hU hg (by linarith) _ fun s => hV (ps s))
       (fun s => decW S Lb hk m (hV (ps s)) (gap_shift hg false s) (by linarith)
         (fun a c hac => by

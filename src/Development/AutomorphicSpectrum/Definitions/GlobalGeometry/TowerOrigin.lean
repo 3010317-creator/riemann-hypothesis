@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Proportional
-import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Proportional
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+
+@[expose] public section
 
 noncomputable section
 
@@ -64,7 +68,7 @@ structure RootOrigin (Y : Model Xo c β) (S : Finset ℕ) (RM : Top.RootModel (C
 
   g : Fx.Ωf →+* RM.Ω
   g_over : 𝔐.ξ ≫ 𝔐.f = spMap g ≫ Fx.ξf
-  g_flag : ∀ s i, (𝔐.M.pt (Fl.b s i)).left ≫ 𝔐.m.φ = spMap (dualMap g) ≫ (Fx.Mf.pt (Fx.bf s i)).left
+  g_flag : ∀ s i, (𝔐.M.pt (Fl.b s i)).left ≫ 𝔐.m.φ = spMap (_root_.GlobalTheory.CompanionTheory.Ar.dualMap g) ≫ (Fx.Mf.pt (Fx.bf s i)).left
   g_deg : letI := g.toAlgebra; Module.finrank Fx.Ωf RM.Ω = Fl.deg
   g_const : ∀ a : Fx.Ωf, IsAlgebraic ℤ a → g a ∈ 𝔐.cst.range
   δ_eq : RM.δ = Module.finrank ℚ c.F * Fl.deg

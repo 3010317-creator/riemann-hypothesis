@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.TestFacts
+module
+
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.TestFacts
+
+@[expose] public section
 
 set_option backward.isDefEq.respectTransparency false
 
@@ -11,8 +15,6 @@ namespace UpperTheory.Ru.crystallineComparison
 section Factor
 
 variable {R : Type} [CommRing R] {e : R}
-
-local notation "Q" e:max => Ideal.Quotient.mk (Ideal.span {1 - e})
 
 private theorem mk_eq_iff (he : IsIdempotentElem e) (a b : R) :
     (Q e) a = (Q e) b ↔ e * a = e * b := by
@@ -112,13 +114,13 @@ private theorem val_quot (he : IsIdempotentElem e) {π : R}
   obtain ⟨d, rfl⟩ := Ideal.Quotient.mk_surjective d'
   have hE : e * (c * a + d * b) = e * π ^ N := by
     rw [← mk_eq_iff he]
-    simpa only [map_add, map_mul, map_pow] using hcd
+    simpa only [map_add (f := _), map_mul, map_pow] using hcd
   obtain ⟨u, hu, h1, h2⟩ := h (a * e + (1 - e)) (b * e) ⟨N, Ideal.mem_span_pair.2
     ⟨c * e + π ^ N * (1 - e), d, by
       linear_combination hE + (c * a - c - π ^ N * a + π ^ N) * he.eq⟩⟩
   have hm : (Q e) (1 - e) = 0 := by rw [map_sub, map_one, mk_self he, sub_self]
   have ha : (Q e) (a * e + (1 - e)) = (Q e) a := by
-    rw [map_add, map_mul, mk_self he, hm, mul_one, add_zero]
+    rw [map_add (f := _), map_mul, mk_self he, hm, mul_one, add_zero]
   have hb : (Q e) (b * e) = (Q e) b := by rw [map_mul, mk_self he, mul_one]
   rw [Ideal.mem_span_singleton] at h1 h2
   refine ⟨(Q e) u, ?_, ?_, ?_⟩

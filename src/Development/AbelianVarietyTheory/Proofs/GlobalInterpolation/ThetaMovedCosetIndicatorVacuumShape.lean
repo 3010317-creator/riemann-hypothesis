@@ -1,9 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDualStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRationalStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFactsStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AddSubgroupRepsExistenceCardSum
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRationalStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AddSubgroupRepsExistenceCardSum
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker Formalism.L2.Th1.H GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable GlobalTheory.MomT
 
 noncomputable section
@@ -165,7 +170,7 @@ variable {X : Fields} (A : Amb X) {a b : ℕ}
 theorem embH_injective (hδ : A.δ ≠ 0) (hT : Nonempty X.Tau) :
     Function.Injective (embH (a := a) (b := b) (X.embC A.σ₀) A.δ) := by
   obtain ⟨τ⟩ := hT
-  rw [injective_iff_map_eq_zero]
+  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro x hx
   apply LinearMap.pi_ext'
   intro j
@@ -190,8 +195,8 @@ theorem loc_index_ne_zero (hFG : A.AA.FG) (hAA : A.AA ≠ ⊥) {N L : Submodule 
 
 theorem volC_pos (hFG : A.AA.FG) (hAA : A.AA ≠ ⊥) (S : Finset (HeightOneSpectrum (𝓞 X.E))) {N : Submodule (𝓞 X.E) (Sp X.E a)}
     {N' : Submodule (𝓞 X.E) (Sp X.E b)} (hN : IsSdLat N) (hN' : IsSdLat N') : 0 < volC A.AA S N N' := by
-  have s1 : IsSdLat (Formalism.L2.Col.stdLat X.E a) := ⟨stdLat_lattice, stdLat_unimodular⟩
-  have s2 : IsSdLat (Formalism.L2.Col.stdLat X.E b) := ⟨stdLat_lattice, stdLat_unimodular⟩
+  have s1 : IsSdLat (Formalism.L2.Col.stdLat X.E a) := ⟨stdLat_fullLattice, stdLat_unimodular⟩
+  have s2 : IsSdLat (Formalism.L2.Col.stdLat X.E b) := ⟨stdLat_fullLattice, stdLat_unimodular⟩
   refine Finset.prod_pos fun P _ => div_pos ?_ ?_
   · exact Nat.cast_pos.2 (Nat.pos_of_ne_zero (loc_index_ne_zero A hFG hAA hN hN' s1 s2 P))
   · exact Nat.cast_pos.2 (Nat.pos_of_ne_zero (loc_index_ne_zero A hFG hAA s1 s2 hN hN' P))
@@ -352,7 +357,7 @@ theorem thInd_shape : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Finset (Heig
       · rfl
       · rintro _ ⟨y, hy, rfl⟩ _ ⟨l, hl, rfl⟩ ⟨l', hl', e⟩
         obtain rfl := hinj e
-        rw [← map_add]
+        rw [← map_add (f := _)]
         exact congrFun (hinv y hy l' hl hl') z
     rw [e1, Finset.mul_sum, xiS, sumU]
     refine Finset.sum_congr rfl fun v hv => ?_

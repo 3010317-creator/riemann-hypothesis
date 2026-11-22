@@ -1,6 +1,15 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JBConjTranspose
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutingHermitianSimultaneousDiag
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAdmOnOfFiniteDimensional
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdmissibleOfIwasawaDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDensityOfImmersion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapMemKfin
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutingHermitianSimultaneousDiag
+
+@[expose] public section
 
 open Matrix Finset GlobalTheory.OpTrace GlobalTheory.AutomorphicL2Unitary GlobalTheory.LinRed GlobalTheory.CompanionTheory.GLK
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.RealD
@@ -118,7 +127,7 @@ theorem exists_skew_exp_eq (n : ℕ) (k : Matrix.unitaryGroup (Fin n) ℂ) :
     rw [e2] at e
     have e3 : ((expG (V * Matrix.diagonal w * Vᴴ) 1 : G n) : Mat n) =
         NormedSpace.exp (V * Matrix.diagonal w * Vᴴ) := by
-      simp
+      simp [expG]
     rw [e3]
     exact hk.trans e.symm
 

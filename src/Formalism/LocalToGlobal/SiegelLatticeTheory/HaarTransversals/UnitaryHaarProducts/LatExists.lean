@@ -1,15 +1,19 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDefs
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsSat
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDiff
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.AdjointActionReduction
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.FrameReduction
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TameSurjectivity.RecUnram
-import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsVecOfHermRep
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassLand
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDefs
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsSat
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDiff
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.AdjointActionReduction
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.FrameReduction
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TameSurjectivity.RecUnram
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsVecOfHermRep
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassLand
+
+@[expose] public section
 
 noncomputable section
 
@@ -25,7 +29,7 @@ def PrimesInClasses : Prop :=
 
 def SatBasis : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : HSpace E) (Λ : Submodule (𝓞 E) S.V),
-    Submodule.IsLattice E Λ → ∀ (n : ℕ) (w : Fin (n + 1) → S.V), LinearIndependent E w →
+    Submodule.IsFullLattice E Λ → ∀ (n : ℕ) (w : Fin (n + 1) → S.V), LinearIndependent E w →
     ∀ a : Fin n → FractionalIdeal (nonZeroDivisors (𝓞 E)) E, (∀ i, a i ≠ 0) →
     ∃ (e : Fin (n + 1) → S.V) (c : FractionalIdeal (nonZeroDivisors (𝓞 E)) E),
       LinearIndependent E e ∧ Submodule.span E (Set.range e) = Submodule.span E (Set.range w) ∧ c ≠ 0 ∧
@@ -138,9 +142,11 @@ theorem decomp {r : ℕ} (e f : Fin r → S.V) (hee : ∀ a b, S.hT (e a) (e b) 
       S.hT (f b) (y - ∑ a, S.hT (f a) y • e a - ∑ a, S.hT (e a) y • f a) = 0 := by
   have hfe := hfe_of hef
   constructor
-  · simp only [map_sub, map_sum, map_smul, hee, hef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
+  set_option synthInstance.maxHeartbeats 100000 in
+    · simp only [map_sub, map_sum, map_smul, hee, hef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
       mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
-  · simp only [map_sub, map_sum, map_smul, hff, hfe, smul_eq_mul, mul_zero, Finset.sum_const_zero,
+  set_option synthInstance.maxHeartbeats 100000 in
+    · simp only [map_sub, map_sum, map_smul, hff, hfe, smul_eq_mul, mul_zero, Finset.sum_const_zero,
       mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
 
 theorem key_split (Λ : Submodule (𝓞 E) S.V) {r : ℕ} (e f : Fin r → S.V)
@@ -213,7 +219,8 @@ theorem zero_of_dual {r : ℕ} {e f : Fin r → S.V} (hfe : ∀ a b, S.hT (f a) 
   have ht : ∀ b, t b = 0 := by
     intro b
     have h := h0 b
-    simp only [map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
       Finset.mem_univ, if_true] at h
     exact h
   simp [ht]
@@ -293,7 +300,8 @@ theorem genFrame_holds : GenFrame := by
     intro b y hy
     have hy' : y ∈ latSpan c e := by rw [← hX]; exact hy
     obtain ⟨x, hx, rfl⟩ := (mem_latSpan c e y).1 hy'
-    simp only [map_sum, map_smul, hcf, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, hcf, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
       Finset.mem_univ, if_true]
     exact hx b
   have hw := fun b : Fin n =>
@@ -366,13 +374,16 @@ theorem genFrame_holds : GenFrame := by
   refine ⟨fun b => f0 b + ∑ k, cc k b • e k, ?_, ?_, ?_⟩
   · intro a b
     have h := hsum a b
-    simp [map_sum, hf0e, hef0, hiso, Finset.sum_ite_eq', starRingEnd_apply]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp [map_sum, hf0e, hef0, hiso, Finset.sum_ite_eq', starRingEnd_apply]
     linear_combination h
   · intro a b
-    simp [map_sum, hiso, hef0]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp [map_sum, hiso, hef0]
   · intro b y hy
     have hexp : S.hT (f0 b + ∑ k, cc k b • e k) y = S.hT (f0 b) y + ∑ k, star (cc k b) * S.hT (e k) y := by
-      simp [map_sum, starRingEnd_apply]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp [map_sum, starRingEnd_apply]
     rw [hexp]
     exact PI.SRW.fi_add (hf0Λ b y hy) (fi_sum _ (fun k => hterm k b y hy))
 
@@ -457,13 +468,13 @@ theorem hypRep_holds : HypRep := by
     rw [this]; exact P.sub_mem hb ha'
   let x : 𝓞 E := a + y * s0
   have hxPb : σ x ∈ P := by
-    have : σ x = σ a + y * σ s0 := by simp only [x, map_add, map_mul, hyσ]
+    have : σ x = σ a + y * σ s0 := by simp only [x, map_add (f := _), map_mul, hyσ]
     rw [this]; exact P.add_mem ha' (P.mul_mem_right _ hyP)
   have hx1 : x - 1 ∈ P := by
     have : x - 1 = y * s0 - b := by simp only [x]; rw [← hab]; ring
     rw [this]; exact P.sub_mem (P.mul_mem_right _ hyP) hb
   have hxt : x + σ x = 1 := by
-    have : x + σ x = (a + σ a) + y * (s0 + σ s0) := by simp only [x, map_add, map_mul, hyσ]; ring
+    have : x + σ x = (a + σ a) + y * (s0 + σ s0) := by simp only [x, map_add (f := _), map_mul, hyσ]; ring
     rw [this, hs0']; simp only [y]; ring
   have hxtE : (x : E) + star (x : E) = 1 := by
     have := congrArg (fun o : 𝓞 E => (o : E)) hxt
@@ -509,19 +520,19 @@ theorem hypRep_holds : HypRep := by
     simp only [β, s, map_mul, map_neg, map_natCast]
     rw [show (algebraMap (𝓞 E) E) (σ o) = star (o : E) from rfl, div_mul_eq_mul_div, eq_div_iff hsα]
     linear_combination ((T : ℕ) : E) * h2
-  · simp only [map_add, LinearMap.add_apply, hsmulL, map_smul, smul_eq_mul, hee, hff, hef, hfe]
+  · simp only [map_add (f := _), LinearMap.add_apply, hsmulL, map_smul, smul_eq_mul, hee, hff, hef, hfe]
     simp only [β, s, star_div₀, star_mul', star_neg, star_natCast, star_star]
     field_simp
     linear_combination (-(T : E) * star α * α) * hxtE
   · intro γ hγ
     have hA : γ * α ∈ c := by
       have h1 := hfc _ hγ
-      simp only [map_add, map_smul, smul_eq_mul, hfe, hff] at h1
+      simp only [map_add (f := _), map_smul, smul_eq_mul, hfe, hff] at h1
       simpa [mul_comm] using h1
     have hB : ∃ o : 𝓞 E, (o : E) = γ * s := by
       obtain ⟨o, ho⟩ := PI.SRW.pair_int S hU hγ (hce α hαc)
       refine ⟨o, (show (o : E) = S.hT (α • e) (γ • (α • e + β • f)) from ho).trans ?_⟩
-      simp only [hsmulL, map_add, map_smul, smul_eq_mul, hee, hef, β]
+      simp only [hsmulL, map_add (f := _), map_smul, smul_eq_mul, hee, hef, β]
       field_simp
       ring
     have hC : ∀ p ∈ P, ∃ o : 𝓞 E, (o : E) = (p : E) * γ := by
@@ -686,9 +697,11 @@ theorem posFrameSig (S : HSpace E) (σ : E →+* ℂ)
     have h3 : σ (S.hT y y) = star z ⬝ᵥ G.mulVec z := by
       have := LinearMap.sum_repr_mul_repr_mulₛₗ S.frame S.frame (B := S.hT) y y
       rw [← this, Finsupp.sum_fintype _ _ (by intro i; simp)]
-      simp only [dotProduct, Matrix.mulVec, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [dotProduct, Matrix.mulVec, map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
-      rw [Finsupp.sum_fintype _ _ (by intro j; simp), map_sum, Finset.mul_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [Finsupp.sum_fintype _ _ (by intro j; simp), map_sum, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       simp only [smul_eq_mul, map_mul, RingHom.id_apply, hG, hz, Matrix.map_apply, HSpace.gram, Pi.star_apply]
       rw [starRingEnd_apply, hσ]
@@ -720,7 +733,8 @@ theorem totPosDef_of_sig (S : HSpace E) (hσ : ∀ (σ : E →+* ℂ) a, σ (sta
     rw [← hU, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec] at this
     exact this
   obtain ⟨i, hi⟩ := Function.ne_iff.1 hYz
-  have hpos : 0 < ‖(Y.mulVec fun j => σ (S.frame.repr x j)) i‖ ^ 2 := by positivity
+  have hpos : 0 < ‖(Y.mulVec fun j => σ (S.frame.repr x j)) i‖ ^ 2 := by
+    exact pow_pos (norm_pos_iff.mpr hi) _
   calc (0 : ℝ) < ‖(Y.mulVec fun j => σ (S.frame.repr x j)) i‖ ^ 2 := hpos
     _ ≤ ∑ k, ‖(Y.mulVec fun j => σ (S.frame.repr x j)) k‖ ^ 2 :=
       Finset.single_le_sum (f := fun k => ‖(Y.mulVec fun j => σ (S.frame.repr x j)) k‖ ^ 2)
@@ -774,18 +788,18 @@ theorem isoW_holds : IsoW D := by
   refine ⟨D.sp.zm + D.sp.iXY 0 y, ?_, ?_, fun i => ⟨?_, ?_⟩⟩
   · intro h0
     have h4 : (VS D).hT D.sp.zm (D.sp.zm + D.sp.iXY 0 y) = 0 := by rw [h0, map_zero]
-    rw [map_add, D.sp.zm_norm, h3, add_zero, neg_eq_zero] at h4
+    rw [map_add (f := _), D.sp.zm_norm, h3, add_zero, neg_eq_zero] at h4
     exact hT0 h4
   · have h5 := hiso y y
-    simp only [map_add, LinearMap.add_apply]
+    simp only [map_add (f := _), LinearMap.add_apply]
     rw [D.sp.zm_norm, h2, h3, h5, hy]
     ring
   · have h6 : (VS D).hT (D.sp.hypE i) D.sp.zm = 0 := by rw [← hconj, (D.sp.hyp_orthz i).1, star_zero]
     have h7 : (VS D).hT (D.sp.hypE i) (D.sp.iXY 0 y) = 0 := by rw [← hconj, (D.sp.hyp_orthX i y).1, star_zero]
-    rw [map_add, h6, h7, add_zero]
+    rw [map_add (f := _), h6, h7, add_zero]
   · have h6 : (VS D).hT (D.sp.hypF i) D.sp.zm = 0 := by rw [← hconj, (D.sp.hyp_orthz i).2, star_zero]
     have h7 : (VS D).hT (D.sp.hypF i) (D.sp.iXY 0 y) = 0 := by rw [← hconj, (D.sp.hyp_orthX i y).2, star_zero]
-    rw [map_add, h6, h7, add_zero]
+    rw [map_add (f := _), h6, h7, add_zero]
 
 theorem ddG_of (hSD : LatEx.SplitDiff) : DdG D := by
   intro P hP
@@ -881,7 +895,8 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
     have hc : ∀ j : Fin D.R.rS, g (Fin.castSucc j) = 0 := by
       intro j
       have h1 := congrArg ((VS D).hT (D.sp.hypF j)) hg
-      rw [map_sum, map_zero, Fin.sum_univ_castSucc] at h1
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum, map_zero, Fin.sum_univ_castSucc] at h1
       simp only [wf, map_smul, Fin.snoc_castSucc, Fin.snoc_last, (hwo j).2, hfe_hyp, smul_eq_mul, mul_zero,
         add_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
       exact h1
@@ -911,7 +926,7 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
     Fin.lastCases (by simpa [cc] using hc0) (fun a => by simpa [cc] using (haa a).1) a
   have hX' : (VS D).L0 ⊓ (Submodule.span D.host.E (Set.range e')).restrictScalars (𝓞 D.host.E) =
       latSpan cc e' := by rw [hspan]; exact hX
-  obtain ⟨f', hf'iso, he'f', hf'Λ⟩ := genFrame_holds D.host.E (VS D) (VS D).L0 (VS D).standardTuple_isLattice
+  obtain ⟨f', hf'iso, he'f', hf'Λ⟩ := genFrame_holds D.host.E (VS D) (VS D).L0 (VS D).standardTuple_isLattice.toIsLattice
     (VS D).baseLattice_isUnimodular (PI.SRW.trace_reduction D) _ e' cc hind' he'iso hcc0 hX'
   have hccΛ : ∀ a, ∀ x ∈ cc a, x • e' a ∈ (VS D).L0 := fun a x hx => by
     have h1 : x • e' a ∈ latSpan cc e' := Submodule.subset_span ⟨a, x, hx, rfl⟩
@@ -1001,7 +1016,7 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
     refine ⟨cl, fun a h0 => hclP a (by rw [h0]; exact FractionalIdeal.zero_mem _), fun hg a => hcl1 a hg, ?_⟩
     exact localization_latSpan P.asIdeal (aaS D) eX cl hclI (fun a => locgen (haa a).1 (hclI a) (hclP a))
 
-  have hprim : ∀ u (γ : D.host.E), γ • zu u ∈ Lsub (VS D).L0 (⟨Fu u, zu u⟩ : LFlag (VS D) D.R.rS _) →
+  have hprim : ∀ u (γ : D.host.E), γ • zu u ∈ Lsub (VS D).L0 (⟨Fu u, zu u⟩ : LFlag (D.sp.Y 0) D.R.rS _) →
       ∃ o : 𝓞 D.host.E, (o : D.host.E) = γ := by
     intro u γ hγ
     obtain ⟨h1, -⟩ := Submodule.mem_inf.1 hγ
@@ -1056,8 +1071,8 @@ end Formalism.L2.SG.Pf.LatEx
 
 namespace Formalism.L2.SG.Pf
 
-variable [Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram] in
 
+variable [Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram] in
 theorem latExists_of (hPC : LatEx.PrimesInClasses) (D : Formalism.BasicNotions.D7) : Formalism.L2.SG.SplitPrimeNormLemmas.LatExists D :=
   LatEx.latExists_of_steps D (LatEx.satBasis_of LatEx.satBasisV_holds) hPC (LatEx.ddG_of D LatEx.splitDiff_holds)
 

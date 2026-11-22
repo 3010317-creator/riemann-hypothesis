@@ -1,6 +1,10 @@
-import Mathlib
-import GroundTheory.AutomorphicForms.QuotientKernel
-import GroundTheory.AutomorphicForms.TraceFormulaConvolution
+module
+
+public import Mathlib
+public import GroundTheory.AutomorphicForms.QuotientKernel
+public import GroundTheory.AutomorphicForms.TraceFormulaConvolution
+
+@[expose] public section
 
 open MeasureTheory Set Filter Topology Function
 open scoped ENNReal Pointwise InnerProductSpace ComplexConjugate
@@ -38,7 +42,7 @@ theorem isHilbertSchmidt_of_ae_eq_dual (T : H →L[ℂ] Lp ℂ 2 ν) (e : X → 
   calc hsNormSq T = ∑' i, ‖T (b i)‖ₑ ^ 2 := rfl
     _ = ∑' i, ∫⁻ x, ‖e x (b i)‖ₑ ^ 2 ∂ν := by
         congr 1; ext i
-        rw [Lp.enorm_def, L2Kernel.eLpNorm_two_sq]
+        rw [Lp.enorm_def, L2Kernel.eLpNorm_two_sq _ _ (Lp.aestronglyMeasurable _)]
         exact lintegral_congr_ae ((hT (b i)).mono fun x hx => by simp only [hx])
     _ ≤ ∫⁻ x, ∑' i, ‖e x (b i)‖ₑ ^ 2 ∂ν := by
         rw [ENNReal.tsum_eq_iSup_sum]
@@ -68,8 +72,8 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Loca
   [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
   (Γ : Subgroup G) [DiscreteTopology Γ]
 
-omit [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] in
 
+omit [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] in
 theorem exists_encard_le_of_isCompact {C : Set G} (hC : IsCompact C) :
     ∃ N : ℕ, ∀ g : G, {γ : Γ | γ • g ∈ C}.encard ≤ N := by
   have hfin := finite_setOf_mem_of_isCompact Γ (hC.mul hC.inv)
@@ -113,7 +117,7 @@ theorem lintegral_indicator_le {E : Set G} (hE : MeasurableSet E) {N : ℕ}
 
 theorem quasiMeasurePreserving_mk :
     Measure.QuasiMeasurePreserving (mk Γ) μ (quotientMeasure Γ μ) := by
-  refine ⟨measurable_mk Γ, Measure.AbsolutelyContinuous.mk fun s hs h0 => ?_⟩
+  refine ⟨(measurable_mk Γ).aemeasurable, Measure.AbsolutelyContinuous.mk fun s hs h0 => ?_⟩
   rw [Measure.map_apply (measurable_mk Γ) hs]
   have hs' : MeasurableSet (mk Γ ⁻¹' s) := hs.preimage (measurable_mk Γ)
   rw [← lintegral_indicator_one hs', lintegral_eq_lintegral_automorphize (Γ := Γ) μ
@@ -138,7 +142,7 @@ theorem stronglyMeasurable_lift (φ : Lp ℂ 2 (quotientMeasure Γ μ)) :
 theorem lintegral_lift_sq_le (φ : Lp ℂ 2 (quotientMeasure Γ μ)) {E : Set G} (hE : MeasurableSet E)
     {N : ℕ} (hN : ∀ g : G, {γ : Γ | γ • g ∈ E}.encard ≤ N) :
     ∫⁻ g in E, ‖φ (mk Γ g)‖ₑ ^ 2 ∂μ ≤ N * ‖φ‖ₑ ^ 2 := by
-  rw [Lp.enorm_def, L2Kernel.eLpNorm_two_sq]
+  rw [Lp.enorm_def, L2Kernel.eLpNorm_two_sq _ _ (Lp.aestronglyMeasurable _)]
   exact lintegral_indicator_le Γ μ hE hN
     ((Lp.stronglyMeasurable φ).measurable.enorm.pow_const 2)
 
@@ -153,9 +157,8 @@ variable [IsFiniteMeasureOnCompacts μ]
 theorem integrableOn_lift (φ : Lp ℂ 2 (quotientMeasure Γ μ)) {C : Set G} (hC : IsCompact C) :
     IntegrableOn (fun g => φ (mk Γ g)) C μ := by
   have hm : MemLp (fun g => φ (mk Γ g)) 2 (μ.restrict C) := by
-    refine ⟨(stronglyMeasurable_lift Γ μ φ).aestronglyMeasurable, ?_⟩
     refine L2Kernel.lt_top_of_sq_lt_top ?_
-    rw [L2Kernel.eLpNorm_two_sq]
+    rw [L2Kernel.eLpNorm_two_sq _ _ (stronglyMeasurable_lift Γ μ φ).aestronglyMeasurable]
     exact lintegral_lift_sq_lt_top Γ μ φ hC
   have : IsFiniteMeasure (μ.restrict C) := ⟨by rw [Measure.restrict_apply_univ]; exact hC.measure_lt_top⟩
   exact hm.integrable one_le_two
@@ -191,7 +194,7 @@ theorem rconv_add (f : CompactlySupportedContinuousMap G ℂ) (φ ψ : Lp ℂ 2 
   unfold rconv
   rw [← integral_add (integrable_rconv Γ μ f φ x) (integrable_rconv Γ μ f ψ x)]
   refine integral_congr_ae ?_
-  filter_upwards [(quasiMeasurePreserving_mk Γ μ).ae_eq_comp (Lp.coeFn_add φ ψ)] with y hy
+  filter_upwards [MeasureTheory.QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_add φ ψ)] with y hy
   simp only [comp_apply, Pi.add_apply] at hy
   rw [hy, mul_add]
 
@@ -201,7 +204,7 @@ theorem rconv_smul (f : CompactlySupportedContinuousMap G ℂ) (c : ℂ)
   unfold rconv
   rw [← integral_const_mul]
   refine integral_congr_ae ?_
-  filter_upwards [(quasiMeasurePreserving_mk Γ μ).ae_eq_comp (Lp.coeFn_smul c φ)] with y hy
+  filter_upwards [MeasureTheory.QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_smul c φ)] with y hy
   simp only [comp_apply, Pi.smul_apply, smul_eq_mul] at hy
   rw [hy]
   ring
@@ -246,8 +249,9 @@ theorem exists_norm_rconv_le (f : CompactlySupportedContinuousMap G ℂ) (x : G)
     f.hasCompactSupport.isCompact.image (continuous_const_mul x)
   obtain ⟨N, hN⟩ := exists_encard_le_of_isCompact Γ hC
   have hf2 : ∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ ≠ ⊤ := by
-    have := (f.continuous.memLp_of_hasCompactSupport (μ := μ) (p := 2) f.hasCompactSupport).2
-    rw [← L2Kernel.eLpNorm_two_sq]
+    have := (f.continuous.memLp_of_hasCompactSupport (μ := μ) (p := 2) f.hasCompactSupport).eLpNorm_lt_top
+    rw [← L2Kernel.eLpNorm_two_sq μ (f : G → ℂ)
+      (show AEStronglyMeasurable (f : G → ℂ) μ from f.continuous.aestronglyMeasurable)]
     exact (ENNReal.pow_lt_top this).ne
   refine ⟨√((∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ) * N).toReal, fun φ => ?_⟩
   refine norm_le_of_enorm_sq_le (ENNReal.mul_ne_top hf2 (by simp)) ?_

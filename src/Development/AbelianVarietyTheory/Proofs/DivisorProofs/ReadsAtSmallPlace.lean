@@ -1,18 +1,22 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinIndOfBasis
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualWeylTensorLiftCoefficientSpaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorLiftEquivariantStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPhiOfFrameInjectiveShiftStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalisedStandardWeylOfLiftMemStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnimodularMatricesPreserveFrameLatticesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisIntegralRelativeAdelicPointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicPointIntegralRelativeLocalBasisStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisDualBasisEmbeddedLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntermediateFieldPadicIntegersEqNormLeOneStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeOneIffIntegralAtPadicEmbeddingPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapEqOneOfIsLocEnv
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedLatticeLocalizationFreeLeCoefficientS
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinIndOfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualWeylTensorLiftCoefficientSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorLiftEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPhiOfFrameInjectiveShiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalisedStandardWeylOfLiftMemStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnimodularMatricesPreserveFrameLatticesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisIntegralRelativeAdelicPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicPointIntegralRelativeLocalBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisDualBasisEmbeddedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntermediateFieldPadicIntegersEqNormLeOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeOneIffIntegralAtPadicEmbeddingPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapEqOneOfIsLocEnv
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedLatticeLocalizationFreeLeCoefficientS
+
+@[expose] public section
 
 set_option autoImplicit false
 set_option maxHeartbeats 400000
@@ -38,7 +42,7 @@ theorem avatar_comm {C W M I : Type} [Field C] [AddCommGroup W] [Module ℂ W] [
     obtain ⟨i, rfl⟩ := hx
     exact h i
   | zero => simp only [map_zero]
-  | add x y _ _ hx hy => simp only [map_add, hx, hy]
+  | add x y _ _ hx hy => simp only [map_add (f := _), hx, hy]
   | smul a x _ hx => simp only [map_smul, hs, hx]
 
 theorem exists_reading_lat {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K] [StarRing K] {T : Type} [Fintype T]
@@ -250,8 +254,8 @@ section Point
 variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
   {Y : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y cX} {Csz : ℝ} (p : PtAt ex Csz)
 
-set_option maxHeartbeats 4000000 in
 
+set_option maxHeartbeats 4000000 in
 theorem reads_rank (j : Fin D.R.m) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) [Fact (Formalism.EigenvalueLevelCeiling.plc w).Prime] (lamW : D.what₂.Tau → ℕ → ℕ)
     (cs : D.what₂.Tau → ℤ) (hS : Shift (fun τ => lamLdef (D := D) (Vc D j).rank ((j : ℕ) + 1) τ) lamW cs) {N : ℕ}
     (e0 : D.what₂.LL →+* PadicAlgCl (Formalism.EigenvalueLevelCeiling.plc w)) (io : PadicAlgCl (Formalism.EigenvalueLevelCeiling.plc w) ≃+* ℂ)
@@ -319,12 +323,5 @@ theorem reads_rank (j : Fin D.R.m) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) [
     rfl
 
 end Point
-
-theorem reads_of_small : InRange fun _ _ _ _ p j P W w => SmallAt p j P w → ReadsAt p j P W w := by
-  refine ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun Fm _ _ _ =>
-    EvPt.of_forall fun x hx i p _ _ j P W hD _ w _ _ _ _ => ?_⟩⟩
-  choose cs hcs using hD.lam
-  exact ⟨false, fun τ => -cs τ, fun e0 io ev bs rk Lf _ kap chi hC hbs =>
-    reads_rank p j w W.lam cs hcs e0 io ev bs rk Lf kap chi hC hbs⟩
 
 end GlobalTheory.FrameRead

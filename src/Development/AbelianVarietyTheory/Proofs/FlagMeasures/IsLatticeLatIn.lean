@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
-import Formalism.SizeWindowBrackets.ChainSlopeWindows.TruncatedLatticeHolds
+module
+
+public import Mathlib
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
+public import Formalism.SizeWindowBrackets.ChainSlopeWindows.TruncatedLatticeHolds
+
+@[expose] public section
 
 open NumberField Matrix GlobalTheory.Mass Formalism.HermitianLatticesTheory Formalism.BasicNotions Formalism.MainNotions.S IsDedekindDomain
 open scoped ENNReal Classical
@@ -46,7 +50,7 @@ theorem genIdxH_eq_idxN {A B : Submodule (𝓞 K) V} (hBA : B ≤ A) (h0 : idxN 
 
 variable [Module K V] [IsScalarTower (𝓞 K) K V]
 
-theorem span_inf_eq (L : Submodule (𝓞 K) V) (hL : Submodule.IsLattice K L) (U : Submodule K V) :
+theorem span_inf_eq (L : Submodule (𝓞 K) V) (hL : RHCompat.SpanningLattice K L) (U : Submodule K V) :
     Submodule.span K ((L ⊓ U.restrictScalars (𝓞 K) : Submodule (𝓞 K) V) : Set V) = U := by
   refine le_antisymm (Submodule.span_le.2 fun x hx => hx.2) fun u hu => ?_
   obtain ⟨r, hr, hru⟩ := Formalism.LFunctionChainParameters.LLcv.span_le_locS (K := K) L (x := u) (by rw [hL.span_eq_top]; trivial)
@@ -56,8 +60,8 @@ theorem span_inf_eq (L : Submodule (𝓞 K) V) (hL : Submodule.IsLattice K L) (U
   rw [← algebraMap_smul K r] at h2
   exact (Submodule.smul_mem_iff _ h1).1 h2
 
-theorem isLattice_latIn (L : Submodule (𝓞 K) V) (hL : Submodule.IsLattice K L) (U : Submodule K V) :
-    Submodule.IsLattice K (latIn U L) := by
+theorem isLattice_latIn (L : Submodule (𝓞 K) V) (hL : RHCompat.SpanningLattice K L) (U : Submodule K V) :
+    RHCompat.SpanningLattice K (latIn U L) := by
   refine ⟨?_, ?_⟩
   · refine Submodule.fg_of_fg_map_injective (U.subtype.restrictScalars (𝓞 K)) U.injective_subtype ?_
     exact Submodule.FG.of_le hL.fg (Submodule.map_comap_le _ _)
@@ -80,7 +84,7 @@ theorem nondeg_of_pd {h : V →ₗ⋆[K] V →ₗ[K] K} (hp : PD h) : h.Nondegen
     simp at this
   exact ⟨fun x hx => key x (hx x), fun x hx => key x (hx x)⟩
 
-theorem idxN_dualInH (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (hL : Submodule.IsLattice K L)
+theorem idxN_dualInH (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (hL : RHCompat.SpanningLattice K L)
     (U : Submodule K V) :
     idxN (Lat.dualInH h (L ⊓ U.restrictScalars (𝓞 K))) (L ⊓ U.restrictScalars (𝓞 K)) =
       discN (hRes h U) (latIn U L) := by

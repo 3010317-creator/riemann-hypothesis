@@ -1,5 +1,9 @@
-import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneGen
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneGen
+
+@[expose] public section
 
 noncomputable section
 
@@ -32,7 +36,8 @@ theorem cA_inc (a : E) : cA σ (inclR (F := F) (AF F) a) = inclR (F := F) (AF F)
 
 theorem bf_inc (J : Matrix (Fin n) (Fin n) E) (u v : Fin n → E) :
     bf (cA σ).toRingHom (incM F J) (incV F u) (incV F v) = inclR (F := F) (AF F) (form σ J u v) := by
-  simp only [bf, form, dotProduct, Matrix.mulVec, map_sum, map_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [bf, form, dotProduct, Matrix.mulVec, map_sum, map_mul]
   rfl
 
 theorem inc_mulVec {m : ℕ} (A : Matrix (Fin n) (Fin m) E) (u : Fin m → E) : incM F A *ᵥ incV F u = incV F (A *ᵥ u) :=
@@ -53,7 +58,7 @@ theorem planeOK {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n} {Y₁ : Spc F 
   have cc : ∀ a : AE F E, cA σ (cA σ a) = a := fun a => by
     induction a using TensorProduct.induction_on with
     | zero => simp
-    | add x y hx hy => simp only [map_add, hx, hy]
+    | add x y hx hy => simp only [map_add (f := _), hx, hy]
     | tmul a e =>
       change a ⊗ₜ σ (σ e) = _
       rw [conj_conj hB]
@@ -87,7 +92,7 @@ theorem planeOK {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n} {Y₁ : Spc F 
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Matrix.mulVec_smul, inc_mulVec, e j]
     funext i
-    simp only [incV, Pi.add_apply, Pi.smul_apply, smul_eq_mul, map_add, map_mul]
+    simp only [incV, Pi.add_apply, Pi.smul_apply, smul_eq_mul, map_add (f := _), map_mul]
     ring
   · have hu : IsUnit (incM F Y.J).det := by
       have := (isUnit_iff_ne_zero.2 hd).map (inclR (F := F) (E := E) (AF F))

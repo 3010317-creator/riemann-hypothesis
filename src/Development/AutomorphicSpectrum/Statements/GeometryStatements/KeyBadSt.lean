@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
-import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
+public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula
+
+@[expose] public section
 
 noncomputable section
 
@@ -20,7 +24,7 @@ def KeyOver {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {R K
       (φ.appLE _ _ h).hom (th.f (j PUnit.unit)) =
         (show Γ(x.P.A.left, (t.PP.L.pull φ).U j ⊓ x.P.L.U i) from (w.s (j, i)).val) *
           resG _ inf_le_right (x.th.f i)) ∧
-    ∀ i, (x.v i).left ≫ φ = spMap (dualMap f) ≫ (v i).left
+    ∀ i, (x.v i).left ≫ φ = spMap (_root_.GlobalTheory.CompanionTheory.Ar.dualMap f) ≫ (v i).left
 
 def KeyBadSt : Prop :=
   ∀ κ : GlobalTheory.KeyCl.Rule, GlobalTheory.KeyCl.Homog (fun _ => 1) κ → GlobalTheory.KeyCl.Funct κ → GlobalTheory.KeyCl.UnitSp κ →

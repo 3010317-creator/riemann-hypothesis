@@ -1,8 +1,12 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefIntVG
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefIntCpt
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefDec
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.HaarMirror
-import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefIntVG
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefIntCpt
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CoefDec
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.HaarMirror
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+
+@[expose] public section
 
 noncomputable section
 
@@ -60,14 +64,5 @@ theorem coefWeightedN {n : ℕ} (ε : Fin n → Bool) (lam : Fin n → ℝ) {H :
   show _ = ‖‖⟪w, σ (Formalism.MainNotions.S.uMat g) w⟫_ℂ‖ * ‖Matrix.toEuclideanCLM (𝕜 := ℂ) (Formalism.MainNotions.S.uMat g)‖ ^ N‖ₑ
   rw [Real.enorm_eq_ofReal (mul_nonneg (norm_nonneg _) hpos), ENNReal.ofReal_mul (norm_nonneg _),
     ofReal_norm_eq_enorm]
-
-def CoefWeightedG : Prop :=
-  ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-    [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)), Formalism.QuantumDeterminants.IsHCParam lam →
-    Formalism.MainNotions.S.IsDS ε lam σ → ∀ w : H, Formalism.MainNotions.S.IsLowUnit ε lam σ w → ∀ h : ℝ, Formalism.QuantumDeterminants.GapAtLeast ε lam h →
-    1000 * (n : ℝ) ^ 2 * ((Finset.univ.filter fun i => ε i = false).card : ℝ) < h → ∀ N : ℝ, 0 ≤ N →
-    N ≤ 4 * (n : ℝ) ^ 2 * Real.sqrt (2 * ((Finset.univ.filter fun i => ε i = false).card : ℝ)) →
-    ∫⁻ g : Formalism.REAL.UJ ε, ‖⟪w, σ (Formalism.MainNotions.S.uMat g) w⟫_ℂ‖ₑ *
-        ENNReal.ofReal (‖Matrix.toEuclideanCLM (𝕜 := ℂ) (Formalism.MainNotions.S.uMat g)‖ ^ N) ∂(Formalism.REAL.muG ε) < ⊤
 
 end ReciprocityTheory.ChartRestriction.DS

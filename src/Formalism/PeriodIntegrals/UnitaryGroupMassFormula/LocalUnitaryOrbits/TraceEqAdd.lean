@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+
+@[expose] public section
 
 noncomputable section
 
@@ -67,14 +71,14 @@ theorem trace_v (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x,
     simp only [sigR, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.map_tmul,
       AlgHom.id_apply]
     rw [← TensorProduct.tmul_add, ← trace_eq_add σ hinv hnt hfin e, Algebra.algebraMap_eq_smul_one]
-  | add w1 w2 h1 h2 => rw [map_add, map_add, h1, h2, map_add]; abel
+  | add w1 w2 h1 h2 => rw [map_add (f := _), map_add (f := _), h1, h2, map_add (f := _)]; abel
 
 theorem sigR_sigR (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (w : Fv F v ⊗[F] E) :
     sigR (Fv F v) σ (sigR (Fv F v) σ w) = w := by
   induction w using TensorProduct.induction_on with
   | zero => simp
   | tmul c e => simp [sigR, hinv]
-  | add w1 w2 h1 h2 => rw [map_add, map_add, h1, h2]
+  | add w1 w2 h1 h2 => rw [map_add (f := _), map_add (f := _), h1, h2]
 
 theorem b_inclR_mem (a : 𝓞 E) : inclR (F := F) (Fv F v) (a : E) ∈ OEv (E := E) v :=
   Submodule.subset_span ⟨a, Set.mem_univ _, rfl⟩

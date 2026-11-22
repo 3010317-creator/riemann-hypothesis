@@ -1,5 +1,9 @@
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoeffRingsHaveRootsOfUnity
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
+module
+
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoeffRingsHaveRootsOfUnity
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
+
+@[expose] public section
 
 noncomputable section
 
@@ -42,11 +46,6 @@ def IsTypeGroupBlockLift (D : D7) (n : ℕ) (L : G0g D.nd → GAf D.host.E n) : 
 def actSum (D : D7) {n : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] (L : G0g D.nd → GAf D.host.E n)
     (z : MonoidAlgebra ℂ (G0g D.nd)) (f : GAf D.host.E n → W) : GAf D.host.E n → W :=
   z.coeff.sum fun g c => c • NG.rt D.host.E n (L g) f
-
-def CenReal (D : D7) (M : MtFam D) : Prop :=
-  ∀ (μ : D.what₂.Tup) (j : ℕ) (h1 : 1 ≤ j) (h2 : j ≤ D.R.m), ∃ L : G0g D.nd → GAf D.host.E D.R.nV,
-    IsTypeGroupBlockLift D D.R.nV L ∧ ∀ (z : ↥(Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g D.nd)))) (x : D.what₂.Mt μ j),
-      (M μ j h1 h2).real (D.ntypes.cenMt μ j z x) = actSum D L (z : MonoidAlgebra ℂ (G0g D.nd)) ((M μ j h1 h2).real x)
 
 def GreenLab {D : D7} (Γ : GrpSide D) : Prop :=
   ∀ (k : Fin 2) (d : ℕ), haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩

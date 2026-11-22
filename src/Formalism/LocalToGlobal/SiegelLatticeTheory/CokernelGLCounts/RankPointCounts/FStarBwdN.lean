@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdNH
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove
-import Formalism.LocalRingCardinality.ConjSqrtMinusD
-import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdNH
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove
+public import Formalism.LocalRingCardinality.ConjSqrtMinusD
+public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+
+@[expose] public section
 
 noncomputable section
 
@@ -33,8 +37,8 @@ theorem bwdN_znotX : F0.z ∉ Xsp (lf D F0) := by
 
 variable (u u' F0 what₂)
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem bwdN_holds : BwdN Zd u u' F0 what₂ := by
   intro hC γ Z hZ F'₂ φ φ' hS Λ₂ hΛ₂
   obtain ⟨hΛ₂lat, hloc₂⟩ := hΛ₂

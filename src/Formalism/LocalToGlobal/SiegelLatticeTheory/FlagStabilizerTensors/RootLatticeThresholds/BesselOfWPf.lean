@@ -1,6 +1,10 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.DoubleCosetBesselBoundOfBesselUniq
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselNonvanishingFromL2
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.DoubleCosetBesselBoundOfBesselUniq
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselNonvanishingFromL2
+
+@[expose] public section
 
 open MeasureTheory Matrix
 open scoped InnerProductSpace ENNReal ComplexConjugate
@@ -220,8 +224,8 @@ theorem bow_core [FiniteDimensional ℂ Wp] {ε : Fin (2 * r + k + 1) → Bool} 
     rw [div_mul_eq_mul_div, eq_div_iff hy]
     linear_combination hc
 
-variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] in
 
+variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] in
 theorem besselOfW_of_local_decomposition (hDI : Formalism.FourierDecayAlt.ThreeDimData.DecInf) (hJ : PI.BesselMapUniq.BesselMapUniq) :
     Formalism.L2.SG.LocWSOf.BesselOfW := by
   intro k r z c u lam ε h H _ _ _ σ hlam hσ hgap hok hz hT hc Vp _ _ _ π hπ w hw μG μW μN ν hG hW hN hq W hWc hWeq
@@ -233,9 +237,5 @@ theorem besselOfW_of_local_decomposition (hDI : Formalism.FourierDecayAlt.ThreeD
   obtain ⟨κ, hκ⟩ := bow_core hS l hla hWc hWeq hRe
   exact ⟨fun v => κ • l v, (Formalism.MainNotions.BridgeCS3d.isBesselMapSm_iff _ _ _ _ _).mpr (DDSmoothness.bessel_smul hlB κ), hκ⟩
 
-variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] in
-
-theorem besselOfW_of_jsz (hJ : PI.BesselMapUniq.BesselMapUniq) : Formalism.L2.SG.LocWSOf.BesselOfW :=
-  besselOfW_of_local_decomposition Formalism.L2.SG.BesselDiscreteSeries.decInf hJ
 
 end Formalism.MainNotions.BridgeCS3dBOW

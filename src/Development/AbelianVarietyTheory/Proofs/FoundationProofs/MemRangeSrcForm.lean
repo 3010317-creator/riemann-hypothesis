@@ -1,16 +1,20 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodLiftOnto
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InjAndRatOfLi
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EOpEqAsAlgebraHom
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasureToRealEqMass
-import Formalism.LocalToGlobal.Divisibility.LiftLatLemmas
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralEqSumOfSurjective
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResidueCharIsOfFinOrder
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlDetEqOneOfMemUnip
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodFormsCoordinateMapMemOfLiftsMem
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKernelFiniteAdelicLawsStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodLiftOnto
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InjAndRatOfLi
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EOpEqAsAlgebraHom
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasureToRealEqMass
+public import Formalism.LocalToGlobal.Divisibility.LiftLatLemmas
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralEqSumOfSurjective
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResidueCharIsOfFinOrder
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlDetEqOneOfMemUnip
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodFormsCoordinateMapMemOfLiftsMem
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKernelFiniteAdelicLawsStatement
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -28,8 +32,8 @@ section Level
 variable {K G M : Type} [Field K] [NumberField K] [Group G] [Fintype G] [AddCommGroup M] [Module K M]
   (r : Representation K G M) (U : Subgroup G) (ψ : U →* Kˣ)
 
-open Classical in
 
+open Classical in
 def invChar (g : G) : K := if hg : g ∈ U then (((ψ ⟨g, hg⟩)⁻¹ : Kˣ) : K) else 0
 
 def trU : M →ₗ[K] M := ∑ g, invChar U ψ g • r g
@@ -43,15 +47,16 @@ theorem invChar_int (g : G) : ∃ a : 𝓞 K, (a : K) = invChar U ψ g := by
   · exact ⟨0, rfl⟩
 
 theorem trU_eigen (f : M) (u : U) : r u (trU r U ψ f) = ((ψ u : Kˣ) : K) • trU r U ψ f := by
-  rw [trU_apply, map_sum, Finset.smul_sum, ← Equiv.sum_comp (Equiv.mulLeft (u : G)) fun g => ((ψ u : Kˣ) : K) • _]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [trU_apply, map_sum, Finset.smul_sum, ← Equiv.sum_comp (Equiv.mulLeft (u : G)) fun g => ((ψ u : Kˣ) : K) • _]
   refine Finset.sum_congr rfl fun g _ => ?_
   simp only [Equiv.coe_mulLeft, map_smul, map_mul, Module.End.mul_apply, smul_smul]
   congr 1
   unfold invChar
   by_cases hg : g ∈ U
-  · rw [dif_pos hg, dif_pos (U.mul_mem u.2 hg), ← Units.val_mul,
+  · rw [dite_eq_left hg, dite_eq_left (U.mul_mem u.2 hg), ← Units.val_mul,
       show (⟨u * g, U.mul_mem u.2 hg⟩ : U) = u * ⟨g, hg⟩ from rfl, map_mul, mul_inv, mul_inv_cancel_left]
-  · rw [dif_neg hg, dif_neg (fun h => hg ((U.mul_mem_cancel_left u.2).1 h)), mul_zero]
+  · rw [dite_eq_right hg, dite_eq_right (fun h => hg ((U.mul_mem_cancel_left u.2).1 h)), mul_zero]
 
 theorem trU_of_eigen {f : M} (hf : ∀ u : U, r u f = ((ψ u : Kˣ) : K) • f) : trU r U ψ f = (Nat.card U : K) • f := by
   classical
@@ -108,8 +113,8 @@ theorem mem_lvlNab (x : Fin (srcDim A i t U ψ) → D.what₂.LL) : x ∈ (A.MtC
 
 theorem lvlNab_isLattice {s : ℕ} (h : (A.MtCSD i t).Good s) :
     Submodule.IsLattice D.what₂.LL ((A.MtCSD i t).lvlNab (A.leftGroupActionLift i t) U ψ) :=
-  Formalism.DivisionValues.ValuationLatticeField.valLatF_isLattice ((A.MtCSD i t).lvlI (A.leftGroupActionLift i t) U ψ)
-    (Subtype.val_injective.comp (srcForm_injective i t U ψ)) (A.MtCSD i t).Nab h.nab_lat
+  (Formalism.DivisionValues.ValuationLatticeField.valLatF_isLattice ((A.MtCSD i t).lvlI (A.leftGroupActionLift i t) U ψ)
+    (Subtype.val_injective.comp (srcForm_injective i t U ψ)) (A.MtCSD i t).Nab h.nab_lat).toIsLattice
 
 theorem exists_src_trU (h : (A.MtCSD i t).ActGood (A.leftGroupActionLift i t)) {f : (A.MtCSD i t).Forms}
     (hf : ∀ c, (f : (A.MtCSD i t).Cl → (A.MtCSD i t).V) c ∈ (A.MtCSD i t).Nab c) :
@@ -270,7 +275,8 @@ theorem clSum_trU [Nontrivial (Fin (R.nW i) → D.what₂.LL)] (f : (A.MtCSD i t
     clSum (presV R i t) (kern R i t) (trU (A.leftGroupActionLift i t) U ψ f) v =
       levelTrace R i U ψ (clSum (presV R i t) (kern R i t) f v) := by
   unfold levelTrace gaL
-  rw [trU_apply, map_sum, Finset.sum_apply, LinearMap.sum_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [trU_apply, map_sum, Finset.sum_apply, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun g _ => ?_
   rw [map_smulₛₗ, h.clSum_equiv, LinearMap.smul_apply, invChar, apply_dite D.what₂.embLL, map_zero]
   rfl
@@ -337,10 +343,13 @@ theorem theta_mem_span {θ} (hθ : OnTies.IsClassSum R i t U ψ ph θ) {y : Fin 
       exact (congrArg (fun g' => kern R i t g' _ v) eg.symm).trans (h.kern_fin hg _ v)
   have hsum : (Nat.card U : D.what₂.LL) • y = ∑ c, (Fintype.card ((A.MtCSD i t).Gam c) : D.what₂.LL)⁻¹ • z c := by
     apply srcForm_injective i t U ψ
-    rw [map_smul, ← trU_of_eigen _ U ψ ((mem_range_srcForm i t U ψ _).1 ⟨y, rfl⟩), map_sum]
-    conv_lhs => rw [← sum_avgForm _ (srcForm A i t U ψ y), map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_smul, ← trU_of_eigen _ U ψ ((mem_range_srcForm i t U ψ _).1 ⟨y, rfl⟩), map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      conv_lhs => rw [← sum_avgForm _ (srcForm A i t U ψ y), map_sum]
     exact Finset.sum_congr rfl fun c _ => by rw [map_smul, map_smul, ez]
-  rw [← Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 Nat.card_pos.ne' : (Nat.card U : D.what₂.LL) ≠ 0), ← map_smul, hsum, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [← Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 Nat.card_pos.ne' : (Nat.card U : D.what₂.LL) ≠ 0), ← map_smul, hsum, map_sum]
   exact Submodule.sum_mem _ fun c _ => by
     rw [map_smul]
     exact Submodule.smul_mem _ _ (Submodule.subset_span (hmem c))
@@ -369,6 +378,8 @@ section Comparison₂
 variable {Bs : DefBase D.what₂.LL} {Df : DefSide Bs} {S : IndefData Df} {P : Type} [Group P] [Finite P] {oc : OnConst}
 
 section Local
+
+attribute [local instance 2000] Submodule.module
 
 variable {T : Full D} [inst : Algebra T.J.Q.c.F D.what₂.LL] {R : RealDat D A T.J.Q.c.F}
   {κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)} {v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec}
@@ -413,7 +424,9 @@ theorem lattices_of_tie (t : OnTie h fw hinj EX p ι wL wF nT O v i z act inc �
     IsLatIn (O.Zg i) (O.X₃ v i) ∧ IsLatIn (O.Zg i) (O.Im v i) ∧ O.X₃ v i ≤ O.Im v i := by
   have hb := toForms_bijective h fw ι z
   have hθ := t.θ'_eq hr
-  have hM := lvlNab_isLattice ι (R.mu v) U ψ hG
+  have hM := Formalism.DivisionValues.ValuationLatticeField.valLatF_isLattice
+    ((A.MtCSD ι (R.mu v)).lvlI (A.leftGroupActionLift ι (R.mu v)) U ψ)
+    (Subtype.val_injective.comp (srcForm_injective ι (R.mu v) U ψ)) (A.MtCSD ι (R.mu v)).Nab hG.nab_lat
   have hθy : ∀ x, (toForms h fw ι z ∘ₗ O.θ' v i ∘ₗ y.symm.toLinearMap) (y x) = toForms h fw ι z (O.θ' v i x) := fun x =>
     congrArg (fun a => toForms h fw ι z (O.θ' v i a)) (y.symm_apply_apply x)
   have hle : O.X₃ v i ≤ O.Im v i := by
@@ -456,7 +469,7 @@ theorem lattices_of_tie (t : OnTie h fw hinj EX p ι wL wF nT O v i z act inc �
         intro a e
         obtain ⟨b, rfl⟩ := hb.2 b
         obtain ⟨c, rfl⟩ := hb.2 c
-        rw [hb.1 (e.trans (map_add _ _ _).symm), map_add]
+        rw [hb.1 (e.trans (map_add _ _ _).symm), map_add (f := _)]
         exact Submodule.add_mem _ (ib _ rfl) (ic _ rfl)
       | smul r b _ ib =>
         intro a e

@@ -1,5 +1,9 @@
-import ReciprocityTheory.AnalyticForms.PotentialTheory.IsCompatChartChart
-import ReciprocityTheory.AnalyticForms.PotentialTheory.SNCAtlas
+module
+
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsCompatChartChart
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.SNCAtlas
+
+@[expose] public section
 
 namespace ReciprocityTheory.AnForm.M.PLAux
 
@@ -53,7 +57,7 @@ theorem mInt_sum_cont {e' : ℕ} {Y : Type} [TopologicalSpace Y] [T2Space Y] [Co
     simp only [Finset.sum_empty]
     exact mInt_zero_fun A Φ (fun _ => rfl)
   | insert j s hj ih =>
-    have hcont : Continuous (fun p => ∑ j ∈ s, f j p) := continuous_finset_sum _ fun j _ => hf j
+    have hcont : Continuous (fun p => ∑ j ∈ s, f j p) := continuous_finsetSum _ fun j _ => hf j
     have h := mIntLinear A Φ hΦ 1 (f j) (fun p => ∑ j ∈ s, f j p)
       (mIntegrableCont A Φ hΦ _ (hf j)) (mIntegrableCont A Φ hΦ _ hcont)
     simp only [one_mul] at h
@@ -138,7 +142,7 @@ theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
   · unfold integralWith
     conv_rhs => rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun j' _ => ?_
-    rw [← integral_finset_sum t (fun j _ => integrableOn_weight A hP.some _ _ (hint j) j')]
+    rw [← MeasureTheory.integral_finsetSum t (fun j _ => integrableOn_weight A hP.some _ _ (hint j) j')]
     have heq : Set.EqOn
         (fun y => hP.some.χ j' ((A.chart j').symm y) * logNormSec L s ((A.chart j').symm y) *
           locDens A (Fin.cons (LocPot.ofFun fun p => ∑ j ∈ t, f j p) Φ) j' y)
@@ -184,8 +188,7 @@ theorem pl_good (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
   cases hσ : σ k with
   | none =>
     simp only [reduceCtorEq, if_false, Finset.sum_const_zero]
-    refine (mInt_zero_fun (B k) _ (fun p => ?_)).symm
-    show v p.1 = 0
+    refine (mInt_zero_fun (B k) _ (g := v ∘ Subtype.val) (fun p => ?_)).symm
     by_contra hne
     have hp : p.1 ∈ tsupport v := subset_tsupport _ hne
     have hpψ := hVψ (hvV hp)

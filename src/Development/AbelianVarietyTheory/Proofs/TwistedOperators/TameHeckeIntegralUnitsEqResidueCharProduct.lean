@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameOnOne
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqMulOfResSNeOne
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharEqProdLocalComponentsApproximating
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteIdeleExistsLocalApprox
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameOnOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEqMulOfResSNeOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharEqProdLocalComponentsApproximating
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteIdeleExistsLocalApprox
+
+@[expose] public section
 
 noncomputable section
 
@@ -29,7 +33,7 @@ theorem val_lt_one_of_resS_eq_zero {F E : Type} [Field F] [NumberField F] [Field
   · rw [map_zero, map_zero]
     exact zero_lt_one
   · intro x y _ _ hx hy
-    rw [map_add]
+    rw [map_add (f := _)]
     exact v.map_add_lt hx hy
   · intro c x _ hx
     rw [smul_eq_mul, map_mul, map_mul]
@@ -92,7 +96,8 @@ theorem resS_idemSum {D : D7} {e : AE D} {P : Finset (Pl D.host.E)} (he : IsIdem
   refine ⟨ht ▸ (∑ Q, t Q).2, fun Q hQ => ?_⟩
   have e1 : (⟨toEAf D (∑ PP ∈ P, es PP), ht ▸ (∑ Q, t Q).2⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) = ∑ Q, t Q :=
     Subtype.ext ht
-  rw [e1, map_sum, Finset.sum_eq_single (⟨Q, hQ⟩ : P)]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [e1, map_sum, Finset.sum_eq_single (⟨Q, hQ⟩ : P)]
   · exact hr ⟨Q, hQ⟩
   · intro R _ hR
     exact resS_idem_eq_zero (hes R R.2) (fun h => hR (Subtype.ext h)) _

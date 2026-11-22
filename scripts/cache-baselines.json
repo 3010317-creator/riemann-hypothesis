@@ -13,7 +13,7 @@
     },
     "leanprover/lean4:v4.36.0": {
       "commit": "611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9",
-      "dependency_manifest_sha256": "ee003c5c7a9b2b2a82a142b6633916661c07117199dd143d94d1af63910237df",
+      "dependency_manifest_sha256": "1ed8a8e19027101ba04a754b3c3a501ae6a0a5a42e7e07c31247495e2007d800",
       "baseline": null
     }
   }

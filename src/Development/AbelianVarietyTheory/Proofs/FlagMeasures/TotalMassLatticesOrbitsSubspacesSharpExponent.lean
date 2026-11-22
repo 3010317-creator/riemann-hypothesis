@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FewOrbitsSubspacesHermitianLatticeDiscriminant
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassIntegralLatticesDiscriminantOrderLe
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FewOrbitsSubspacesHermitianLatticeDiscriminant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassIntegralLatticesDiscriminantOrderLe
+
+@[expose] public section
+
 open NumberField Matrix GlobalTheory.Mass Formalism.HermitianLatticesTheory
 open scoped ENNReal Classical
 
@@ -60,7 +65,7 @@ theorem count_sets (K : Type) [Field K] [NumberField K] (d : ℕ) : 1 ≤ d →
             field_simp
     · intro S hS hprod
       have hdvd : Nat.minFac d ∣ ∏ P ∈ S, qIn P := hprod ▸ Nat.minFac_dvd d
-      obtain ⟨P, hP, hpP⟩ := (Prime.dvd_finset_prod_iff hp.prime _).1 hdvd
+      obtain ⟨P, hP, hpP⟩ := hp.prime.exists_mem_finset_dvd hdvd
       obtain ⟨hmax, h2, hN⟩ := hS P hP
       have hq : qIn P ∣ d := hprod ▸ Finset.dvd_prod_of_mem (fun P => qIn P) hP
       obtain ⟨a, b, -⟩ := hlt _ h2 hq

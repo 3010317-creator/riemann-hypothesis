@@ -1,9 +1,16 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.IntOfOff
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.GalTPDefs
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.TPGDecomp
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ThkBaseBadA
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.SchurStep
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.BlockDeterminants.Decomp
+public import Development.WeilBound.ThetaLifts.LatticeBasics.CommuteTheta
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.MeasurableSetIntF
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.GalTPDefs
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.TPGDecomp
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ThkBaseBadA
+
+@[expose] public section
 
 set_option synthInstance.maxHeartbeats 200000
 
@@ -82,7 +89,8 @@ private theorem int_of_off_pk {g : UA σ X.J} (hg : OffAt v g) : IntAt v g := fu
     exact Matrix.one_mulVec z
   exact ⟨e.symm ▸ hz, e'.symm ▸ hz⟩
 private theorem int_gOff_pk {S : Finset (Pl F)} {c : UA σ X.J} (hc : c ∈ gOff σ X S) (hv : v ∈ S) : IntAt v c :=
-  (Subgroup.closure_le (Euler.intGrp σ X v)).2 (fun _ hg => int_of_off_pk (hg.2 v hv)) hc
+  (show gOff σ X S ≤ Euler.intGrp σ X v from
+    (Subgroup.closure_le _).2 (fun _ hg => int_of_off_pk (hg.2 v hv))) hc
 private theorem int_gAt_pk {S : Finset (Pl F)} {b : UA σ X.J} (hb : b ∈ gAt σ X S) (hv : v ∉ S) : IntAt v b := by
   have : gAt σ X S ≤ Euler.intGrp σ X v := iSup₂_le fun w hw x hx => by
     have hvw : v ≠ w := fun e => hv (e ▸ hw)

@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.GlobalTheory.GL3.Statement
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.GlobalTheory.GL3.Statement
+
+@[expose] public section
 
 noncomputable section
 
@@ -27,33 +31,6 @@ def ChiUnitDet (D : D7) (χ : IdE D → ℂ) : Prop :=
   ∀ N (L L' : Submodule (𝓞 D.host.E) (Fin N → D.host.E)), Even N →
     IsSDLat D.host.E N L → IsSDLat D.host.E N L' → ‖χ (detId D L L')‖ = 1
 
-theorem LinkThIndep_of
-    (hI : ∀ D : D7, ∀ cc : Ideal (𝓞 D.host.K), IsCurveIdeal D cc → ∀ δ : ℂ, IsDiscriminantTwelfthRootOfIdealLattice D cc δ →
-      IopIso D (tor0 D cc δ))
-    (hC : ∀ D : D7, ∀ χ : IdE D → ℂ, IsChi D χ → ChiUnitDet D χ) :
-    LinkThIndep := by
-  intro D cc hcc δ hδ χ e hχ hv heq N N' L₁ L₁' L₂ L₂' h1 h2
-  have hI' := hI D cc hcc δ hδ
-  have hC' := hC D χ hχ
-  set T := tor0 D cc δ
-
-  have h12 : admitted D N N' L₁ L₂' := ⟨h1.1, h1.2.1, h1.2.2.1, h2.2.2.2⟩
-
-  have hA := heq.2.1 N N' ⟨L₁, h1.2.2.1⟩ ⟨L₁', h1.2.2.2⟩ ⟨L₂', h2.2.2.2⟩ h1.1 h1.2.1
-  dsimp only at hA
-  have s1 : normSq D T (La D T L₁ L₂') (e N N' L₁ L₂') = normSq D T (La D T L₁ L₁') (e N N' L₁ L₁') := by
-    rw [hA, normSq_const_mul, norm_zpow, hC' N' L₁' L₂' h1.2.1 h1.2.2.2 h2.2.2.2, one_zpow, one_pow,
-      one_mul]
-    exact hI' N N' L₁ L₁' L₁ L₂' h1 h12 _ (hv N N' L₁ L₁' h1).1
-
-  have hB := heq.2.2 N N' ⟨L₁, h1.2.2.1⟩ ⟨L₂, h2.2.2.1⟩ ⟨L₂', h2.2.2.2⟩ h1.1 h1.2.1
-  dsimp only at hB
-  have s2 : normSq D T (La D T L₂ L₂') (e N N' L₂ L₂') = normSq D T (La D T L₁ L₂') (e N N' L₁ L₂') := by
-    rw [hB, normSq_const_mul, norm_zpow, hC' N L₁ L₂ h1.1 h1.2.2.1 h2.2.2.1, one_zpow, one_pow,
-      one_mul]
-    exact hI' N N' L₁ L₂' L₂ L₂' h12 h2 _ (hv N N' L₁ L₂' h12).1
-  rw [s2, s1]
-
 end Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity
 
 namespace Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU
@@ -80,8 +57,6 @@ theorem conj_conj (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
 def conjO (r : 𝓞 D.host.E) : 𝓞 D.host.E :=
   ⟨D.host.conj r, r.isIntegral_coe.map (D.host.conj : D.host.E →+* D.host.E).toIntAlgHom⟩
 
-theorem coe_conjO (r : 𝓞 D.host.E) : ((conjO D r : 𝓞 D.host.E) : D.host.E) = D.host.conj r := rfl
-
 theorem conj_smul (r : 𝓞 D.host.E) (x : D.host.E) :
     D.host.conj (r • x) = conjO D r • D.host.conj x := by
   rw [Algebra.smul_def, Algebra.smul_def, map_mul]
@@ -90,7 +65,7 @@ theorem conj_smul (r : 𝓞 D.host.E) (x : D.host.E) :
 def cS (𝔞 : IdE D) : IdE D where
   carrier := {x | D.host.conj x ∈ 𝔞}
   add_mem' := fun ha hb => by
-    simp only [Set.mem_ofPred_eq, map_add]; exact 𝔞.add_mem ha hb
+    simp only [Set.mem_ofPred_eq, map_add (f := _)]; exact 𝔞.add_mem ha hb
   zero_mem' := by simp
   smul_mem' := fun r x hx => by
     show D.host.conj (r • x) ∈ 𝔞
@@ -261,13 +236,6 @@ def DetIdealsKernelNormOne (D : D7) : Prop :=
 theorem chi_unit_of_det_norm_one (D : D7) (hd : DetIdealsKernelNormOne D) (χ : IdE D → ℂ) (hχ : IsChi D χ) :
     ChiUnitDet D χ :=
   fun N L L' he h1 h2 => CU.norm_chi_eq_one_of_normOne D χ hχ (hd N L L' he h1 h2)
-
-theorem theta_norm_indep_of_det_norm_one
-    (hI : ∀ D : D7, ∀ cc : Ideal (𝓞 D.host.K), IsCurveIdeal D cc → ∀ δ : ℂ, IsDiscriminantTwelfthRootOfIdealLattice D cc δ →
-      IopIso D (tor0 D cc δ))
-    (hd : ∀ D : D7, DetIdealsKernelNormOne D) :
-    LinkThIndep :=
-  LinkThIndep_of hI fun D χ hχ => chi_unit_of_det_norm_one D (hd D) χ hχ
 
 end Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity
 

@@ -1,13 +1,17 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.JoinEquivEqAtReference
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EventuallyCongOne
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamRdefEqSgTrue
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsDeco
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
-import Formalism.LocalToGlobal.Columns.RowFormsGood
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.JoinEquivEqAtReference
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EventuallyCongOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LamRdefEqSgTrue
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsDeco
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
+public import Formalism.LocalToGlobal.Columns.RowFormsGood
+
+@[expose] public section
 
 noncomputable section
 
@@ -19,18 +23,19 @@ section Alg
 
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
-omit [NumberField K] in
 
+omit [NumberField K] in
 theorem repr_map_mem {V V' ι ι' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V'] [Fintype ι]
     (b : Basis ι K V) (b' : Basis ι' K V') (f : V →ₗ[K] V') (hf : ∀ i j, b'.repr (f (b i)) j ∈ cmMax K) {x : V}
     (hx : ∀ i, b.repr x i ∈ cmMax K) (j : ι') : b'.repr (f x) j ∈ cmMax K := by
-  rw [← b.sum_repr x, map_sum, map_sum, Finsupp.finsetSum_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [← b.sum_repr x, map_sum, map_sum, Finsupp.finsetSum_apply]
   refine sum_mem fun i _ => ?_
   rw [map_smul, map_smul, Finsupp.smul_apply, smul_eq_mul]
   exact mul_mem (hx i) (hf i j)
 
-omit [StarRing K] in
 
+omit [StarRing K] in
 theorem isIntegral_of_line {V : Type} [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
     (N : Submodule (𝓞 K) V) (hN : Submodule.IsLattice K N) {v : V} (hv : v ≠ 0) (l : K)
     (h : ∀ a : K, a • v ∈ N → l • a • v ∈ N) : IsIntegral (𝓞 K) l := by
@@ -63,7 +68,8 @@ theorem exists_inv_rat {V ι Γ : Type} [AddCommGroup V] [Module K V] [Fintype �
       simp only [← map_mul]
       rw [Fintype.sum_bijective (g * ·) (Group.mulLeft_bijective g) _ (fun g => ρ g) fun _ => rfl]
     refine hi ?_
-    rw [LinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [LinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
     exact sum_mem fun g _ => hρ g i j
   have h1 := LinearMap.congr_fun h0 v
   rw [LinearMap.sum_apply] at h1
@@ -71,12 +77,13 @@ theorem exists_inv_rat {V ι Γ : Type} [AddCommGroup V] [Module K V] [Fintype �
   rw [← Nat.cast_smul_eq_nsmul K] at h1
   exact smul_ne_zero (Nat.cast_ne_zero.2 Fintype.card_ne_zero) hv h1
 
-omit [NumberField K] [StarRing K] in
 
+omit [NumberField K] [StarRing K] in
 theorem repr_of_smul {V' W ι' : Type} [AddCommGroup V'] [Module K V'] [AddCommGroup W] [Module ℂ W] [Fintype ι'] (σ : K →+* ℂ)
     (b' : Basis ι' K V') (c0 : V' →ₛₗ[σ] W) (hli : LinearIndependent ℂ fun i => c0 (b' i)) {x y : V'} {μ : ℂ}
     (h : c0 x = μ • c0 y) (j : ι') : σ (b'.repr x j) = μ * σ (b'.repr y j) := by
-  rw [← b'.sum_repr x, ← b'.sum_repr y, map_sum, map_sum, Finset.smul_sum] at h
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [← b'.sum_repr x, ← b'.sum_repr y, map_sum, map_sum, Finset.smul_sum] at h
   simp only [map_smulₛₗ, smul_smul] at h
   exact Fintype.linearIndependent_iffₛ.1 hli _ _ h j
 
@@ -164,37 +171,8 @@ section Coef
 
 variable {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K] [StarRing K] {ι : Type} [Fintype ι]
 
-theorem exists_cast {a n : ℕ} (h : n = a) (emb : ι → E →+* K) (lam : ι → Formalism.BasicNotions.DomWeight a) (lam' : ι → Formalism.BasicNotions.DomWeight n)
-    (hw : ∀ τ (i : Fin a) (i' : Fin n), (i : ℕ) = i' → (lam τ).w i = (lam' τ).w i') :
-    ∃ e0 : VV K lam' ≃ₗ[K] VV K lam,
-      (∀ v, (e0 v).1 = MvPolynomial.rename (Prod.map id (Prod.map (Fin.cast h) (Fin.cast h))) v.1) ∧
-      (∀ i j, (bVV K lam).repr (e0 (bVV K lam' i)) j ∈ cmMax K) ∧
-      (∀ x y, pairV emb lam 1 (e0 x) (e0 y) = pairV emb lam' 1 x y) ∧
-      (∀ γ : GL (Fin a) E, ∃ g, R3.MatEq γ g ∧ ∀ v, e0 (rhoV emb lam' g v) = rhoV emb lam γ (e0 v)) ∧
-      ∀ L L', (∀ x, x ∈ L ↔ (fun i => x (Fin.cast h i)) ∈ L') →
-        (nabAt emb lam' L').map ((e0 : VV K lam' →ₗ[K] VV K lam).restrictScalars (𝓞 K)) = nabAt emb lam L := by
-  subst h
-  obtain rfl : lam = lam' := funext fun τ => by
-    have : (lam τ).w = (lam' τ).w := funext fun i => hw τ i i rfl
-    revert this
-    cases lam τ
-    cases lam' τ
-    rintro rfl
-    rfl
-  refine ⟨LinearEquiv.refl _ _, fun v => ?_, fun i j => ?_, fun _ _ => rfl, fun γ => ⟨γ, ⟨rfl, fun i j i' j' a b => ?_⟩, fun _ => rfl⟩,
-    fun L L' hL => ?_⟩
-  · exact (MvPolynomial.rename_id_apply _).symm
-  · classical
-    rw [LinearEquiv.refl_apply, Module.Basis.repr_self, Finsupp.single_apply]
-    split_ifs
-    · exact one_mem _
-    · exact zero_mem _
-  · rw [Fin.ext a, Fin.ext b]
-  · obtain rfl : L = L' := Submodule.ext hL
-    exact Submodule.map_id _
 
 open scoped TensorProduct in
-
 theorem mem_globLat_swap {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] {n : ℕ}
     {Λ : Submodule (𝓞 E) (Fin n → E)} (hfr : IsFrame (1 : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) Λ)
     (h : GL (Fin n) (IsDedekindDomain.FiniteAdeleRing (𝓞 F) F ⊗[F] E)) (v : Fin n → E) :
@@ -301,18 +279,6 @@ open GlobalTheory.Mem.Col2 GlobalTheory.Mem.R3 GlobalTheory.EX
 
 variable (X : Stages) {px : PreX X.B.toPre} (I : ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL))
   (tr : TrI X.B px)
-
-def valPol (v : VV X.B.fields.K X.B.wts.sgTrue) : Pol ℂ X.toD7.what₂.Tau X.toD7.sp.X'.rank :=
-  MvPolynomial.map X.toD7.what₂.embLL
-    (MvPolynomial.rename (Prod.map id (Prod.map (Fin.cast (RowAd.rank_X' X).symm) (Fin.cast (RowAd.rank_X' X).symm)))
-      (show Pol X.toD7.what₂.LL X.toD7.what₂.Tau (X.B.R.N X.B.R.m - 1) from v.1))
-
-theorem gram_eq_one (hI : I.Ok) : X.toD7.sp.X'.gram = 1 := by
-  show X.B.sp.X'.gram = 1
-  obtain ⟨hs, -, h2, -⟩ := hI.spaces
-  rw [h2]
-  refine Matrix.ext fun i i' => (Formalism.BasicNotions.Examples₂.stdSpace_gram_apply hs _ _ _ _ i i').trans ?_
-  simp [Matrix.one_apply, Formalism.BasicNotions.Examples₂.sgn]
 
 end Rows
 

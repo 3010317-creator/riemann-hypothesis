@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ReLatSelf
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ReLatSelf
+
+@[expose] public section
 
 noncomputable section
 
@@ -18,11 +22,6 @@ open GlobalTheory.ChiGrid GlobalTheory.VolRatioCompare
 variable {D : D7}
 
 def SameSp (V V' : HSp D) : Prop := ∃ L h1 h2, V' = reLat V L h1 h2
-
-theorem SameSp.refl (V : HSp D) : SameSp V V := by
-  refine ⟨V.L0, V.standardTuple_isLattice, V.baseLattice_isUnimodular, ?_⟩
-  cases V
-  rfl
 
 theorem SameSp.neg {V V' : HSp D} (h : SameSp V V') : SameSp (negSp V) (negSp V') := by
   obtain ⟨L, h1, h2, rfl⟩ := h
@@ -55,14 +54,15 @@ theorem SameL.isV {X X' : LSp D} (h : SameL X X') {ν q : ℕ} (hX : X.IsV ν q)
 theorem hT_frame (V : HSp D) (x y : V.V) :
     V.hT x y = ∑ i, ∑ j, star (V.frame.equivFun x i) * V.gram i j * V.frame.equivFun y j := by
   conv_lhs => rw [← V.frame.sum_equivFun x, ← V.frame.sum_equivFun y]
-  simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, smul_eq_mul,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, smul_eq_mul,
     Finset.mul_sum, HSpace.gram, starRingEnd_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
 
 private theorem exists_unimodular_lattice_eq_lat_of_isSelfDualC (X : LSp D) (h : IsSelfDualC X.sp X.lat) :
-    ∃ (L : Submodule (𝓞 D.host.E) X.sp.V) (h1 : Submodule.IsLattice D.host.E L)
+    ∃ (L : Submodule (𝓞 D.host.E) X.sp.V) (h1 : Submodule.IsFullLattice D.host.E L)
       (h2 : Formalism.HermitianLatticesTheory.IsUnimodular X.sp.hT L),
       (X.lat : Set (Fin X.sp.rank → D.host.E)) = {x | ∑ i, x i • X.sp.frame i ∈ L} := by
   classical
@@ -77,12 +77,11 @@ private theorem exists_unimodular_lattice_eq_lat_of_isSelfDualC (X : LSp D) (h :
       have : c' = c := by rw [← hinv c', hcc, hinv]
       exact this ▸ hc', fun hc => Submodule.mem_map_of_mem hc⟩
   have hsurj : ∀ v : X.sp.V, e (X.sp.frame.equivFun v) = v := fun v => X.sp.frame.equivFun.symm_apply_apply v
-  have h1 : Submodule.IsLattice D.host.E (X.lat.map e) := by
-    refine ⟨hlat.fg.map e, ?_⟩
-    have himg : ((X.lat.map e : Submodule (𝓞 D.host.E) X.sp.V) : Set X.sp.V) =
-        (X.sp.frame.equivFun.symm : (Fin X.sp.rank → D.host.E) →ₗ[D.host.E] X.sp.V) '' (X.lat : Set _) :=
-      Submodule.map_coe e X.lat
-    rw [himg, Submodule.span_image, hlat.span_eq_top, Submodule.map_top, LinearEquiv.range]
+  have h1 : Submodule.IsFullLattice D.host.E (X.lat.map e) := by
+    refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (hlat.fg.map e), span_eq_top := ?_ }
+    change Submodule.span D.host.E ((X.sp.frame.equivFun.symm : (Fin X.sp.rank → D.host.E) →ₗ[D.host.E] X.sp.V) '' (X.lat : Set (Fin X.sp.rank → D.host.E))) = ⊤
+    rw [Submodule.span_image, hlat.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
+    exact X.sp.frame.equivFun.symm.surjective
   have h2 : Formalism.HermitianLatticesTheory.IsUnimodular X.sp.hT (X.lat.map e) := by
     unfold Formalism.HermitianLatticesTheory.IsUnimodular Formalism.HermitianLatticesTheory.dual Formalism.E.hdual
     ext v
@@ -190,8 +189,8 @@ theorem SameSp.onb {V V' : HSp D} (h : SameSp V V') {s b : D.what₂.Tau → Mat
   obtain rfl := eq_of_heq e'
   exact hs
 
-private theorem isThetaFunO_reLat_reLat_eq {S U : HSp D} (L : Submodule (𝓞 D.host.E) S.V) (h1 : Submodule.IsLattice D.host.E L)
-    (h2 : Formalism.HermitianLatticesTheory.IsUnimodular S.hT L) (L' : Submodule (𝓞 D.host.E) U.V) (h1' : Submodule.IsLattice D.host.E L')
+private theorem isThetaFunO_reLat_reLat_eq {S U : HSp D} (L : Submodule (𝓞 D.host.E) S.V) (h1 : Submodule.IsFullLattice D.host.E L)
+    (h2 : Formalism.HermitianLatticesTheory.IsUnimodular S.hT L) (L' : Submodule (𝓞 D.host.E) U.V) (h1' : Submodule.IsFullLattice D.host.E L')
     (h2' : Formalism.HermitianLatticesTheory.IsUnimodular U.hT L') :
     IsThetaFunO ψ (reLat S L h1 h2) (reLat U L' h1' h2') = IsThetaFunO ψ S U :=
   funext fun _ => propext ⟨fun h => { h with }, fun h => { h with }⟩
@@ -206,8 +205,8 @@ theorem ex_om {S S' U U' : HSp D} (h : SameSp S S') (h' : SameSp U U')
   cases hω
   constructor <;> (try rw [hE]) <;> assumption
 
-private theorem isThetaFunO_negSp_reLat_reLat_eq {V U : HSp D} (L : Submodule (𝓞 D.host.E) V.V) (h1 : Submodule.IsLattice D.host.E L)
-    (h2 : Formalism.HermitianLatticesTheory.IsUnimodular V.hT L) (L' : Submodule (𝓞 D.host.E) U.V) (h1' : Submodule.IsLattice D.host.E L')
+private theorem isThetaFunO_negSp_reLat_reLat_eq {V U : HSp D} (L : Submodule (𝓞 D.host.E) V.V) (h1 : Submodule.IsFullLattice D.host.E L)
+    (h2 : Formalism.HermitianLatticesTheory.IsUnimodular V.hT L) (L' : Submodule (𝓞 D.host.E) U.V) (h1' : Submodule.IsFullLattice D.host.E L')
     (h2' : Formalism.HermitianLatticesTheory.IsUnimodular U.hT L') :
     IsThetaFunO ψ (negSp (reLat V L h1 h2)) (reLat U L' h1' h2') = IsThetaFunO ψ (negSp V) U :=
   funext fun _ => propext ⟨fun h => { h with }, fun h => { h with }⟩

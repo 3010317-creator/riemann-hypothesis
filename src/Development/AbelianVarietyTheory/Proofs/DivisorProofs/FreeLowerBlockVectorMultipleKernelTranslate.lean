@@ -1,19 +1,23 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.KerDatTuple
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsDeltaDelAtOwnAt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelVectorMovedByRootsOfUnity
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointHalfDatumStabilizerPairMove
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitEmbeddingValuedEqIntValuationInteger
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualWeylLatticeExistsNatPowSmulMem
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPowLocKMulInf
-import Formalism.LocalToGlobal.UnitaryNorms.CharProd
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.KerDatTuple
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsDeltaDelAtOwnAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelVectorMovedByRootsOfUnity
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdjointHalfDatumStabilizerPairMove
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitEmbeddingValuedEqIntValuationInteger
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualWeylLatticeExistsNatPowSmulMem
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPowLocKMulInf
+public import Formalism.LocalToGlobal.UnitaryNorms.CharProd
+
+@[expose] public section
 
 set_option autoImplicit false
 set_option synthInstance.maxHeartbeats 400000
@@ -193,7 +197,7 @@ theorem conj_entry {A R : Type} [CommRing A] [CommRing R] (f : A →+* R) {n : �
   have h2 : (β⁻¹).1 * K.map f * β.1 = 1 + f b • ((β⁻¹).1 * (K.map f - 1) * β.1) := by
     rw [← Matrix.smul_mul, ← Matrix.mul_smul, h3, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, Units.inv_mul,
       add_sub_cancel]
-  rw [h2, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, map_add, map_mul, hφ, zero_mul, add_zero, Matrix.one_apply]
+  rw [h2, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, map_add (f := _), map_mul, hφ, zero_mul, add_zero, Matrix.one_apply]
   split_ifs
   · rwa [map_one]
   · rwa [map_zero]
@@ -232,7 +236,8 @@ theorem exists_pow_hat {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)}
   convert h5 using 1
   funext i
   rw [AlgEquiv.eq_symm_apply]
-  simp only [Pi.smul_apply, nsmul_eq_mul, Matrix.mulVec, dotProduct, map_sum, map_mul, map_natCast]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Pi.smul_apply, nsmul_eq_mul, Matrix.mulVec, dotProduct, map_sum, map_mul, map_natCast]
   rfl
 
 theorem smul_mem_hLat {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)}
@@ -361,9 +366,9 @@ theorem eq_std_iff {κ : Type} [CommRing κ] {n r : ℕ} (hr : r ≤ n) (y : Mat
 variable {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
 
+
 open Classical in
 include h1 h2 in
-
 theorem datum_eq (R : RealDat D A Ks) (i : Fin D.R.m) (hr : (Wc D i).rank ≤ (Vc D i).rank) (hd : Disjoint R.Pg Q)
     (ξR : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ) {u u' : Matrix (Fin (Vc D i).rank) (Fin (Wc D i).rank) (Datum.EAf D)}
     (hu : ∀ a b, u' a b = (if a.val < (Wc D i).rank then 1 else ν) * u a b) :
@@ -402,11 +407,11 @@ theorem datum_eq (R : RealDat D A Ks) (i : Fin D.R.m) (hr : (Wc D i).rank ≤ (V
         rw [zpow_neg_one, Units.val_inv_eq_inv_val]
         congr 3
         exact Units.ext (congrArg Matrix.det (rL PP.1))
-      · rw [dif_neg h, dif_neg fun h' => h fun PP hPP => by rw [← rL]; exact (h' PP hPP).2]
+      · rw [dite_eq_right h, dite_eq_right fun h' => h fun PP hPP => by rw [← rL]; exact (h' PP hPP).2]
   · rw [if_neg hI]
     split_ifs with hI'
     · unfold omegaQ
-      rw [dif_neg, mul_zero]
+      rw [dite_eq_right, mul_zero]
       intro h
       refine hI fun a b => ?_
       by_cases ha : a.val < (Wc D i).rank
@@ -474,7 +479,7 @@ theorem exists_diag_unitary {A R : Type} [CommRing A] [CommRing R] {n : ℕ} (hn
   · have e1 : f e • g.1.map f = (f e - f a) • (1 : Matrix (Fin n) (Fin n) R) + f a • M.map f := by
       ext x y
       have := congrArg f (congrFun (congrFun he x) y)
-      simp only [Matrix.smul_apply, Matrix.add_apply, smul_eq_mul, map_mul, map_add, map_sub, Matrix.one_apply,
+      simp only [Matrix.smul_apply, Matrix.add_apply, smul_eq_mul, map_mul, map_add (f := _), map_sub, Matrix.one_apply,
         Matrix.map_apply, apply_ite f, map_one, map_zero] at this ⊢
       exact this
     have e2 : (β⁻¹).1 * g.1.map f * β.1 * u = (f e - f a) • u + f a • ((Matrix.diagonal d).map f * u) := by
@@ -612,7 +617,9 @@ theorem val_eq_of_notMem_sq {K : Type} [Field K] [NumberField K] {P : HeightOneS
 theorem prime_absNorm {Q : Finset (Pl D.host.E)} (hQ : IsTwistPlaces D.host.g Q) {PP : Pl D.host.E} (h : PP ∈ Q) :
     (Ideal.absNorm PP.asIdeal).Prime ∧ ((Ideal.absNorm PP.asIdeal : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal ^ 2 := by
   obtain ⟨⟨q, hq, hc, hn, -⟩, -⟩ := hQ PP h
-  have e : Ideal.absNorm PP.asIdeal = q := hc
+  have e : Ideal.absNorm PP.asIdeal = q := by
+    rw [Ideal.absNorm_eq_natCard]
+    exact hc
   rw [e]
   exact ⟨hq, hn⟩
 
@@ -635,7 +642,7 @@ theorem exists_unif {Q : Finset (Pl D.host.E)} (hQ : IsTwistPlaces D.host.g Q) :
 
 theorem inv_natPow_rpow_neg_half_even_eq_pow {ι : Type} (s : Finset ι) (q : ι → ℕ) (o : ι → ℤ) (t r : ℕ) (ho : ∀ i ∈ s, o i = t) :
     (∏ i ∈ s, (q i : ℝ) ^ (-o i)) ^ ((r : ℝ) / 2) = ∏ i ∈ s, ((Real.sqrt (q i))⁻¹ ^ r) ^ t := by
-  rw [← Real.finset_prod_rpow _ _ fun i _ => zpow_nonneg (Nat.cast_nonneg _) _]
+  rw [← Real.finsetProd_rpow _ _ (fun i _ => zpow_nonneg (Nat.cast_nonneg _) _) _]
   refine Finset.prod_congr rfl fun i hi => ?_
   rw [ho i hi, Real.sqrt_eq_rpow, ← Real.rpow_neg (Nat.cast_nonneg _), ← Real.rpow_intCast, ← Real.rpow_natCast,
     ← Real.rpow_natCast, ← Real.rpow_mul (Nat.cast_nonneg _), ← Real.rpow_mul (Nat.cast_nonneg _),
@@ -774,13 +781,13 @@ theorem vecFree_base_translate : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
   obtain ⟨c, ⟨hc0, m₁, hc1, hc2⟩, hc⟩ := scalar_good hL i hK.chr hK.fin hK.pl hμ hp hξ hV ha hN hNv hodd
     (x := GlobalTheory.VecInv.detAt e hee _ g) hdet
   obtain ⟨m₂, hm₂⟩ := inCoefLat_pow R i (hL.βV i) hk (p := p) fun PP hPP => by
-    rw [RingHom.map_add, RingHom.map_add, (cpt_sum ha PP).2 fun h => hPP (hp PP h), zero_add, GlobalTheory.StdFrames.toEAf_cA]
+    rw [RingHom.map_add (f := _), RingHom.map_add (f := _), (cpt_sum ha PP).2 fun h => hPP (hp PP h), zero_add, GlobalTheory.StdFrames.toEAf_cA]
     exact GlobalTheory.StdFrames.cpt_sg_eq_zero ((cpt_sum ha _).2 fun h => hPP ((GlobalTheory.StdFrames.natCast_mem_cP PP p).1 (hp _ h)))
   have hν : ∀ PP, GlobalTheory.StdFrames.cpt (D := D) PP (toEAf D (a * (N : AE D) + (1 - a))) =
       GlobalTheory.StdFrames.cpt (D := D) PP (toEAf D a) * N + (1 - GlobalTheory.StdFrames.cpt (D := D) PP (toEAf D a)) := fun PP => by
     change ((GlobalTheory.StdFrames.cpt (D := D) PP).comp (toEAf D)) _ = ((GlobalTheory.StdFrames.cpt (D := D) PP).comp (toEAf D)) a * N +
       (1 - ((GlobalTheory.StdFrames.cpt (D := D) PP).comp (toEAf D)) a)
-    rw [map_add, map_mul, map_sub, map_one, map_natCast]
+    rw [map_add (f := _), map_mul, map_sub, map_one, map_natCast]
   have hν1 : ∀ PP ∈ Q, Valued.v (GlobalTheory.StdFrames.cpt (D := D) PP (toEAf D (a * (N : AE D) + (1 - a)))) = WithZero.exp (-1 : ℤ) :=
     fun PP h => by
       rw [hν, (cpt_sum ha PP).1 h, one_mul, sub_self, add_zero, ← hNv PP h,
@@ -798,7 +805,7 @@ theorem vecFree_base_translate : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
     ring
   refine ⟨D.what₂.embLL c⁻¹ • ω (g⁻¹, 1) φ, ⟨hvac, e, he, hex, fun Tm hTm => ?_⟩, g⁻¹,
     GlobalTheory.IdemSupport.mem_GfC_of_suppF _ (f := a + cA D a)
-      (by rw [RingHom.map_add, hinf, GlobalTheory.PlaceVec.infPart_cA hinf, add_zero]) hk, c⁻¹, m₁ + m₂, rfl,
+      (by rw [RingHom.map_add (f := _), hinf, GlobalTheory.PlaceVec.infPart_cA hinf, add_zero]) hk, c⁻¹, m₁ + m₂, rfl,
     int_congr (isIntegral_pow_mul (p := p) m₂ hc2) (by ring), int_congr (isIntegral_pow_mul (p := p) m₂ hc1)
       (by rw [inv_inv]; ring), inv_ne_zero hc0, fun h _ => hm₂ _ (Nat.le_add_left _ _) h⟩
   have law := GlobalTheory.SplitLinear.splitLinearModelConj D R.ψ _ _ _ _ ω hK.weil _ _ hS hT _ e he _ hvac.2.theta hvac.2.lat 1

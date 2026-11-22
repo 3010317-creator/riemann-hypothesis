@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 noncomputable section
 
@@ -13,7 +17,7 @@ def latSpanV {E V : Type} [Field E] [NumberField E] [AddCommGroup V] [Module E V
 
 def SatBasisV : Prop :=
   ∀ (E V : Type) [Field E] [NumberField E] [AddCommGroup V] [Module E V] [Module (𝓞 E) V]
-    [IsScalarTower (𝓞 E) E V] [FiniteDimensional E V] (Λ : Submodule (𝓞 E) V), Submodule.IsLattice E Λ →
+    [IsScalarTower (𝓞 E) E V] [FiniteDimensional E V] (Λ : Submodule (𝓞 E) V), Submodule.IsFullLattice E Λ →
     ∀ (n : ℕ) (w : Fin (n + 1) → V), LinearIndependent E w →
     ∀ a : Fin n → FractionalIdeal (nonZeroDivisors (𝓞 E)) E, (∀ i, a i ≠ 0) →
     ∃ (e : Fin (n + 1) → V) (c : FractionalIdeal (nonZeroDivisors (𝓞 E)) E),

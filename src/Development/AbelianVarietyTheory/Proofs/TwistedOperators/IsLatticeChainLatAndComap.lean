@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ScaledBasisMemChainLattice
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Imports
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ImportsAlt
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ScaledBasisMemChainLattice
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Imports
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ImportsAlt
+
+@[expose] public section
 
 open MeasureTheory ValuativeRel Matrix
 open scoped Pointwise
@@ -45,6 +49,30 @@ theorem isLattice_chainLat_and_comap :
   intro k _ _ _ _ n _ _ c
   refine ⟨fun ϖ hϖ L hL => ⟨?_, ?_⟩, fun Λ hΛ => ⟨?_, ?_⟩⟩
   · exact (hL.fg.map _).sup (Submodule.fg_span (Set.finite_range _))
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+  · refine Submodule.fg_of_fg_map_injective (inX k n c) ?_
+      (hΛ.fg.of_le (Submodule.map_comap_le _ _))
+    intro x y hxy
+    funext r
+    have := congrFun hxy (Sum.inl r)
+    simpa [inX_apply] using this
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+
+theorem isFullLattice_chainLat_and_comap :
+    ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
+      (n : Type) [Fintype n] [DecidableEq n] (c : ℕ),
+      (∀ (ϖ : 𝒪[k]), (ϖ : k) ≠ 0 → ∀ L : Submodule 𝒪[k] (n → k), Submodule.IsFullLattice k L →
+        Submodule.IsFullLattice k (chainLat ϖ c L)) ∧
+      ∀ Λ : Submodule 𝒪[k] (n ⊕ Fin c → k), Submodule.IsFullLattice k Λ →
+        Submodule.IsFullLattice k (Λ.comap (inX k n c)) := by
+  intro k _ _ _ _ n _ _ c
+  refine ⟨fun ϖ hϖ L hL =>
+    { toIsLattice := (isLattice_chainLat_and_comap k n c).1 ϖ hϖ L hL.toIsLattice
+      span_eq_top := ?_ }, fun Λ hΛ =>
+    { toIsLattice := (isLattice_chainLat_and_comap k n c).2 Λ hΛ.toIsLattice
+      span_eq_top := ?_ }⟩
   · rw [eq_top_iff]
     intro v _
     have hv : v = inX k n c (fun r => v (Sum.inl r)) +
@@ -70,12 +98,6 @@ theorem isLattice_chainLat_and_comap :
       rw [map_smul, ← algebraMap_smul k a, smul_smul, inv_mul_cancel₀ h1, one_smul]
     rw [this]
     exact Submodule.smul_mem _ _ (Submodule.subset_span (inX_mem_chainLat.2 hav))
-  · refine Submodule.fg_of_fg_map_injective (inX k n c) ?_
-      (hΛ.fg.of_le (Submodule.map_comap_le _ _))
-    intro x y hxy
-    funext r
-    have := congrFun hxy (Sum.inl r)
-    simpa [inX_apply] using this
   · refine span_eq_top_of_smul_mem _ fun v => ?_
     obtain ⟨a, ha, hav⟩ := exists_smul_mem (K := k) Λ (v := inX k n c v)
       (by rw [hΛ.span_eq_top]; trivial)

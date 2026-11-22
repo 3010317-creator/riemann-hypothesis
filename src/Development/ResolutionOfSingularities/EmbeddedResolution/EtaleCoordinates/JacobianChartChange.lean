@@ -1,17 +1,22 @@
-import Mathlib
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.AdaptedParameters
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateDivisorSmoothness
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.ChartRing
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateSubscheme
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleChartExistence
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossingsAddHypersurface
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothCenterChart
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheaf
-import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+module
+
+public import Mathlib
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.AdaptedParameters
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateDivisorSmoothness
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.ChartRing
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.CoordinateSubscheme
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleChartExistence
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossingsAddHypersurface
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothCenterChart
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheaf
+public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+
+@[expose] public section
+
 universe u
 
 open CategoryTheory Opposite AlgebraicGeometry TopologicalSpace
@@ -98,7 +103,8 @@ private theorem basisKaehler_repr_kaehlerMap (k₀ : Type*) [CommRing k₀] (ι�
       = ∑ j : ι₀, algebraMap S S' ((EtaleCoordinates.basisKaehler k₀ ι₀ S).repr ω j) •
         EtaleCoordinates.basisKaehler k₀ ι₀ S' j := by
     conv_lhs => rw [hω]
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     refine Finset.sum_congr rfl ?_
     intro j _
     rw [map_smul, hb j]
@@ -353,17 +359,6 @@ def chartPartialDeriv (hV : IsAffineOpen V) (c : EtaleChart p V n) (j : Fin n)
     c.algebra_formallyEtale hV
   EtaleCoordinates.partialDeriv k (ULift.{u} (Fin n)) Γ(X, V) (ULift.up j) f
 
-omit [AlgebraicGeometry.Smooth p] in
-theorem chartPartialDeriv_eq (hV : IsAffineOpen V) (c : EtaleChart p V n) (j : Fin n)
-    (f : Γ(X, V)) :
-    letI : Algebra k Γ(X, V) := sectionsAlgebra k p V
-    letI : Algebra (MvPolynomial (ULift.{u} (Fin n)) k) Γ(X, V) := c.algebra
-    haveI : IsScalarTower k (MvPolynomial (ULift.{u} (Fin n)) k) Γ(X, V) := c.isScalarTower
-    haveI : Algebra.FormallyEtale (MvPolynomial (ULift.{u} (Fin n)) k) Γ(X, V) :=
-      c.algebra_formallyEtale hV
-    chartPartialDeriv hV c j f =
-      EtaleCoordinates.partialDeriv k (ULift.{u} (Fin n)) Γ(X, V) (ULift.up j) f :=
-  rfl
 
 private theorem derivation_sum_apply {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
     {ι : Type*} [DecidableEq ι] (s : Finset ι) (D : ι → Derivation R A A) (a : A) :

@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ImportsTer
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ImportsTer
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH NumberField IsDedekindDomain Matrix
 open Formalism.L2.DIV (Pl)
@@ -51,7 +55,7 @@ theorem isLattice_capX_and_exists_glue (D : D7) (u : D.what₂.Word) (Y X : HSp 
   obtain ⟨hfg, hsp, hsd⟩ := hL
   have hT := Tu_ne_zero u
   have hinj : Function.Injective ι := by
-    rw [injective_iff_map_eq_zero]
+    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     refine X.nondeg.1 x fun y => ?_
     rw [← hi, hx, map_zero, LinearMap.zero_apply]
@@ -69,24 +73,15 @@ theorem isLattice_capX_and_exists_glue (D : D7) (u : D.what₂.Word) (Y X : HSp 
     have : Y.hD (ι x + s • z) z = -(s * Tu D u) := by
       have h1 := ho x
       simp only [HSpace.hD] at h1 hz ⊢
-      rw [map_add, map_smul, h1, hz, smul_eq_mul]; ring
+      rw [map_add (f := _), map_smul, h1, hz, smul_eq_mul]; ring
     rw [this]
     congr 2
     field_simp
   refine ⟨GlobalTheory.StdFrames.isLattice_crdLat X ⟨?_, ?_⟩, ?_⟩
   · refine Submodule.fg_of_fg_map_injective (ι.restrictScalars (𝓞 D.host.E)) hinj (hfg.of_le ?_)
     exact Submodule.map_comap_le _ _
-  · rw [eq_top_iff]
-    intro x _
-    obtain ⟨c, hc, hx⟩ := exists_smul_mem L (y := ι x) (hsp ▸ Submodule.mem_sup_left ⟨x, rfl⟩)
-    have hc1 : algebraMap (𝓞 D.host.E) D.host.E c ≠ 0 := by simpa using hc
-    have : x = (algebraMap (𝓞 D.host.E) D.host.E c)⁻¹ • (c • x) := by
-      rw [← algebraMap_smul D.host.E c, smul_smul, inv_mul_cancel₀ hc1, one_smul]
-    rw [this]
-    refine Submodule.smul_mem _ _ (Submodule.subset_span ?_)
-    change (ι.restrictScalars (𝓞 D.host.E)) (c • x) ∈ L
-    rw [map_smul]
-    exact hx
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
   · let I : Ideal (𝓞 D.host.E) :=
       (L.map ((Y.hT z).restrictScalars (𝓞 D.host.E))).comap (Algebra.linearMap (𝓞 D.host.E) D.host.E)
     have hI : ∀ i : 𝓞 D.host.E, i ∈ I ↔ ∃ y ∈ L, Y.hD y z = (i : D.host.E) := fun i => Iff.rfl
@@ -127,7 +122,7 @@ theorem isLattice_capX_and_exists_glue (D : D7) (u : D.what₂.Word) (Y X : HSp 
     obtain ⟨x, hx⟩ := hdec y hy
     obtain ⟨b, hb⟩ := hint y hy
     have e : y + b • l = ι (x + b • x₀) := by
-      rw [← algebraMap_smul D.host.E b, ← algebraMap_smul D.host.E b x₀, hb, map_add, map_smul, hl2]
+      rw [← algebraMap_smul D.host.E b, ← algebraMap_smul D.host.E b x₀, hb, map_add (f := _), map_smul, hl2]
       generalize Y.hD y z = t at hx ⊢
       rw [hx]
       module

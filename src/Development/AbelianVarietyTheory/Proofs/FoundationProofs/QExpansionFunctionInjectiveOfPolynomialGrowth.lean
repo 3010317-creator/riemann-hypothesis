@@ -1,6 +1,11 @@
-import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
-import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
-import CompanionTheory.EightfoldTheory.VariationTheory.AutomorphicForms.Newform
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
+public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
+public import CompanionTheory.EightfoldTheory.VariationTheory.AutomorphicForms.Newform
+
+@[expose] public section
+
 open UpperHalfPlane Complex MeasureTheory CongruenceSubgroup GlobalTheory.EisM UpperTheory.V.Af Filter Topology
 open scoped MatrixGroups Real ComplexConjugate Manifold ModularForm
 
@@ -83,7 +88,7 @@ theorem qs_injective : ∀ a b : ℕ → ℂ, PolyB a → PolyB b → qs a = qs 
     show ∑' n, p n (fun _ => q) = 0
     simp only [hp, FormalMultilinearSeries.ofScalars_apply_eq, smul_eq_mul, hcdef, sub_mul]
     rw [Summable.tsum_sub ha' hb', e, sub_self]
-  have hcont : ContinuousAt p.sum 0 := hP.continuousOn.continuousAt (EMetric.ball_mem_nhds 0 hpos)
+  have hcont : ContinuousAt p.sum 0 := hP.continuousOn.continuousAt (Metric.eball_mem_nhds 0 hpos)
   have h0 : p.sum 0 = 0 := by
     have hev : p.sum =ᶠ[𝓝[≠] (0 : ℂ)] fun _ => (0 : ℂ) := by
       filter_upwards [self_mem_nhdsWithin, nhdsWithin_le_nhds (Metric.ball_mem_nhds (0 : ℂ) one_pos)]

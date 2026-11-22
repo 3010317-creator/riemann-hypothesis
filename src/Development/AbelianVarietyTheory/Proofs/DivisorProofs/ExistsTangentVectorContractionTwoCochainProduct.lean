@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -87,13 +91,13 @@ theorem exists_contr : ∀ (R : Type) [CommRing R] (A B : Over (Sp R)) [GrpObj A
     (z _ _ _ (sHom x) (τHom φ x) - z _ _ _ (aHom φ x) (sHom _) - z _ _ _ (iHom v hv x) (τHom φ x) +
       z _ _ _ (bHom v φ x) (iHom v hv _)), ?_⟩
   intro D _ _ D' _ _ φ x s i s' i' a b τ hs hi hs' hi' ha hb hτ
-  obtain rfl : s = sHom x := Thick.hom_ext fun r ↦ (hs r).trans rfl
-  obtain rfl : i = iHom v hv x := Thick.hom_ext fun r ↦ (hi r).trans rfl
-  obtain rfl : s' = sHom _ := Thick.hom_ext fun r ↦ (hs' r).trans rfl
-  obtain rfl : i' = iHom v hv _ := Thick.hom_ext fun r ↦ (hi' r).trans rfl
-  obtain rfl : a = aHom φ x := Thick.hom_ext fun r ↦ (ha r).trans rfl
-  obtain rfl : b = bHom v φ x := Thick.hom_ext fun r ↦ (hb r).trans rfl
-  obtain rfl : τ = τHom φ x := Thick.hom_ext fun r ↦ (hτ r).trans rfl
+  obtain rfl : s = sHom x := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hs r).trans rfl)
+  obtain rfl : i = iHom v hv x := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hi r).trans rfl)
+  obtain rfl : s' = sHom _ := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hs' r).trans rfl)
+  obtain rfl : i' = iHom v hv _ := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hi' r).trans rfl)
+  obtain rfl : a = aHom φ x := Thick.Hom.ext' (AlgHom.ext fun r ↦ (ha r).trans rfl)
+  obtain rfl : b = bHom v φ x := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hb r).trans rfl)
+  obtain rfl : τ = τHom φ x := Thick.Hom.ext' (AlgHom.ext fun r ↦ (hτ r).trans rfl)
   rfl
 
 end GlobalTheory.PtExt.ContrMor

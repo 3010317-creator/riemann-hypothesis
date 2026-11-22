@@ -1,7 +1,11 @@
-import Formalism.LocalRingCardinality.DataSpaces
-import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleRanksRankComplement
-import Formalism.FockGram.SymGramPosSemidef
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
+module
+
+public import Formalism.LocalRingCardinality.DataSpaces
+public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleRanksRankComplement
+public import Formalism.FockGram.SymGramPosSemidef
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
+
+@[expose] public section
 
 noncomputable section
 
@@ -56,7 +60,8 @@ theorem diagForm_single (N : ℕ) (neg : Fin N → Bool) (i j : Fin N) :
 theorem diagForm_isSymm (N : ℕ) (neg : Fin N → Bool) : (diagForm (E := E) N neg).IsSymm := by
   constructor
   intro x y
-  simp only [diagForm_apply, map_sum, starRingEnd_apply, star_mul', star_star, star_sgn]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [diagForm_apply, map_sum, starRingEnd_apply, star_mul', star_star, star_sgn]
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
 
@@ -88,8 +93,11 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E]
 def stdLat (N : ℕ) : Submodule (𝓞 E) (Fin N → E) :=
   Submodule.span (𝓞 E) (Set.range (Pi.basisFun E (Fin N)))
 
-theorem stdLat_isLattice (N : ℕ) : Submodule.IsLattice E (stdLat (E := E) N) where
-  fg := Submodule.fg_span (Set.finite_range _)
+theorem stdLat_isLattice (N : ℕ) : Submodule.IsLattice E (stdLat (E := E) N) :=
+  Submodule.IsLattice.of_fg E (Submodule.fg_span (Set.finite_range _))
+
+theorem stdLat_isFullLattice (N : ℕ) : Submodule.IsFullLattice E (stdLat (E := E) N) where
+  toIsLattice := stdLat_isLattice N
   span_eq_top := by
     rw [stdLat, Submodule.span_span_of_tower]
     exact (Pi.basisFun E (Fin N)).span_eq
@@ -136,7 +144,7 @@ def stdSpace (hstar : ∀ x : E, IsIntegral ℤ x → IsIntegral ℤ (star x)) (
   frame := Pi.basisFun E (Fin N)
   sig := fun _ => (p, q)
   L0 := stdLat N
-  standardTuple_isLattice := stdLat_isLattice N
+  standardTuple_isLattice := stdLat_isFullLattice N
   baseLattice_isUnimodular := stdLat_unimod hstar N neg
 
 variable (hstar : ∀ x : E, IsIntegral ℤ x → IsIntegral ℤ (star x))
@@ -450,7 +458,7 @@ def spacesExample : Spaces R0 F E where
   hypF := fun _ => 0
   hyp_ee := fun _ _ => by simp
   hyp_ff := fun _ _ => by simp
-  hyp_ef := fun i _ => absurd i.isLt (by simp)
+  hyp_ef := fun i _ => (Nat.not_lt_zero _ i.isLt).elim
   hyp_orthX := fun _ _ => ⟨by simp, by simp⟩
   hyp_orthz := fun _ => ⟨by simp, by simp⟩
   baseSpace_signature_eq := fun _ => rfl
@@ -475,8 +483,6 @@ def spacesExample : Spaces R0 F E where
   V_rank := fun _ _ _ => rfl
   Vneg := fun _ => false
   V_std := fun _ _ _ => standardLattice_orthogonal
-
-theorem spacesToy_T : (spacesExample hstar cm T hT pz hpz hy).T = T := rfl
 
 theorem spacesExample_Ysig : ∀ j, j ≤ R0.m → ∀ τ : E →+* ℂ,
     ((spacesExample hstar cm T hT pz hpz hy).Y j).sig τ = sigYD R0 j := by

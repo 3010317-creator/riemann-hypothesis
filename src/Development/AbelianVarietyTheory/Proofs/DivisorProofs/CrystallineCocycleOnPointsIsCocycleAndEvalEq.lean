@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -25,7 +29,7 @@ theorem ev_eq_fv_of_triv {R : Type} [CommRing R] {X : Over (Sp R)} (f : Z1 (O (d
     exact Over.OverMorphism.ext hp
   subst e
   refine ⟨rfl, ?_⟩
-  have : a = trivMap φ x := Thick.hom_ext h
+  have : a = trivMap φ x := Thick.Hom.ext' (AlgHom.ext h)
   rw [this]
   rfl
 

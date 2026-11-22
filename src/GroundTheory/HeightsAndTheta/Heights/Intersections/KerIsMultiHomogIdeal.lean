@@ -1,6 +1,11 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.Intersections.ExistsIntValuationLtOne
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.ExistsIntValuationLtOne
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.Inter
@@ -29,8 +34,8 @@ theorem ltIdeal_one_isPrime {R Γ : Type*} [CommRing R] [LinearOrderedCommGroupW
 
 def tWeight [DecidableEq K] (k : K) : K → ℕ := fun k' => if k' = k then 1 else 0
 
-omit [Fintype K] [∀ k, Fintype (ι k)] in
 
+omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem specMap_component [DecidableEq K] {E : Type*} [Field E] (ψ : MRing ι →+* E) (k : K) (d : ℕ)
     (g : MRing ι) :
     RegularityFunctionFieldNumber.specMap ψ ∅ (weightedHomogeneousComponent (blockWeight k) d g) =
@@ -54,11 +59,11 @@ theorem specMap_component [DecidableEq K] {E : Type*} [Field E] (ψ : MRing ι �
     · rw [h, hm.weightedHomogeneousComponent_same, hh.weightedHomogeneousComponent_same]
     · rw [hm.weightedHomogeneousComponent_ne d h, hh.weightedHomogeneousComponent_ne d h, map_zero]
   | add p q hp hq =>
-    rw [map_add, map_add, hp, hq, map_add (RegularityFunctionFieldNumber.specMap ψ ∅) p q]
+    rw [map_add (f := _), map_add (f := _), hp, hq, map_add (RegularityFunctionFieldNumber.specMap ψ ∅) p q]
     exact ((weightedHomogeneousComponent (R := E) (tWeight k) d).map_add _ _).symm
 
-set_option backward.isDefEq.respectTransparency.types false in
 
+set_option backward.isDefEq.respectTransparency.types false in
 theorem ker_isMultiHomogIdeal [DecidableEq K] {E : Type*} [Field E] (ψ : MRing ι →+* E) :
     IsMultiHomogIdeal (RingHom.ker (RegularityFunctionFieldNumber.specMap ψ ∅)) := by
   refine isMultiHomogIdeal_of_isHomogeneous fun k d g hg => ?_
@@ -70,9 +75,9 @@ theorem ker_isMultiHomogIdeal [DecidableEq K] {E : Type*} [Field E] (ψ : MRing 
 
 end RegularityValuationCentre
 
+
 set_option maxHeartbeats 400000 in
 open regularityEmbedding_holds in
-
 theorem RegularityValuationCentre.proof : RegularityValuationCentre.Statement := by
   intro K _ ι _ P hP Γ _ v n hn
   classical
@@ -122,7 +127,7 @@ theorem RegularityValuationCentre.proof : RegularityValuationCentre.Statement :=
     intro g
     induction g using MvPolynomial.induction_on with
     | C a => simp [chartHom]
-    | add f g hf hg => rw [map_add]; exact add_mem hf hg
+    | add f g hf hg => rw [map_add (f := chartHom r)]; exact add_mem hf hg
     | mul_X f p hf =>
       rw [map_mul]
       exact mul_mem hf (by simpa [chartHom] using (Valuation.mem_integer_iff v (r p)).mpr (hrle p))

@@ -1,7 +1,11 @@
-import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.DatDatum
-import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.UmgOps
-import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.HkApply
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.TsphVec
+module
+
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.DatDatum
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.UmgOps
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.CuspidalNormBounds.HkApply
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.TsphVec
+
+@[expose] public section
 
 open private kgl_eq tj_eq hop_apply mem_fixL from Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.TsphVec
 
@@ -11,11 +15,11 @@ open GroundTheory.Automorphic.CuspidalSpectrum UpperTheory.ConvolutionTheory.C U
 
 namespace UpperTheory.ConvolutionTheory.BW
 
-variable {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {n : ℕ}
-  {μ : Measure (normOneGL E n)} [μ.IsHaarMeasure] {v : LL μ} {φ : Sm E n}
+variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {n : ℕ}
+  {μ : Measure (normOneGL (K := E) (n := n))} [μ.IsHaarMeasure] {v : LL μ} {φ : Sm E n}
 
 private theorem out_eq (h : Umg φ) :
-    (fun y : RightCosetSpace (rationalGLOne E n) => φ.1 ((Quotient.out y : normOneGL E n) : GA E n)) = cuspQuot h.left := by
+    (fun y : RightCosetSpace (rationalGLOne (K := E) (n := n)) => φ.1 ((Quotient.out y : normOneGL (K := E) (n := n)) : GA E n)) = cuspQuot h.left := by
   funext y
   conv_rhs => rw [← Quotient.out_eq y]
   rfl
@@ -57,13 +61,13 @@ private theorem rep_rt (h : Rep μ v φ) (g : GA E n) : Rep μ (RG μ g v) (rt E
   refine of_cont ((((umgOps E) n).2 φ h.umg).2.2.2.2.1 g) (fun t x => ?_) ?_
   · change φ.1 (zt E n t * x * g) = φ.1 (x * g)
     rw [mul_assoc, h.cen]
-  · have e : (fun y : normOneGL E n => (rt E n g φ).1 (y : GA E n)) =
-        fun y : normOneGL E n => φ.1 ((y * retractOne g : normOneGL E n) : GA E n) := funext fun y => retr h y g
+  · have e : (fun y : normOneGL (K := E) (n := n) => (rt E n g φ).1 (y : GA E n)) =
+        fun y : normOneGL (K := E) (n := n) => φ.1 ((y * retractOne g : normOneGL (K := E) (n := n)) : GA E n) := funext fun y => retr h y g
     rw [e]
     exact (cont_of h).translate (retractOne g)
 
-private theorem rep_hecke (h : Rep μ v φ) (w : Pl E) {T : GL (Fin n) (w.adicCompletion E) → ℂ} (hT : T ∈ Hecke ℂ (KGL w n)) :
-    Rep μ (heckeVec (localRepresentationL2 μ w) (KGL w n) T v) (heckeVec (rw n w) (KGL w n) T φ) := by
+private theorem rep_hecke (h : Rep μ v φ) (w : Pl E) {T : GL (Fin n) (w.adicCompletion E) → ℂ} (hT : T ∈ Hecke ℂ (KGL w (n := n))) :
+    Rep μ (heckeVec (localRepresentationL2 μ w) (KGL w (n := n)) T v) (heckeVec (rw n w) (KGL w (n := n)) T φ) := by
   classical
   have hf := Formalism.UG.P.finite_support_cosets (Final.GLintComm E w n) hT.2
   rw [heckeVec, heckeVec, finsum_eq_sum_of_support_subset (s := hf.toFinset) _ fun c hc => by
@@ -79,7 +83,7 @@ private theorem rep_hecke (h : Rep μ v φ) (w : Pl E) {T : GL (Fin n) (w.adicCo
 end UpperTheory.ConvolutionTheory.BW
 
 theorem UpperTheory.ConvolutionTheory.BW.repOps :
-    ∀ (E : Type) [Field E] [NumberField E] [IsTotallyComplex E], UpperTheory.ConvolutionTheory.BW.RepOps E := by
+    ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E], UpperTheory.ConvolutionTheory.BW.RepOps E := by
   intro E _ _ _ n μ _ _ v φ h
   refine ⟨fun ψ h' => Subtype.ext (funext fun g => ?_), fun v' ψ c h' => rep_comb h c h', fun hc r hr hrn => ?_,
     fun w i hw => ?_⟩
@@ -92,7 +96,7 @@ theorem UpperTheory.ConvolutionTheory.BW.repOps :
     filter_upwards [ae_ctFun_congr μ r e] with y hy
     rw [constantTermL2, hy]
     exact hc r hr hrn y
-  · have hv : v ∈ fixL μ w (KGL w n) := (mem_fixL μ w _ v).2 fun k hk => by
+  · have hv : v ∈ fixL μ w (KGL w (n := n)) := (mem_fixL μ w _ v).2 fun k hk => by
       have h1 := rep_rt h (finGL E n (locGL E n w k))
       have e : rt E n (finGL E n (locGL E n w k)) φ = φ := hw k hk
       rw [e] at h1

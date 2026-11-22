@@ -1,7 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOHZeroRight
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOHZeroRight
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory Matrix
 open GlobalTheory.FinPl GlobalTheory.MixPer GlobalTheory.MixModel GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil GlobalTheory.SeeSaw
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -17,9 +22,9 @@ theorem extL_mem_latO : ∀ (D : D7) (V₀ A L S : HSp D) (o : OrthDec V₀ A L)
   refine ⟨fun i j => ?_, fun y hy => ?_⟩
   · rw [Matrix.mul_apply]
     exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (huP i k)
-  · have hy' := ((hloc V₀).2.2.2 M y hM.1).1 hy
+  · have hy' := ((hloc V₀).2.2.2 M y hM.1.toIsLattice).1 hy
     have hp : o.pA *ᵥ y ∈ latV A LA P := by
-      refine ((hloc A).2.2.2 LA (o.pA *ᵥ y) hA.1).2 ⟨fun i => ?_, fun v hv e he => ?_⟩
+      refine ((hloc A).2.2.2 LA (o.pA *ᵥ y) hA.1.toIsLattice).2 ⟨fun i => ?_, fun v hv e he => ?_⟩
       · rw [Matrix.mulVec, dotProduct]
         exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (hy'.1 k)
       · obtain ⟨LL, hLL⟩ := hO v hv

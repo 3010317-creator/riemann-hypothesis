@@ -1,6 +1,10 @@
-import Mathlib
-import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.lift_levelP_alt₂
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSatakeLeOfUnitarySphericalGL
+module
+
+public import Mathlib
+public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.lift_levelP_alt₂
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSatakeLeOfUnitarySphericalGL
+
+@[expose] public section
 
 noncomputable section
 
@@ -168,7 +172,7 @@ theorem integer_eq : 𝒪[w.adicCompletion E] = Formalism.UG.Ov E w := by
   rw [Valuation.mem_integer_iff, he.le_one_iff_le_one]
   exact Iff.rfl
 
-theorem integralGL_eq_KGL (n : ℕ) : integralGL (w.adicCompletion E) n = KGL w n := by
+theorem integralGL_eq_KGL (n : ℕ) : integralGL (w.adicCompletion E) n = KGL w (n := n) := by
   have : ∀ O : Subring (w.adicCompletion E), O = 𝒪[w.adicCompletion E] →
       Formalism.UG.GLint (Fin n) O = integralGL (w.adicCompletion E) n := by
     rintro _ rfl

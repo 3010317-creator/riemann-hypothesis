@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramHspOf
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondegStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodularStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramHspOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondegStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianNegTraceZeroInvHermitianUnimodularStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -34,7 +38,7 @@ theorem isThetaFunO_mul {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T S₁ T₁
   refine ⟨fun γ w => ?_, ?_, (h₁.cont.comp c₁).mul (h₂.cont.comp c₂), fun k L hL hL0 w => ?_⟩
   · obtain ⟨γ₁, e₁⟩ := r₁ γ
     obtain ⟨γ₂, e₂⟩ := r₂ γ
-    rw [map_add, map_add, hH, e₁, e₂, h₁.quasi, h₂.quasi, neg_add, AddChar.map_add_eq_mul]
+    rw [map_add (f := _), map_add (f := _), hH, e₁, e₂, h₁.quasi, h₂.quasi, neg_add, AddChar.map_add_eq_mul]
     ring
   · obtain ⟨U₁, o₁, hU₁⟩ := h₁.level
     obtain ⟨U₂, o₂, hU₂⟩ := h₂.level
@@ -43,9 +47,9 @@ theorem isThetaFunO_mul {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T S₁ T₁
     have a₂ := congrFun (hU₂ (p₂ u) hu.2 (hi u h0).2) (p₂ w)
     unfold heisO at a₁ a₂ ⊢
     beta_reduce
-    rw [← a₁, ← a₂, hH, p₁.map_add, p₂.map_add, AddChar.map_add_eq_mul]
+    rw [← a₁, ← a₂, hH, map_add (f := p₁), map_add (f := p₂), AddChar.map_add_eq_mul]
     ring
-  · simp only [map_add]
+  · simp only [map_add (f := _)]
     exact (h₁.smooth k (p₁.comp L) (c₁.comp hL) (fun t => (hf _ (hL0 t)).1) (p₁ w)).mul
       (h₂.smooth k (p₂.comp L) (c₂.comp hL) (fun t => (hf _ (hL0 t)).2) (p₂ w))
 
@@ -65,14 +69,14 @@ theorem infPart_cA {D : D7} (x : AE D) :
     infPart D (cA D x) = sigR (Ainf D.host.F) D.sp.cm.sig (infPart D x) := by
   induction x using TensorProduct.induction_on with
   | zero => simp only [RingHom.map_zero]
-  | add x y hx hy => simp only [RingHom.map_add, hx, hy]
+  | add x y hx hy => simp only [RingHom.map_add (f := _), hx, hy]
   | tmul a x => rfl
 
 theorem finPart_cA {D : D7} (x : AE D) :
     finPart D (cA D x) = sigR (Af D.host.F) D.sp.cm.sig (finPart D x) := by
   induction x using TensorProduct.induction_on with
   | zero => simp only [RingHom.map_zero]
-  | add x y hx hy => simp only [RingHom.map_add, hx, hy]
+  | add x y hx hy => simp only [RingHom.map_add (f := _), hx, hy]
   | tmul a x => rfl
 
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {i j : ℕ}
@@ -102,8 +106,8 @@ theorem mapW_rat (e : Num G i j) (γ : Matrix (Fin (spW G i j).rank) (Fin ((spW 
   ⟨-_, (congrArg Neg.neg (mulG_rat (spV₁ G i j) ((γ.submatrix id fun k => e (.inr k)).map star))).trans
     (Matrix.map_neg _ (map_neg (incA D)) _).symm⟩
 
-theorem thetaPt_box : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) (M : Vol G) (t : T) (i j : ℕ) (e : Num G i j) (Bs : Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : Chars D.host.F D.host.E)
-    (om : Rep D.sp.cm.sig Γ.V Γ.W) (om' : Rep D.sp.cm.sig Γ.V' Γ.W), IsTripleOf W M t i j e Bs Γ X → IsTriple Bs Γ X om om' →
+theorem thetaPt_box : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) (M : Vol G) (t : T) (i j : ℕ) (e : Num G i j) (Bs : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E)
+    (om : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W) (om' : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W), IsTripleOf W M t i j e Bs Γ X → IsTriple Bs Γ X om om' →
     (∀ Φ ∈ schA D.host.F (Ix G i j), ∀ Φ' ∈ schA D.host.F (Ix G i j), thetaPt Γ W.ψ (Φ + Φ') = thetaPt Γ W.ψ Φ + thetaPt Γ W.ψ Φ') ∧
     (∀ Φ ∈ schA D.host.F (Ix G i j), ∀ Φ' ∈ schA D.host.F (Ix G i j), thetaPt Γ W.ψ Φ = thetaPt Γ W.ψ Φ' → Φ = Φ') ∧
     ∀ (f₁ : HomV G i j → ℂ) (f₂ : HomW G i j → ℂ), IsThetaFunO W.ψ _ _ f₁ → IsThetaFunO W.ψ _ _ f₂ →

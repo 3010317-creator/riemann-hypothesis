@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunction
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemLevelOfThetaDatumNeZero
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FinitePartMemLevelOfThetaDatumNeZero
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
@@ -11,8 +16,6 @@ namespace UpperTheory.standardActionStabilizer
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle
 
 variable {D : D7}
-
-local notation "OO" => Formalism.L2.Herm.intAf D.host.F D.host.E
 
 private theorem isIntM_mul {b a c : ℕ} {N : Matrix (Fin b) (Fin a) (Lev.EAf D)} {κ : Matrix (Fin a) (Fin c) (Lev.EAf D)}
     (hN : IsIntM N) (hκ : IsIntM κ) : IsIntM (N * κ) := fun i j => by
@@ -102,10 +105,10 @@ private theorem unitChar_mul (ν : (AE D)ˣ →* Circle) {e : AE D} {S : Finset 
   unfold unitChar
   by_cases hL : ∃ x, IsUnitDet e L x
   · have hLκ : ∃ x, IsUnitDet e (L * κ) x := ⟨_, isUnitDet_mul he hL.choose_spec hy⟩
-    rw [dif_pos hL, dif_pos hLκ, isUnitDet_unique hLκ.choose_spec (isUnitDet_mul he hL.choose_spec hy), map_mul,
+    rw [dite_eq_left hL, dite_eq_left hLκ, isUnitDet_unique hLκ.choose_spec (isUnitDet_mul he hL.choose_spec hy), map_mul,
       _root_.mul_inv_rev, Circle.coe_mul]
   · have hLκ : ¬ ∃ x, IsUnitDet e (L * κ) x := fun ⟨z, hz⟩ => hL ⟨_, isUnitDet_div he hκ hz hy⟩
-    rw [dif_neg hL, dif_neg hLκ, mul_zero]
+    rw [dite_eq_right hL, dite_eq_right hLκ, mul_zero]
 
 private theorem half_act {e : AE D} (S T : HSp D) (g : GA D S) {x : WO S T} (h : IsHalf e x) :
     IsHalf e (actO S T g 1 x) := fun i j => by

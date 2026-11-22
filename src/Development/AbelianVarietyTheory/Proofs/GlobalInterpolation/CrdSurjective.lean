@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.ThDistC
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelIndexMulVec
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.ThDistC
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelIndexMulVec
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker Formalism.MainNotions Formalism.L2.Th1.H GlobalTheory.ThetaMove GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree
 
@@ -19,7 +23,7 @@ def crd (g : Sp E a ≃ₗ[E] Sp E a) (g' : Sp E b ≃ₗ[E] Sp E b) : HomE E a 
   toFun x := (LinearMap.toMatrix' ((g'.symm : Sp E b →ₗ[E] Sp E b) ∘ₗ x ∘ₗ (g : Sp E a →ₗ[E] Sp E a))).vec
   map_zero' := by simp
   map_add' x y := by
-    rw [LinearMap.add_comp, LinearMap.comp_add, map_add, Matrix.vec_add]
+    rw [LinearMap.add_comp, LinearMap.comp_add, map_add (f := _), Matrix.vec_add]
 
 theorem crd_apply (g : Sp E a ≃ₗ[E] Sp E a) (g' : Sp E b ≃ₗ[E] Sp E b) (x : HomE E a b) :
     crd g g' x = (LinearMap.toMatrix' ((g'.symm : Sp E b →ₗ[E] Sp E b) ∘ₗ x ∘ₗ (g : Sp E a →ₗ[E] Sp E a))).vec := rfl

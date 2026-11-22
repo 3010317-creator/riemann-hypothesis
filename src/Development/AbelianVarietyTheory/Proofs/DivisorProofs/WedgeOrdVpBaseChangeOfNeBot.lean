@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsChernExistsUniqueAndIso
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNormalFormArcDatumFramedPointRootOfUnity
-import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsChartPull
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocallyNoetherian
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsChernExistsUniqueAndIso
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNormalFormArcDatumFramedPointRootOfUnity
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsChartPull
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocallyNoetherian
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
+
+@[expose] public section
 
 set_option autoImplicit false
 set_option synthInstance.maxHeartbeats 400000
@@ -78,8 +82,26 @@ theorem mem_Fil_of_corr (hF : PrimitiveSubmodule B = Submodule.span R' ((bcMor h
 
 theorem IsLieImage.baseChange (hF : PrimitiveSubmodule B = Submodule.span R' ((bcMor hφ).pull '' (PrimitiveSubmodule A)))
     (hL : LieExact B) {h : HdR A} {h' : HdR B} (e : (bcMor hφ).Corr h h') {v : epsR R ⟶ A} {v' : epsR R' ⟶ B}
-    (ev : v'.left ≫ φ = spMap (dualMap (algebraMap R R')) ≫ v.left) (hv : IsLieImage h v) : IsLieImage h' v' := by
-  have ht := ArcQ.NormalForm.isTangent_baseChange hφ ev hv.1
+    (ev : v'.left ≫ φ = spMap (dualMap (algebraMap R R')) ≫ v.left) (hv : IsLieImage h v) : IsLieImage h' v' := open CategoryTheory.MonoidalCategory CategoryTheory.CartesianMonoidalCategory CategoryTheory.MonObj in open scoped CategoryTheory.Obj in by
+  have ht : IsTangent v' := by
+    apply hφ.1.hom_ext
+    · rw [Category.assoc, ev, ← Category.assoc, ← Cris.spMap_comp]
+      have ee : (TrivSqZeroExt.fstHom R' R' R').toRingHom.comp
+          (dualMap (algebraMap R R')) =
+          (algebraMap R R').comp (TrivSqZeroExt.fstHom R R R).toRingHom := by
+        ext x <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
+      rw [ee, Cris.spMap_comp, Category.assoc, hv.1]
+      letI : Monoid (Over.mk (𝟙 (Sp R')) ⟶ B) := CategoryTheory.Hom.monoid
+      letI : Monoid (Over.mk ((Over.mk (𝟙 (Sp R'))).hom ≫ spMap (algebraMap R R')) ⟶ A) := CategoryTheory.Hom.monoid
+      have he := congrArg (fun t => t.left) (map_one (pushHom hφ (Over.mk (𝟙 (Sp R')))))
+      simpa [pushHom, pushPt, ArcQ.NormalForm.one_left_eq] using he.symm
+    · have ee : spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫
+          spMap (algebraMap R' (DualNumber R')) = 𝟙 _ := ArcLieCompare.epsRed_hom
+      change spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫ v'.left ≫ B.hom = _
+      rw [Over.w]
+      change spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫ spMap (algebraMap R' (DualNumber R')) = _
+      rw [ee, Over.w]
+      rfl
   obtain ⟨k, hk⟩ := hL.2 v' ht
   have : h' - k ∈ Fil B := by
     rw [Fil, hF, Submodule.mem_dualAnnihilator]
@@ -96,8 +118,8 @@ theorem IsLieImage.baseChange (hF : PrimitiveSubmodule B = Submodule.span R' ((b
   rw [← hk.2 f hf, ← sub_eq_zero]
   exact mem_Fil.1 this f hf
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem IsKSValue.baseChange (P : AbelianDeRham) {A' : Over (Sp (DualNumber R))} [GrpObj A']
     {B' : Over (Sp (DualNumber R'))} [GrpObj B'] {g : ℕ} (hA : IsAbelianScheme A')
     (hg : SmoothOfRelativeDimension g A'.hom) {i : A.left ⟶ A'.left} {j : B.left ⟶ B'.left}
@@ -144,12 +166,12 @@ theorem IsKSValue.baseChange (P : AbelianDeRham) {A' : Over (Sp (DualNumber R))}
   refine ⟨k', ⟨d', mem_Fil_of_corr (hφ := hφ') hF₁ ex hd, fun c => ?_⟩,
     hk.baseChange (hφ := hφ) hF₀ (PH R' B g b₀.1 b₀.2).1 ek ev⟩
   obtain ⟨z, rfl⟩ := bc₀.2 c
-  induction z with
+  induction z using TensorProduct.induction_on with
   | zero =>
     rw [map_zero, map_zero, map_zero, LinearMap.map_zero, LinearMap.map_zero]
     simp
   | add x y hx hy =>
-    simp only [map_add, hx, hy]
+    simp only [map_add (f := _), hx, hy]
     ext <;> simp
   | tmul r c =>
     have n := (constMor A).comp m
@@ -188,22 +210,14 @@ variable {K K' : Type} [Field K] [Algebra c.F K] [Field K'] [Algebra c.F K'] {K�
   [Algebra c.F K₀] {ι : Type} [Fintype ι] {Φ : Finset (E →+* ℂ)} {ψ : K →ₐ[c.F] K'} {y : FrPt Xo c K}
   {y' : FrPt Xo c K'}
 
-def dualExt (ψ : K →ₐ[c.F] K') : DualNumber K →ₐ[c.F] DualNumber K' :=
-  { dualMap ψ.toRingHom with
-    commutes' := fun a => by ext <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl'] }
-
-@[simp] theorem fst_dualExt (a : DualNumber K) : (dualExt ψ a).fst = ψ a.fst := add_zero _
-
-@[simp] theorem snd_dualExt (a : DualNumber K) : (dualExt ψ a).snd = ψ a.snd := zero_add _
 
 open scoped CategoryTheory.Obj in
-
 theorem exists_isGrpPullback {S S' : Scheme.{0}} (G : Over S) [GrpObj G] (f : S' ⟶ S) :
     ∃ (G' : Over S') (_ : GrpObj G') (φ : G'.left ⟶ G.left), IsGrpPullback G' G f φ :=
   ⟨_, inferInstance, _, isGrpPullback_pullback G f⟩
 
 theorem IsKS.baseChange (P : AbelianDeRham) (h : FrMap ψ y y') {x : Sp (DualNumber K) ⟶ Xo.X} {M : HIx Dw Φ → K}
-    (hM : IsKS Φ y x M) : IsKS Φ y' (spMap (dualMap ψ.toRingHom) ≫ x) (ψ ∘ M) := by
+    (hM : IsKS Φ y x M) : IsKS Φ y' (spMap (dualMap ψ.toRingHom) ≫ x) (ψ ∘ M) := open CategoryTheory.MonoidalCategory CategoryTheory.CartesianMonoidalCategory CategoryTheory.MonObj in open scoped CategoryTheory.Obj in by
   obtain ⟨A, _, A', _, π, π', i, hi, b, ub, hb, hπ, hπ', e, hpol, hu, hl, hM⟩ := hM
   letI : Algebra K K' := ψ.toRingHom.toAlgebra
   obtain ⟨B, _, φ, hφ⟩ := exists_isGrpPullback A (spMap (algebraMap K K'))
@@ -227,95 +241,58 @@ theorem IsKS.baseChange (P : AbelianDeRham) (h : FrMap ψ y y') {x : Sp (DualNum
   have hL := (P.2.1 K' B _ (PolPull.isAbelianScheme_of_isGrpPullback hA hφ)
     ((smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hφ.1 gA)).1
   obtain ⟨b', hpol', eb⟩ := hpol.pull_comp (AbelianDeRham.bcMor hφ) (UnivPol.pol Xo).isLB
-  choose tv htv using ArcQ.NormalForm.exists_baseChange hφ
+  have dual_over : spMap (dualMap (algebraMap K K')) ≫
+      spMap (algebraMap K (DualNumber K)) = spMap (algebraMap K' (DualNumber K')) ≫ spMap (algebraMap K K') := by
+    rw [← Cris.spMap_comp, ← Cris.spMap_comp]
+    congr 1
+    ext r <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
+  have exists_bc (v : epsR K ⟶ A) : ∃ u : epsR K' ⟶ B,
+      u.left ≫ φ = spMap (dualMap (algebraMap K K')) ≫ v.left := by
+    have e : (spMap (dualMap (algebraMap K K')) ≫ v.left) ≫ A.hom =
+        (epsR K').hom ≫ spMap (algebraMap K K') := by rw [Category.assoc, Over.w]; exact dual_over
+    exact ⟨Over.homMk (hφ.1.lift _ _ e) (hφ.1.lift_snd _ _ _), hφ.1.lift_fst _ _ _⟩
+  choose tv htv using exists_bc
+  have comb_bc {n : ℕ} {cf : Fin n → K} {v : Fin n → (epsR K ⟶ A)} {w : epsR K ⟶ A}
+      {u : Fin n → (epsR K' ⟶ B)} {w' : epsR K' ⟶ B}
+      (hu : ∀ i, (u i).left ≫ φ = spMap (dualMap (algebraMap K K')) ≫ (v i).left)
+      (hw : w'.left ≫ φ = spMap (dualMap (algebraMap K K')) ≫ w.left)
+      (h : IsLieComb cf v w) : IsLieComb (fun i => algebraMap K K' (cf i)) u w' := by
+    have dual_scale (a : K) : spMap (dualMap (algebraMap K K')) ≫ spMap (epsScaleR a) =
+        spMap (epsScaleR (algebraMap K K' a)) ≫ spMap (dualMap (algebraMap K K')) := by
+      rw [← Cris.spMap_comp, ← Cris.spMap_comp]
+      congr 1
+      ext r <;> simp [dualMap, epsScaleR, TrivSqZeroExt.algebraMap_eq_inl]
+    rw [ArcQ.NormalForm.isLieComb_iff] at h ⊢
+    let U : Over.mk ((epsR K').hom ≫ spMap (algebraMap K K')) ⟶ epsR K :=
+      Over.homMk (spMap (dualMap (algebraMap K K'))) dual_over
+    letI : Monoid (epsR K' ⟶ B) := CategoryTheory.Hom.monoid
+    letI : Monoid (epsR K ⟶ A) := CategoryTheory.Hom.monoid
+    letI : Monoid (Over.mk ((epsR K').hom ≫ spMap (algebraMap K K')) ⟶ A) := CategoryTheory.Hom.monoid
+    have e₁ := map_list_prod (pushHom hφ (epsR K')) (List.ofFn fun i => ArcQ.NormalForm.sc (algebraMap K K' (cf i)) ≫ u i)
+    have e₂ := map_list_prod (preHom (G := A) U) (List.ofFn fun i => ArcQ.NormalForm.sc (cf i) ≫ v i)
+    rw [List.map_ofFn] at e₁ e₂
+    have e₃ : (pushHom hφ (epsR K')) ∘ (fun i => ArcQ.NormalForm.sc (algebraMap K K' (cf i)) ≫ u i) =
+        (preHom (G := A) U) ∘ fun i => ArcQ.NormalForm.sc (cf i) ≫ v i :=
+      funext fun i => Over.OverMorphism.ext (by
+        show (spMap (epsScaleR (algebraMap K K' (cf i))) ≫ (u i).left) ≫ φ =
+          spMap (dualMap (algebraMap K K')) ≫ spMap (epsScaleR (cf i)) ≫ (v i).left
+        rw [Category.assoc, hu, ← Category.assoc, ← Category.assoc, dual_scale])
+    rw [e₃, ← e₂, ← h] at e₁
+    apply Over.OverMorphism.ext
+    apply hφ.1.hom_ext
+    · exact hw.trans (congrArg (·.left) e₁).symm
+    · rw [Over.w, Over.w]
   choose th hth using bc.exists
   refine ⟨B, _, B', _, φ ≫ π, φ' ≫ π', _, hj, b', fun σ k => tv (ub σ k), fun k => th (hb k),
     (hφ.comp hπ).congr h.1.symm rfl, hφ'.comp hπ', by rw [← Category.assoc, sq, Category.assoc, e], hpol',
     fun σ k => ?_, fun σ k => (hl σ k).baseChange (hφ := hφ) hF hL (hth _) (htv _), fun τ a => ?_⟩
   · rw [← Category.assoc, htv, Category.assoc, hu, h.2.1]
   · obtain ⟨w, hw, f, hf, hd, hv⟩ := hM τ a
-    refine ⟨tv w, ArcQ.NormalForm.isLieComb_baseChange hφ (fun _ => htv _) (htv w) hw, th f,
+    refine ⟨tv w, comb_bc (fun _ => htv _) (htv w) hw, th f,
       mem_Fil_of_corr (hφ := hφ) hF (hth f) hf, fun k => ?_,
       hv.baseChange (hφ := hφ) P hA' gA' hj hφ' sq (hth f) (htv w)⟩
     rw [eb _ _ _ _ (hth f) (hth _), hd]
     split_ifs <;> simp
-
-theorem IsDef.baseChange (h : FrMap ψ y y') {v : FrPt Xo c (DualNumber K)} {v' : FrPt Xo c (DualNumber K')}
-    (e : FrMap (dualExt ψ) v v') (hv : IsDef y v) : IsDef y' v' :=
-  frMap_of_comp e (frMap_comp (χ := ψ.comp (red c K)) hv h fun _ => rfl) fun a => fst_dualExt a
-
-theorem IsShift.baseChange {N : FIx Dw → K} {v w : FrPt Xo c (DualNumber K)} {v' w' : FrPt Xo c (DualNumber K')}
-    (ev : FrMap (dualExt ψ) v v') (ew : FrMap (dualExt ψ) w w') (h : IsShift N v w) : IsShift (ψ ∘ N) v' w' := by
-  have := (frMap_iff_frChg h ev).1 ew
-  unfold IsShift
-  convert this using 1
-  · funext τ
-    ext i j <;> by_cases hij : i = j <;> simp [unip, Matrix.one_apply, hij]
-  · ext <;> simp [unip₀]
-
-theorem IsVert.baseChange (h : FrMap ψ y y') {N : FIx Dw → K} {v : FrPt Xo c (DualNumber K)}
-    {v' : FrPt Xo c (DualNumber K')} (e : FrMap (dualExt ψ) v v') (hv : IsVert y N v) : IsVert y' (ψ ∘ N) v' := by
-  obtain ⟨y₀, h₀, hv⟩ := hv
-  obtain ⟨y₁, h₁⟩ := exists_frMap (dualExt ψ) y₀
-  exact ⟨y₁, frMap_of_comp h (frMap_comp (χ := (dualExt ψ).comp (cst c K)) h₀ h₁ fun _ => rfl) fun a => by
-    ext <;> simp, hv.baseChange h₁ e⟩
-
-theorem IsTanFrame.baseChange (P : AbelianDeRham) (h : FrMap ψ y y') {v : TIx Dw Φ → FrPt Xo c (DualNumber K)}
-    {v' : TIx Dw Φ → FrPt Xo c (DualNumber K')} (e : ∀ k, FrMap (dualExt ψ) (v k) (v' k)) (hv : IsTanFrame Φ y v) :
-    IsTanFrame Φ y' v' := by
-  have s : ∀ {J : Type} [DecidableEq J] (k : J), ψ ∘ (Pi.single k 1 : J → K) = Pi.single k 1 := fun k => by
-    funext j
-    simp only [Function.comp_apply, Pi.single_apply]
-    split_ifs <;> simp
-  refine ⟨fun k => ⟨(hv.1 k).1.baseChange h (e _), ?_⟩, fun k => s k.toF ▸ (hv.2 k).baseChange h (e _)⟩
-  rw [(e _).1, ← s k]
-  exact (hv.1 k).2.baseChange P h
-
-theorem IsTanFrame.exists_baseChange (P : AbelianDeRham) (h : FrMap ψ y y')
-    {v : TIx Dw Φ → FrPt Xo c (DualNumber K)} (hv : IsTanFrame Φ y v) :
-    ∃ v', (∀ k, FrMap (dualExt ψ) (v k) (v' k)) ∧ IsTanFrame Φ y' v' := by
-  choose v' e using fun k => exists_frMap (dualExt ψ) (v k)
-  exact ⟨v', e, hv.baseChange P h e⟩
-
-theorem der_baseChange (φ : K₀ →ₐ[c.F] K) {v : FrPt Xo c (DualNumber K)} {v' : FrPt Xo c (DualNumber K')}
-    (h : FrMap (dualExt ψ) v v') {e : Ix Dw → ℤ} {s : RulK Xo c K₀} (hs : s ∈ secK Xo c K₀ e) :
-    der (ψ.comp φ) v' s = ψ (der φ v s) := by
-  rw [der, val_frMap hs (φ := (cst c K).comp φ) (fun a => by ext <;> simp) h, snd_dualExt, der]
-
-theorem wedge_baseChange (φ : K₀ →ₐ[c.F] K) {v : ι → FrPt Xo c (DualNumber K)} {v' : ι → FrPt Xo c (DualNumber K')}
-    (h : ∀ k, FrMap (dualExt ψ) (v k) (v' k)) {e : ι → Ix Dw → ℤ} {s : ι → RulK Xo c K₀}
-    (hs : ∀ i, s i ∈ secK Xo c K₀ (e i)) : wedge (ψ.comp φ) v' s = ψ (wedge φ v s) := by
-  rw [wedge, wedge, AlgHom.map_det]
-  congr 1
-  ext i k
-  simp [der_baseChange φ (h k) (hs i)]
-
-theorem jac_baseChange (φ : K₀ →ₐ[c.F] K) (hy : FrMap ψ y y') {v : ι → FrPt Xo c (DualNumber K)}
-    {v' : ι → FrPt Xo c (DualNumber K')} (h : ∀ k, FrMap (dualExt ψ) (v k) (v' k)) {e₀ : Ix Dw → ℤ}
-    {s₀ : RulK Xo c K₀} (h₀ : s₀ ∈ secK Xo c K₀ e₀) {e : ι → Ix Dw → ℤ} {s : ι → RulK Xo c K₀}
-    (hs : ∀ i, s i ∈ secK Xo c K₀ (e i)) : jac (ψ.comp φ) y' v' s₀ s = ψ (jac φ y v s₀ s) := by
-  rw [jac, jac, AlgHom.map_det]
-  congr 1
-  ext (i | i) (k | k) <;>
-    simp [der_baseChange φ (h _) (hs _), der_baseChange φ (h _) h₀,
-      val_frMap h₀ (φ := φ) (χ := ψ.comp φ) (fun _ => rfl) hy,
-      val_frMap (hs _) (φ := φ) (χ := ψ.comp φ) (fun _ => rfl) hy]
-
-theorem IsWedgeVal.baseChange (P : AbelianDeRham) (h : FrMap ψ y y') {o : ι ≃ TIx Dw Φ} {φ : K₀ →ₐ[c.F] K}
-    {e : Ix Dw → ℤ} {s : ι → RulK Xo c K₀} (hs : ∀ i, s i ∈ secK Xo c K₀ e) {d : K}
-    (hd : IsWedgeVal Φ o φ y s d) : IsWedgeVal Φ o (ψ.comp φ) y' s (ψ d) := by
-  obtain ⟨h0, v, hv, rfl⟩ := hd
-  obtain ⟨v', e', hv'⟩ := hv.exists_baseChange P h
-  exact ⟨fun i => by rw [val_frMap (hs i) (φ := φ) (fun _ => rfl) h, h0, map_zero], v', hv',
-    (wedge_baseChange φ (fun k => e' (o k)) (e := fun _ => e) hs).symm⟩
-
-theorem IsJacVal.baseChange (P : AbelianDeRham) (h : FrMap ψ y y') {o : ι ≃ TIx Dw Φ} {φ : K₀ →ₐ[c.F] K}
-    {e : Ix Dw → ℤ} {s₀ : RulK Xo c K₀} (h₀ : s₀ ∈ secK Xo c K₀ e) {s : ι → RulK Xo c K₀}
-    (hs : ∀ i, s i ∈ secK Xo c K₀ e) {d : K} (hd : IsJacVal Φ o φ y s₀ s d) :
-    IsJacVal Φ o (ψ.comp φ) y' s₀ s (ψ d) := by
-  obtain ⟨v, hv, rfl⟩ := hd
-  obtain ⟨v', e', hv'⟩ := hv.exists_baseChange P h
-  exact ⟨v', hv', (jac_baseChange φ h (fun k => e' (o k)) h₀ (e := fun _ => e) hs).symm⟩
 
 end Field
 
@@ -330,25 +307,7 @@ variable (P : AbelianDeRham) (ψ : letI := io.toAlgebra; CoefHom c io' T.Fr) {r 
   (h : letI := io.toAlgebra; letI := io'.toAlgebra; FrMap ψ y.1 y'.1) {e : Ix Dw → ℤ} {s₀ : RulK Xo c K₀}
   (h₀ : s₀ ∈ secK Xo c K₀ e) {s : ι → RulK Xo c K₀} (hs : ∀ i, s i ∈ secK Xo c K₀ e)
 
-include P hr hψ hφ h hs in
 
-theorem IsWedgeOrd.baseChange {n : ℕ} {w : EReal} (hw : IsWedgeOrd Φ n φ y s w) :
-    IsWedgeOrd Φ (r * n) φ' y' s w := by
-  letI := io.toAlgebra
-  letI := io'.toAlgebra
-  obtain rfl : ψ.comp φ = φ' := AlgHom.ext hφ
-  obtain ⟨o, d, hd, rfl⟩ := hw
-  exact ⟨o, ψ d, hd.baseChange P h hs, (nval_bc ψ.toRingHom hr hψ n d).symm⟩
-
-include P hr hψ hφ h h₀ hs in
-
-theorem IsJacOrd.baseChange {n : ℕ} {w : EReal} (hw : IsJacOrd Φ n φ y s₀ s w) :
-    IsJacOrd Φ (r * n) φ' y' s₀ s w := by
-  letI := io.toAlgebra
-  letI := io'.toAlgebra
-  obtain rfl : ψ.comp φ = φ' := AlgHom.ext hφ
-  obtain ⟨o, d, hd, rfl⟩ := hw
-  exact ⟨o, ψ d, hd.baseChange P h h₀ hs, (nval_bc ψ.toRingHom hr hψ n d).symm⟩
 
 variable (k : letI := io.toAlgebra; KSIso Φ y.1) (k' : letI := io'.toAlgebra; KSIso Φ y'.1)
 

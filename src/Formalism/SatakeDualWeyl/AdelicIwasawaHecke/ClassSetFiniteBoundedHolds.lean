@@ -1,9 +1,13 @@
-import Formalism.SatakeDualWeyl.DefsCS
-import Formalism.HermitianLattices.HermitianLatticesProofs.ClassSetAssembly
-import Formalism.HermitianLattices.HermitianLatticesProofs.TraceReal
-import Formalism.HermitianLattices.HermitianLatticesProofs.ShortVectors
-import Formalism.HermitianLattices.HermitianLatticesProofs.FinIntermediate
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomOfTrace
+module
+
+public import Formalism.SatakeDualWeyl.DefsCS
+public import Formalism.HermitianLattices.HermitianLatticesProofs.ClassSetAssembly
+public import Formalism.HermitianLattices.HermitianLatticesProofs.TraceReal
+public import Formalism.HermitianLattices.HermitianLatticesProofs.ShortVectors
+public import Formalism.HermitianLattices.HermitianLatticesProofs.FinIntermediate
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomOfTrace
+
+@[expose] public section
 
 noncomputable section
 
@@ -27,7 +31,7 @@ theorem class_set_finite_bounded_holds (hCovolOfDual : Formalism.UG.CS.CovolOfDu
   obtain ⟨N, ι, hι, hmul, hlat⟩ := Formalism.HermitianLatticesTheory.traceReal_main h hsymm hpos
   obtain ⟨C, hC⟩ := hCovolOfDual K V h hsymm hpos N ι hι e he
   obtain ⟨m, hm, t, ht⟩ := csBdd_nat_mul d hd
-  let S : Set (Submodule (𝓞 K) V) := {M | Submodule.IsLattice K M ∧
+  let S : Set (Submodule (𝓞 K) V) := {M | Submodule.IsFullLattice K M ∧
     (∀ x ∈ M, ∀ y ∈ M, (d : K) * h x y ∈ (1 : Submodule (𝓞 K) K)) ∧
     (∀ x ∈ Formalism.HermitianLatticesTheory.dual h M, (e : K) • x ∈ M)}
   have hSd : ∀ M ∈ S, ∀ x ∈ M, ∀ y ∈ M, (m : K) * h x y ∈ (1 : Submodule (𝓞 K) K) := by

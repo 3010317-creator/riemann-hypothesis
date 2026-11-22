@@ -1,5 +1,10 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsLines
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsLines
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights
@@ -37,13 +42,12 @@ end KLinesIsLattice
 
 theorem LinesIsLattice.proof : LinesIsLattice.Statement := by
   intro K _ _ ι _ M hfg hspan
-  refine ⟨hfg, ?_⟩
+  refine { toIsLattice := Submodule.IsLattice.of_fg ℚ hfg, span_eq_top := ?_ }
   have hMN : Submodule.span K (M : Set (ι → K)) ≤ KLinesIsLattice.qSpan M :=
     Submodule.span_le.mpr fun v hv => Submodule.subset_span hv
   rw [hspan, top_le_iff] at hMN
-  rw [eq_top_iff]
-  intro v _
-  have hv : v ∈ KLinesIsLattice.qSpan M := hMN ▸ Submodule.mem_top
-  exact hv
-
+  apply top_unique
+  intro x _
+  have hx : x ∈ KLinesIsLattice.qSpan M := by rw [hMN]; trivial
+  exact hx
 end GroundTheory.Heights₂.Heights

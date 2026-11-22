@@ -1,13 +1,18 @@
-import Mathlib
-import Development.AutomorphicArithmetic.LocalEmbeddings.StageGeoDefs
-import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
-import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGoodRationalSchroedingerModelStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateUnitaryAdelicIsoMapHaarFundamentalDomaiStatement
-import Development.AutomorphicArithmetic.DivisorFrames.ExistsSplitBasisConjLatticeOfSelfDualFrame
-import Development.AutomorphicArithmetic.DivisorFrames.ExistsSplitBasisSkewLatticeOfFrame
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.LocalEmbeddings.StageGeoDefs
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGoodRationalSchroedingerModelStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateUnitaryAdelicIsoMapHaarFundamentalDomaiStatement
+public import Development.AutomorphicArithmetic.DivisorFrames.ExistsSplitBasisConjLatticeOfSelfDualFrame
+public import Development.AutomorphicArithmetic.DivisorFrames.ExistsSplitBasisSkewLatticeOfFrame
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints GlobalTheory.Grid GlobalTheory.ChainFr GlobalTheory.SquareComm GlobalTheory.FinMatch
 open scoped TensorProduct ComplexConjugate GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels Classical
@@ -59,8 +64,8 @@ private theorem herm_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
     rw [eJ]
     exact GlobalTheory.TripleSpace.isCartan_neg_conj (hs _)
 
-open scoped ComplexOrder in
 
+open scoped ComplexOrder in
 private theorem skew_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau)
     (hB : ∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) (X : HSp D) {k : ℕ} (e : Fin k ≃ Fin X.rank)
     (Λ₀ : Submodule (𝓞 D.host.E) (Fin X.rank → D.host.E)) (hA : IsSelfDualC X Λ₀)
@@ -104,7 +109,7 @@ private theorem skew_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
 
 private theorem ext_bas {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (B : Base F E) {n : ℕ}
     (Q : ∀ v : B.P, GL (Fin n) (Fv F v) → Prop) (h : ∀ v, ∃ b, Q v b) :
-    ∃ bas : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl F, GL (Fin n) (Fv F v), ∀ v : B.P, Q v (bas v) := by
+    ∃ bas : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n) (Fv F v), ∀ v : B.P, Q v (bas v) := by
   choose b hb using h
   refine ⟨fun v => if hv : v ∈ B.P then b ⟨v, hv⟩ else 1, fun v => ?_⟩
   simp only [dif_pos v.2]

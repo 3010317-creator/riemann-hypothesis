@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.OFRepGood
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.OFRepGood
+
+@[expose] public section
 
 noncomputable section
 
@@ -15,7 +19,7 @@ theorem fixedOK_of_rows (D : Formalism.BasicNotions.D7) (u : D.what₂.Word) (F0
     (hΛ : Λ ∈ what₂) : FixedOK D F0 Λ := by
   obtain ⟨hE, hz, hrr, -⟩ := hR
   obtain ⟨-, ⟨hlat, hunim, -, -⟩, hx⟩ := hrr.1 Λ hΛ
-  refine ⟨hlat, hunim, hE, ?_, (D.cOf u)⁻¹, inv_ne_zero (D.cOf_ne u), ?_⟩
+  refine ⟨hlat.toIsLattice, hunim, hE, ?_, (D.cOf u)⁻¹, inv_ne_zero (D.cOf_ne u), ?_⟩
   · unfold XLam at hx
     intro a
     have hmem : F0.e a ∈ XS D F0 := by

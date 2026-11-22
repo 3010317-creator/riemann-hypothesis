@@ -1,17 +1,54 @@
-import Mathlib
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
-import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
-import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.StrictModelTranslatesTwistCompatibleStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlueFinitelyManyCompatibleSmoothModelsStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelGroupLawDefinedAtTranslateStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueModelExtensionOfDefinedAtPointsStatement
+module
+
+public import Mathlib
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.StrictModelTranslatesTwistCompatibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlueFinitelyManyCompatibleSmoothModelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelGroupLawDefinedAtTranslateStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueModelExtensionOfDefinedAtPointsStatement
+public meta import Lean.Elab.Command
+
+@[expose] public section
+
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open scoped CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.SS
+
+-- c189: restore Model.prod for incomplete imports.
+open CategoryTheory Limits MonoidalCategory AlgebraicGeometry in
+open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
+run_cmd
+  unless (← Lean.getEnv).contains `GlobalTheory.SS.Model.prod do
+    let prodName := Lean.mkIdent `_root_.GlobalTheory.SS.Model.prod
+    Lean.Elab.Command.elabCommand (← `(
+      private noncomputable def $prodName:ident
+          {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K]
+          {A A' : Over (Sp K)} (M : GlobalTheory.SS.Model R A)
+          (N : GlobalTheory.SS.Model R A') : GlobalTheory.SS.Model R (A ⊗ A') where
+        Y := M.Y ⊗ N.Y
+        e := (Functor.Monoidal.μIso (Over.pullback (spMap (algebraMap R K))) M.Y N.Y).symm ≪≫
+          tensorIso M.e N.e
+        smooth := by
+          have := M.smooth
+          have := N.smooth
+          show Smooth (pullback.fst _ _ ≫ M.Y.hom)
+          infer_instance
+        sep := by
+          have := M.sep
+          have := N.sep
+          show IsSeparated (pullback.fst _ _ ≫ M.Y.hom)
+          infer_instance
+        qc := by
+          have := M.qc
+          have := N.qc
+          show QuasiCompact (pullback.fst _ _ ≫ M.Y.hom)
+          infer_instance))
+
 noncomputable section
 namespace GlobalTheory.SS.FinUnion
 variable {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K] {A A' : Over (Sp K)}
@@ -78,23 +115,33 @@ theorem ext_apply {M : Model R A} {N : Model R A'} {f : A ⟶ A'} {U : M.Y.left.
   have b := hp.lift_snd t w e
   rw [← a, Category.assoc, h.2, ← Category.assoc, b]
 
+set_option backward.isDefEq.respectTransparency false in
 theorem prod_j_fst (M : Model R A) (N : Model R A') :
     (M.prod N).j ≫ (fst M.Y N.Y).left = (fst A A').left ≫ M.j := by
   have h : (M.prod N).e.inv ≫ (Over.pullback (spMap (algebraMap R K))).map (fst M.Y N.Y) = fst A A' ≫ M.e.inv := by
     simp [Model.prod]
   have h2 := congrArg (fun x => x.left ≫ pullback.fst M.Y.hom (spMap (algebraMap R K))) h
-  simp only [Over.comp_left, Category.assoc, Over.pullback_map_left] at h2
-  erw [pullback.lift_fst] at h2
-  exact (Category.assoc _ _ _).trans h2
+  have hn : ((Over.pullback (spMap (algebraMap R K))).map (fst M.Y N.Y)).left ≫
+      pullback.fst M.Y.hom (spMap (algebraMap R K)) =
+      pullback.fst (M.Y ⊗ N.Y).hom (spMap (algebraMap R K)) ≫ (fst M.Y N.Y).left := by
+    simp
+  simp only [Over.comp_left, Category.assoc] at h2
+  rw [hn] at h2
+  simpa [Model.j, Model.prod, Category.assoc] using h2
 
+set_option backward.isDefEq.respectTransparency false in
 theorem prod_j_snd (M : Model R A) (N : Model R A') :
     (M.prod N).j ≫ (snd M.Y N.Y).left = (snd A A').left ≫ N.j := by
   have h : (M.prod N).e.inv ≫ (Over.pullback (spMap (algebraMap R K))).map (snd M.Y N.Y) = snd A A' ≫ N.e.inv := by
     simp [Model.prod]
   have h2 := congrArg (fun x => x.left ≫ pullback.fst N.Y.hom (spMap (algebraMap R K))) h
-  simp only [Over.comp_left, Category.assoc, Over.pullback_map_left] at h2
-  erw [pullback.lift_fst] at h2
-  exact (Category.assoc _ _ _).trans h2
+  have hn : ((Over.pullback (spMap (algebraMap R K))).map (snd M.Y N.Y)).left ≫
+      pullback.fst N.Y.hom (spMap (algebraMap R K)) =
+      pullback.fst (M.Y ⊗ N.Y).hom (spMap (algebraMap R K)) ≫ (snd M.Y N.Y).left := by
+    simp
+  simp only [Over.comp_left, Category.assoc] at h2
+  rw [hn] at h2
+  simpa [Model.j, Model.prod, Category.assoc] using h2
 
 theorem twist_j (M : Model R A) (f : A ≅ A') : f.hom.left ≫ (M.twist f).j = M.j := by
   simp only [Model.j, Model.twist, Iso.trans_inv, Over.comp_left, Category.assoc]
@@ -138,7 +185,7 @@ theorem exists_move {X Y S : Scheme.{0}} (f : X ⟶ S) (g : Y ⟶ S) (O : (pullb
 theorem irr_union {X I : Type} [TopologicalSpace X] (S : Set X) (U : I → Set X) (i₀ : I) (hU : ∀ i, IsOpen (U i))
     (hI : ∀ i, IsPreirreducible (S ∩ U i)) (hc : ∀ x ∈ S, ∃ i, x ∈ U i) (hm : ∀ i, (S ∩ U i ∩ U i₀).Nonempty) :
     IsIrreducible S := by
-  refine ⟨(hm i₀).mono fun x hx => hx.1.1, ?_⟩
+  refine ⟨(hm i₀).mono (show S ∩ U i₀ ∩ U i₀ ⊆ S from fun x hx => hx.1.1), ?_⟩
   have hs : S ⊆ closure (S ∩ U i₀) := fun x hx => by
     obtain ⟨i, hi⟩ := hc x hx
     exact closure_mono (show S ∩ U i ∩ U i₀ ⊆ S ∩ U i₀ from fun y hy => ⟨hy.1.1, hy.2⟩)
@@ -169,8 +216,8 @@ theorem law_split (a : 𝟙_ (Over (Sp K)) ⟶ A) :
     toUnit_unique (fst A A ≫ toUnit A) (toUnit _), toUnit_unique (snd A A ≫ toUnit A) (toUnit _)]
   group
 
-set_option backward.isDefEq.respectTransparency false in
 
+set_option backward.isDefEq.respectTransparency false in
 theorem le_of_law [IsDomain R] [IsDiscreteValuationRing R] [IsFractionRing R K] {M G : Model R A} (hM : Strict M)
     (m : M.Y ⊗ M.Y ⟶ G.Y) (hm : (M.prod M).j ≫ m.left = (μ[A]).left ≫ G.j) (a : 𝟙_ (Over (Sp K)) ⟶ A)
     (ha : GenIso M M (transl a).hom) (hc : Compat (M.twist (transl a)) G) : (M.twist (transl a)).Le G := by
@@ -262,8 +309,8 @@ theorem sp_inter {M G : Model R A} [IsLocalRing R] (g : M.Y ⟶ G.Y) : G.sp ∩ 
   · rintro ⟨x, hx, rfl⟩
     exact ⟨(e x).trans hx, x, rfl⟩
 
-set_option backward.isDefEq.respectTransparency false in
 
+set_option backward.isDefEq.respectTransparency false in
 theorem meet [IsDomain R] [IsLocalRing R] [IsFractionRing R K] {M G : Model R A} (f : A ≅ A) (hf : GenIso M M f.hom)
     (g : (M.twist f).Y ⟶ G.Y) (hg : (M.twist f).j ≫ g.left = G.j) (g₀ : M.Y ⟶ G.Y) (hg₀ : M.j ≫ g₀.left = G.j) :
     (G.sp ∩ Set.range g.left ∩ Set.range g₀.left).Nonempty := by

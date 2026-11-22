@@ -1,9 +1,13 @@
-import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.SpecializesIff
-import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.IsProjPrimeOfRelComps
-import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.ResGAppLE
-import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.LeDimQuotientHorizontal
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
-import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.PCharacterised
+module
+
+public import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.SpecializesIff
+public import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.IsProjPrimeOfRelComps
+public import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.ResGAppLE
+public import Development.WeilBound.CoreStatements.MinimalPrimeDimensions.LeDimQuotientHorizontal
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
+public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.PCharacterised
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -26,7 +30,7 @@ theorem bijective_comp (F : Type) [Field F] [NumberField F] :
     exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 F)) hfg
   · intro τ
     have hinj : Function.Injective τ := by
-      rw [injective_iff_map_eq_zero]
+      set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
       intro x hx
       by_contra hne
       have h := Ideal.comap_ne_bot_of_integral_mem hne (show x ∈ RingHom.ker τ from hx)
@@ -136,9 +140,6 @@ end
 
 variable {K : Type} [Field K] [NumberField K] {m : ℕ} {X : Scheme.{0}} {p : X ⟶ Sp (𝓞 K)} {L : HermLB p}
   {s : Fin m → L.B.Sec} {D : ℕ} {H : ArchData K m} {h : X → ℝ}
-
-local notation "φ" => (MvPolynomial.map (algebraMap (𝓞 K) K) : MvPolynomial (Fin m) (𝓞 K) →+* MvPolynomial (Fin m) K)
-local notation "CC" => (C : 𝓞 K →+* MvPolynomial (Fin m) (𝓞 K))
 
 theorem charZero_iff {Z : Scheme.{0}} [IsIntegral Z] {q : Z ⟶ Sp (𝓞 K)} {B : LB Z} {s : Fin m → B.Sec} (hE : Emb q s) :
     CharZero Γ(Z, ⊤) ↔ (ptIdeal q s (genericPoint Z)).comap CC = ⊥ := by

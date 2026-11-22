@@ -1,7 +1,13 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsJoinDivCycle
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPolynomialLocalizedLength
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PExistsUniqueRelabel
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsJoinDivCycle
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPolynomialLocalizedLength
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PExistsUniqueRelabel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsIntersectionFamily
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -50,13 +56,9 @@ theorem rename_eq_symm_comp_C :
   rw [← joinPolyEquiv_comp_rename, ← RingHom.comp_assoc]
   ext x <;> simp
 
-set_option hygiene false in
 
-local notation "ψ" => joinPolyEquiv (R := R) (ι := ι)
 
-set_option hygiene false in
-
-local notation "ε" => rename (R := R) (liftVar (ι := ι) ptIdx)
+local notation "ε" => rename (liftVar ptIdx)
 
 theorem joinPolyEquiv_rename (x : MRing ι R) : joinPolyEquiv (ε x) = Polynomial.C x :=
   RingHom.congr_fun joinPolyEquiv_comp_rename x
@@ -131,19 +133,20 @@ theorem multAt_map_rename (P Q : Ideal (MRing ι R)) [Q.IsPrime] (hPQ : P ≤ Q)
     ReciprocityTheory.ChartRestriction.G.Geo.multAt (P.map ε ⊔ Ideal.span {ε f}) (Q.map ε) =
       ReciprocityTheory.ChartRestriction.G.Geo.multAt (P ⊔ Ideal.span {f}) Q := by
   have hm : ∀ I : Ideal (MRing ι R),
-      I.map ε = (I.map (Polynomial.C : MRing ι R →+* _)).map ((ψ).symm : Polynomial (MRing ι R) →+* MvPolynomial (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) R) := by
+      I.map ε = (I.map (Polynomial.C : MRing ι R →+* _)).map ((joinPolyEquiv (R := R) (ι := ι)).symm.toRingHom : Polynomial (MRing ι R) →+* MvPolynomial (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) R) := by
     intro I
     rw [map_rename_eq]
     exact (Ideal.map_symm (joinPolyEquiv (R := R) (ι := ι))).symm
-  have hf : ε f = (ψ).symm (Polynomial.C f) := by
+  have hf : ε f = (joinPolyEquiv (R := R) (ι := ι)).symm (Polynomial.C f) := by
     rw [← joinPolyEquiv_rename, RingEquiv.symm_apply_apply]
   haveI : (Q.map (Polynomial.C : MRing ι R →+* _)).IsPrime := Ideal.isPrime_map_C_of_isPrime
-  have hQp : ((Q.map (Polynomial.C : MRing ι R →+* _)).map ((ψ).symm : Polynomial (MRing ι R) →+* MvPolynomial (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) R)).IsPrime := by
+  have hQp : ((Q.map (Polynomial.C : MRing ι R →+* _)).map ((joinPolyEquiv (R := R) (ι := ι)).symm.toRingHom : Polynomial (MRing ι R) →+* MvPolynomial (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) R)).IsPrime := by
     rw [← hm]
     exact isPrime_map_rename Q
   haveI := hQp
-  have key := GroundTheory.Heights₂.Heights.Targets.ExistsUniqueRelabel.length_map (ψ).symm
-    (P.map (Polynomial.C : MRing ι R →+* _)) (Q.map (Polynomial.C : MRing ι R →+* _)) (Ideal.map_mono hPQ)
+  have key := @GroundTheory.Heights₂.Heights.Targets.ExistsUniqueRelabel.length_map _ _ _ _
+    (joinPolyEquiv (R := R) (ι := ι)).symm
+    (P.map (Polynomial.C : MRing ι R →+* _)) (Q.map (Polynomial.C : MRing ι R →+* _)) inferInstance hQp (Ideal.map_mono hPQ)
     (Polynomial.C f)
   have hsup : P.map (Polynomial.C : MRing ι R →+* _) ⊔ Ideal.span {Polynomial.C f} =
       (P ⊔ Ideal.span {f}).map (Polynomial.C : MRing ι R →+* _) := by
@@ -151,13 +154,13 @@ theorem multAt_map_rename (P Q : Ideal (MRing ι R)) [Q.IsPrime] (hPQ : P ≤ Q)
   rw [hsup, PolynomialLocalizedLength.full (MRing ι R) Q (P ⊔ Ideal.span {f})] at key
   rw [hm P, hm Q, hf]
   unfold ReciprocityTheory.ChartRestriction.G.Geo.multAt
-  rw [dif_pos hQp, dif_pos ‹Q.IsPrime›]
+  rw [dite_eq_left hQp, dite_eq_left ‹Q.IsPrime›]
   exact congrArg ENat.toNat key
 
 end JoinDivCycle
 
-open JoinDivCycle in
 
+open JoinDivCycle in
 theorem JoinDivCycle.proof : JoinDivCycle.Statement := by
   intro R _ _ K _ ι _ P f
   classical
@@ -183,7 +186,7 @@ theorem JoinDivCycle.proof : JoinDivCycle.Statement := by
   ext W
   by_cases hW : ∃ Q : Ideal (MRing ι R), Q.map (rename (R := R) (liftVar (ι := ι) ptIdx)) = W
   · obtain ⟨Q, rfl⟩ := hW
-    rw [Finsupp.mapDomain_apply hinj]
+    rw [Finsupp.mapDomain_apply_of_injective hinj]
     simp only [ReciprocityTheory.ChartRestriction.G.Geo.divCycle, Finsupp.ofSupportFinite_coe]
     by_cases hQ : Q ∈ ReciprocityTheory.ChartRestriction.G.Geo.divSupp P f
     · haveI : Q.IsPrime := hQ.1.1.1

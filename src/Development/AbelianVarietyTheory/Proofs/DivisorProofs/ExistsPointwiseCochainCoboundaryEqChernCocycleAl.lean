@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -68,7 +72,7 @@ theorem exists_pointwiseCochain_coboundary_eq_chernCocycle : ∀ (R : Type) [Com
       (∀ c, f.φ c = ψ (φ c)) → V E E'' z _ (trivMap (ψ.comp φ) z) = V E E'' z y f := by
     intro y hy f hf
     subst hy
-    exact congrArg (V E E'' z _) (Thick.hom_ext fun c ↦ (hf c).symm)
+    exact congrArg (V E E'' z _) (Thick.Hom.ext' (AlgHom.ext fun c ↦ (hf c).symm))
   have hc := gen (spOver ψ ≫ spOver φ ≫ z) (by rw [← Category.assoc, spOver_comp])
     (trivMap φ z ≫ trivMap ψ (spOver φ ≫ z)) fun _ ↦ rfl
   have key := hV E E' E'' z _ _ (trivMap φ z) (trivMap ψ (spOver φ ≫ z)) ψ rfl hz

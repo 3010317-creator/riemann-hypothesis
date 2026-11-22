@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
+
+@[expose] public section
 
 noncomputable section
 
@@ -47,20 +51,6 @@ section General
 
 variable {G : Type} [Group G] {K : Subgroup G} {Φ : G → ℂ}
 
-theorem translate_mem_kSpan {Ψ : G → ℂ} (h : Ψ ∈ kSpan K Φ) {k : G} (hk : k ∈ K) :
-    (fun g => Ψ (g * k)) ∈ kSpan K Φ := by
-  have : kSpan K Φ ≤ (kSpan K Φ).comap (LinearMap.funLeft ℂ ℂ fun g => g * k) := Submodule.span_le.2 (by
-    rintro _ ⟨k', hk', rfl⟩
-    exact Submodule.subset_span ⟨k * k', mul_mem hk hk', funext fun g => congrArg Φ (mul_assoc g k k')⟩)
-  exact this h
-
-variable (K Φ) in
-
-def kSpanRep : K →* Module.End ℂ (kSpan K Φ) where
-  toFun k := (LinearMap.funLeft ℂ ℂ fun g : G => g * k.1).restrict (p := kSpan K Φ) (q := kSpan K Φ)
-    fun _ h => translate_mem_kSpan h k.2
-  map_one' := by ext Ψ g; exact congrArg Ψ.1 (mul_one g)
-  map_mul' a b := by ext Ψ g; exact congrArg Ψ.1 (mul_assoc g a b).symm
 
 variable [TopologicalSpace G] [ContinuousMul G]
 
@@ -90,13 +80,15 @@ theorem totallyDisconnectedSpace_GFin : TotallyDisconnectedSpace (GFin σ J) :=
 
 theorem nonarchimedeanGroup_GLoc (v : HeightOneSpectrum (𝓞 F)) : NonarchimedeanGroup (GLoc σ J v) :=
   haveI := totallyDisconnectedSpace_GLoc σ J v
-  haveI := isLattice_stdLattice (E := E) (n := m)
+  letI : Submodule.IsFullLattice E (stdLattice E m) :=
+    (isLattice_stdLattice (E := E) (n := m)).toIsFullLattice
   nonarchimedeanGroup_of_isCompact_isOpen (isCompact_stabLoc σ J (stdLattice E m) v)
     (isOpen_stabLoc σ J (stdLattice E m) v)
 
 theorem nonarchimedeanGroup_GFin : NonarchimedeanGroup (GFin σ J) :=
   haveI := totallyDisconnectedSpace_GFin σ J
-  haveI := isLattice_stdLattice (E := E) (n := m)
+  letI : Submodule.IsFullLattice E (stdLattice E m) :=
+    (isLattice_stdLattice (E := E) (n := m)).toIsFullLattice
   nonarchimedeanGroup_of_isCompact_isOpen (isCompact_levelOffFin σ J (stdLattice E m) ∅)
     (isOpen_levelOffFin_empty σ J (stdLattice E m))
 

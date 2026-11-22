@@ -1,11 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsPolAVSectionInverseImage
-import Development.AbelianVarietyTheory.Definitions.Divisors.ToricPeriodBlockIsSymm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffTopMonEqZero
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLieBasisOfHolUnif
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPolAVSectionInverseImage
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToricPeriodBlockIsSymm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffTopMonEqZero
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLieBasisOfHolUnif
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField MeasureTheory
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory
-open GlobalTheory GlobalTheory.LieHt GlobalTheory.Cartier GlobalTheory.ThetaOnto GlobalTheory.MBModel GlobalTheory.KeyCl GlobalTheory.Ex GlobalTheory.MBLow GlobalTheory.SecJet
+open GlobalTheory GlobalTheory.LieHt GlobalTheory.Cartier GlobalTheory.ThetaOnto GlobalTheory.KeyCl GlobalTheory.Ex GlobalTheory.MBLow GlobalTheory.SecJet
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.MBLow.Cl Matrix
@@ -123,7 +128,7 @@ theorem valR_spMap_comp {A B : Type} [CommRing A] [CommRing B] {X : Scheme.{0}} 
     (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
     valR (spMap φ ≫ x) U f = φ (TangentOrigin.evalPt x U h f) := by
   have h' : ⊤ ≤ (spMap φ ≫ x) ⁻¹ᵁ U := fun p _ => h (Set.mem_univ _)
-  rw [valR, dif_pos h']
+  rw [valR, dite_eq_left h']
   exact TangentOrigin.evalPt_spMap_comp φ x U h h' f
 
 end GlobalTheory.TanLinComb
@@ -176,7 +181,7 @@ theorem val_one (U : (TF (R := R) ℂ ⊗ G).left.Opens) (f : Γ((TF (R := R) �
     rw [comp_lift, Category.comp_id, MonObj.comp_one]
   rw [e, Over.comp_left]
   show valR (spMap (algebraMap ℂ (DualNumber ℂ)) ≫ x0 G) U f = _
-  rw [valR_spMap_comp _ _ U h0, valF, dif_pos h0, TrivSqZeroExt.algebraMap_eq_inl]
+  rw [valR_spMap_comp _ _ U h0, valF, dite_eq_left h0, TrivSqZeroExt.algebraMap_eq_inl]
   rfl
 
 theorem dg_one : Dg (1 : TP R (DualNumber ℂ) ⟶ G) (fun _ _ => 0) := by
@@ -244,6 +249,8 @@ theorem dg_prod : ∀ {n : ℕ} (z : Fin n → (TP R (DualNumber ℂ) ⟶ G)) (�
 
 end GlobalTheory.TanLinComb
 
+open GlobalTheory.MBLow.GlobalTheory.CompanionTheory.Ar (dualMap)
+
 namespace GlobalTheory.TanLinComb
 
 variable {R : Type} [CommRing R] [IsDomain R] [Algebra (FractionRing R) ℂ]
@@ -309,9 +316,10 @@ end GlobalTheory.TanLinComb
 
 namespace GlobalTheory
 
-open GlobalTheory.TanLinComb in
 
+open GlobalTheory.TanLinComb in
 theorem isD_lieComb : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) [Algebra (FractionRing R) ℂ] (N : NumD ℂ) (ν : NumOf D ℂ N) (g : ℕ) (d : AB N.toNumB g) (n : ℕ) (c : Fin n → R) (v : Fin n → (epsR R ⟶ D.P.A)) (w : epsR R ⟶ D.P.A) (W : Fin n → Fin g → ℂ) (b : Fin n → (TE R ℂ ⟶ D.P.A)) (bw : TE R ℂ ⟶ D.P.A), (∀ j, IsTangent (v j)) → IsLieComb c v w → (∀ j, (b j).left = spMap (dualMap ((algebraMap (FractionRing R) ℂ).comp (algebraMap R (FractionRing R)))) ≫ (v j).left) → bw.left = spMap (dualMap ((algebraMap (FractionRing R) ℂ).comp (algebraMap R (FractionRing R)))) ≫ w.left → (∀ j, IsD ν d (W j) (b j)) → IsD ν d (∑ j, (algebraMap (FractionRing R) ℂ) (algebraMap R (FractionRing R) (c j)) • W j) bw := by
+  open TanLinComb in
   intro R _ _ D _ N ν g d n c v w W b bw hv hc hb hbw hD
   have hx0 : ptB ν d 0 = x0 D.P.A := by
     have e1 : ν.eA (d.ex 0) = 1 := by
@@ -338,7 +346,8 @@ theorem isD_lieComb : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) [A
   rw [hx0] at h0 ⊢
   refine (key.2 U f h0).trans ?_
   congr 2
-  simp only [δW, Finset.sum_apply, Pi.smul_apply, map_sum, map_smul, smul_eq_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [δW, Finset.sum_apply, Pi.smul_apply, map_sum, map_smul, smul_eq_mul]
   rfl
 
 end GlobalTheory

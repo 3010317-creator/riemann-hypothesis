@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 namespace FunctorialResolution.EmbeddedResolution
 namespace EtaleCoordinates
 
@@ -22,7 +27,7 @@ variable [Algebra (MvPolynomial ι k) S] [Algebra k S]
 
 include ι
 
-private theorem exists_basisKaehler :
+public theorem exists_basisKaehler :
     ∃ b : Module.Basis ι S (KaehlerDifferential k S),
       ∀ i : ι, b i = KaehlerDifferential.D k S (coord k ι S i) := by
   have h : IsBaseChange S (KaehlerDifferential.map k k (MvPolynomial ι k) S) :=
@@ -41,18 +46,18 @@ noncomputable def basisKaehler : Module.Basis ι S (KaehlerDifferential k S) :=
     basisKaehler k ι S i = KaehlerDifferential.D k S (coord k ι S i) :=
   (exists_basisKaehler k ι S).choose_spec i
 
-private noncomputable def partialDerivFun (i : ι) (s : S) : S :=
+public noncomputable def partialDerivFun (i : ι) (s : S) : S :=
   (basisKaehler k ι S).repr (KaehlerDifferential.D k S s) i
 
-private theorem partialFun_map_add (i : ι) :
+public theorem partialFun_map_add (i : ι) :
     ∀ x y : S, partialDerivFun k ι S i (x + y) = partialDerivFun k ι S i x + partialDerivFun k ι S i y := by
   intro x y
   show (basisKaehler k ι S).repr (KaehlerDifferential.D k S (x + y)) i
       = (basisKaehler k ι S).repr (KaehlerDifferential.D k S x) i
         + (basisKaehler k ι S).repr (KaehlerDifferential.D k S y) i
-  rw [map_add, map_add, Finsupp.add_apply]
+  rw [map_add (f := _), map_add (f := _), Finsupp.add_apply]
 
-private theorem partialFun_map_smul (i : ι) :
+public theorem partialFun_map_smul (i : ι) :
     ∀ (c : k) (x : S),
       partialDerivFun k ι S i (c • x) = (RingHom.id k) c • partialDerivFun k ι S i x := by
   intro c x
@@ -64,12 +69,12 @@ private theorem partialFun_map_smul (i : ι) :
       = c • (basisKaehler k ι S).repr (KaehlerDifferential.D k S x) i
   rw [h2, LinearEquiv.map_smul, Finsupp.smul_apply, smul_eq_mul, ← Algebra.smul_def]
 
-private noncomputable def partialDerivLinear (i : ι) : S →ₗ[k] S where
+public noncomputable def partialDerivLinear (i : ι) : S →ₗ[k] S where
   toFun := partialDerivFun k ι S i
   map_add' := partialFun_map_add k ι S i
   map_smul' := partialFun_map_smul k ι S i
 
-private theorem partialLinear_leibniz (i : ι) :
+public theorem partialLinear_leibniz (i : ι) :
     ∀ a b : S, partialDerivLinear k ι S i (a * b)
       = a • partialDerivLinear k ι S i b + b • partialDerivLinear k ι S i a := by
   intro a b
@@ -79,7 +84,7 @@ private theorem partialLinear_leibniz (i : ι) :
   have h2 : (basisKaehler k ι S).repr (KaehlerDifferential.D k S (a * b)) i
       = a * (basisKaehler k ι S).repr (KaehlerDifferential.D k S b) i
         + b * (basisKaehler k ι S).repr (KaehlerDifferential.D k S a) i := by
-    rw [h, map_add, Finsupp.add_apply, LinearEquiv.map_smul, LinearEquiv.map_smul,
+    rw [h, map_add (f := _), Finsupp.add_apply, LinearEquiv.map_smul, LinearEquiv.map_smul,
       Finsupp.smul_apply, Finsupp.smul_apply, smul_eq_mul, smul_eq_mul]
   exact h2
 
@@ -129,7 +134,8 @@ theorem span_range_partialDeriv [Finite ι] :
     have h2 : D.liftKaehlerDifferential
         (∑ i : ι, partialDeriv k ι S i s • KaehlerDifferential.D k S (coord k ι S i))
         = D.liftKaehlerDifferential (KaehlerDifferential.D k S s) := by rw [h1]
-    simp only [map_sum, map_smul, Derivation.liftKaehlerDifferential_comp_D] at h2
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, Derivation.liftKaehlerDifferential_comp_D] at h2
     rw [sum_smul_derivation_apply, ← h2]
     exact Finset.sum_congr rfl fun i _ => by rw [smul_eq_mul, mul_comm]
   rw [key]
@@ -150,42 +156,12 @@ theorem eq_sum_smul_partialDeriv [Fintype ι] (D : Derivation k S S) :
       = ∑ i : ι, (basisKaehler k ι S).repr (KaehlerDifferential.D k S s) i
           • basisKaehler k ι S i :=
     ((basisKaehler k ι S).sum_repr (KaehlerDifferential.D k S s)).symm
-  rw [h1, h2, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [h1, h2, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, basisKaehler_apply, Derivation.liftKaehlerDifferential_comp_D, smul_eq_mul,
     ← partialDeriv_apply]
   exact mul_comm _ _
-
-private theorem exists_basisDerivation [Fintype ι] [DecidableEq ι] :
-    ∃ b : Module.Basis ι S (Derivation k S S), ∀ i : ι, b i = partialDeriv k ι S i := by
-  have hli : LinearIndependent S (partialDeriv k ι S) := by
-    rw [linearIndependent_iff']
-    intro s g hg j hj
-    have h0 : (∑ i ∈ s, g i • partialDeriv k ι S i) (coord k ι S j) = 0 := by
-      rw [hg]
-      simp
-    rw [sum_smul_derivation_apply k ι S g (partialDeriv k ι S)
-      (coord k ι S j) s] at h0
-    have key : ∑ i ∈ s, g i * partialDeriv k ι S i (coord k ι S j)
-        = g j * partialDeriv k ι S j (coord k ι S j) := by
-      refine Finset.sum_eq_single j ?_ ?_
-      · intro i _ hij
-        rw [partialDeriv_coord_of_ne k ι S i j hij, mul_zero]
-      · intro hj'
-        exact absurd hj hj'
-    rw [key, partialDeriv_coord_self, mul_one] at h0
-    exact h0
-  have hsp : ⊤ ≤ Submodule.span S (Set.range (partialDeriv k ι S)) :=
-    (span_range_partialDeriv k ι S).ge
-  exact ⟨Module.Basis.mk hli hsp, fun i => Module.Basis.mk_apply hli hsp i⟩
-
-noncomputable def basisDerivation [Fintype ι] [DecidableEq ι] :
-    Module.Basis ι S (Derivation k S S) :=
-  (exists_basisDerivation k ι S).choose
-
-@[simp] theorem basisDerivation_apply [Fintype ι] [DecidableEq ι] (i : ι) :
-    basisDerivation k ι S i = partialDeriv k ι S i :=
-  (exists_basisDerivation k ι S).choose_spec i
 
 end
 

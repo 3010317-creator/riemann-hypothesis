@@ -1,9 +1,13 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.IdLiftDef
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LadjFrame
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LTheta
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LretrCancel
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LisoSmulMem
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LFrame
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.IdLiftDef
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LadjFrame
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LTheta
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LretrCancel
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LisoSmulMem
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.LFrame
+
+@[expose] public section
 
 noncomputable section
 
@@ -37,7 +41,7 @@ theorem lift_exists_map {ι : Type} (e w : ι → S.V) (hli : LinearIndependent 
 variable {r : ℕ} {T : E}
 
 theorem lift_gen (hA : IntegralAdjointUnimodular) (hI : IsotropicIntegralRetraction) (hF : UnitriangularFrameIntegral) (hcm : Formalism.HermitianLatticesTheory.IsCMUnram E)
-    (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (F F' : LFlag S r T) (hlat : Submodule.IsLattice E Λ)
+    (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (F F' : LFlag S r T) (hlat : Submodule.IsFullLattice E Λ)
     (huni : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ) (hconv : IsFixedConv Λ g F) (hconv' : IsFixedConv Λ g F')
     (he : ∀ a, F'.fl.e a - F.fl.e a ∈ Xflag F a.val) :
     ∃ n ∈ NLam Λ F, ∀ a, n (F.fl.e a) = F'.fl.e a := by
@@ -51,7 +55,7 @@ theorem lift_gen (hA : IntegralAdjointUnimodular) (hI : IsotropicIntegralRetract
         obtain ⟨b, rfl⟩ := hz
         exact F.fl.e_iso a b
       | zero => simp
-      | add z z' _ _ hz hz' => rw [map_add, hz, hz', add_zero]
+      | add z z' _ _ hz hz' => rw [map_add (f := _), hz, hz', add_zero]
       | smul c z _ hz => rw [map_smul, hz, smul_zero]
     intro x hx y hy
     replace hx : x ∈ Submodule.span E (Set.range F.fl.e) := hx
@@ -60,7 +64,7 @@ theorem lift_gen (hA : IntegralAdjointUnimodular) (hI : IsotropicIntegralRetract
       obtain ⟨a, rfl⟩ := hz
       exact h1 a y hy
     | zero => simp
-    | add z z' _ _ hz hz' => rw [map_add, LinearMap.add_apply, hz, hz', add_zero]
+    | add z z' _ _ hz hz' => rw [map_add (f := _), LinearMap.add_apply, hz, hz', add_zero]
     | smul c z _ hz => rw [map_smulₛₗ, LinearMap.smul_apply, hz, smul_zero]
   have hXa_le : ∀ j, Xflag F j ≤ Xsp F := fun j => Submodule.span_mono (Set.image_subset_range _ _)
   have hX_le : Xsp F ≤ Xflag F r :=
@@ -82,7 +86,7 @@ theorem lift_gen (hA : IntegralAdjointUnimodular) (hI : IsotropicIntegralRetract
       exact hXa_mono (by have : i.1 < j := hi; omega) (he i)
     | zero => simp
     | add z z' _ _ hz hz' =>
-      rw [map_add, add_sub_add_comm]
+      rw [map_add (f := _), add_sub_add_comm]
       exact Submodule.add_mem _ hz hz'
     | smul c z _ hz =>
       rw [map_smul, ← smul_sub]
@@ -186,7 +190,7 @@ theorem lift_gen (hA : IntegralAdjointUnimodular) (hI : IsotropicIntegralRetract
     conv_rhs => rw [hx, hy]
     generalize S1 x = s
     generalize S1 y = t
-    simp only [LinearMap.add_apply, Module.End.one_apply, map_add]
+    simp only [LinearMap.add_apply, Module.End.one_apply, map_add (f := _)]
     rw [hN0iso s t, hN01 s t, hN10 s t, ← hN01 (N1 s) t, hN0N1]
     simp only [map_zero, LinearMap.zero_apply, add_zero]
     ring

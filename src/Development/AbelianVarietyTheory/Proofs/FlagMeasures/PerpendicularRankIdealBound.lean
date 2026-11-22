@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanInfEq
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanInfEq
+
+@[expose] public section
 
 open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt GlobalTheory.LoopC
 open scoped ENNReal Classical
@@ -127,10 +131,12 @@ theorem isCompl_perp (h : V →ₗ⋆[K] V →ₗ[K] K) (ha : ∀ x, h x x = 0 �
     have hx' : ∀ i, h (b i : V) x = 0 := fun i => congrFun (LinearMap.mem_ker.1 hx) i
     have e : p = ∑ i, b.repr ⟨p, hp⟩ i • (b i : V) := by
       have := congrArg A.subtype (b.sum_repr ⟨p, hp⟩)
-      rw [map_sum] at this
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum] at this
       exact this.symm
     rw [e]
-    simp [map_sum, hx']
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp [map_sum, hx']
   have h1 := f.finrank_range_add_finrank_ker
   have h2 : finrank K (LinearMap.range f) ≤ finrank K A := by
     have := (LinearMap.range f).finrank_le
@@ -189,16 +195,18 @@ theorem key (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.Nondegene
         have := L.sub_mem (L.smul_mem b hz) hbm.1
         rw [smul_add, add_sub_cancel_left] at this
         exact this
-      rw [smul_add, map_add, LinearMap.add_apply, (hT x).1 hxT _ hbm.2, zero_add]
+      rw [smul_add, map_add (f := _), LinearMap.add_apply, (hT x).1 hxT _ hbm.2, zero_add]
       exact (mem_dual h _ x).1 hx1 _ hbt
     · intro a b ha hb
-      rw [map_add, LinearMap.add_apply]
+      rw [map_add (f := _), LinearMap.add_apply]
       exact Submodule.add_mem _ ha hb
   obtain ⟨a, haI, rfl⟩ := (Ideal.mem_map_of_equiv _ r).1 hr
   change _ ∈ L
   rw [← hdd, mem_dual]
   intro y hy
-  have hy' : y ∈ dualInH h L := ⟨hy, by change y ∈ Submodule.span K _; rw [hL.span_eq_top]; trivial⟩
+  have hspan : Submodule.span K (L : Set V) = ⊤ := by
+    simpa using span_inf L hL (⊤ : Submodule K V)
+  have hy' : y ∈ dualInH h L := ⟨hy, by change y ∈ Submodule.span K _; rw [hspan]; trivial⟩
   have hay : a • y ∈ I₂ • L := by
     have := Submodule.smul_mem_smul haI hy'
     rw [Submodule.mul_smul] at this

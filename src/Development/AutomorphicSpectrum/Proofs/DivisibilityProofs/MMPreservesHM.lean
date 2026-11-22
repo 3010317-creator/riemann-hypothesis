@@ -1,5 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.DSApply
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PureEqPureA
+
+@[expose] public section
+
 open NumberField IsDedekindDomain MeasureTheory Filter Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun
 open scoped TensorProduct SchwartzMap LineDeriv ContDiff Matrix Classical
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
@@ -23,7 +28,7 @@ private theorem conj_extensionEmbedding_of_isReal {w : InfinitePlace F} (hw : w.
     have h := RingHom.congr_fun (InfinitePlace.isReal_iff.mp hw) ((WithAbs.equiv _) a)
     simpa [NumberField.ComplexEmbedding.conjugate_coe_eq] using h
 
-theorem piInf_cA {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {w : InfinitePlace F} (τ : EmbOver E w) (x : AE F E) :
+theorem piInf_cA {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {w : InfinitePlace F} (τ : EmbOver E w) (x : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) :
     piInf τ (cA σ x) = (starRingEnd ℂ) (piInf τ x) := by
   obtain ⟨hF, -, -, hστ⟩ := h
   induction x using TensorProduct.induction_on with
@@ -34,10 +39,10 @@ theorem piInf_cA {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {w : InfinitePlace F}
     have hc := conj_extensionEmbedding_of_isReal (hF.isReal w) ((evInf F w) a)
     erw [hc]
     rfl
-  | add x y hx hy => simp only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy]
+
 
 omit [NumberField E] in
-
 theorem piInf_inclR {w : InfinitePlace F} (τ : EmbOver E w) (e : E) :
     piInf τ (inclR (F := F) (AF F) e) = τ.1 e := by
   simp [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf, GlobalTheory.AdelicU.infEmb, GlobalTheory.AdelicU.compInf, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR]

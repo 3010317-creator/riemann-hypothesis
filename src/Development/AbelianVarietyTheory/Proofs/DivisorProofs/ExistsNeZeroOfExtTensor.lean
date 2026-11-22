@@ -1,17 +1,23 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.OneSubOfIsIrreducible
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.WeilTensorLiftConclusion
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BzfinHolds
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharInCuspidalSupportOfJacquetSubquotientFactor
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LengthFilterFinRange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricLemmaFiltrationHolds
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GeometricLemmaOfFiltration
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StdMaxParabolicRadicalLeBlockUnipotentRadical
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBijectiveOfIsSubquotient
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraMapIntertwiningMapBijectiveOfIsSmooth
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JacquetModuleMapInjectiveOfInjective
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsParahoricVec
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.WeilTensorLiftConclusion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BzfinHolds
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharInCuspidalSupportOfJacquetSubquotientFactor
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LengthFilterFinRange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricLemmaFiltrationHolds
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GeometricLemmaOfFiltration
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StdMaxParabolicRadicalLeBlockUnipotentRadical
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBijectiveOfIsSubquotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraMapIntertwiningMapBijectiveOfIsSmooth
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JacquetModuleMapInjectiveOfInjective
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
+
+@[expose] public section
+
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.TypeTwo
 open scoped TensorProduct
 
@@ -32,12 +38,6 @@ theorem nontrivial_of_irr {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) :
   ext x
   rw [Subsingleton.elim x 0]
   exact iff_of_true (zero_mem _) (zero_mem _)
-
-def equivOfBijective {ρ : Representation ℂ G V} {σ : Representation ℂ G W} (f : ρ.IntertwiningMap σ)
-    (hf : Function.Bijective f) : ρ.Equiv σ :=
-  Representation.Equiv.mk (LinearEquiv.ofBijective f.toLinearMap hf) fun g => by
-    ext v
-    exact f.isIntertwining _ _ g v
 
 end General
 

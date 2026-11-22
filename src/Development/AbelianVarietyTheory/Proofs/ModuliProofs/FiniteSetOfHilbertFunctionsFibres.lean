@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPowSmulMemRangeOfSurjectiveBaseChange
-import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPowSmulMemRangeOfSurjectiveBaseChange
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+
+@[expose] public section
 
 open scoped TensorProduct
 
@@ -110,20 +114,20 @@ theorem dimDeg_add_finrank {A σ : Type} [CommRing A] [Finite σ] (I : Ideal (Mv
   have hrange : (homogeneousSubmodule σ K e).map ψ = (piece I e).baseChange K := by
     apply le_antisymm
     · rintro _ ⟨G, hG, rfl⟩
-      rw [G.as_sum, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [G.as_sum, map_sum]
       refine Submodule.sum_mem _ fun d hd => ?_
       have hd' : d.degree = e := by
         rw [Finsupp.degree_eq_weight_one]
         exact hG (mem_support_iff.1 hd)
-      have : (monomial d (coeff d G) : MvPolynomial σ K) =
-          coeff d G • map (algebraMap A K) (monomial d 1) := by
+      have : (monomial d (AddMonoidAlgebra.coeff G d) : MvPolynomial σ K) =
+          AddMonoidAlgebra.coeff G d • map (algebraMap A K) (monomial d 1) := by
         simp [smul_monomial]
       rw [this, map_smul, hψ]
       exact Submodule.smul_mem _ _ (Submodule.tmul_mem_baseChange_of_mem _
         ⟨_, isHomogeneous_monomial 1 hd', rfl⟩)
     · rintro _ ⟨z, rfl⟩
       induction z with
-      | zero => simp
       | add z w hz hw => rw [map_add]; exact add_mem hz hw
       | tmul c n =>
         obtain ⟨_, F, hF, rfl⟩ := n
@@ -213,8 +217,8 @@ theorem finite_of_le_ker {R σ : Type} [CommRing R] [IsNoetherianRing R] [Finite
 
 end HilbertFamily
 
-open GlobalTheory.ZM in
 
+open GlobalTheory.ZM in
 theorem finite_setOf_dimDeg_map : ∀ (R σ : Type) [CommRing R] [IsNoetherianRing R] [Finite σ] (I : Ideal (MvPolynomial σ R)), (∀ F ∈ I, ∀ e, MvPolynomial.homogeneousComponent e F ∈ I) → {φ : ℕ → ℕ | ∃ (K : Type) (_ : Field K) (x : R →+* K), φ = dimDeg (I.map (MvPolynomial.map x))}.Finite := by
   intro R σ _ _ _ I hI
   refine (HilbertFamily.finite_of_le_ker I hI ⊥).subset ?_

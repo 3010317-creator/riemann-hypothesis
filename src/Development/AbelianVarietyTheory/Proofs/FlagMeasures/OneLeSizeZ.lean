@@ -1,26 +1,31 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
-import Formalism.HermitianLattices.FinalNeighbourConstruct
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopCountExponentBound
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticesMeanEqGenusMeanStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthTransversalFlagsInfIsotropicEqBotStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LiftedFlagLatticeChainSpansStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairLatticeLeLiftedPairLatticeSupIsotropicStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCommonSublatticeSmallDetStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesBoundedDetLeSumStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.XLamLeSmulSupXLamAdmissibleFlagStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceFormPosOnOrthLiftedFlagStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairIsometryUniqueOnOrthModIsotropicStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPairMoveByIntegralUnipotentStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeSeenInDefiniteSpaceDetRankIndexStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CntPrimLatticeImageIsometryStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Formalism.HermitianLattices.FinalNeighbourConstruct
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopCountExponentBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticesMeanEqGenusMeanStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthTransversalFlagsInfIsotropicEqBotStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LiftedFlagLatticeChainSpansStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairLatticeLeLiftedPairLatticeSupIsotropicStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCommonSublatticeSmallDetStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesBoundedDetLeSumStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.XLamLeSmulSupXLamAdmissibleFlagStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceFormPosOnOrthLiftedFlagStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairIsometryUniqueOnOrthModIsotropicStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPairMoveByIntegralUnipotentStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeSeenInDefiniteSpaceDetRankIndexStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CntPrimLatticeImageIsometryStatement
+
+@[expose] public section
+
 open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt GlobalTheory.LoopC
 open scoped ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -50,7 +55,8 @@ theorem cnt_triples {α γ ι : Type} {E : α → α → Prop} (hE : Equivalence
       exact and_congr_right fun hq => (hR p hp q hq).symm
   have e2 := e1.trans (FrEqv.encard_biUnion_le' S _)
   refine (ENat.toENNReal_le.2 e2).trans ?_
-  rw [show ((∑ i ∈ S, ((c '' Y₁ i) ×ˢ (c '' Y₂ i)).encard : ℕ∞) : ℝ≥0∞) =
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [show ((∑ i ∈ S, ((c '' Y₁ i) ×ˢ (c '' Y₂ i)).encard : ℕ∞) : ℝ≥0∞) =
     ∑ i ∈ S, ((((c '' Y₁ i) ×ˢ (c '' Y₂ i)).encard : ℕ∞) : ℝ≥0∞) from map_sum ENat.toENNRealRingHom _ _]
   refine (Finset.sum_le_card_nsmul S _ (K * K) fun i hi => ?_).trans ?_
   · rw [Set.encard_prod, ENat.toENNReal_mul, ← FrEqv.cntCl_eq_encard hE, ← FrEqv.cntCl_eq_encard hE]
@@ -262,8 +268,10 @@ theorem main : ∀ Cg cb Cu cT CT C0 A Ad C₁ : ℝ, 0 ≤ C₁ → ∃ C₀ : 
     obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, h, -⟩ := hyp.1.1
     exact (h u).2
   have hf : 1 ≤ D.R.f := by
-    have : 0 < D.R.f := by unfold Ranks.f Ranks.n; positivity
-    exact this
+    have := D.R.m_le_f
+    have := D.R.two_le_m
+    unfold Ranks.f Ranks.n
+    omega
   have hm1 : (1 : ℝ) ≤ D.R.m := by have := D.R.two_le_m; exact_mod_cast (by omega : 1 ≤ D.R.m)
   have hm : (D.R.m : ℝ) = 2 * D.R.rS + 2 := by exact_mod_cast (GlobalTheory.real_places_facts D).2.2.2.1
   have hN1 : 1 ≤ NT D u := one_le_pow₀ (by exact_mod_cast (show 1 ≤ Tu D u by omega))

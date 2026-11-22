@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenPtSubset
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory Matrix
@@ -55,10 +59,10 @@ theorem sb_modul {m n : ℕ} {ε : AE D} {Λ : AddSubgroup (Mx D m n)} {φ : Mx 
     exact nsmul_mem (h3 t (right_ne_zero_of_mul ht)) k₀
 
 theorem symplO_add_left' (S T : HSp D) (x x' y : WO S T) : symplO S T (x + x') y = symplO S T x y + symplO S T x' y := by
-  simp only [symplO, hO, Matrix.add_apply, mul_add, Finset.sum_add_distrib, LinearMap.map_add]
+  simp only [symplO, hO, Matrix.add_apply, mul_add, Finset.sum_add_distrib, LinearMap.map_add (f := _)]
 
 theorem symplO_add_right' (S T : HSp D) (x y y' : WO S T) : symplO S T x (y + y') = symplO S T x y + symplO S T x y' := by
-  simp only [symplO, hO, Matrix.add_apply, RingHom.map_add, map_add (cA D), mul_add, add_mul, Finset.sum_add_distrib,
+  simp only [symplO, hO, Matrix.add_apply, RingHom.map_add (f := _), map_add (cA D), mul_add, add_mul, Finset.sum_add_distrib,
     LinearMap.map_add]
 
 theorem symplO_nsmul' (S T : HSp D) (k : ℕ) (x y : WO S T) : symplO S T (k • x) y = symplO S T x (k • y) := by
@@ -73,8 +77,8 @@ theorem map_infPart_of_half {S T : HSp D} {a : AE D} (ha : infPart D a = 0) {u :
   rw [← hu i j, map_mul, ha, zero_mul]
 
 theorem sb_trans_latO {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)}
-    {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)} (hS : Submodule.IsLattice D.host.E ΛS)
-    (hT : Submodule.IsLattice D.host.E ΛT) {ε : AE D} (hinf : infPart D ε = 0) {φ : WO S T → ℂ}
+    {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)} (hS : Submodule.IsFullLattice D.host.E ΛS)
+    (hT : Submodule.IsFullLattice D.host.E ΛT) {ε : AE D} (hinf : infPart D ε = 0) {φ : WO S T → ℂ}
     (h : IsSBHalf ε (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) φ)
     {x : WO S T} (hx : IsHalf ε x) :
     IsSBHalf ε (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True)
@@ -116,9 +120,9 @@ def graphMap (e : Num G i j) (T₁ : (HomV G i j → ℂ) →ₗ[ℂ] (HomV G i 
         (fun x => T₂ (fun y => g (ofMaps e (x, y))) (mapW e u)) + fun x => T₂ (fun y => g' (ofMaps e (x, y))) (mapW e u) :=
       funext fun x => by
         show T₂ ((fun y => g (ofMaps e (x, y))) + fun y => g' (ofMaps e (x, y))) (mapW e u) = _
-        rw [map_add]; rfl
+        rw [map_add (f := _)]; rfl
     show T₁ (fun x => T₂ (fun y => (g + g') (ofMaps e (x, y))) (mapW e u)) (mapV e u) = _
-    rw [h, map_add]; rfl
+    rw [h, map_add (f := _)]; rfl
   map_smul' c g := funext fun u => by
     have h : (fun x => T₂ (fun y => (c • g) (ofMaps e (x, y))) (mapW e u)) =
         c • fun x => T₂ (fun y => g (ofMaps e (x, y))) (mapW e u) :=
@@ -158,9 +162,9 @@ def modulPair (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.G
 
 end GlobalTheory.BigDat
 
+
 set_option maxHeartbeats 1600000 in
 open GlobalTheory.BigDat.GraphHeis in
-
 theorem GlobalTheory.BigDat.boxGraph_graph_heis : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T}, L.Is μ₀ → ∀ (W : G.Weil) (i j : Fin D.R.m) (e : Num G i j) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j),
     Γ.V.J = (1 : D.host.E) • (spW G i j).gram → Γ.W.J = skewGram (spV G i j) (spV₁ G i j) e → ∀ (ε : AE D) (P : Finset (Pl D.host.E)), IsIdemSum ε P →
     ∀ (f₁ : HomV G i j → ℂ) (f₂ : HomW G i j → ℂ) (T₁ : (HomV G i j → ℂ) →ₗ[ℂ] (HomV G i j → ℂ))

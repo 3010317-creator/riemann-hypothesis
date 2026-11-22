@@ -1,4 +1,8 @@
-import Formalism.LocalToGlobal.GroupLattices.PerfectRings.ExistsSqEqIntCast
+module
+
+public import Formalism.LocalToGlobal.GroupLattices.PerfectRings.ExistsSqEqIntCast
+
+@[expose] public section
 
 open Polynomial
 
@@ -224,18 +228,18 @@ theorem not_isField : ¬ IsField (integralClosure A L) := by
 theorem isDVR (hC : IsAdicComplete (maximalIdeal A) A) : IsDiscreteValuationRing (integralClosure A L) := by
   have := dedekind A K L
   have := isLocalRing A K L hC
-  exact ((IsDiscreteValuationRing.TFAE (integralClosure A L) (not_isField A K L)).out 2 0).mp
+  exact ((IsDiscreteValuationRing.TFAE (integralClosure A L) (not_isField A K L)).out 3 1).mp
     (dedekind A K L)
 
 theorem complete (hC : IsAdicComplete (maximalIdeal A) A) :
-    haveI := isDVR A K L hC
+    letI := isDVR A K L hC;
     IsAdicComplete (maximalIdeal (integralClosure A L)) (integralClosure A L) := by
   have := isDVR A K L hC
   have := dedekind A K L
   have hcm := complete_map A K L hC
   have h6 : ∀ J : Ideal (integralClosure A L), J ≠ ⊥ →
       ∃ n : ℕ, J = maximalIdeal (integralClosure A L) ^ n :=
-    ((IsDiscreteValuationRing.TFAE (integralClosure A L) (not_isField A K L)).out 0 6).mp
+    ((IsDiscreteValuationRing.TFAE (integralClosure A L) (not_isField A K L)).out 1 7).mp
       (isDVR A K L hC)
   obtain ⟨n, hn⟩ := h6 _ (map_ne_bot A K L)
   rcases Nat.eq_zero_or_pos n with h0 | hpos

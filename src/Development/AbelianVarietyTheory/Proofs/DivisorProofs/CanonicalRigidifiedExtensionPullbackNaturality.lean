@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleTensorLiftApplyEqTwoPointValueStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleOnPointsIsCocycleAndEvalEqStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleCotangentValueBaseChangeNaturaStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleTensorLiftApplyEqTwoPointValueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleOnPointsIsCocycleAndEvalEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleCotangentValueBaseChangeNaturaStatement
+
+@[expose] public section
 
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct WithConv
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap epsR IsTangent IsGrpPullback)
@@ -95,7 +99,7 @@ def natDat {c : primDR A} (d : Dat t c) : Dat t' (m.pull c) where
     rw [e] at h1
     rw [t.res n, d.res n] at h2
     have h3 := (t'.semiHom t m).res_app n (d.h (n + 1))
-    simp only [corr, down_apply, sR_apply, map_add, map_sub] at h1 h2 ⊢
+    simp only [corr, down_apply, sR_apply, map_add (f := _), map_sub] at h1 h2 ⊢
     have h4 : ∀ a, (G'.res n : G'.A (n + 1) →ₐ[R'] G'.A n) a = G'.res n a := fun _ ↦ rfl
     simp only [h4] at h1 ⊢
     linear_combination -(h2.symm.trans h1) + h3
@@ -109,8 +113,8 @@ variable {A : Over (Sp R)} [GrpObj A] {A' : Over (Sp R')} [GrpObj A'] {φ : A'.l
   {m : GrpMor (dp0 R) (𝟙 _) A (dp0 R') (𝟙 _) A' σ (spMap σ) φ}
 variable {p : ℕ} {G : PDivGroup p R} {G' : PDivGroup p R'} {t : G.TorsionTower A} {t' : G'.TorsionTower A'}
 
-variable (σ m t t') in
 
+variable (σ m t t') in
 def sL (n : ℕ) : letI := via σ (G'.A n ⊗[R'] G'.A n); G.A n →ₐ[R] G'.A n ⊗[R'] G'.A n :=
   letI := via σ (G'.A n ⊗[R'] G'.A n)
   { (Algebra.TensorProduct.includeLeftRingHom).comp ((t'.semiHom t m).app n).toRingHom with
@@ -118,8 +122,8 @@ def sL (n : ℕ) : letI := via σ (G'.A n ⊗[R'] G'.A n); G.A n →ₐ[R] G'.A 
       change ((t'.semiHom t m).app n) (algebraMap R _ r) ⊗ₜ[R'] (1 : G'.A n) = _
       rw [SemiBialgHom.map_algebraMap]; rfl }
 
-variable (σ m t t') in
 
+variable (σ m t t') in
 def sRt (n : ℕ) : letI := via σ (G'.A n ⊗[R'] G'.A n); G.A n →ₐ[R] G'.A n ⊗[R'] G'.A n :=
   letI := via σ (G'.A n ⊗[R'] G'.A n)
   { (Algebra.TensorProduct.includeRight.toRingHom).comp ((t'.semiHom t m).app n).toRingHom with
@@ -140,7 +144,7 @@ theorem lift_eq_two (n : ℕ) (c : G.A n ⊗[R] G.A n) :
     change ((t'.semiHom t m).app n a ⊗ₜ[R'] (1 : G'.A n)) * ((1 : G'.A n) ⊗ₜ[R'] (t'.semiHom t m).app n b) = _
     rw [Algebra.TensorProduct.tmul_mul_tmul, _root_.mul_one, _root_.one_mul]
     rfl
-  | add x y hx hy => simp only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 private theorem coc_naturality (n : ℕ) :
     letI := via σ (G'.A n); letI := via σ (G'.A n ⊗[R'] G'.A n)
@@ -156,7 +160,7 @@ private theorem coc_naturality (n : ℕ) :
   generalize Coalgebra.comul (R := R) a = c
   induction c using TensorProduct.induction_on with
   | zero => simp only [map_zero]
-  | add x y hx hy => simp only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy]
   | tmul a b => rfl
 
 private theorem coc_naturality_of_dat_algHom {c : primDR A} (d : Dat t c) (n : ℕ) {T : Type} [CommRing T] [Algebra R' T]
@@ -171,7 +175,7 @@ private theorem coc_naturality_of_dat_algHom {c : primDR A} (d : Dat t c) (n : �
   rw [ptsDown_y σ m t t'] at hp
   change fv (m.isMor.coef.pullbackOneCocycle d.f) (G'.A n) T ψ (t'.y n) +
     ψ ((t'.semiHom t m).app n (d.h n) + corr σ m t t' d.f n) = _
-  rw [hp, hc, map_add]
+  rw [hp, hc, map_add (f := _)]
   simp only [AlgHom.comp_apply, down_apply, sR_apply, corr]
   abel
 
@@ -188,7 +192,7 @@ private theorem tensorProduct_lift_includeLeft_includeRight_apply (n : ℕ) (c :
   induction c using TensorProduct.induction_on with
   | zero => simp only [map_zero]
   | tmul a b => simp
-  | add x y hx hy => simp only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 private theorem coc_naturality_tensor (n : ℕ) :
     letI := via σ (G'.A n); letI := via σ (G'.A n ⊗[R'] G'.A n)
@@ -249,10 +253,10 @@ theorem om_nat {c : primDR A} (d : Dat t c) (n : ℕ) :
       (sR σ m t t' n) a (fun _ ↦ rfl)).2
   simp only [Dat.om, natDat, corr]
   rw [e1, e2, map_sub, SemiBialgHom.cot_d]
-  simp only [dUnit, map_add]
+  simp only [dUnit, map_add (f := _)]
   abel
 
-theorem isCan_pull : ∀ (p : ℕ) (R R' : Type) [CommRing R] [CommRing R'] (A : Over (Sp R)) [GrpObj A] (A' : Over (Sp R')) [GrpObj A'] (G : PDivGroup p R) (G' : PDivGroup p R') (t : G.TorsionTower A) (t' : G'.TorsionTower A') (σ : R →+* R') (φ : A'.left ⟶ A.left) (m : GrpMor (dp0 R) (𝟙 _) A (dp0 R') (𝟙 _) A' σ (spMap σ) φ) (c : primDR A) (x : G.RigExt), IsCan t c x → IsCan t' (m.pull c) ((t'.semiHom t m).rig x) := by
+theorem isCan_pull : ∀ (p : ℕ) (R R' : Type) [CommRing R] [CommRing R'] (A : Over (Sp R)) [GrpObj A] (A' : Over (Sp R')) [GrpObj A'] (G : PDivGroup p R) (G' : PDivGroup p R') (t : G.TorsionTower A) (t' : G'.TorsionTower A') (σ : R →+* R') (φ : A'.left ⟶ A.left) (m : GrpMor (dp0 R) (𝟙 _) A (dp0 R') (𝟙 _) A' σ (spMap σ) φ) (c : primDR A) (x : ((G.cocycles × G.omega) ⧸ _root_.LinearMap.range (G.cob.prod (_root_.LinearMap.codRestrict G.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G.A i))).domRestrict G.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n))))))), IsCan t c x → IsCan t' (m.pull c) ((t'.semiHom t m).rig x) := by
   intro p R R' _ _ A _ A' _ G G' t t' σ φ m c x hx
   obtain ⟨d, z, w, hz, hw, rfl⟩ := hx
   refine ⟨natDat (m := m) (t' := t') d, ((t'.semiHom t m).pair (z, w)).1, ((t'.semiHom t m).pair (z, w)).2,

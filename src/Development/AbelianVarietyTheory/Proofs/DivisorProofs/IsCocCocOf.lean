@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -25,8 +29,8 @@ theorem Sm.map {W : K → X.left.Opens} {D D' : Type} [CommRing D] [Algebra R D]
   obtain ⟨i, hi⟩ := h
   exact ⟨i, (trivMap φ x).le_preimage hi⟩
 
-open Classical in
 
+open Classical in
 def cocOf (W : K → X.left.Opens) (n : C1 ((IsSmall (dp0 R) (X.hom ≫ 𝟙 _) W).ι ⋙ O (dp0 R) (X.hom ≫ 𝟙 _))) :
     Fn1 X := fun _ _ _ _ _ _ φ x ↦
   if h : Sm W x then n (smallAt W x h) (smallAt W _ (h.map φ)) (ObjectProperty.homMk (trivMap φ x)) else 0
@@ -45,7 +49,7 @@ theorem isCoc_cocOf (W : K → X.left.Opens)
       (f : smallAt W x hx ⟶ smallAt W y h) (f' : smallAt W x hx ⟶ smallAt W y' h'),
       (∀ r, f.hom.φ r = f'.hom.φ r) → n _ _ f = n _ _ f' := by
     rintro y _ rfl h h' f f' hf
-    have : f = f' := ObjectProperty.hom_ext _ (Thick.hom_ext hf)
+    have : f = f' := ObjectProperty.hom_ext _ (Thick.Hom.ext' (AlgHom.ext hf))
     subst this; rfl
   have key := hn (smallAt W x hx) (smallAt W _ (hx.map φ)) (smallAt W _ ((hx.map φ).map ψ))
     (ObjectProperty.homMk (trivMap φ x)) (ObjectProperty.homMk (trivMap ψ _)) rfl rfl rfl

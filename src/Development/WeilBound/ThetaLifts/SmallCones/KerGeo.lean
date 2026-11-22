@@ -1,5 +1,9 @@
-import Development.WeilBound.ThetaLifts.SmallCones.ExpAlg
-import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneAd
+module
+
+public import Development.WeilBound.ThetaLifts.SmallCones.ExpAlg
+public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneAd
+
+@[expose] public section
 
 set_option linter.unusedSectionVars false
 
@@ -31,7 +35,7 @@ theorem hT_add_l (x x' y : Matrix (Fin n) (Fin d) S) : hTens c J J' (x + x') y =
   simp only [hTens, Matrix.add_apply, add_mul, Finset.sum_add_distrib]
 
 theorem hT_add_r (x y y' : Matrix (Fin n) (Fin d) S) : hTens c J J' x (y + y') = hTens c J J' x y + hTens c J J' x y' := by
-  simp only [hTens, Matrix.add_apply, map_add, mul_add, Finset.sum_add_distrib]
+  simp only [hTens, Matrix.add_apply, map_add (f := _), mul_add, Finset.sum_add_distrib]
 
 theorem hT_smul_l (a : S) (x y : Matrix (Fin n) (Fin d) S) : hTens c J J' (a • x) y = a * hTens c J J' x y := by
   simp only [hTens, Matrix.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc]
@@ -112,7 +116,8 @@ theorem tr_inc (e : E) : Algebra.trace (AF F) (AE F E) (inclR (F := F) (AF F) e)
 
 theorem hT_inc (x y : Matrix (Fin n) (Fin d) E) : hTens (cA σ) (incM F X.J) (incM F W.J) (incM F x) (incM F y) =
     inclR (F := F) (AF F) (hTens σ X.J W.J x y) := by
-  simp only [hTens, incM, Matrix.map_apply, cA_inc, map_mul, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [hTens, incM, Matrix.map_apply, cA_inc, map_mul, map_sum]
 
 theorem sy_inc (x y : Matrix (Fin n) (Fin d) E) :
     sy σ X W (incM F x) (incM F y) = algebraMap F (AF F) (Algebra.trace F E (-hTens σ X.J W.J x y)) := by
@@ -213,9 +218,9 @@ theorem polar_of {T : Type} [AddCommGroup T] [Module E T] [Module F T] [IsScalar
     ∃ (m : ℕ) (b : Module.Basis (Fin m) F T) (z : Fin m → Matrix (Fin n) (Fin d) E),
       Polar σ X W X₁ W₁ ι ι' I (fun j => U (b j)) z := by
   let β : LinearMap.BilinForm F T := LinearMap.mk₂ F (fun t' t => Algebra.trace F E (-hTens σ X.J W.J (Z t') (U t)))
-    (fun a b c => by rw [map_add, hT_add_l, neg_add, map_add])
+    (fun a b c => by rw [map_add (f := _), hT_add_l, neg_add, map_add (f := _)])
     (fun a b c => by rw [← algebraMap_smul E a b, map_smul, hT_smul_l, ← mul_neg, ← Algebra.smul_def, map_smul])
-    (fun a b c => by rw [map_add, hT_add_r, neg_add, map_add])
+    (fun a b c => by rw [map_add (f := _), hT_add_r, neg_add, map_add (f := _)])
     (fun a b c => by
       rw [← algebraMap_smul E a c, map_smul, hT_smul_r, σ.commutes, ← mul_neg, ← Algebra.smul_def, map_smul])
   have hβ : β.Nondegenerate := LinearMap.BilinForm.Nondegenerate.ofSeparatingRight fun t ht => nd t fun t' => by
@@ -237,7 +242,8 @@ theorem polar_of {T : Type} [AddCommGroup T] [Module E T] [Module F T] [IsScalar
   · rw [sy, sy, symp, symp, hT_mm, incM_gram g, incM_gram g']
   · obtain ⟨s, t, x₁, rfl⟩ := span x
     refine ⟨b.repr s, (β.dualBasis hβ b).repr t, x₁, ?_⟩
-    simp only [← LinearMap.map_smul_of_tower, ← map_sum, Module.Basis.sum_repr]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [← LinearMap.map_smul_of_tower, ← map_sum, Module.Basis.sum_repr]
 
 end PositivityTheory.ThKCT.Ker
 

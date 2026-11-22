@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
-import Development.AbelianVarietyTheory.Definitions.Divisors.PrismaticDieudonnePerfdIff
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFrobGBaseChange
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PrismaticDieudonnePerfdIff
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFrobGBaseChange
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -27,24 +31,21 @@ def SemiBialgHom.liftOver {ρ : R →+* R''} (f : SemiBialgHom ρ A A'') (τ : R
   have hg : ∀ r a, g (r ⊗ₜ a) = τ r • f a := fun r a => (Algebra.smul_def (τ r) (f a)).symm
   have hs : ∀ (r : R') x, g (r • x) = τ r • g x := fun r x => by
     induction x with
-    | zero => simp
-    | add x y hx hy => simp only [smul_add, map_add, hx, hy]
+    | add x y hx hy => simp only [smul_add, map_add (f := _), hx, hy]
     | tmul s a => rw [smul_tmul', hg, hg, smul_eq_mul, map_mul, mul_smul]
   { toRingHom := g
     smul_map := hs
     counit_map := fun x => by
       change counit (g x) = _
       induction x with
-      | zero => simp
-      | add x y hx hy => simp only [map_add, hx, hy]
+      | add x y hx hy => simp only [map_add (f := _), hx, hy]
       | tmul r a =>
         rw [hg, map_smul, f.counit_map, TensorProduct.counit_tmul, h]
         simp [Algebra.smul_def, mul_comm]
     comul_map := fun x => by
       change comul (g x) = _
       induction x with
-      | zero => simp
-      | add x y hx hy => simp only [map_add, hx, hy]
+      | add x y hx hy => simp only [map_add (f := _), hx, hy]
       | tmul r a =>
         rw [← mul_one r, ← smul_eq_mul, ← smul_tmul', hs, map_smul, map_smul, map_smulₛₗ, hg, map_one,
           one_smul]
@@ -53,8 +54,7 @@ def SemiBialgHom.liftOver {ρ : R →+* R''} (f : SemiBialgHom ρ A A'') (τ : R
         rw [← SemiBialgHom.two_comul, ← SemiBialgHom.two_comul]
         generalize comul (R := R) a = c
         induction c with
-        | zero => simp
-        | add x y hx hy => simp only [map_add, hx, hy]
+        | add x y hx hy => simp only [map_add (f := _), hx, hy]
         | tmul a b => simp [hg] }
 
 @[simp] theorem SemiBialgHom.liftOver_tmul {ρ : R →+* R''} (f : SemiBialgHom ρ A A'')
@@ -72,8 +72,8 @@ abbrev frobRing (h : (p : R) = 0) : R →+* R := SS.FrobField.powHom R p 1 hp.ou
 @[simp] theorem frobRing_apply (h : (p : R) = 0) (r : R) : frobRing h r = r ^ p :=
   congrArg (r ^ ·) (pow_one p)
 
-omit hp in
 
+omit hp in
 theorem natCast_eq_zero_of_algebra (h : (p : R) = 0) (A : Type) [CommRing A] [Algebra R A] :
     (p : A) = 0 := by
   rw [← map_natCast (algebraMap R A), h, map_zero]
@@ -87,8 +87,7 @@ def frobBialg (h : (p : R) = 0) (A : Type) [CommRing A] [Bialgebra R A] :
     rw [frobRing_apply, comul_pow, ← frobRing_apply (natCast_eq_zero_of_algebra h (A ⊗[R] A))]
     generalize comul (R := R) a = c
     induction c with
-    | zero => simp only [map_zero]
-    | add x y hx hy => simp only [map_add, hx, hy]
+    | add x y hx hy => simp only [map_add (f := _), hx, hy]
     | tmul a b => simp [Algebra.TensorProduct.tmul_pow]
 
 @[simp] theorem frobBialg_apply (h : (p : R) = 0) {A : Type} [CommRing A] [Bialgebra R A] (a : A) :
@@ -112,15 +111,15 @@ def SemiHom.liftOver {G'' : PDivGroup p O''} {ρ : O →+* O''} (s : SemiHom ρ 
   ⟨fun n => (s.app n).liftOver τ h, fun n x => by
     induction x using TensorProduct.induction_on with
     | zero => simp
-    | add x y hx hy => simp only [map_add, hx, hy]
+    | add x y hx hy => simp only [map_add (f := _), hx, hy]
     | tmul r a => simp [s.res_app]⟩
 
 @[simp] theorem SemiHom.liftOver_app {G'' : PDivGroup p O''} {ρ : O →+* O''} (s : SemiHom ρ G'' G)
     (τ : O' →+* O'') (h : ∀ r, ρ r = τ (algebraMap O O' r)) (n : ℕ) (r : O') (a : G.A n) :
     (s.liftOver τ h).app n (r ⊗ₜ a) = τ r • s.app n a := (s.app n).liftOver_tmul τ h r a
 
-variable (O') in
 
+variable (O') in
 theorem baseChange_induction (n : ℕ) {P : (G.baseChange O').A n → Prop} (h0 : P 0)
     (h1 : ∀ (r : O') a, P (r • (G.toBase O').app n a)) (h2 : ∀ x y, P x → P y → P (x + y))
     (x : (G.baseChange O').A n) : P x := by
@@ -149,7 +148,7 @@ theorem baseChange_ext_dual (n : ℕ) {x y : (G.baseChange O').A n}
   induction z using baseChange_induction O' (G := G.dual) n with
   | h0 => simp
   | h1 r χ => rw [map_smul, ofConv_smul, LinearMap.smul_apply, LinearMap.smul_apply, h]
-  | h2 z w hz hw => rw [map_add, ofConv_add, LinearMap.add_apply, LinearMap.add_apply, hz, hw]
+  | h2 z w hz hw => rw [map_add (f := _), ofConv_add, LinearMap.add_apply, LinearMap.add_apply, hz, hw]
 
 end Over
 
@@ -172,14 +171,14 @@ def frobProj : SemiHom (frobRing h) (frobTwist h G) G :=
   letI := (frobRing h).toAlgebra
   G.toBase R
 
-variable {G} in
 
+variable {G} in
 def frobLift (s : SemiHom (frobRing h) H G) : H ⟶ frobTwist h G :=
   letI := (frobRing h).toAlgebra
   SemiHom.lift (O := R) (O' := R) s
 
-variable {G} in
 
+variable {G} in
 @[simp] theorem frobLift_app_frobProj (s : SemiHom (frobRing h) H G) (n : ℕ) (a : G.A n) :
     (frobLift h s).app n ((frobProj h G).app n a) = s.app n a :=
   letI := (frobRing h).toAlgebra
@@ -197,13 +196,6 @@ def verschiebung : frobTwist h G ⟶ G :=
 
 variable {G}
 
-def frobTwistMap (f : G ⟶ H) : frobTwist h G ⟶ frobTwist h H :=
-  letI := (frobRing h).toAlgebra
-  baseChangeMap R f
-
-@[simp] theorem frobTwistMap_app_frobProj (f : G ⟶ H) (n : ℕ) (a : H.A n) :
-    (frobTwistMap h f).app n ((frobProj h H).app n a) = (frobProj h G).app n (f.app n a) := rfl
-
 theorem frobTwist_induction (n : ℕ) {P : (frobTwist h G).A n → Prop} (h0 : P 0)
     (h1 : ∀ (r : R) a, P (r • (frobProj h G).app n a)) (h2 : ∀ x y, P x → P y → P (x + y))
     (x : (frobTwist h G).A n) : P x :=
@@ -214,17 +206,6 @@ theorem frobTwist_hom_ext {f g : H ⟶ frobTwist h G}
     (e : ∀ n a, f.app n ((frobProj h G).app n a) = g.app n ((frobProj h G).app n a)) : f = g :=
   letI := (frobRing h).toAlgebra
   baseChange_hom_ext e
-
-@[simp] theorem frobTwistMap_id : frobTwistMap h (𝟙 G) = 𝟙 _ := frobTwist_hom_ext h fun _ _ => rfl
-
-theorem frobTwistMap_comp (f : G ⟶ H) (g : H ⟶ K) :
-    frobTwistMap h (f ≫ g) = frobTwistMap h f ≫ frobTwistMap h g :=
-  frobTwist_hom_ext h fun _ _ => rfl
-
-theorem frobTwistMap_add (f g : G ⟶ H) :
-    frobTwistMap h (f + g) = frobTwistMap h f + frobTwistMap h g :=
-  letI := (frobRing h).toAlgebra
-  baseChangeMap_add R f g
 
 @[simp] theorem relFrob_app_frobProj (n : ℕ) (a : G.A n) :
     (relFrob h G).app n ((frobProj h G).app n a) = a ^ p :=
@@ -268,45 +249,6 @@ def SemiHom.frobTwist (h' : (p : S) = 0) {σ : R →+* S} {G' : PDivGroup p S} (
 section BaseChange
 
 variable (h' : (p : S) = 0) [Algebra R S] (G)
-
-def frobProjBaseChange :
-    SemiHom (frobRing h') ((frobTwist h G).baseChange S) (G.baseChange S) :=
-  (((frobTwist h G).toBase S).comp (frobProj h G)).liftOver (frobRing h') fun r => by
-    simp only [RingHom.comp_apply, frobRing_apply, map_pow]
-
-def frobTwistBaseChange : frobTwist h' (G.baseChange S) ≅ (frobTwist h G).baseChange S where
-  hom := ((G.toBase S).frobTwist h h').lift
-  inv := frobLift h' (frobProjBaseChange h G h')
-  hom_inv_id := frobTwist_hom_ext h' fun n x => by
-    refine (congrArg (((G.toBase S).frobTwist h h').lift.app n)
-      (frobLift_app_frobProj h' (frobProjBaseChange h G h') n x)).trans ?_
-    change _ = (frobProj h' (G.baseChange S)).app n x
-    induction x using baseChange_induction S (G := G) n with
-    | h0 => simp only [map_zero]
-    | h2 x y hx hy => simp only [map_add, hx, hy]
-    | h1 r a =>
-      rw [SemiBialgHom.smul_map, SemiBialgHom.smul_map, map_smul]
-      congr 1
-      refine (congrArg _ (SemiHom.liftOver_app _ _ _ n 1 a)).trans ?_
-      rw [map_one, one_smul]
-      exact (SemiHom.lift_app _ n 1 _).trans ((one_smul _ _).trans
-        (SemiHom.frobTwist_app_frobProj h h' _ n a))
-  inv_hom_id := baseChange_hom_ext fun n x => by
-    refine (congrArg ((frobLift h' (frobProjBaseChange h G h')).app n)
-      ((SemiHom.lift_app ((G.toBase S).frobTwist h h') n 1 x).trans (one_smul _ _))).trans ?_
-    change _ = ((frobTwist h G).toBase S).app n x
-    induction x using frobTwist_induction h (G := G) n with
-    | h0 => simp only [map_zero]
-    | h2 x y hx hy => simp only [map_add, hx, hy]
-    | h1 r a =>
-      rw [SemiBialgHom.smul_map, SemiBialgHom.smul_map, SemiHom.frobTwist_app_frobProj, map_smul,
-        frobLift_app_frobProj]
-      exact congrArg _ ((SemiHom.liftOver_app _ _ _ n 1 a).trans (by rw [map_one, one_smul]; rfl))
-
-theorem frobTwistBaseChange_hom_app (n : ℕ) (x : (frobTwist h G).A n) :
-    (frobTwistBaseChange h G h').hom.app n (((frobTwist h G).toBase S).app n x) =
-      ((G.toBase S).frobTwist h h').app n x :=
-  (SemiHom.lift_app _ n 1 x).trans (one_smul _ _)
 
 end BaseChange
 

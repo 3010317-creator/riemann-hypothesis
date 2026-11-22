@@ -1,6 +1,11 @@
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOHZeroRight
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+module
+
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOHZeroRight
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory Matrix
 open GlobalTheory.FinPl GlobalTheory.MixPer GlobalTheory.MixModel GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil GlobalTheory.SeeSaw
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -25,8 +30,8 @@ theorem jA_latV {V₀ A L : HSp D} (o : OrthDec V₀ A L) {P : Pl D → Prop} {L
     (hLA : IsSelfDualC A LA) (hM : IsSelfDualC V₀ M) (hloc : ∀ v, P v → ∃ LL, OrthAt o M LA LL v)
     {y : Fin A.rank → AE D} (hy : y ∈ latV A LA P) : o.jA *ᵥ y ∈ latV V₀ M P := by
   have hG := GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D P
-  have hy' := ((hG.2 A).2.2.2 LA y hLA.1).1 hy
-  refine ((hG.2 V₀).2.2.2 M _ hM.1).2 ⟨fun i => ?_, fun v hv e he => ?_⟩
+  have hy' := ((hG.2 A).2.2.2 LA y hLA.1.toIsLattice).1 hy
+  refine ((hG.2 V₀).2.2.2 M _ hM.1.toIsLattice).2 ⟨fun i => ?_, fun v hv e he => ?_⟩
   · simp only [Matrix.mulVec, dotProduct]
     exact sum_mem fun j _ => Ideal.mul_mem_left _ _ (hy'.1 j)
   · obtain ⟨LL, hLL⟩ := hloc v hv

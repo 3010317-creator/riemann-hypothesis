@@ -1,11 +1,15 @@
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.RadAATopOfParts
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliWordSumExpansion
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalMeasurabilityWeakThreshold
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralIdentities
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftClosedUnderOperations
+module
+
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RadAATopOfParts
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliWordSumExpansion
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalMeasurabilityWeakThreshold
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralIdentities
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftClosedUnderOperations
+
+@[expose] public section
 
 open Matrix MeasureTheory Filter Topology
 open scoped ContDiff
@@ -60,7 +64,11 @@ theorem rw_clm (L : E →L[ℂ] E) : ∀ (w : List (Mat k r)), (∀ X ∈ w, inL
       Rw w (fun x => L (f x)) g = L (Rw w f g)
   | [], _, _, _, _, _ => rfl
   | X :: w, hw, f, g, hg, hf => by
-    obtain ⟨U, hU, hgU, hUloc⟩ := loc_spread hf
+    have hspread : ∃ U : Set (Mat k r), IsOpen U ∧ g ∈ U ∧
+        ∀ x ∈ U, Loc ((X :: w).length : ℕ∞) f x := by
+      obtain ⟨U, f', hU, hgU, hf', he⟩ := hf
+      exact ⟨U, hU, hgU, fun x hx => ⟨U, f', hU, hx, hf', he⟩⟩
+    obtain ⟨U, hU, hgU, hUloc⟩ := hspread
     have hw' : ∀ Y ∈ w, inLie k r Y := fun Y hY => hw Y (by simp [hY])
     have hagree : ∀ x ∈ U, x ∈ GV k r → Rw w (fun x => L (f x)) x = L (Rw w f x) := fun x hx hxG =>
       rw_clm L w hw' f x hxG (loc_mono (by simp) (hUloc x hx))
@@ -70,7 +78,7 @@ theorem rw_clm (L : E →L[ℂ] E) : ∀ (w : List (Mat k r)), (∀ X ∈ w, inL
       have := loc_Rw (N := w.length + 1) (by simpa using hf) w hw' 1 (by omega)
       simpa using this
     have hd := loc_hasDerivAt le_rfl hl hg (hw X (by simp))
-    exact ((L.restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hd).deriv
+    exact ((L.restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (x := (0 : ℝ)) hd).deriv
 
 theorem wsum_clm (L : E →L[ℂ] E) (u : ℂ) (c : Fin r → Fin (2 * r + k + 1)) (σ : Equiv.Perm (Fin r))
     (f : Mat k r → E) (g : Mat k r) (hg : g ∈ GV k r) (hf : Loc (r : ℕ∞) f g) :
@@ -87,9 +95,11 @@ theorem wsum_clm (L : E →L[ℂ] E) (u : ℂ) (c : Fin r → Fin (2 * r + k + 1
 theorem aa_clm (L : E →L[ℂ] E) (u : ℂ) (f : Mat k r → E) (g : Mat k r) (hg : g ∈ GV k r)
     (hf : Loc (r : ℕ∞) f g) (hLf : Loc (r : ℕ∞) (fun x => L (f x)) g) :
     C3.AAop k r r le_rfl u (fun x => L (f x)) g = L (C3.AAop k r r le_rfl u f g) := by
-  rw [aa_expand u _ g hg hLf, aa_expand u f g hg hf, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [aa_expand u _ g hg hLf, aa_expand u f g hg hf, map_sum]
   refine Finset.sum_congr rfl fun c _ => ?_
-  rw [map_smul, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_smul, map_sum]
   congr 1
   refine Finset.sum_congr rfl fun σ _ => ?_
   rw [map_smul, wsum_clm L u c σ f g hg hf]

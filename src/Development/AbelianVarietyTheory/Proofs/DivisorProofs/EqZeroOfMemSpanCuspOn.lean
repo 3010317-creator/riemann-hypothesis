@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.WedgeNrmLeOfWedgeNormLe
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.WedgeNrmLeOfWedgeNormLe
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -59,13 +63,13 @@ theorem exists_ptN_le {P : FDSec X} (hP : P ∈ holSub X la) :
   ⟨(supE X la P).toReal, ENNReal.toReal_nonneg, fun p => (ENNReal.ofReal_le_iff_le_toReal (supE_ne_top X la hP)).1
     (le_iSup (fun p : FPt X => ENNReal.ofReal ((X p.1).pnorm (la p.1) (P p.1) p.2)) p)⟩
 
-omit [Fintype Cp] in
 
+omit [Fintype Cp] in
 theorem ptN_add_le (P Q : FDSec X) (z : Σ k, FD.Frame (X k).Ψ r) : ptN la (P + Q) z ≤ ptN la P z + ptN la Q z :=
   pnorm_add_le _ _ _ _ _
 
-omit [Fintype Cp] in
 
+omit [Fintype Cp] in
 theorem ptN_smul (a : ℂ) (P : FDSec X) (z : Σ k, FD.Frame (X k).Ψ r) : ptN la (a • P) z = ‖a‖ * ptN la P z :=
   pnorm_smul _ _ _ _ _
 
@@ -84,7 +88,7 @@ theorem exists_ptN_sub_le {K W : Type} [Field K] [AddCommGroup W] [Module K W] {
     obtain ⟨f, hf, h₁⟩ := hP (ε / 2) (half_pos hε)
     obtain ⟨g, hg, h₂⟩ := hQ (ε / 2) (half_pos hε)
     refine ⟨f + g, add_mem hf hg, fun p => ?_⟩
-    rw [map_add, show P + Q - (rd f + rd g) = (P - rd f) + (Q - rd g) by abel]
+    rw [map_add (f := _), show P + Q - (rd f + rd g) = (P - rd f) + (Q - rd g) by abel]
     exact (ptN_add_le _ _ _).trans (by linarith [h₁ p, h₂ p])
   | smul a P _ hP =>
     intro ε hε

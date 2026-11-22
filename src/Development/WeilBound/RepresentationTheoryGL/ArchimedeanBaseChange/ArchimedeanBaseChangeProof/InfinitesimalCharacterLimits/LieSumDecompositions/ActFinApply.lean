@@ -1,10 +1,14 @@
-import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PBlocksSl
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CapelliDetDiagonalBlockActsByInfinitesimalCharac
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermAuxiliaryStatementB
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraFiniteFormsGLSingleCharSpanMem
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericFiniteByInduction
-import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PProjA
+module
+
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PBlocksSl
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CapelliDetDiagonalBlockActsByInfinitesimalCharac
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermAuxiliaryStatementB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraFiniteFormsGLSingleCharSpanMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericFiniteByInduction
+public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PProjA
+
+@[expose] public section
 
 noncomputable section
 
@@ -135,7 +139,7 @@ theorem act_right {ψ : Sm E (r + s)} (hψ : ψ ∈ U) (ℓ : Sm E s) (m₁ : GA
     rw [upd1, ← CapFactor.lev_eq_leviEmb]
     rfl
 
-theorem LS_stable : IsStable (LS U T) := by
+theorem LS_stable : _root_.GlobalTheory.CuspRep.IsStable (LS U T) := by
   intro o φ hφ
   induction hφ using Submodule.span_induction with
   | mem x hx =>
@@ -143,10 +147,10 @@ theorem LS_stable : IsStable (LS U T) := by
     obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
     exact act_left hU hT hψ' x m₂ (fun m₁ => by rw [hx, ← e]) o
   | zero => rw [map_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+  | add x y _ _ hx hy => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hy
   | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ a hx
 
-theorem RS_stable : IsStable (RS U T) := by
+theorem RS_stable : _root_.GlobalTheory.CuspRep.IsStable (RS U T) := by
   intro o φ hφ
   induction hφ using Submodule.span_induction with
   | mem x hx =>
@@ -154,11 +158,11 @@ theorem RS_stable : IsStable (RS U T) := by
     obtain ⟨ψ', hψ', e⟩ := base_one hU hT hψ k g
     exact act_right hU hT hψ' x m₁ (fun m₂ => by rw [hx, ← e]) o
   | zero => rw [map_zero]; exact zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+  | add x y _ _ hx hy => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hy
   | smul a x _ hx => rw [map_smul]; exact Submodule.smul_mem _ a hx
 
-omit hU in
 
+omit hU in
 theorem LS_aut : ∀ φ ∈ LS U T, IsAutForm φ := by
   intro φ hφ
   induction hφ using Submodule.span_induction with
@@ -171,8 +175,8 @@ theorem LS_aut : ∀ φ ∈ LS U T, IsAutForm φ := by
   | add x y _ _ hx hy => exact GlobalTheory.CompanionTheory.AffglAssembly.isAutForm_add hx hy
   | smul a x _ hx => exact GlobalTheory.CompanionTheory.AffglAssembly.isAutForm_smul a hx
 
-omit hU in
 
+omit hU in
 theorem RS_aut : ∀ φ ∈ RS U T, IsAutForm φ := by
   intro φ hφ
   induction hφ using Submodule.span_induction with

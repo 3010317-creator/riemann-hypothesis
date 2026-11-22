@@ -1,6 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsEmptyOfEffCartierBot
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsRegularRingOfSmooth
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SmoothOfRelativeDimensionPspace
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.WChartsC
+
+@[expose] public section
 
 noncomputable section
 
@@ -40,13 +47,6 @@ section Line
 open GlobalTheory.Principalise GlobalTheory.Principalise.Model
 
 variable (k : Type) [Field k]
-
-abbrev coord : Γ(Sp (Polynomial k), ⊤) :=
-  (Scheme.ΓSpecIso (.of (Polynomial k))).commRingCatIsoToRingEquiv.symm Polynomial.X
-
-instance smooth_line : Smooth (spMap (Polynomial.C : k →+* Polynomial k)) := by
-  rw [HasRingHomProperty.Spec_iff (P := @Smooth)]
-  exact RingHom.smooth_algebraMap.2 (⟨inferInstance, inferInstance⟩ : Algebra.Smooth k (Polynomial k))
 
 end Line
 

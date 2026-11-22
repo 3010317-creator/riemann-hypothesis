@@ -1,16 +1,20 @@
-import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.DatDatum
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfEx
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfIff
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSatakeAlmostAll
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseChangeSpehOfDiscreteSeries
+module
+
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockHeckeSlices.DatDatum
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfEx
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfIff
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSatakeAlmostAll
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseChangeSpehOfDiscreteSeries
+
+@[expose] public section
 
 open NumberField MeasureTheory GlobalTheory.CuspRep GroundTheory.Automorphic GroundTheory.Automorphic.CuspidalSpectrum UpperTheory.V UpperTheory.ConvolutionTheory.C
 
 namespace UpperTheory.ConvolutionTheory.BW.BlockSaturationData
 
-variable {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {S : Set (Pl E)}
+variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {S : Set (Pl E)}
 
 private theorem blo_at {r : ℕ} (b : Blo S r) : ∃ V, IsSummand (mu1 E r) V ∧
     At (mu1 E r) S V (fun τ => Finset.univ.val.map (b.Λ τ)) fun w => (b.sat w).map fun x : ℂˣ => (x : ℂ) := by
@@ -37,7 +41,7 @@ private theorem blo_at {r : ℕ} (b : Blo S r) : ∃ V, IsSummand (mu1 E r) V �
     rw [e] at h1
     exact h1
   · have h0 := b.isSat w hw
-    have hx : (⟨b.f, hm⟩ : π.V) ∈ GlobalTheory.PRep.fixed (π.locRep w) (GlobalTheory.LFun.KGL w r) :=
+    have hx : (⟨b.f, hm⟩ : π.V) ∈ GlobalTheory.PRep.fixed (π.locRep w) (GlobalTheory.LFun.KGL w (n := r)) :=
       GlobalTheory.LGrp.mem_fixed.2 fun k hk => Subtype.ext (GlobalTheory.LGrp.mem_fixed.1 h0.2.1 k hk)
     have hne : (⟨b.f, hm⟩ : π.V) ≠ 0 := fun e => b.ne (congrArg Subtype.val e)
     obtain ⟨B, hB⟩ := GlobalTheory.CompanionTheory.SatAe.exists_hasSatGL_locRep π w ((Submodule.ne_bot_iff _).2 ⟨_, hx, hne⟩)
@@ -102,7 +106,7 @@ theorem main (n : ℕ) (d : Dat S n) (h2 : 2 ≤ d.len) : ∃ b : Datum E n, ∀
 end UpperTheory.ConvolutionTheory.BW.BlockSaturationData
 
 theorem UpperTheory.ConvolutionTheory.BW.datDatum :
-    ∀ (E : Type) [Field E] [NumberField E] [IsTotallyComplex E], UpperTheory.ConvolutionTheory.BW.DatDatum E := by
+    ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E], UpperTheory.ConvolutionTheory.BW.DatDatum E := by
   intro E _ _ _ S n d h2
   obtain ⟨b, hb⟩ := UpperTheory.ConvolutionTheory.BW.BlockSaturationData.main n d h2
   exact ⟨b, ⟨_, _, hb 0⟩, fun F _ hF z => hF _ _ (hb z)⟩

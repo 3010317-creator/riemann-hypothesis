@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.FinLocalCutAt
-import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.LiePush
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsConstantLieBasisArcGroup
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.FinLocalCutAt
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.LiePush
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsConstantLieBasisArcGroup
+
+@[expose] public section
 
 noncomputable section
 
@@ -231,13 +235,15 @@ theorem comb_iff_coeff (U : Fin m → Fin g → A) (cf : Fin m → PowerSeries A
 theorem eig_const_iff (N : Matrix (Fin g) (Fin g) A) (r : A) (z : Fin g → A) :
     (fun j => PowerSeries.C (R := A) (z j)) ᵥ* N.map (PowerSeries.C (R := A)) =
       PowerSeries.C (R := A) r • (fun j => PowerSeries.C (R := A) (z j)) ↔ z ᵥ* N = r • z := by
-  simp only [funext_iff, vecMul, dotProduct, map_apply, Pi.smul_apply, smul_eq_mul, ← map_mul, ← map_sum,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [funext_iff, vecMul, dotProduct, map_apply, Pi.smul_apply, smul_eq_mul, ← map_mul, ← map_sum,
     PowerSeries.C_injective.eq_iff]
 
 theorem comb_const_iff (U : Fin m → Fin g → A) (cf : Fin m → A) (z : Fin g → A) :
     ((fun j => PowerSeries.C (R := A) (z j)) =
       ∑ k, PowerSeries.C (R := A) (cf k) • fun j => PowerSeries.C (R := A) (U k j)) ↔ z = ∑ k, cf k • U k := by
-  simp only [funext_iff, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, ← map_mul, ← map_sum,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [funext_iff, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, ← map_mul, ← map_sum,
     PowerSeries.C_injective.eq_iff]
 
 theorem eigBasis_powerSeries_iff {I : Type} (M : I → Matrix (Fin g) (Fin g) A) (r : I → A) (U : Fin m → Fin g → A) :
@@ -412,8 +418,8 @@ theorem arcBasis_iff (ρ : (E →+* ℂ) → (𝓞 E →+* A)) (e : ∀ τ : E �
   choose v hv using fun ν => (GlobalTheory.T.exists_unique_constant_tangent_vectors_along_arc hG E H Dw l Xo c O β Y A b a χ W ν).1.exists
   exact ⟨fun τ k => v (e τ k), fun τ k => hv _, fun τ => (isEigBasis_iff hG W _ fun k => hv _).1 (h τ)⟩
 
-include W in
 
+include W in
 theorem IsEigBasis.of_cor {O' : Type} [CommRing O'] {β' : O' →+* c.F} {Y' : Model Xo c β'} {b' : O' →+* A}
     {a' : ArcIn Dw l β' A b'} {χ' : Sp (PowerSeries A) ⟶ Y'.X} (W' : Wit Y' a' χ')
     {p : IsPullDeg (RingHom.id A) a.D₀ a'.D₀} (hl : ∀ (x : 𝓞 E) y, p.xe (x • y) = x • p.xe y)

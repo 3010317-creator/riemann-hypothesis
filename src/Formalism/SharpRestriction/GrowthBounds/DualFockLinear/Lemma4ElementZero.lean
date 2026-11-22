@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.GrowthBounds.DualFockLinear.OneSidedLemma4Realisable
+module
+
+public import Formalism.SharpRestriction.GrowthBounds.DualFockLinear.OneSidedLemma4Realisable
+
+@[expose] public section
 
 noncomputable section
 
@@ -100,7 +104,8 @@ theorem xiAt_of {K : ℕ} [NeZero r] [NeZero K] {hk : m + 1 = r + K} {Fr : Frame
       refine Finset.sum_congr rfl fun q _ => ?_
       by_cases hq : o q ≤ tF
       · rw [if_pos hq]
-      · rw [if_neg hq, coeff_zero]
+      · rw [if_neg hq]
+        change 0 = _
         by_contra hne
         have h4 : mm ∈ (sig q).support := mem_support_iff.2 (Ne.symm hne)
         have h5 := lemma4_element_normal_degree hk (hs q).2 mm h4

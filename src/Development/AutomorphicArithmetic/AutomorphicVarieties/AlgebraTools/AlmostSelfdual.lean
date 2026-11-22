@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DualLattice
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DualLattice
+
+@[expose] public section
 
 open Polynomial Matrix IsLocalRing TensorProduct
 
@@ -32,7 +36,7 @@ private theorem UpperTheory.V.AlgebraTools.almost_selfdual_move {A : Type} [Comm
     exact h1
   · intro y z hy hz
     show Bf x (y + z) ∈ (1 : Submodule A F)
-    rw [map_add]
+    rw [map_add (f := _)]
     exact Submodule.add_mem _ hy hz
 
 private theorem UpperTheory.V.AlgebraTools.almost_selfdual_smul {A : Type} [CommRing A] {F V : Type} [Field F]
@@ -47,7 +51,7 @@ private theorem UpperTheory.V.AlgebraTools.almost_selfdual_smul {A : Type} [Comm
     exact Submodule.smul_mem_smul ha (h n hn)
   · intro y z hy hz
     show f (y + z) ∈ I • M
-    rw [map_add]
+    rw [map_add (f := _)]
     exact Submodule.add_mem _ hy hz
 
 private theorem UpperTheory.V.AlgebraTools.map_mem_dualSubmodule_of_bilinForm_similitude {A : Type} [CommRing A] {F V G : Type} [Field F]
@@ -70,7 +74,7 @@ private theorem UpperTheory.V.AlgebraTools.end_apply_mem_sup_of_apply_mem {A : T
     (hP : ∀ y ∈ P, f y ∈ P) (hQ : ∀ y ∈ Q, f y ∈ Q) : ∀ y ∈ P ⊔ Q, f y ∈ P ⊔ Q := by
   intro y hy
   obtain ⟨p, hp, q, hq, rfl⟩ := Submodule.mem_sup.mp hy
-  rw [map_add]
+  rw [map_add (f := _)]
   exact Submodule.add_mem_sup (hP p hp) (hQ q hq)
 
 theorem UpperTheory.V.AlgebraTools.almost_selfdual :
@@ -108,7 +112,8 @@ theorem UpperTheory.V.AlgebraTools.almost_selfdual :
         have hWl : Submodule.IsLattice F (Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y) := by
           haveI := hY
           haveI := hDY
-          refine Submodule.IsLattice.of_le_of_isLattice_of_fg F hYW ?_
+          refine Submodule.IsLattice.of_fg F ?_
+          haveI : Module.Finite A ↥(Bf.dualSubmodule Y) := Submodule.IsLattice.finite F _
           have : IsNoetherian A ↥(Bf.dualSubmodule Y) := inferInstance
           have : IsNoetherian A
               ↥(Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y : Submodule A V) :=

@@ -1,9 +1,13 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.JordanExists
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsRepsOfCover
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InvMemLocROfUnimod
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteRepSetOfOrtho
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.JordanExists
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsRepsOfCover
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InvMemLocROfUnimod
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteRepSetOfOrtho
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+
+@[expose] public section
 
 open NumberField Module
 
@@ -62,9 +66,9 @@ theorem card_ne_zero_eq {n : ℕ} (e : Fin n → ℕ) :
   rw [Finset.card_filter]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : e i = 0
-  · rw [if_neg (not_not.mpr hi), hi]
+  · rw [ite_eq_right (not_not.mpr hi), hi]
     simp
-  · rw [if_pos hi, min_eq_right (Nat.one_le_iff_ne_zero.mpr hi)]
+  · rw [ite_eq_left hi, min_eq_right (Nat.one_le_iff_ne_zero.mpr hi)]
 
 variable {K F V : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F]
   [Algebra F K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V]
@@ -162,9 +166,6 @@ scoped instance fixAct (h : V →ₗ⋆[K] V →ₗ[K] K) (U : Submodule K V) :
   one_smul := autSub_gmap_one
   mul_smul a b Λ := autSub_gmap_mul a.1 b.1 Λ
 
-theorem smul_def {h : V →ₗ⋆[K] V →ₗ[K] K} {U : Submodule K V} (g : isomFix h U)
-    (Λ : Submodule (𝓞 K) V) : g • Λ = Formalism.HermitianLatticesTheory.gmap g.1 Λ := rfl
-
 def stabEquiv (h : V →ₗ⋆[K] V →ₗ[K] K) (U : Submodule K V) (Λ : Submodule (𝓞 K) V) :
     MulAction.stabilizer (isomFix h U) Λ ≃ stabFix h U Λ where
   toFun a := ⟨a.1.1, a.1.2, MulAction.mem_stabilizer_iff.mp a.2⟩
@@ -198,7 +199,7 @@ theorem nondegenerate_on_orth_compl {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.I
   intro v
   have hv : v ∈ U ⊔ orthK h U := by rw [hUW.sup_eq_top]; exact Submodule.mem_top
   obtain ⟨u, hu, w, hw, rfl⟩ := Submodule.mem_sup.mp hv
-  rw [map_add, hxy w hw, ← hs.eq u x, (mem_orthK.mp hx) u hu, map_zero, add_zero]
+  rw [map_add (f := _), hxy w hw, ← hs.eq u x, (mem_orthK.mp hx) u hu, map_zero, add_zero]
 
 theorem vJof_eq_of_jordan (h2 : JordanInv) (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) {X X' : Submodule K V} {L L' : Submodule (𝓞 K) V}

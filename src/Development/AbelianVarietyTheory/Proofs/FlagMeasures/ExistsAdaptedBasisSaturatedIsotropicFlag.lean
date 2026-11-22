@@ -1,12 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HasSignatureComplement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometric
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDual
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplOfSaturated
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsProjector
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HasSignatureComplement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometric
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDual
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplOfSaturated
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsProjector
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.FlagBase
 
@@ -23,6 +27,52 @@ theorem exists_complement (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q : ℕ) 
     (h7 : ∀ z ∈ Λ, ∃ y, B *ᵥ y ∈ Λ ∧ (Bᴴ * I.J) *ᵥ (z - B *ᵥ y) = 0) :
     ∃ (γ : GL (Fin I₀.n) I.E) (x₀ : I₀.Gf), (B * γ.1)ᴴ * I.J * (B * γ.1) = I₀.J.map e ∧
       ∀ y, y ∈ lamX I₀ (1, x₀) ↔ ((B * γ.1) *ᵥ fun l => e (y l)) ∈ Λ := by
+  have hΛfull : Submodule.IsFullLattice I.E Λ := by
+    refine { toIsLattice := hΛ, span_eq_top := ?_ }
+    haveI : Module.Finite (𝓞 I.E) Λ := Module.Finite.iff_fg.mpr hΛ.fg
+    haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 I.E) Λ
+    obtain ⟨s, hs⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ Λ).FG)
+    apply eq_top_iff.mpr
+    intro y _
+    let f : Λ →+ I.E := {
+      toFun := fun x => star (x : Fin I.n → I.E) ⬝ᵥ (I.J *ᵥ y)
+      map_zero' := by simp [dotProduct]
+      map_add' := by
+        intro x z
+        simp [dotProduct, star_add, add_mul, Finset.sum_add_distrib] }
+    obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 I.E)) s f
+    have ha0 : (algebraMap (𝓞 I.E) I.E a) ≠ 0 :=
+      (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+    let P : Submodule ℤ Λ := ((1 : Submodule (𝓞 I.E) I.E).restrictScalars ℤ).comap
+      ((algebraMap (𝓞 I.E) I.E a) • f.toIntLinearMap)
+    have hsP : (s : Set Λ) ⊆ P := by
+      intro x hx
+      obtain ⟨b, hb⟩ := ha x hx
+      change (algebraMap (𝓞 I.E) I.E a) * f x ∈ (1 : Submodule (𝓞 I.E) I.E)
+      refine Submodule.mem_one.mpr ⟨b, ?_⟩
+      simpa [Algebra.smul_def] using hb
+    have hP : P = ⊤ := by
+      apply eq_top_iff.mpr
+      rw [← hs]
+      exact Submodule.span_le.mpr hsP
+    have hy : (algebraMap (𝓞 I.E) I.E a) • y ∈ Λ := by
+      apply (hdual _).2
+      intro x hx
+      have hxP : (⟨x, hx⟩ : Λ) ∈ P := by rw [hP]; trivial
+      change (algebraMap (𝓞 I.E) I.E a) * f ⟨x, hx⟩ ∈ (1 : Submodule (𝓞 I.E) I.E) at hxP
+      have he : star x ⬝ᵥ (I.J *ᵥ ((algebraMap (𝓞 I.E) I.E a) • y)) =
+          (algebraMap (𝓞 I.E) I.E a) * f ⟨x, hx⟩ := by
+        simp [f, Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul,
+          Finset.mul_sum, mul_assoc, mul_left_comm]
+      rw [he]
+      exact Submodule.mem_one.mp hxP
+    have hy' : (algebraMap (𝓞 I.E) I.E a) • y ∈ Submodule.span I.E (Λ : Set (Fin I.n → I.E)) :=
+      Submodule.subset_span hy
+    have h := (Submodule.span I.E (Λ : Set (Fin I.n → I.E))).smul_mem
+      (algebraMap (𝓞 I.E) I.E a)⁻¹ hy'
+    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at h
+    exact h
+  obtain ⟨xΛ, hxΛ⟩ := GlobalTheory.SelfDualPoint.exists_lamX_eq I Λ hΛfull (by simpa only [hform_eq] using hdual)
   have he' : ∀ y, e.symm (star y) = star (e.symm y) := fun y => e.injective (by simp [he])
   set G : Matrix (Fin I₀.n) (Fin I₀.n) I₀.E := (Bᴴ * I.J * B).map e.symm with hG
   have hGe : Bᴴ * I.J * B = G.map e := by ext r s; exact (e.apply_symm_apply _).symm
@@ -30,9 +80,9 @@ theorem exists_complement (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q : ℕ) 
     rw [hGe]; exact ((e : I₀.E →+* I.E).map_det G).symm.trans (by rw [h, map_zero]))
   have hGh : Gᴴ = G := by
     rw [hG, ← Matrix.conjTranspose_map _ he', ← gram_swap (J_herm I)]
-  obtain ⟨L, hL, -, hLd⟩ := exists_factor_lattice I.E I₀.E e he _ _ I.J B G Λ (J_herm I) hGe hGd hΛ hdual h7
-  obtain ⟨γ, hγ⟩ := GlobalTheory.FlagMeas.sameKindIsometric I₀.E I₀.cm.cmUnram I₀.n G I₀.J hGh (J_herm I₀) hGd I₀.J_det ⟨L, hL, hLd⟩
-    ⟨I₀.L, ⟨I₀.L_fg, I₀.L_span⟩, by simpa only [hform_eq] using I₀.L_dual⟩ (fun φ => by
+  obtain ⟨L, hL, -, hLd⟩ := exists_factor_lattice I.E I₀.E e he _ _ I.J B G Λ (J_herm I) hGe hGd hΛfull hdual h7
+  obtain ⟨γ, hγ⟩ := GlobalTheory.FlagMeas.sameKindIsometric I₀.E I₀.cm.cmUnram I₀.n G I₀.J hGh (J_herm I₀) hGd I₀.J_det ⟨L, hL.toIsLattice, hLd⟩
+    ⟨I₀.L, Submodule.IsLattice.of_fg I₀.E I₀.L_fg, by simpa only [hform_eq] using I₀.L_dual⟩ (fun φ => by
       refine ⟨_, _, ?_, hasSignature_map I₀ _ _ hI₀ φ⟩
       set ψ : I.E →+* ℂ := φ.comp e.symm.toRingHom
       have hψ : ∀ x, ψ (star x) = star (ψ x) := I.cm.cmUnram.2.1 ψ
@@ -55,7 +105,7 @@ theorem exists_complement (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q : ℕ) 
     refine Eq.trans ?_ this
     rw [show G.map (e : I₀.E →+* I.E) = _ from hGe.symm]
     simp only [conjTranspose_mul, Matrix.mul_assoc]
-  obtain ⟨L', hL', hm, hLd'⟩ := exists_factor_lattice I.E I₀.E e he _ _ I.J (B * γ'.1) I₀.J Λ (J_herm I) hT I₀.J_det hΛ hdual
+  obtain ⟨L', hL', hm, hLd'⟩ := exists_factor_lattice I.E I₀.E e he _ _ I.J (B * γ'.1) I₀.J Λ (J_herm I) hT I₀.J_det hΛfull hdual
     fun z hz => by
       obtain ⟨y, hy, hy'⟩ := h7 z hz
       have : (B * γ'.1) *ᵥ (γ'⁻¹.1 *ᵥ y) = B *ᵥ y := by
@@ -104,7 +154,8 @@ theorem exists_isAdapted : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q a 
       have : Submodule.span I.E (Λ i : Set (Fin (j i) → I.E)) ≤ W.comap (Ti i).mulVecLin :=
         Submodule.span_le.2 fun t ht => Submodule.subset_span (hone i t ht)
       rw [← hT]
-      exact this ((hΛ i).span_eq_top ▸ Submodule.mem_top)
+      have hsp := Submodule.IsFullLattice.span_eq_top (self := hΛ i)
+      exact this (hsp ▸ Submodule.mem_top)
     · obtain ⟨u, -, rfl⟩ := (hlast z).1 hz
       exact ⟨u, rfl⟩
   have hdim : Module.finrank I.E W = Fintype.card κ := by
@@ -124,7 +175,7 @@ theorem exists_isAdapted : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q a 
     | smul_left c x y _ _ h => simp [h]
     | smul_right c x y _ _ h => simp [mulVec_smul, h]
   obtain ⟨W', hW'iso, hW'dim, hW'nd, hsplit⟩ := GlobalTheory.WittInt.main I.E I.cm.cmUnram I.n I.J (J_herm I) I.J_det _
-    ⟨hfg, hspan⟩ hdual W hWiso
+    (Submodule.IsLattice.of_fg I.E hfg) hdual W hWiso
   obtain ⟨T', B, hrange', h3, h6, hB⟩ := exists_witt I.E I.n I₀.n κ I.J T W W' (J_herm I) I.J_det (hκ ▸ hn) hrange hdim
     (hW'dim.trans hdim) hWiso hW'iso hW'nd
   have mT : ∀ u, T *ᵥ u ∈ W := fun u => hrange ▸ ⟨u, rfl⟩
@@ -146,7 +197,7 @@ theorem exists_isAdapted : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q a 
     obtain ⟨u', rfl⟩ := hyW
     simp only [mulVecLin_apply] at hw hx hy hxS
     exact ⟨u, u', w, hxS, hy, hw ▸ sub_mem (sub_mem hz hx) hy, by rw [hw]; abel⟩
-  obtain ⟨γ, x₀, hG, hx₀⟩ := exists_complement I I₀ e p q he hI (hκ ▸ hI₀) (hκ ▸ hn) _ ⟨hfg, hspan⟩ hdual T T' B
+  obtain ⟨γ, x₀, hG, hx₀⟩ := exists_complement I I₀ e p q he hI (hκ ▸ hI₀) (hκ ▸ hn) _ (Submodule.IsLattice.of_fg I.E hfg) hdual T T' B
     h1 h2 h3 h4 h5 h6 fun z hz => by
       obtain ⟨u, u', y, -, -, hy, rfl⟩ := hdec z hz
       refine ⟨y, hy, ?_⟩
@@ -163,7 +214,7 @@ theorem exists_isAdapted : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (p q a 
     congr 1
     ext s
     simp [mulVec, dotProduct, Matrix.one_apply]
-  refine ⟨Λ, x₀, Ti, fun i => T'.submatrix id fun s => ⟨i, s⟩, B * γ.1, he, hn, hΛ, fun i k => ⟨?_, ?_, fun h => ?_⟩,
+  refine ⟨Λ, x₀, Ti, fun i => T'.submatrix id fun s => ⟨i, s⟩, B * γ.1, he, hn, (fun i => (hΛ i).toIsLattice), fun i k => ⟨?_, ?_, fun h => ?_⟩,
     fun i => ⟨?_, ?_, ?_⟩, hG, fun z => ⟨fun hz => ?_, ?_⟩, hS⟩
   · rw [hT, hT, hsub, h1]; rfl
   · rw [hsub, h2]; rfl

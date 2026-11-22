@@ -1,4 +1,8 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LaurentAdjoinEqOfImageEq
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LaurentAdjoinEqOfImageEq
+
+@[expose] public section
 
 open NumberField Module
 
@@ -9,11 +13,11 @@ namespace Formalism.HermitianLattices.Ext.L3.WCC
 open WCA WCB
 
 variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
-variable {V : Type} [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V]
-  [IsScalarTower (𝓞 K) K V]
 
 local notation "ι" => algebraMap (𝓞 F) (𝓞 K)
 local notation "κ" => algebraMap (𝓞 K) K
+variable {V : Type} [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V]
+  [IsScalarTower (𝓞 K) K V]
 
 theorem core (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm)
     (han : ∀ x, h x x = 0 → x = 0) {A : Submodule (𝓞 K) V} (hA : Formalism.HermitianLatticesTheory.IsIntegralLat h A)
@@ -57,7 +61,7 @@ theorem core (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K
   have hy : y = x + d := by simp [hd]
   have hexp : ∀ a b : V, h (a + b) (a + b) = h a a + h a b + h b a + h b b := by
     intro a b
-    simp only [map_add, LinearMap.add_apply]
+    simp only [map_add (f := _), LinearMap.add_apply]
     ring
   have hdd : h x d + h d x + h d d = 0 := by
     have h1 := hexp x d
@@ -74,7 +78,7 @@ theorem core (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K
   have hcn : InI 𝔭 (v + (v + J)) (c - κ (ι n)) := by
     have h1 : c - κ (ι n) = h (star l • d) z₀ + h x (star l • d) := by
       rw [hc_def, hz₀]
-      simp only [map_add, LinearMap.add_apply]
+      simp only [map_add (f := _), LinearMap.add_apply]
       rw [hxx]
       ring
     rw [h1]
@@ -111,7 +115,7 @@ theorem core (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K
   have hθ1 : InI 𝔭 1 θ := hθJ.mono (by omega)
   have hskew : h d z₀ + h z₀ d = 0 := by
     rw [hz₀]
-    simp only [map_add, LinearMap.add_apply, map_smul, LinearMap.map_smulₛₗ₂, smul_eq_mul,
+    simp only [map_add (f := _), LinearMap.add_apply, map_smul, LinearMap.map_smulₛₗ₂, smul_eq_mul,
       starRingEnd_apply, star_star]
     linear_combination hdd + h d d * hl
   have hθstar : star θ = -θ := by

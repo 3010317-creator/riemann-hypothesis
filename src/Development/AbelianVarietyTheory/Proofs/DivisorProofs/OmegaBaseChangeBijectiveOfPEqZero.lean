@@ -1,4 +1,9 @@
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
+module
+
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
+
+@[expose] public section
+
 open TensorProduct Coalgebra Bialgebra CategoryTheory WithConv GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup
 
 namespace GlobalTheory
@@ -19,12 +24,12 @@ theorem liftSemi_toBaseChange_cot_bijective (R R' A : Type) [CommRing R] [CommRi
     intro x
     induction x using TensorProduct.induction_on with
     | zero => simp
-    | add x y hx hy => rw [map_add, map_add, hx, hy]
+    | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
     | tmul r m =>
       obtain ⟨a, rfl⟩ := AugCot.d_surjective (counitAlgHom R A) m
       have h1 := SemiBialgHom.cot_d (toBaseChange R R' A) a
       simp only [liftSemi_tmul, E, LinearEquiv.trans_apply]
-      rw [show AugCot.d (counitAlgHom R A) a = dUnit R a from rfl, h1, AugCot.baseChangeEquiv_tmul_d,
+      rw [show AugCot.d (counitAlgHom R A) a = dUnit (R := R) a from rfl, h1, AugCot.baseChangeEquiv_tmul_d,
         map_smul, AugCot.congr_d]
       rfl
   have hfun : ⇑(liftSemi (toBaseChange R R' A).cot) = ⇑E := funext key
@@ -49,7 +54,7 @@ theorem omega_baseChange_bijective {p : ℕ} {R : Type} [CommRing R] (G : PDivGr
     intro x
     induction x using TensorProduct.induction_on with
     | zero => simp
-    | add x y hx hy => rw [map_add, map_add, map_add, map_add, hx, hy]
+    | add x y hx hy => rw [map_add (f := _), map_add (f := _), map_add (f := _), map_add (f := _), hx, hy]
     | tmul r w =>
       simp only [liftSemi_tmul, map_smul, e, LinearEquiv.baseChange_tmul, LinearEquiv.ofBijective_apply]
       congr 1

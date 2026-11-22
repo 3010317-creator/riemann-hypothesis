@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsNoetherianRingDualNumber
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsNoetherianRingDualNumber
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -44,7 +48,7 @@ def redTrans : ((S.coef hI).comp S.redO).G ⟶ (viaDR hI hk s₀).G where
       pt := by
         change spMap (RingHom.id _) ≫ affPt s₀ U.unop = affPt s₀ U.unop ≫ 𝟙 X₀
         rw [Cris.spMap_id, Category.id_comp, Category.comp_id] }
-  naturality U V a := Thick.hom_ext fun b ↦ S.nat a b
+  naturality U V a := Thick.Hom.ext' (AlgHom.ext fun b ↦ S.nat a b)
 
 theorem redO_r (c : Cr hI π s₀) :
     S.redO.pull1 (S.r hI c) = cmpO s₀ (toH1O s₀ (rho hI hk s₀ c)) := by
@@ -74,7 +78,7 @@ theorem Sys.mem_K_sup_iff : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
   · intro h
     obtain ⟨k, hk', i, hi, rfl⟩ := Submodule.mem_sup.1 h
     have h0 : S.r hI k = 0 := hk'
-    rw [map_add, h0, zero_add]
+    rw [map_add (f := _), h0, zero_add]
     refine (key i).1 ?_
     rw [(hBC.2 i).2 hi]
     exact Submodule.zero_mem _

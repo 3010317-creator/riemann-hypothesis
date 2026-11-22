@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdNA
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdNA
+
+@[expose] public section
 
 noncomputable section
 
@@ -111,7 +115,7 @@ theorem ext_top {W : Type*} [AddCommGroup W] [Module E W] [Module (𝓞 E) W] [I
   refine ⟨G.comp (LinearMap.codRestrict ⊤ LinearMap.id (fun _ => Submodule.mem_top)), fun x hx => ?_⟩
   exact hG x hx
 
-theorem dual_sum (Λ : Submodule (𝓞 E) S.V) (hΛ : Submodule.IsLattice E Λ) (hSD : SD S Λ) (U : Submodule E S.V)
+theorem dual_sum (Λ : Submodule (𝓞 E) S.V) (hΛ : Submodule.IsFullLattice E Λ) (hSD : SD S Λ) (U : Submodule E S.V)
     (v : S.V) (hv : ∀ m ∈ Λ, m ∈ U → IsIntegral ℤ (S.hT m v)) : ∃ w ∈ Λ, v - w ∈ orth S U := by
   obtain ⟨π, hπ, hπU⟩ := retract S Λ hΛ.fg U
   let g : Λ →ₗ[𝓞 E] E := ((S.hT v).restrictScalars (𝓞 E)) ∘ₗ π

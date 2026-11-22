@@ -1,5 +1,9 @@
-import Formalism.LocalToGlobal.GlobalTheory.NatInvMemIntW
-import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.ExistsPrimeToLe
+module
+
+public import Formalism.LocalToGlobal.GlobalTheory.NatInvMemIntW
+public import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.ExistsPrimeToLe
+
+@[expose] public section
 
 noncomputable section
 
@@ -52,7 +56,8 @@ theorem transpose_base_matrix_infinity (Y : GL (Fin (D.R.N 0)) D.host.E) (τ : D
         Matrix (Fin (D.R.N 0)) (Fin (D.R.N 0)) D.host.E) τ := by
   rw [B0inv_coe]
   ext i j
-  simp only [Matrix.transpose_apply, Matrix.map_apply, Formalism.L2.Forms.atInf, Formalism.UG.cT, Matrix.mul_apply, map_sum, map_mul,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Matrix.transpose_apply, Matrix.map_apply, Formalism.L2.Forms.atInf, Formalism.UG.cT, Matrix.mul_apply, map_sum, map_mul,
     AlgHom.coe_toRingHom]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [embLL_rhoC, embLL_rhoC, gramN_sig j k, embT_sigD, embT_sigD, starRingEnd_self_apply, mul_comm]

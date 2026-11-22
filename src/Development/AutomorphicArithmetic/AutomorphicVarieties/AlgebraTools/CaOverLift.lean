@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 open IsLocalRing
 
@@ -118,7 +122,7 @@ theorem UpperTheory.V.AlgebraTools.exists_lift_ker_eq :
       map_one' := hj (by rw [hg, map_one, map_one])
       map_mul' := fun s t => hj (by rw [map_mul, hg, hg, hg, map_mul])
       map_zero' := hj (by rw [hg, map_zero, map_zero])
-      map_add' := fun s t => hj (by rw [map_add, hg, hg, hg, map_add]) }
+      map_add' := fun s t => hj (by rw [map_add (f := _), hg, hg, hg, map_add (f := _)]) }
   refine ⟨x', ?_, ?_⟩
   · ext r
     exact hj ((hg _).trans (RingHom.congr_fun hψ1 r))

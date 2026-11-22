@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.CmpPrime
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.CmpPrime
+
+@[expose] public section
 
 open Polynomial
 
@@ -31,7 +35,7 @@ private theorem cmpPrime_core {Λ B : Type} [CommRing Λ] [IsDomain Λ] [CommRin
       (∏ j ∈ Finset.univ.erase i, g j).map (algebraMap Λ (FractionRing Λ)) := by
     rw [Polynomial.map_prod]
     intro h
-    obtain ⟨j, hj, hdvd⟩ := (Prime.dvd_finset_prod_iff gprime _).1 h
+    obtain ⟨j, hj, hdvd⟩ := (Prime.dvd_finsetProd_iff gprime _).1 h
     have hji : j ≠ i := Finset.ne_of_mem_erase hj
     have hassoc := (irr i).associated_of_dvd (irr j) hdvd
     have heq := Polynomial.eq_of_monic_of_associated (mapMonic i) (mapMonic j) hassoc

@@ -1,12 +1,18 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContinuesConst
-import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.EisensteinMaximalParabolic
-import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelEisensteinContinuationOfDoublingMethod
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixSDblDecZero
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsConjStabilizersSelfDualLatticesUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanMajorantStabilisersConjugateStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonAdjointHeckeOperatorEqDualLabel
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContinuesConst
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EisensteinIsotropicLine
+public import Development.AbelianVarietyTheory.Definitions.Foundations.AnalyticOnNhdTsumNpow
+public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelEisensteinContinuationOfDoublingMethod
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixSDblDecZero
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsConjStabilizersSelfDualLatticesUnramifiedStatement
+import all Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsConjStabilizersSelfDualLatticesUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ArchimedeanMajorantStabilisersConjugateStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonAdjointHeckeOperatorEqDualLabel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
+
+@[expose] public section
 
 open scoped NNReal Matrix TensorProduct Topology
 open Filter NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.Pj GlobalTheory.AdelicU GlobalTheory.Doubling GlobalTheory.Cont GlobalTheory.MixModel GlobalTheory.RegSW GlobalTheory.EisCont GlobalTheory.SiegelSet GlobalTheory.UAut GlobalTheory.EisLine
@@ -20,8 +26,8 @@ section Glue
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
   (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
 
-omit [NumberField E] in
 
+omit [NumberField E] in
 theorem exists_proj_eq (x : ∀ v, GLoc σ J v) (S : Finset (HeightOneSpectrum (𝓞 F))) :
     ∃ g : GAd σ J, (∀ v ∈ S, proj σ J v g = x v) ∧ (∀ v ∉ S, proj σ J v g = 1) ∧ ∀ w, projArch σ J w g = 1 := by
   classical
@@ -39,8 +45,8 @@ theorem exists_proj_eq (x : ∀ v, GLoc σ J v) (S : Finset (HeightOneSpectrum (
       rw [map_mul, proj_emb_ne σ J hv.1, one_mul, h2 v hv.2]
     · rw [map_mul, projArch_emb, one_mul, h3]
 
-omit [NumberField E] in
 
+omit [NumberField E] in
 theorem exists_projArch_eq (x : ∀ w, GArch σ J w) (S : Finset (InfinitePlace F)) :
     ∃ g : GAd σ J, (∀ w ∈ S, projArch σ J w g = x w) ∧ (∀ w ∉ S, projArch σ J w g = 1) ∧ ∀ v, proj σ J v g = 1 := by
   classical
@@ -58,8 +64,8 @@ theorem exists_projArch_eq (x : ∀ w, GArch σ J w) (S : Finset (InfinitePlace 
       rw [map_mul, projArch_embArch_ne σ J hv.1, one_mul, h2 v hv.2]
     · rw [map_mul, proj_embArch, one_mul, h3]
 
-theorem exists_conj_of_local {L L' : Submodule (𝓞 E) (Fin n → E)} (hL : Submodule.IsLattice E L)
-    (hL' : Submodule.IsLattice E L') (a a' : GL (Fin n) (AF F ⊗[F] E))
+theorem exists_conj_of_local {L L' : Submodule (𝓞 E) (Fin n → E)} (hL : Submodule.IsFullLattice E L)
+    (hL' : Submodule.IsFullLattice E L') (a a' : GL (Fin n) (AF F ⊗[F] E))
     (hf : ∀ v : HeightOneSpectrum (𝓞 F), ∃ g : GLoc σ J v, ∀ k : GLoc σ J v,
       k ∈ stabLoc σ J L' v ↔ g⁻¹ * k * g ∈ stabLoc σ J L v)
     (hi : ∀ w : InfinitePlace F, ∃ g : GArch σ J w, ∀ k : GArch σ J w,
@@ -85,6 +91,8 @@ theorem exists_conj_of_local {L L' : Submodule (𝓞 E) (Fin n → E)} (hL : Sub
 
 end Glue
 
+open private fullLattice_of_isSelfDualAt from
+  Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsConjStabilizersSelfDualLatticesUnramifiedStatement in
 theorem exists_conj : ∀ (D : D7) (T : HSp D) (L L' : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)) (a a' : GL (Fin T.rank) (AE D)), IsLevel T L a → IsLevel T L' a' → ∃ g : GA D T, ∀ k : GA D T, k ∈ lev T L' a' ↔ g⁻¹ * k * g ∈ lev T L a := by
   intro D T L L' a a' h h'
   have hc := isCMExt_host D
@@ -92,7 +100,11 @@ theorem exists_conj : ∀ (D : D7) (T : HSp D) (L L' : Submodule (𝓞 D.host.E)
   have hf := fun v => GlobalTheory.T.exists_conj_stabilizers_selfDual_lattices_unramified D.host.F D.host.E D.sp.cm.sig hc (GlobalTheory.HeckeAdjoint.unramified_host D) T.rank T.gram
     hJ L L' h.lat h'.lat v (h.dual v) (h'.dual v)
   have hi := fun w => GlobalTheory.T.archimedean_majorant_stabilisers_conjugate D.host.F D.host.E D.sp.cm.sig hc T.rank T.gram hJ a a' h.maj h'.maj w
-  obtain ⟨g, hg⟩ := exists_conj_of_local D.sp.cm.sig T.gram h.lat h'.lat a a' hf hi
+  obtain ⟨M, hM0, hM⟩ := Ring.exists_maximal_of_not_isField (RingOfIntegers.not_isField D.host.F)
+  let v : HeightOneSpectrum (𝓞 D.host.F) := ⟨M, hM.isPrime, hM0⟩
+  have hFull := fullLattice_of_isSelfDualAt hJ h.lat (h.dual v)
+  have hFull' := fullLattice_of_isSelfDualAt hJ h'.lat (h'.dual v)
+  obtain ⟨g, hg⟩ := exists_conj_of_local D.sp.cm.sig T.gram hFull hFull' a a' hf hi
   exact ⟨g, fun k => hg k⟩
 
 end GlobalTheory.EisCont.LevelConj

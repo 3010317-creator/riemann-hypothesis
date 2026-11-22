@@ -1,15 +1,19 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.CcARatioZero
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Decomp
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Weighted
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Transported
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.PsiGelfand
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PsiPos
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.EquivSigLamOfIsDS
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.InfChar
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.BridgeExpK
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerBasic
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Exists
-import Formalism.PeriodIntegrals.ZuckTensor
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.CcARatioZero
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Decomp
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Weighted
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.Transported
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.PsiGelfand
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PsiPos
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.EquivSigLamOfIsDS
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.InfChar
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.BridgeExpK
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.BochnerInequality.LayerBasic
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Exists
+public import Formalism.PeriodIntegrals.ZuckTensor
+
+@[expose] public section
 
 noncomputable section
 
@@ -294,7 +298,8 @@ theorem cns_tens_sum {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H
     (η : Fin n → H) {β : Type*} (B : Finset β) (F : β → Fin n → D) :
     ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => (((∑ b ∈ B, F b) d : D) : H)) c) =
       ∑ b ∈ B, ∑ c, inner ℂ (η c) (tensGrp dual σ g (fun d => ((F b d : D) : H)) c) := by
-  simp only [tensGrp, Finset.sum_apply, Submodule.coe_sum, map_sum, Finset.smul_sum, inner_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [tensGrp, Finset.sum_apply, Submodule.coe_sum, map_sum, Finset.smul_sum, inner_sum]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c _ => ?_
   rw [Finset.sum_comm]

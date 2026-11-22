@@ -1,11 +1,16 @@
-import Mathlib
-import ReciprocityTheory.CommutativeAlgebra.MaximalIdealSquares.RingKrullDimQuotientSpanSingletonAddOne
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsRegularRingOfSmooth
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
-import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
-import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+module
+
+public import Mathlib
+public import ReciprocityTheory.CommutativeAlgebra.MaximalIdealSquares.RingKrullDimQuotientSpanSingletonAddOne
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsRegularRingOfSmooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+
+@[expose] public section
+
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open scoped CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
@@ -166,7 +171,6 @@ theorem mem_span_of_map_eq_zero (R A B D : Type) [CommRing R] [CommRing A] [Comm
       (mapBaseChange_surjective R A B hs) v).mp hv'
     clear hv hv'
     induction w with
-    | zero => simp
     | add x y hx hy => rw [map_add, map_add]; exact add_mem hx hy
     | tmul d w =>
       obtain ⟨y, hy⟩ := (exact_kerCotangentToTensor_mapBaseChange R A B hs w.1).mp w.2
@@ -201,11 +205,10 @@ theorem mem_span_of_residue {A D k M I I' : Type} [CommRing A] [CommRing D] [IsL
       ((Algebra.linearMap D k).restrictScalars A).exact_subtype_ker_map hs v).mp hv
     clear hv
     induction w with
-    | zero => exact ⟨0, by rw [map_zero, smul_zero]⟩
     | add x y hx hy =>
       obtain ⟨x', hx⟩ := hx
       obtain ⟨y', hy⟩ := hy
-      exact ⟨x' + y', by rw [map_add, hx, hy, smul_add]⟩
+      exact ⟨x' + y', by rw [map_add (f := _), hx, hy, smul_add]⟩
     | tmul d m =>
       obtain ⟨e, he⟩ := hk d.1 d.2
       exact ⟨e ⊗ₜ m, by
@@ -264,7 +267,6 @@ theorem exists_mul_mem_span (R A B K I : Type) [CommRing R] [CommRing A] [CommRi
   have : Subsingleton (K ⊗[A] (RingHom.ker (algebraMap A B) ⧸ N)) := by
     refine subsingleton_of_forall_eq 0 fun v => ?_
     induction v with
-    | zero => rfl
     | add x y hx hy => rw [hx, hy, add_zero]
     | tmul d m =>
       obtain ⟨m, rfl⟩ := N.mkQ_surjective m

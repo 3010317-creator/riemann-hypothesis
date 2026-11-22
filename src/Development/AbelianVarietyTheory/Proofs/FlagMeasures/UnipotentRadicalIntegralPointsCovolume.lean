@@ -1,36 +1,40 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowersMulZero
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeLeProdLayersUnipotentStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsTraceOne
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointMajorantFramesGiveMajorants
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointRationalEquivariance
-import Formalism.HarderNarasimhan.ShiftInvariance
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDualFlagOfSaturatedIsotropicFlagStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianFlagPieceHeightsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianFlagAtComplexEmbeddingStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexFlagAtEmbeddingFrameFinrankAndLowersStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagUnipotentRadicalEqLoweringStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinrankMatricesLoweringFiltrationByEqSuccAddStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalBlockFrameOfComplexFlagStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSkewOrthonormalBasisAdaptedFiltrationStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealComplexSpanOrthonormalSkewFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryLayerCoordsToBlocksStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumePiLatticeUnitaryCoordinatesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HomLatticeCovolumeEmbeddingFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBiorthogonalFrameOfSaturatedFlagStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BiorthogonalBlockFramesTriangularStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalBlockFrameLocalSplitStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HeightFlagPieceTriangularFrameStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSkewIntegerNormCoprimePrimeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConjStableLatticeRealImagCovolumeLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ZlatticeCovolumeEqOfCoprimeScalarsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryLeadingTermOfSkewLayerStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdjointMemAndExistsIntegralPointStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegralPointsAlgebraSubgroupStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EmbeddingsMatchInfinitePlacesAutInstanceStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagUnipotentDimEqSumPairsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdLayerHeightQuotientsEqSqStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowersMulZero
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeLeProdLayersUnipotentStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsTraceOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointMajorantFramesGiveMajorants
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointRationalEquivariance
+public import Formalism.HarderNarasimhan.ShiftInvariance
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDualFlagOfSaturatedIsotropicFlagStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianFlagPieceHeightsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianFlagAtComplexEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexFlagAtEmbeddingFrameFinrankAndLowersStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagUnipotentRadicalEqLoweringStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinrankMatricesLoweringFiltrationByEqSuccAddStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalBlockFrameOfComplexFlagStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSkewOrthonormalBasisAdaptedFiltrationStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealComplexSpanOrthonormalSkewFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryLayerCoordsToBlocksStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumePiLatticeUnitaryCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HomLatticeCovolumeEmbeddingFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBiorthogonalFrameOfSaturatedFlagStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BiorthogonalBlockFramesTriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalBlockFrameLocalSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HeightFlagPieceTriangularFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSkewIntegerNormCoprimePrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConjStableLatticeRealImagCovolumeLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ZlatticeCovolumeEqOfCoprimeScalarsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryLeadingTermOfSkewLayerStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdjointMemAndExistsIntegralPointStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegralPointsAlgebraSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EmbeddingsMatchInfinitePlacesAutInstanceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagUnipotentDimEqSumPairsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdLayerHeightQuotientsEqSqStatement
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.FlagBase GlobalTheory.RadCov
 
@@ -277,7 +281,7 @@ theorem radicalCovolume : RadicalCovolume := by
     rcases le_total b m with h | h
     · exact hF.1 h
     · exact (hF.2.2.1 b h).le
-  obtain ⟨T, T', Λ, hT, hΛ, hFT⟩ := GlobalTheory.T.exists_biorthogonal_frame_of_saturated_flag I.E I.n m F r hF.1 hF.2.1 hF.2.2.1 ⟨hfg, hsp⟩
+  obtain ⟨T, T', Λ, hT, hΛ, hFT⟩ := GlobalTheory.T.exists_biorthogonal_frame_of_saturated_flag I.E I.n m F r hF.1 hF.2.1 hF.2.2.1 (Submodule.IsLattice.of_fg I.E hfg)
     (fun b y hy hyb => by
       by_cases hb : m ≤ b
       · rwa [hF.2.2.1 b hb]
@@ -317,7 +321,7 @@ theorem radicalCovolume : RadicalCovolume := by
         map_zero' := by funext v i; simp
         map_add' := fun Y Y' => by
           funext v i
-          simp [Matrix.map_add, Matrix.mul_add, Matrix.add_mul] }
+          simp [Matrix.map_add (f := _), Matrix.mul_add, Matrix.add_mul] }
     have c0 : ∀ Y v i, crd Y v i = ((I.P v)⁻¹ * Y.map (I.φ v) * I.P v * (B v i.1)ᴴ).trace :=
       fun _ _ _ => rfl
     have c1 : ∀ (x : 𝓞 I.E) Y v i, crd (x • Y) v i = I.φ v (x : I.E) * crd Y v i := by
@@ -367,7 +371,7 @@ theorem radicalCovolume : RadicalCovolume := by
       have hcX : crd (w • Y - I.J⁻¹ * (w • Y)ᴴ * I.J) = fun v i => (y v i : ℂ) := by
         funext v i
         have h1 := congrArg (I.φ v) hw
-        rw [map_add, hφ, map_one] at h1
+        rw [map_add (f := _), hφ, map_one] at h1
         rw [map_sub, Pi.sub_apply, Pi.sub_apply, c2, c1, hYy, map_mul, Complex.conj_ofReal]
         linear_combination (y v i : ℂ) * h1
       generalize w • Y - I.J⁻¹ * (w • Y)ᴴ * I.J = X at hX' hU' hcX
@@ -385,7 +389,7 @@ theorem radicalCovolume : RadicalCovolume := by
       refine ⟨g, (hΓ' g).2 ⟨hg, fun v => lowers_anti (hW v).1.1 (Nat.zero_le c) (hg2 v)⟩, hg2, ?_⟩
       convert hyD using 1
       funext v i
-      rw [hg1, ← c0, map_add, c3 Z hZ, add_zero, hcX]
+      rw [hg1, ← c0, map_add (f := _), c3 Z hZ, add_zero, hcX]
       simp
     · rw [hcov, hf2, hdeg, show Formalism.HermitianLatticesTheory.fDeg I.E = I.f from hf1] at hD3
       exact hD3

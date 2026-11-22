@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx GlobalTheory.Chain
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -107,7 +111,7 @@ theorem isSelfDualC_of_isSDFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank
       have hm := Submodule.map_span (V.frame.equivFun : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)) (V.L0 : Set V.V)
       rw [hL.span_eq_top, Submodule.map_top, LinearEquiv.range, LinearEquiv.coe_coe] at hm
       exact hm.symm
-    refine ⟨hfg, ?_⟩
+    refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E hfg, span_eq_top := ?_ }
     rw [eq_top_iff, ← h3]
     exact h2
 

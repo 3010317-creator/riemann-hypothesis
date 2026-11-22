@@ -1,8 +1,12 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassConstSucc
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsMassConstOne
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsFixF
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LiStatOf
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassLand
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassConstSucc
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsMassConstOne
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsFixF
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LiStatOf
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MassLand
+
+@[expose] public section
 
 open NumberField Module
 
@@ -54,8 +58,8 @@ theorem siegelMassRatio_of_LI (hH : HermRepUnram) (hLI : LIStat) : Formalism.Her
   rw [e1, e2, hprod, div_eq_iff (by positivity)]
   ring
 
-variable [Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram] in
 
+variable [Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram] in
 theorem siegelMassRatio : Formalism.HermitianLatticesTheory.SiegelMassRatio := siegelMassRatio_of_LI hermRepUnram liStat
 
 end Formalism.HermitianLattices.Ext.L3

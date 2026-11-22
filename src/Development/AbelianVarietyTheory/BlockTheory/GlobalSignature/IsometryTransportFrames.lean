@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
+module
+
+public import Mathlib
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
+
+@[expose] public section
 
 noncomputable section
 
@@ -16,7 +20,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E]
 
 def HasSig (W : HSpace E) (P Q : ℕ) : Prop := W.SigOK ∧ ∀ τ : E →+* ℂ, W.sig τ = (P, Q)
 
-def withLat (W : HSpace E) (L : Submodule (𝓞 E) W.V) (hL : Submodule.IsLattice E L)
+def withLat (W : HSpace E) (L : Submodule (𝓞 E) W.V) (hL : Submodule.IsFullLattice E L)
     (hU : Formalism.HermitianLatticesTheory.IsUnimodular W.hT L) : HSpace E :=
   { W with L0 := L, standardTuple_isLattice := hL, baseLattice_isUnimodular := hU }
 
@@ -24,15 +28,6 @@ def frameMat (W₁ W₂ : HSpace E) (e : W₁.V →ₗ[E] W₂.V) : Matrix (Fin 
   LinearMap.toMatrix W₁.frame W₂.frame e
 
 def CarriesLat (W₁ W₂ : HSpace E) (e : W₁.V ≃ₗ[E] W₂.V) : Prop := ∀ x : W₁.V, x ∈ W₁.L0 ↔ e x ∈ W₂.L0
-
-example (W : HSpace E) (L : Submodule (𝓞 E) W.V) (hL : Submodule.IsLattice E L)
-    (hU : Formalism.HermitianLatticesTheory.IsUnimodular W.hT L) : (withLat W L hL hU).gram = W.gram := rfl
-
-example (W : HSpace E) : withLat W W.L0 W.standardTuple_isLattice W.baseLattice_isUnimodular = W := rfl
-
-example (W₁ W₂ : HSpace E) (e : W₁.V →ₗ[E] W₂.V) (x : W₁.V) :
-    (frameMat W₁ W₂ e).mulVec (W₁.frame.repr x) = W₂.frame.repr (e x) :=
-  LinearMap.toMatrix_mulVec_repr _ _ _ _
 
 end Spaces
 
@@ -48,7 +43,7 @@ def IsConjBy {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] (σ 
 def LatticeIndep (D : D7) : Prop :=
   letI := D.host.cmStar
   ∀ (W : HSpace D.host.E) (P Q : ℕ), HasSig W P Q →
-    ∀ (L : Submodule (𝓞 D.host.E) W.V) (hL : Submodule.IsLattice D.host.E L)
+    ∀ (L : Submodule (𝓞 D.host.E) W.V) (hL : Submodule.IsFullLattice D.host.E L)
       (hU : Formalism.HermitianLatticesTheory.IsUnimodular W.hT L) (μ : Measure (HA (AF D.host.F) D.sp.cm.sig W.gram)),
       IsVolMeas D W P Q μ ↔ IsVolMeas D (withLat W L hL hU) P Q μ
 

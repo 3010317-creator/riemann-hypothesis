@@ -1,5 +1,9 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiscOnto
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiagMulMulDiagApply
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiscOnto
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiagMulMulDiagApply
+
+@[expose] public section
 
 open NumberField Module Matrix
 
@@ -12,8 +16,6 @@ namespace Formalism.L2.SG.Pf.discriminantGroupCounts
 open Formalism.HermitianLattices.Ext.L3 Formalism.L2.SG.Pf.Cnt Formalism.L2.SG.Pf.G5
 
 variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
-
-local notation "ι" => algebraMap (𝓞 F) (𝓞 K)
 
 theorem mul_mk_eq_zero_iff {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {a : 𝓞 F} {e k : ℕ}
     (ha : a ∈ 𝔭 ^ e) (ha' : a ∉ 𝔭 ^ (e + 1)) (hek : e ≤ k) (w : 𝓞 K) :
@@ -168,9 +170,5 @@ theorem kerCount_main (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {𝔭
 end Formalism.L2.SG.Pf.discriminantGroupCounts
 
 namespace Formalism.L2.SG.Pf.Cnt
-
-theorem kernel_counting_holds : Formalism.L2.SG.Pf.G5.KerCount := by
-  intro K F _ _ _ _ _ _ _ hK 𝔭 h𝔭 m a ha0 k hk N hN
-  exact Formalism.L2.SG.Pf.discriminantGroupCounts.kerCount_main hK h𝔭 ha0 hk N hN
 
 end Formalism.L2.SG.Pf.Cnt

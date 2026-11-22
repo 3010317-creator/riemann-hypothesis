@@ -1,6 +1,10 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.CardOrbitMulCardStabilizer
-import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
-import Formalism.HermitianLattices.FinalNeighbourConstruct
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.CardOrbitMulCardStabilizer
+public import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
+public import Formalism.HermitianLattices.FinalNeighbourConstruct
+
+@[expose] public section
 
 noncomputable section
 
@@ -131,8 +135,8 @@ theorem fibres_of_gluing_facts (D : D7) (u : D.what₂.Word) (hpos : IsPosDef (D
   have g2 := h2 hT hT3 hsp F0 he hz
   have g3 := h3 hT hT3 hsp F0 he hz
   obtain ⟨g4f, g4c⟩ := h4 hT hT3 hsp F0 he hz Λ hΛ M hM
-  letI := unitaryActOnLatticesWLine D
-  letI := unitaryActOnLatticesW D
+  let := unitaryActOnLatticesWLine D
+  let := unitaryActOnLatticesW D
   have hinj : Set.InjOn (latticeWithZ D F0) (s : Set (LatV D)) := by
     intro Λ₁ hΛ₁ Λ₂ hΛ₂ heq
     rw [Finset.mem_coe] at hΛ₁ hΛ₂
@@ -141,7 +145,7 @@ theorem fibres_of_gluing_facts (D : D7) (u : D.what₂.Word) (hpos : IsPosDef (D
     obtain ⟨Λ₀, _, huniq⟩ := hs.2 Λ₂ (hs.1 _ hΛ₂)
     exact (huniq Λ₁ ⟨hΛ₁, σ, hσ, hσe⟩).trans (huniq Λ₂ ⟨hΛ₂, 1, one_mem_flag_stabilizer D F0, gmap_one _⟩).symm
   have hAfin : Finite (MulAction.stabilizer (isom (D.sp.X 0).hT) M) := by
-    have hf := final_autFinite D.host.E (D.sp.X 0).V (D.sp.X 0).hT (D.sp.X 0).herm (trace_inner_self_pos _ hpos) M hM.1
+    have hf := final_autFinite D.host.E (D.sp.X 0).V (D.sp.X 0).hT (D.sp.X 0).herm (trace_inner_self_pos _ hpos) M hM.1.toIsFullLattice
     have := hf.to_subtype
     exact Finite.of_injective
       (fun γ : MulAction.stabilizer (isom (D.sp.X 0).hT) M =>
@@ -199,7 +203,7 @@ theorem fibres_of_gluing_facts (D : D7) (u : D.what₂.Word) (hpos : IsPosDef (D
         rfl
 
 theorem gluing_mass_of_gluing_facts (D : D7) (u : D.what₂.Word) (hpos : IsPosDef (D.sp.X 0).hT)
-    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsLattice D.host.E (L0X D Λ (lf D F0)))
+    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsFullLattice D.host.E (L0X D Λ (lf D F0)))
     (h1 : LatticeClassesIff D u) (h2 : CardAutEqCardIsometryStabilizer D u) (h3 : IsometriesTransportLattices D u) (h4 : GluingCount D u)
     (h5 : OrthLatticesOneGenus D u) : WordRowsGluing D u :=
   gluing_mass_of_fibre_structure D u hpos hlat (fibres_of_gluing_facts D u hpos h1 h2 h3 h4 h5)

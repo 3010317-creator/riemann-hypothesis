@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.ClassSumDualGeF
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.AuxStatement14
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.ClassSumDualGeF
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.AuxStatement14
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 open scoped Matrix ComplexOrder
@@ -103,36 +107,49 @@ namespace ValuationLatticeField
 theorem valLatF_isLattice {K : Type} [Field K] [NumberField K] [StarRing K]
     {n : ℕ} {Cl V : Type} [Fintype Cl] [AddCommGroup V] [Module K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (I : (Fin n → K) →ₗ[K] (Cl → V))
-    (hI : Function.Injective I) (N : Cl → Submodule (𝓞 K) V) (hN : ∀ c, Submodule.IsLattice K (N c)) :
-    Submodule.IsLattice K (valLatF I N) := by
+    (hI : Function.Injective I) (N : Cl → Submodule (𝓞 K) V) (hN : ∀ c, Submodule.IsFullLattice K (N c)) :
+    Submodule.IsFullLattice K (valLatF I N) := by
   classical
-  refine ⟨?_, ?_⟩
-  · apply Submodule.fg_of_fg_map_injective (I.restrictScalars (𝓞 K)) hI
+  have hfg : (valLatF I N).FG := by
+    apply Submodule.fg_of_fg_map_injective (I.restrictScalars (𝓞 K)) hI
     exact (Submodule.fg_pi fun c => (hN c).fg).of_le (Submodule.map_comap_le _ _)
-  · rw [eq_top_iff]
-    intro z _
-    have hz : ∀ c, ∃ s ∈ nonZeroDivisors (𝓞 K), s • I z c ∈ N c := by
-      intro c
-      have htop := Formalism.HermitianLatticesTheory.indexBasic_locS_top (K := K) (N c) (hN c).span_eq_top
-      have : I z c ∈ Formalism.HermitianLatticesTheory.locS (nonZeroDivisors (𝓞 K)) (N c) := by rw [htop]; trivial
-      exact this
-    choose s hs hsz using hz
-    have hS : ∏ c, s c ∈ nonZeroDivisors (𝓞 K) := Submonoid.prod_mem _ fun c _ => hs c
-    have hs0 : (algebraMap (𝓞 K) K (∏ c, s c)) ≠ 0 :=
-      IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hS
-    have hmem : (∏ c, s c) • z ∈ valLatF I N := by
-      rw [mem_valLatF]
-      intro c
-      have e : I ((∏ c, s c) • z) c = (∏ c' ∈ Finset.univ.erase c, s c') • (s c • I z c) := by
-        rw [smul_smul, mul_comm, Finset.mul_prod_erase _ _ (Finset.mem_univ c),
-          LinearMap.map_smul_of_tower, Pi.smul_apply]
-      rw [e]
-      exact (N c).smul_mem _ (hsz c)
-    have : z = (algebraMap (𝓞 K) K (∏ c, s c))⁻¹ • ((∏ c, s c) • z) := by
-      rw [← algebraMap_smul K (∏ c, s c) z, smul_smul, inv_mul_cancel₀ hs0, one_smul]
-    rw [this]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
-
+  refine { toIsLattice := Submodule.IsLattice.of_fg K hfg, span_eq_top := ?_ }
+  apply top_unique
+  intro x _
+  have hc : ∀ c, ∃ d : 𝓞 K, d ≠ 0 ∧ d • I x c ∈ N c := by
+    intro c
+    obtain ⟨d, hd⟩ := multiple_mem_span_of_mem_localization_span
+      (nonZeroDivisors (𝓞 K)) K (N c : Set V) (I x c)
+      (by rw [(hN c).span_eq_top]; trivial)
+    refine ⟨d, nonZeroDivisors.coe_ne_zero d, ?_⟩
+    change (d : 𝓞 K) • I x c ∈ Submodule.span (𝓞 K) (N c : Set V) at hd
+    simpa only [Submodule.span_eq] using hd
+  have hall : ∀ s : Finset Cl, ∃ d : 𝓞 K, d ≠ 0 ∧ ∀ c ∈ s, d • I x c ∈ N c := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => exact ⟨1, one_ne_zero, by simp⟩
+    | @insert c s hcs ih =>
+      obtain ⟨d, hd, hdc⟩ := hc c
+      obtain ⟨e, he, hes⟩ := ih
+      refine ⟨e * d, mul_ne_zero he hd, ?_⟩
+      intro a ha
+      rcases Finset.mem_insert.mp ha with hca | ha
+      · rw [hca, mul_smul]
+        exact (N c).smul_mem e hdc
+      · rw [mul_comm, mul_smul]
+        exact (N a).smul_mem d (hes a ha)
+  obtain ⟨d, hd, hdx⟩ := hall Finset.univ
+  have hmem : d • x ∈ valLatF I N := by
+    rw [mem_valLatF]
+    intro c
+    rw [LinearMap.map_smul_of_tower, Pi.smul_apply]
+    exact hdx c (Finset.mem_univ c)
+  have hdK : algebraMap (𝓞 K) K d ≠ 0 := by
+    intro h
+    exact hd ((FaithfulSMul.algebraMap_injective (𝓞 K) K) (by simpa using h))
+  apply (Submodule.smul_mem_iff _ hdK).mp
+  rw [algebraMap_smul]
+  exact Submodule.subset_span hmem
 end ValuationLatticeField
 
 open ValuationLatticeField

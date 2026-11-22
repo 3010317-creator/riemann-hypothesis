@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -62,7 +66,7 @@ theorem mem_hodgeFiltration_iff_pointwiseCoboundary (R : Type) [CommRing R] (X :
       have e1 := ev_sq f (trivMap φ.φ (y T hT)) (liftHom T' _ hz) (liftHom T _ (hy T hT)) φ fun _ ↦ rfl
       have e2 := hk T.B T'.B φ.φ (y T hT) (sm_whole _)
       change fv f T.B T'.B φ.φ (y T hT) + _ = _ at e1
-      rw [map_add]
+      rw [map_add (f := _)]
       linear_combination e1 - e2
     exact key _ (hy T' hT') (hu T' hT' _ h')
 

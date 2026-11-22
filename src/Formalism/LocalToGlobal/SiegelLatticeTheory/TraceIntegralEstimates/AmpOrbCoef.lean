@@ -1,7 +1,11 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.AmpNZFinal
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.AmpOrbClosed
-import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.AmpTrans
-import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.HzOfInWb
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.AmpNZFinal
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.AmpOrbClosed
+public import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.AmpTrans
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.HzOfInWb
+
+@[expose] public section
 
 open MeasureTheory Matrix
 open scoped InnerProductSpace ENNReal
@@ -88,8 +92,8 @@ theorem B_ne {k r : ℕ} {H Wp : Type} [NormedAddCommGroup H] [InnerProductSpace
   have hm0 : 0 < c * (Module.finrank ℂ Wp : ℝ) := mul_pos hc (by exact_mod_cast Module.finrank_pos)
   exact (ENNReal.ofReal_pos.2 hm0).ne' hz0
 
-variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] [Fact Formalism.L2.SG.LitS.PfNVG.BesselNVG] in
 
+variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] [Fact Formalism.L2.SG.LitS.PfNVG.BesselNVG] in
 theorem ampOrbCoefDD_of (hJ : PI.BesselMapUniq.BesselMapUniq) : Formalism.MainNotions.S.Pv.LemmaJ.AmpOrbCoefDD := by
   intro Cg cb Cu cT CT C0
   refine ⟨0, 1000, fun C' Cl _ hCl D large₂ hH τ w w' hTT θ W hW A hA hT hT' => ?_⟩
@@ -219,11 +223,5 @@ theorem ampOrbCoefDD_of (hJ : PI.BesselMapUniq.BesselMapUniq) : Formalism.MainNo
     ring
   exact e2.trans hO.symm
 
-variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] [Fact Formalism.L2.SG.LitS.PfNVG.BesselNVG] in
-
-theorem amplitude_uniform_of_bessel_uniq (hJ : PI.BesselMapUniq.BesselMapUniq) (hKD : Formalism.MainNotions.S.Pv.AmpDD.KDense)
-    (hRJ : Formalism.MainNotions.S.Pv.LemmaJ.RootJac) (hRH : Formalism.MainNotions.S.Pv.LemmaJ.RootHaar) (hOQ : Formalism.MainNotions.S.Pv.LemmaJ.OrbQuotEx)
-    (hRA : Formalism.MainNotions.S.Pv.LemmaJ.RelAtPt) (hBI : Formalism.MainNotions.S.Pv.BetaCut.BetaInfCoefNZ) : Formalism.MainNotions.S.Pv.LemmaJ.AmpUnif :=
-  Formalism.MainNotions.S.Pv.LemmaJ.amplitude_uniform_of_coefficients hJ hKD hRJ hRH hOQ hRA (ampOrbCoefDD_of hJ) hBI
 
 end Formalism.L2.S.Pv.AmpOrbCoef

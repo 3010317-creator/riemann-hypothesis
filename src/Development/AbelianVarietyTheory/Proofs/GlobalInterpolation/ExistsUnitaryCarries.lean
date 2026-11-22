@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.StrongApproximationUnitaryCongruence
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StandardDeterminantUnit
+module
+
+public import Mathlib
+public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.StrongApproximationUnitaryCongruence
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StandardDeterminantUnit
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Matrix Filter Topology
 
@@ -83,7 +87,7 @@ theorem Carries.eventually [StarRing E] {P : HeightOneSpectrum (𝓞 E)} {N : Su
     rwa [mulVec_mulVec, Matrix.mul_assoc, nonsing_inv_mul _ hAu, Matrix.mul_one] at this
 
 theorem exists_carries [StarRing E] (P : HeightOneSpectrum (𝓞 E)) {N : Submodule (𝓞 E) (Sp E n)}
-    (hN : Submodule.IsLattice E N) : ∃ A, Carries P N A := by
+    (hN : Submodule.IsFullLattice E N) : ∃ A, Carries P N A := by
   obtain ⟨b, hb⟩ := Formalism.BasicNotions.SkeletonIndexLemmas.exists_basis_locP P hN.fg hN.span_eq_top (n := n) (by simp)
   let f : Sp E n ≃ₗ[E] Sp E n := b.equivFun
   have h1 : gmap f (Submodule.span (𝓞 E) (Set.range b)) = stdLat E n := by
@@ -161,7 +165,7 @@ theorem tendsto_comb {ST : Finset (HeightOneSpectrum (𝓞 E))} (e : ST → ℕ 
   exact tendsto_iff_norm_sub_tendsto_zero.1 t
 
 theorem exists_unitary_carries {ST : Finset (HeightOneSpectrum (𝓞 E))} (hST : GlobalTheory.IndefiniteRowSideFullHecke.StandardDeterminantUnit.SplitNonConj ST)
-    {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsLattice E N) :
+    {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsFullLattice E N) :
     ∃ g : Matrix (Fin n) (Fin n) E, gᴴ * g = 1 ∧ ∀ P ∈ ST, Carries P N g := by
   classical
   choose e he1 he0 hes using fun P : ST => exists_idem hST P.2
@@ -261,7 +265,7 @@ theorem val_det_eq {P : HeightOneSpectrum (𝓞 E)} {g : Sp E n ≃ₗ[E] Sp E n
   rw [map_mul, map_one] at h3
   exact eq_one_of_one_le_mul_left h1 h2 h3.ge
 
-theorem at_conj_eq {ST SG : Finset (HeightOneSpectrum (𝓞 E))} (d : DecoSet E n ST SG) {P : HeightOneSpectrum (𝓞 E)}
+theorem at_conj_eq {ST SG : Finset (HeightOneSpectrum (𝓞 E))} (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) {P : HeightOneSpectrum (𝓞 E)}
     (h : d.1.at P = stdAt E n P) : d.1.at (conjPrime₂ P) = stdAt E n (conjPrime₂ P) :=
   le_antisymm (localization_conj_le_of_le stdLat_lattice.fg stdLat_unimodular d.2.uni h.ge)
     (localization_conj_le_of_le d.2.lat.fg d.2.uni stdLat_unimodular h.le)

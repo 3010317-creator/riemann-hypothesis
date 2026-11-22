@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+
+@[expose] public section
 
 noncomputable section
 
@@ -169,7 +173,7 @@ theorem mem_of_genU_mem (L : Subfield (GenField Ω r)) (hbase : ∀ b : Ω, alge
       refine mul_mem hp ?_
       obtain ⟨s, ⟨⟨l, k⟩, h⟩⟩ := i
       have := hentry s k l (le_of_lt h)
-      rwa [genU, dif_pos h] at this
+      rwa [genU, dite_eq_left h] at this
   obtain ⟨p, q, -, rfl⟩ := IsFractionRing.div_surjective (A := MvPolynomial (GenIx r) Ω) a
   exact div_mem (hpoly p) (hpoly q)
 

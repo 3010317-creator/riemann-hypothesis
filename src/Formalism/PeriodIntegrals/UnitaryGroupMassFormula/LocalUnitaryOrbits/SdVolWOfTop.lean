@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.PairHermZeroRight
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.SdDual
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.PairHermZeroRight
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.SdDual
+
+@[expose] public section
 
 noncomputable section
 
@@ -29,7 +33,7 @@ theorem smul_mem_LW {a : ℕ} {s : Fv F v} (hs : s ∈ v.adicCompletionIntegers 
   fun i => Submodule.smul_mem _ (⟨s, hs⟩ : v.adicCompletionIntegers F) (hX i)
 
 def TopW (a : ℕ) : Prop :=
-  (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
+  (∃ L : Submodule (𝓞 E) (Fin n → E), RHCompat.SpanningLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
     IsCompact (LamT (E := E) v Λ a) ∧ IsOpen (LamT (E := E) v Λ a)
 
 def DualW (a : ℕ) : Prop :=
@@ -55,7 +59,15 @@ theorem sdVolW_of_top (a : ℕ) (hC : CondV σ J ψ v) (hT : TopW v Λ a) (hD : 
   set μ := dX σ J ψ v a with hμdef
   set L := LW v Λ a with hLdef
   set L' := smulSub (dV v)⁻¹ L with hL'def
-  obtain ⟨hLc, hLo⟩ := hT hL
+  have hLspan : ∃ L : Submodule (𝓞 E) (Fin n → E),
+      RHCompat.SpanningLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, hEq⟩ := hL
+    exact ⟨L, RHCompat.SpanningLattice.ofFull hL, hEq⟩
+  have hLweak : ∃ L : Submodule (𝓞 E) (Fin n → E),
+      Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, hEq⟩ := hL
+    exact ⟨L, hL.toIsLattice, hEq⟩
+  obtain ⟨hLc, hLo⟩ := hT hLspan
   rw [← coe_LW] at hLc hLo
   have hL'c : IsCompact (L' : Set (TupV (E := E) v n a)) := isCompact_smulSub _ L hLc
   have hL'o : IsOpen (L' : Set (TupV (E := E) v n a)) := isOpen_smulSub _ (inv_ne_zero hd0) L hLo
@@ -70,7 +82,7 @@ theorem sdVolW_of_top (a : ℕ) (hC : CondV σ J ψ v) (hT : TopW v Λ a) (hD : 
     rw [e, psiV_zero]
   have hA : ann (fun X Y => psiV F ψ v (BR (Fv F v) σ J X Y)) (L : Set (TupV (E := E) v n a)) = L' := by
     rw [Sd.ann_eq_cond v (psiV F ψ v) (dV v) (BR (Fv F v) σ J) _ (hC hS)]
-    · exact hD hS hL hSD hU
+    · exact hD hS hLweak hSD hU
     · intro s hs x hx
       exact ⟨s • x, smul_mem_LW v Λ hs hx, fun y => SdDualW.BR_smul_left v σ J s x y⟩
   have hle : L ≤ L' := by
@@ -78,7 +90,7 @@ theorem sdVolW_of_top (a : ℕ) (hC : CondV σ J ψ v) (hT : TopW v Λ a) (hD : 
     rw [hL'def, mem_smulSub]
     refine ⟨dV v • X, smul_mem_LW v Λ (dV_int v) hX, ?_⟩
     rw [smul_smul, inv_mul_cancel₀ hd0, one_smul]
-  have hN1 := hI hL hU
+  have hN1 := hI hLweak hU
   have hNz : L.relIndex L' ≠ 0 := by
     intro h
     rw [h, Nat.cast_zero] at hN1

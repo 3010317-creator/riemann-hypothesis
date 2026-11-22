@@ -1,12 +1,16 @@
-import Mathlib
-import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.QuotientVanishing.QuotVanish
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralEqSmulIntegralAvg
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsIsometryFlagOfEquiv
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwCentPreservesFlag
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EqZeroOfCommuteOfSeparable
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecondCountableNilrad
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.KillingFormDiffCartanInvolution
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.QuotientVanishing.QuotVanish
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralEqSmulIntegralAvg
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsIsometryFlagOfEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwCentPreservesFlag
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EqZeroOfCommuteOfSeparable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecondCountableNilrad
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.KillingFormDiffCartanInvolution
+public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+
+@[expose] public section
 
 noncomputable section
 
@@ -201,10 +205,6 @@ theorem mulVec_inv_mulVec (g : GL (Fin n) ℂ) (y : Fin n → ℂ) :
     g.val *ᵥ ((g⁻¹ : GL (Fin n) ℂ).val *ᵥ y) = y := by
   rw [Matrix.mulVec_mulVec, ← Units.val_mul]; simp
 
-theorem inv_mulVec_mulVec (g : GL (Fin n) ℂ) (y : Fin n → ℂ) :
-    (g⁻¹ : GL (Fin n) ℂ).val *ᵥ (g.val *ᵥ y) = y := by
-  rw [Matrix.mulVec_mulVec, ← Units.val_mul]; simp
-
 theorem img_eq_of_mapsTo (g : GL (Fin n) ℂ) (W : Sb) (h₁ : ∀ y ∈ W, g.val *ᵥ y ∈ W)
     (h₂ : ∀ y ∈ W, (g⁻¹ : GL (Fin n) ℂ).val *ᵥ y ∈ W) : img g W = W := by
   ext y
@@ -300,10 +300,10 @@ theorem exists_proj {W₁ W₂ V₂ V₃ : Sb} (c₁ : W₁ ⊔ V₂ = W₂) (d�
   · rw [m2]
     obtain ⟨a, ha, b, hb, c, hc, rfl⟩ := exists_sum_along_flag c₁ c₂ y
     have f1 : E₁ (a + b + c) = a := by
-      rw [map_add, map_add, e1 a ha, e1' b (Submodule.mem_sup_left hb),
+      rw [map_add (f := _), map_add (f := _), e1 a ha, e1' b (Submodule.mem_sup_left hb),
         e1' c (Submodule.mem_sup_right hc), add_zero, add_zero]
     have f3 : E₃ (a + b + c) = c := by
-      rw [map_add, map_add, e3' a (hle₁ ha), e3' b (hle₂ hb), e3 c hc, zero_add, zero_add]
+      rw [map_add (f := _), map_add (f := _), e3' a (hle₁ ha), e3' b (hle₂ hb), e3 c hc, zero_add, zero_add]
     rw [f1, f3, show a + b + c - a - c = b by abel]
     exact hb
   · rw [m3]; exact Submodule.projection_apply_mem h3 y

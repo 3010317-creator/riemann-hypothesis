@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+
+@[expose] public section
 
 noncomputable section
 
@@ -26,6 +30,6 @@ def IsCocharLie {R : Type} [CommRing R] {x : Sp R ⟶ S} (M : LieModel (splitTor
 def LieModel.Lifts {G : Over S} [GrpObj G] {R R' : Type} [CommRing R] [CommRing R'] {x : Sp R ⟶ S}
     {E : Type} [AddCommGroup E] [Module R E] (M : LieModel G x E) (c : R →+* R') {S' : Scheme.{0}} {G' : Over S'}
     (φ : G'.left ⟶ G.left) {x' : Sp R' ⟶ S'} (e : E) (v : epsAt x' ⟶ G') : Prop :=
-  v.left ≫ φ = spMap (dualMap c) ≫ (M.pt e).left
+  v.left ≫ φ = spMap (GlobalTheory.CompanionTheory.Ar.dualMap c) ≫ (M.pt e).left
 
 end GlobalTheory.CompanionTheory.Ar

@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingMulLeft
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmallEqZero
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctionsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeNonzeroVectorPairNormalForms
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingMulLeft
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmallEqZero
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeNonzeroVectorPairNormalForms
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.FlagBase
 
@@ -159,7 +163,7 @@ def vecHom (g : MatInf E j) : (Fin j → E) →+ VecInf E j where
     exact Matrix.mulVec_zero _
   map_add' y z := by
     funext w
-    simp only [vecAt, Pi.add_apply, map_add]
+    simp only [vecAt, Pi.add_apply, map_add (f := _)]
     exact Matrix.mulVec_add _ _ _
 
 theorem mem_latAt (L : Submodule (𝓞 E) (Fin j → E)) (g : MatInf E j) (x : VecInf E j) :
@@ -177,7 +181,7 @@ theorem mem_latAt (L : Submodule (𝓞 E) (Fin j → E)) (g : MatInf E j) (x : V
     exact ⟨n • p, zsmul_mem hp n, (vecHom g).map_zsmul n p⟩
 
 theorem vecHom_injective {g : MatInf E j} (hg : 0 < detNorm E j g) : Function.Injective (vecHom g) := by
-  rw [injective_iff_map_eq_zero]
+  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro y hy
   obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
   have h1 : (Matrix.of (g w))⁻¹ *ᵥ (fun a => w.embedding (y a)) = 0 := congrFun hy w
@@ -204,7 +208,7 @@ theorem tsum_latAt (L : Submodule (𝓞 E) (Fin j → E)) {g : MatInf E j} (hg :
 
 theorem measurable_vecAt (y : Fin j → E) : Measurable fun g : MatInf E j => vecAt y g := by
   change Measurable fun g : InfinitePlace E → Fin j → Fin j → ℂ => vecAt y g
-  refine measurable_pi_lambda _ fun w => measurable_pi_lambda _ fun a => ?_
+  refine Measurable.of_eval fun w => Measurable.of_eval fun a => ?_
   have hc : Continuous fun g : InfinitePlace E → Fin j → Fin j → ℂ => (Matrix.of (g w) : Matrix (Fin j) (Fin j) ℂ) :=
     continuous_apply w
   simp only [vecAt, Matrix.inv_def, Ring.inverse_eq_inv', Matrix.smul_mulVec, Pi.smul_apply, smul_eq_mul]
@@ -267,16 +271,16 @@ theorem pair_le {I J : Type} [Countable I] [Countable J]
       (by rwa [emb_mul_mul, h, ← emb_mul_mul, inv_mul_cancel, emb_one_mul])
     exact ⟨e1, (inv_mul_eq_one.1 e2).symm⟩
 
-variable (E j) in
 
+variable (E j) in
 abbrev Cls : Type :=
-  Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsLattice E Λ} =>
+  Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ} =>
       ∃ γ : GL (Fin j) E, ∀ y, (γ : Matrix (Fin j) (Fin j) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1)
 
 omit [NumberField E] in
-theorem cls_exists (L : Submodule (𝓞 E) (Fin j → E)) (hL : Submodule.IsLattice E L) :
+theorem cls_exists (L : Submodule (𝓞 E) (Fin j → E)) (hL : Submodule.IsFullLattice E L) :
     ∃ (c : Cls E j) (γ : GL (Fin j) E), Carries γ L (Quot.out c).1 := by
-  have he : Equivalence (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsLattice E Λ} =>
+  have he : Equivalence (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ} =>
       ∃ γ : GL (Fin j) E, ∀ y, (γ : Matrix (Fin j) (Fin j) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1) :=
     ⟨fun Λ => ⟨1, carries_one _⟩, fun ⟨γ, h⟩ => ⟨γ⁻¹, Carries.inv h⟩,
       fun ⟨γ, h⟩ ⟨δ, h'⟩ => ⟨δ * γ, Carries.mul h' h⟩⟩
@@ -292,9 +296,9 @@ theorem cls_eq {c c' : Cls E j} {γ : GL (Fin j) E} (h : Carries γ (Quot.out c)
 local instance countable_field : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.symm.toEquiv
 
 local instance countable_cls : Countable (Cls E j) := by
-  have : Countable {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsLattice E Λ} := by
-    have h : ∀ Λ : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsLattice E Λ}, ∃ s : Finset (Fin j → E),
-        Submodule.span (𝓞 E) (s : Set (Fin j → E)) = Λ.1 := fun Λ => Λ.2.fg
+  have : Countable {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ} := by
+    have h : ∀ Λ : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ}, ∃ s : Finset (Fin j → E),
+        Submodule.span (𝓞 E) (s : Set (Fin j → E)) = Λ.1 := fun Λ => Λ.2.toIsLattice.fg
     choose s hs using h
     exact Function.Injective.countable (f := s) fun a b hab => Subtype.ext (by rw [← hs a, ← hs b, hab])
   infer_instance
@@ -365,6 +369,7 @@ theorem exists_block {k : ℕ} (δ : GL (Fin k) E) : ∃ γ : GL (Fin (k + 1)) E
     simpa [M] using Matrix.GeneralLinearGroup.det_ne_zero δ
   refine ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero M hd, ?_, h1, fun b => by simp [M]⟩
   funext a
+  simp only [Matrix.mulVec_single_one, Matrix.col_apply, Pi.single_apply]
   refine Fin.cases ?_ (fun a => ?_) a <;> simp [M]
 
 omit [NumberField E] in
@@ -380,21 +385,62 @@ theorem exists_sub {k : ℕ} (γ : GL (Fin (k + 1)) E)
     simpa [h0] using hd
   exact ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero _ hd', rfl⟩
 
-theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex E → ∀ k : ℕ, ∀ Lf : Ideal (𝓞 E) → Submodule (𝓞 E) (Fin k → E) → Submodule (𝓞 E) (Fin (k + 1) → E), (∀ 𝔞 Λ' y, y ∈ Lf 𝔞 Λ' ↔ (∀ t ∈ 𝔞, (t : E) * y 0 ∈ (algebraMap (𝓞 E) E).range) ∧ Fin.tail y ∈ Λ') → ∀ (w : ℝ → ENNReal) (Φ : VecInf E (k + 1) → ENNReal), Measurable w → Measurable Φ → latMean E (k + 1) (fun L => w (covAt E (k + 1) L) * ∑' x : {x : VecInf E (k + 1) // x ∈ L ∧ x ≠ 0}, Φ x.1) = ∑' 𝔞 : {𝔞 : Ideal (𝓞 E) // 𝔞 ≠ ⊥}, ∑' c : Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin k → E) // Submodule.IsLattice E Λ} => ∃ γ : GL (Fin k) E, ∀ y, (γ : Matrix (Fin k) (Fin k) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1), covol {x | x ∈ autGL E (k + 1) (Lf 𝔞.1 (Quot.out c).1) ∧ ∀ w a, x w a 0 = if a = 0 then 1 else 0} ((haarGL E (k + 1)).withDensity fun g => w (covAt E (k + 1) (latAt E (k + 1) (Lf 𝔞.1 (Quot.out c).1) g)) * Φ (fun u a => (Matrix.of (g u))⁻¹ a 0)) {g | 0 < detNorm E (k + 1) g} := by
+private theorem full_of_surjective_image {n m : ℕ}
+    (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L)
+    (N : Submodule (𝓞 E) (Fin m → E)) (hN : Submodule.IsLattice E N)
+    (f : (Fin n → E) →ₗ[E] (Fin m → E)) (hf : Function.Surjective f)
+    (hmem : ∀ x ∈ L, f x ∈ N) : Submodule.IsFullLattice E N := by
+  refine { toIsLattice := hN, span_eq_top := ?_ }
+  have hm : (Submodule.span E (L : Set (Fin n → E))).map f ≤
+      Submodule.span E (N : Set (Fin m → E)) := by
+    rw [← Submodule.span_image]
+    exact Submodule.span_mono (by rintro _ ⟨x, hx, rfl⟩; exact hmem x hx)
+  rw [hL.span_eq_top, Submodule.map_top, LinearMap.range_eq_top.mpr hf] at hm
+  exact top_unique hm
+
+private theorem full_of_head_and_tail {k : ℕ}
+    (L : Submodule (𝓞 E) (Fin k → E)) (hL : Submodule.IsFullLattice E L)
+    (N : Submodule (𝓞 E) (Fin (k + 1) → E)) (hN : Submodule.IsLattice E N)
+    (hhead : Pi.single 0 1 ∈ N) (htail : ∀ z ∈ L, Fin.cons 0 z ∈ N) :
+    Submodule.IsFullLattice E N := by
+  refine { toIsLattice := hN, span_eq_top := ?_ }
+  let P := Submodule.span E (N : Set (Fin (k + 1) → E))
+  have hc : Submodule.span E (L : Set (Fin k → E)) ≤
+      P.comap (GlobalTheory.LatVecPair.consZero k) :=
+    Submodule.span_le.mpr fun z hz => Submodule.subset_span (htail z hz)
+  rw [hL.span_eq_top] at hc
+  apply eq_top_iff.mpr
+  intro y _
+  have ht : Fin.cons 0 (Fin.tail y) ∈ P := hc (Submodule.mem_top : Fin.tail y ∈ ⊤)
+  have hh : (Pi.single 0 (y 0) : Fin (k + 1) → E) ∈ P := by
+    have he : (Pi.single 0 (y 0) : Fin (k + 1) → E) = (y 0) • Pi.single 0 (1 : E) := by
+      ext i
+      by_cases hi : i = 0 <;> simp [Pi.single_apply, hi]
+    rw [he]
+    exact P.smul_mem _ (Submodule.subset_span hhead)
+  rw [← Fin.cons_self_tail y, GlobalTheory.LatVecPair.cons_eq]
+  exact P.add_mem hh ht
+
+theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex E → ∀ k : ℕ, ∀ Lf : Ideal (𝓞 E) → Submodule (𝓞 E) (Fin k → E) → Submodule (𝓞 E) (Fin (k + 1) → E), (∀ 𝔞 Λ' y, y ∈ Lf 𝔞 Λ' ↔ (∀ t ∈ 𝔞, (t : E) * y 0 ∈ (algebraMap (𝓞 E) E).range) ∧ Fin.tail y ∈ Λ') → ∀ (w : ℝ → ENNReal) (Φ : VecInf E (k + 1) → ENNReal), Measurable w → Measurable Φ → latMean E (k + 1) (fun L => w (covAt E (k + 1) L) * ∑' x : {x : VecInf E (k + 1) // x ∈ L ∧ x ≠ 0}, Φ x.1) = ∑' 𝔞 : {𝔞 : Ideal (𝓞 E) // 𝔞 ≠ ⊥}, ∑' c : Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin k → E) // Submodule.IsFullLattice E Λ} => ∃ γ : GL (Fin k) E, ∀ y, (γ : Matrix (Fin k) (Fin k) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1), covol {x | x ∈ autGL E (k + 1) (Lf 𝔞.1 (Quot.out c).1) ∧ ∀ w a, x w a 0 = if a = 0 then 1 else 0} ((haarGL E (k + 1)).withDensity fun g => w (covAt E (k + 1) (latAt E (k + 1) (Lf 𝔞.1 (Quot.out c).1) g)) * Φ (fun u a => (Matrix.of (g u))⁻¹ a 0)) {g | 0 < detNorm E (k + 1) g} := by
   intro E _ _ hE k Lf hLf w Φ hw hΦ
   obtain ⟨hA1, hA2, hA3⟩ := GlobalTheory.LatVecPair.classes E k Lf hLf
+  have hLfFull (𝔞 : Ideal (𝓞 E)) (L : Submodule (𝓞 E) (Fin k → E))
+      (h𝔞 : 𝔞 ≠ ⊥) (hL : Submodule.IsFullLattice E L) : Submodule.IsFullLattice E (Lf 𝔞 L) := by
+    obtain ⟨hweak, hhead⟩ := hA1 𝔞 L h𝔞 hL.toIsLattice
+    exact full_of_head_and_tail L hL _ hweak hhead (fun z hz =>
+      (hLf 𝔞 L _).2 ⟨fun t _ => RingHom.mem_range.mpr ⟨0, by simp⟩, by simpa using hz⟩)
   choose D hD hDU hs using fun c : Cls E (k + 1) =>
     GlobalTheory.StrictDom.exists_strictDomain E (k + 1) (Quot.out c).1 (Quot.out c).2 emb (fun _ _ _ _ => rfl) (autSub (Quot.out c).1)
       fun _ h => h
   choose D' hD' hDU' hs' using fun p : {𝔞 : Ideal (𝓞 E) // 𝔞 ≠ ⊥} × Cls E k =>
-    GlobalTheory.StrictDom.exists_strictDomain E (k + 1) (Lf p.1.1 (Quot.out p.2).1) (hA1 _ _ p.1.2 (Quot.out p.2).2).1 emb (fun _ _ _ _ => rfl)
+    GlobalTheory.StrictDom.exists_strictDomain E (k + 1) (Lf p.1.1 (Quot.out p.2).1) (hLfFull p.1.1 (Quot.out p.2).1 p.1.2 (Quot.out p.2).2) emb (fun _ _ _ _ => rfl)
       (stabSub (Lf p.1.1 (Quot.out p.2).1) (Pi.single 0 1)) fun _ h => h.1
   let F : Submodule ℤ (VecInf E (k + 1)) → VecInf E (k + 1) → ENNReal := fun L x => w (covAt E (k + 1) L) * Φ x
   have hL : latMean E (k + 1) (fun L => w (covAt E (k + 1) L) *
       ∑' x : {x : VecInf E (k + 1) // x ∈ L ∧ x ≠ 0}, Φ x.1) =
       ∑' i : (Σ c : Cls E (k + 1), {y : Fin (k + 1) → E // y ∈ (Quot.out c).1 ∧ y ≠ 0}),
         ∫⁻ g in D i.1, F (latAt E (k + 1) (Quot.out i.1).1 g) (vecAt i.2.1 g) ∂(haarGL E (k + 1)) := by
-    rw [ENNReal.tsum_sigma']
+    rw [latMean, ENNReal.tsum_sigma']
     refine tsum_congr fun c => ?_
     rw [covol_eq_lintegral (autSub (Quot.out c).1) _ (mem_autGL _) (D c) (hD c) (hDU c) (hs c) _
       (fun γ hγ g => by rw [latAt_emb (show Carries γ _ _ from hγ) g])]
@@ -405,7 +451,9 @@ theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], I
       rw [tsum_latAt _ (hDU c hg), ENNReal.tsum_mul_left]
     · intro y
       refine AEMeasurable.mul ?_ (hΦ.comp (measurable_vecAt _)).aemeasurable
-      refine (GlobalTheory.T.measurable_translatedLattice_functions E hE (k + 1) w Φ hw hΦ _ (Quot.out c).2).1.aemeasurable.congr ?_
+      have hweight := (GlobalTheory.T.measurable_translatedLattice_functions E hE (k + 1)
+        w Φ hw hΦ (Quot.out c).1 (Quot.out c).2).1
+      refine hweight.aemeasurable.congr ?_
       filter_upwards [ae_restrict_mem (hD c)] with g hg
       exact Set.indicator_of_mem (hDU c hg) _
   rw [hL, ← ENNReal.tsum_prod]
@@ -431,11 +479,25 @@ theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], I
       obtain rfl : y = y' := Subtype.ext (by simpa using h2)
       exact ⟨rfl, rfl⟩
     · rintro ⟨c, y⟩ g hg
-      obtain ⟨γ, 𝔞, Λ', h𝔞, hΛ', h1, h2⟩ := hA2 _ (Quot.out c).2 y.1 y.2.1 y.2.2
-      obtain ⟨c', δ, hδ⟩ := cls_exists Λ' hΛ'
+      obtain ⟨γ, 𝔞, Λ', h𝔞, hΛ', h1, h2⟩ := hA2 _ (Quot.out c).2.toIsLattice y.1 y.2.1 y.2.2
+      let f : (Fin (k + 1) → E) →ₗ[E] (Fin k → E) :=
+        (LinearMap.pi fun j => LinearMap.proj j.succ).comp
+          (Matrix.mulVecLin (γ : Matrix (Fin (k + 1)) (Fin (k + 1)) E))
+      have hf : Function.Surjective f := by
+        intro z
+        refine ⟨(γ⁻¹ : GL (Fin (k + 1)) E) *ᵥ Fin.cons 0 z, ?_⟩
+        change Fin.tail ((γ : Matrix (Fin (k + 1)) (Fin (k + 1)) E) *ᵥ
+          ((γ⁻¹ : GL (Fin (k + 1)) E) *ᵥ Fin.cons 0 z)) = z
+        rw [Matrix.mulVec_mulVec, Units.mul_inv, Matrix.one_mulVec]
+        rfl
+      have hfull' : Submodule.IsFullLattice E Λ' := full_of_surjective_image
+        (Quot.out c).1 (Quot.out c).2 Λ' hΛ' f hf (fun x hx => by
+          change Fin.tail ((γ : Matrix (Fin (k + 1)) (Fin (k + 1)) E) *ᵥ x) ∈ Λ'
+          exact ((hLf 𝔞 Λ' _).1 ((h2 x).2 hx)).2)
+      obtain ⟨c', δ, hδ⟩ := cls_exists Λ' hfull'
       obtain ⟨β, b1, b2, b3⟩ := exists_block δ
       have hβ : Carries β (Lf 𝔞 Λ') (Lf 𝔞 (Quot.out c').1) :=
-        (hA3 𝔞 𝔞 Λ' _ h𝔞 h𝔞 hΛ' (Quot.out c').2 β b1).2
+        (hA3 𝔞 𝔞 Λ' _ h𝔞 h𝔞 hΛ' (Quot.out c').2.toIsLattice β b1).2
           ⟨rfl, by rw [b2]; exact hδ, fun y _ t _ => ⟨0, by simp [b3, dotProduct]⟩⟩
       obtain ⟨σ, ⟨s1, s2⟩, -⟩ := hs' (⟨𝔞, h𝔞⟩, c') _ (detNorm_emb_mul_pos (β * γ) (hDU c hg))
       refine ⟨(⟨𝔞, h𝔞⟩, c'), σ * (β * γ), ⟨Carries.mul s1.1 (hβ.mul h2), ?_⟩, by rwa [emb_mul_mul]⟩
@@ -443,15 +505,19 @@ theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], I
   · refine pair_le (J := Σ c : Cls E (k + 1), {y : Fin (k + 1) → E // y ∈ (Quot.out c).1 ∧ y ≠ 0})
       _ _ _ _ _ _ hD' (fun i => hD i.1) ?_ ?_ F
     · rintro ⟨𝔞, c⟩ ⟨𝔟, c'⟩ γ g hg h1 h2 h3
-      obtain ⟨e1, e2, -⟩ := (hA3 𝔞.1 𝔟.1 _ _ 𝔞.2 𝔟.2 (Quot.out c).2 (Quot.out c').2 γ h2).1 h1
+      obtain ⟨e1, e2, -⟩ := (hA3 𝔞.1 𝔟.1 _ _ 𝔞.2 𝔟.2 (Quot.out c).2.toIsLattice (Quot.out c').2.toIsLattice γ h2).1 h1
       obtain ⟨δ, hδ⟩ := exists_sub γ h2
       rw [hδ] at e2
       obtain rfl : c = c' := cls_eq e2
       obtain rfl : 𝔞 = 𝔟 := Subtype.ext e1
       exact ⟨rfl, (hs' (𝔞, c) g (hDU' _ hg)).unique ⟨⟨h1, h2⟩, h3⟩ ⟨one_mem _, by rwa [emb_one_mul]⟩⟩
     · rintro ⟨𝔞, c⟩ g hg
-      obtain ⟨h1, h2⟩ := hA1 𝔞.1 _ 𝔞.2 (Quot.out c).2
-      obtain ⟨c', δ, hδ⟩ := cls_exists _ h1
+      obtain ⟨h1, h2⟩ := hA1 𝔞.1 _ 𝔞.2 (Quot.out c).2.toIsLattice
+      have hfull : Submodule.IsFullLattice E (Lf 𝔞.1 (Quot.out c).1) :=
+        full_of_head_and_tail (Quot.out c).1 (Quot.out c).2 _ h1 h2 (fun z hz =>
+          (hLf 𝔞.1 (Quot.out c).1 _).2 ⟨fun t _ => RingHom.mem_range.mpr ⟨0, by simp⟩,
+            by simpa using hz⟩)
+      obtain ⟨c', δ, hδ⟩ := cls_exists _ hfull
       obtain ⟨σ, ⟨s1, s2⟩, -⟩ := hs c' _ (detNorm_emb_mul_pos δ (hDU' _ hg))
       have hc : Carries (σ * δ) _ _ := Carries.mul s1 hδ
       refine ⟨⟨c', ⟨_, (hc _).2 h2, fun h0 => ?_⟩⟩, σ * δ, ⟨hc, rfl⟩, by rwa [emb_mul_mul]⟩

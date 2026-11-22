@@ -1,15 +1,20 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsTotallyImaginaryGeneratorOfIsCMField
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.HasLocalLanglandsOfIsLocalArtinOfCMDatum
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.HasLocalLanglandsIffOfPlaceIso
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaArtin
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.QuadraticTwists.ExBridge
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.QuadraticTwists.ExPlaceIso
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalAdjoinRange
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIso
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
-import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExLift
-import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExComp
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsTotallyImaginaryGeneratorOfIsCMField
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.HasLocalLanglandsOfIsLocalArtinOfCMDatum
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.HasLocalLanglandsIffOfPlaceIso
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaArtin
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.QuadraticTwists.ExBridge
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.QuadraticTwists.ExPlaceIso
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalAdjoinRange
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIso
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExLift
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExComp
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc GlobalTheory.WeilDeligne GlobalTheory.GalOfCusp GlobalTheory.HeckeGal GlobalTheory.LocLanglands GlobalTheory.Published UpperTheory.V.W
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
@@ -45,7 +50,7 @@ theorem UpperTheory.V.Loc.ltAll :
     induction hx using IntermediateField.adjoin_induction with
     | mem y hy => obtain ⟨x, rfl⟩ := hy; rw [hg, ← hf]; exact IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩
     | algebraMap y => exact Bw.j_E y
-    | add a b _ _ ha hb => rw [map_add]; exact add_mem ha hb
+    | add a b _ _ ha hb => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem ha hb
     | inv a _ ha => rw [map_inv₀]; exact inv_mem ha
     | mul a b _ _ ha hb => rw [map_mul]; exact mul_mem ha hb
   have hfj : (fun x : M => Bw.j (algebraMap M Ω x)) = f := funext hg

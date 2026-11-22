@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.SlopeBoundSingleLiftOfDefinitions
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.SlopeBoundSingleLiftOfDefinitions
+
+@[expose] public section
 
 open Finset Module NumberField Formalism.HN Formalism.L2.Indef Formalism.L2.Indef.Tree
 
@@ -11,13 +15,11 @@ section Bound₂
 
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
-def withLevel (P : SlopeBoundParameters) (t : ℝ) : SlopeBoundParameters := { P with g12 := t }
-
 def OneConstant {d : ℕ} (X X' : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ) (c : InfinitePlace K → ℝ) : Prop :=
   ∀ v, 0 < c v ∧ ∀ x y, Formalism.HermitianLatticesTheory.majAt (Pi.basisFun K (Fin d)) X v x y =
     (c v : ℂ) * Formalism.HermitianLatticesTheory.majAt (Pi.basisFun K (Fin d)) X' v x y
 
-theorem lcv_of_oneConstant [IsTotallyComplex K] {d : ℕ} (hd : 0 < d)
+theorem lcv_of_oneConstant [_root_.NumberField.IsTotallyComplex K] {d : ℕ} (hd : 0 < d)
     (X X' : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ) (hX : ∀ v, IsUnit (X v).det) (hX' : ∀ v, IsUnit (X' v).det)
     (c : InfinitePlace K → ℝ) (hc : OneConstant X X' c) (M : Submodule (𝓞 K) (Fin d → K))
     (hM : Submodule.IsLattice K M) :

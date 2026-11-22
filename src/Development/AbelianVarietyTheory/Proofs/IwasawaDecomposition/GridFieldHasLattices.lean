@@ -1,13 +1,59 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.GKeyFin
-import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.GoodPairSystems
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistsAtLinked
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowRatW
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.GoodReductionCondition
-import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ExistsSmallSpherical
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PositionMv
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvPSizeRowsDlog
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.GKeyFin
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.GoodPairSystems
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistsAtLinked
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowRatW
+public import Development.AutomorphicArithmetic.CharacterBoxes.ExS
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.CountsIrreducibilityConstants
+public import Formalism.SharpRestriction.GlobalSchurBounds.LinkTied
+public import Formalism.SharpRestriction.GlobalSchurBounds.MainSup
+public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.WuDecayAll
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowsPos
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.PNamed
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.DiscreteSeriesOfFormalDegree
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DivRows3GIff
+public import Formalism.LocalToGlobal.FiniteTOf
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ThetaChr
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ColumnCompatibleSelection
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.STiesR
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SameDegreeZeroFormsSelf
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DivisionPairOfAdelicFormsFaceColumnsData
+public import Formalism.LocalToGlobal.CarriedPlMap
+public import Formalism.LocalToGlobal.SelSide
+public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.TwistedCharacterValue
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TwArgs
+public import Formalism.LocalToGlobal.Divisibility.ColPins
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.AllRows
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseRankDimension
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RowSideOfCompatibleThetaPair
+public import Formalism.LocalToGlobal.IndefiniteReal.NonzeroIndexPlaceIndepConstants
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ClassSumPin
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SingleIndexPlacesAreTwisted
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SlopeTestRemainingChoicesAlt
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SerFixOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ExistsSmallSpherical
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PositionMv
+public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RegularisedSiegelWeilFirstTerm
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RayFieldTheta
+public import Formalism.LocalToGlobal.IndefiniteReal.RealTB
+public import Formalism.LocalToGlobal.IndefiniteReal.RealPins
+public import Development.AbelianVarietyTheory.Definitions.Divisors.Params
+public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWeilUnitaryConvergent
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoreClausesOfWeakCharacterisation
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LeastSplitAuxiliaryPrimeLtScaleBound
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightOnePlacesAreTwistPlacesOfWitness
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BwitFrameTwists
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowEListPinPt
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
@@ -53,29 +99,8 @@ theorem gridFit_of_parts {p : PtAt ex Csz} {CF : ℝ} {G : Grid p CF} (hs : Twis
     (h3 : Formalism.L2.Host.PsiChoiceCompatible D p.R.C ex.nch p.Tp) (h4 : GlobalTheory.LamTie.IsLamTieFull D.ntw (lamOf G)) : GridFit p G :=
   ⟨h1, h2, hs, hc, hp, h3, h4⟩
 
-theorem hasGrid_of_full (p : PtAt ex Csz) (CF : ℝ) (hp : p.Ties)
-    (hs : TwistedPlaceChoiceLiesOverPair D ex.nch)
-    (hc : ∀ w, TwistedAt D w → BlochKatoReduction.Gen.QOk D.ntw (ex.nch.twI w) (ex.nch.Q w))
-    (hpw : ∃ N0 : D.ntw.Tw → ℕ, ∀ w, TwistedAt D w → ∀ a : ℤ, IsCoprime a (D.ntw.l (ex.nch.twI w) : ℤ) →
-      BlochKatoReduction.Gen.partC N0 (ex.nch.twI w) (ex.nch.Q w) (ex.nch.k' w) (ex.nch.psi' w ^ a) (twEps D (ex.nch.twI w)))
-    (G : Grid p CF) (h2 : FieldHas G (Formalism.L2.Host.embLL0 D)) (h4 : GlobalTheory.LamTie.IsLamTieFull D.ntw (lamOf G))
-    (hF : Full p.R.toRealDat G) : HasGrid (@Fld) p CF := by
-  have hfit := gridFit_of_parts hs hc hpw hp.real.valLL0 h2 hp.real.psiChoice h4
-  obtain ⟨W, M, ρ, ξ, cv, rm, S, rp, n, e, c, hIs, hOK, hSq⟩ := hF
-  exact ⟨G, W, hIs.weil, hfit, n, ⟨M, ρ, ξ, cv, rm, S, rp, e, c⟩, ⟨hIs, hp.eSer, hOK, hSq⟩⟩
-
 end GlobalTheory.Mem.LiteralAutomorphy.GridRow
 
 namespace GlobalTheory.Mem.LiteralAutomorphy.GridRow
-
-theorem rowE_hasGrid_fld : ∀ (hL : GlobalTheory.Published.LocalLanglandsGL) (CF : ℝ) (N : NExt hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (GlobalTheory.HeightCounting.Up.NEl hL CF K B f T w Z Wt p0 t nch n xd c)) → RowE (IsGoodE (prmR (NEa hL N (GridA CF)) S Γ).s) (IsLinked (prmR (NEa hL N (GridA CF)) S Γ)) fun _ D O c b => ∀ t : b.Comparison₂, (b.part t).pt.Ties → GlobalTheory.BigTop.Fun.HasGrid @GlobalTheory.BigTop.Fun.Fld (b.part t).pt CF := by
-  intro hL CF N S Γ hN
-  refine ((GlobalTheory.Mem.LiteralAutomorphy.TwAtLink.twists_at_linked hL (prmR (NEa hL N (GridA CF)) S Γ) (IsGoodE (prmR (NEa hL N (GridA CF)) S Γ).s)).and
-    ((rowE_pinned_grid hL CF N S Γ hN).and (rowE_full_grid hL CF N S Γ))).imp fun κ K β c b _ _ _ H t ht => ?_
-  obtain ⟨hw1, hw2, hcond, hpow⟩ := H.1
-  obtain ⟨G₀, hF₀, hT₀⟩ := H.2.1 t ht
-  obtain ⟨G, hv, hw, hch, hFull⟩ := H.2.2 t ht G₀
-  exact hasGrid_of_full _ CF ht ⟨hw1, fun w w' a b c => (hw2 w w' a b c).2.2⟩ hcond hpow G (fieldHas_of_same hv hch hF₀)
-    (lamOf_of_same hw hch ▸ hT₀) hFull
 
 end GlobalTheory.Mem.LiteralAutomorphy.GridRow

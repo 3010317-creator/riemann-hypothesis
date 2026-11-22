@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.EnergyAbs
-import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.EnergyAbsTrunc
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.EnergyAbs
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.EnergyAbsTrunc
+
+@[expose] public section
 
 noncomputable section
 
@@ -80,8 +84,8 @@ theorem sigma_Yop {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) {μ μS ν
     prod_restrict_translate ν hmap A, hemb.integral_map]
   congr 1
   funext p
-  simp only [fY, Prod.map, id, map_smul]
   have hq : (p.2 * s0⁻¹)⁻¹ * p.1 = s0 * (p.2⁻¹ * p.1) := by group
+  simp only [fY, Prod.map, id_eq, ContinuousLinearMap.map_smul]
   rw [hq, rep_mul_apply hσ, inv_mul_cancel_left, hW.2.2.2.1 s0 hs0,
     ContinuousLinearMap.adjoint_inner_right]
 

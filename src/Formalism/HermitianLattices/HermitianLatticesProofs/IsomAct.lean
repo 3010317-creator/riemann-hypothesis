@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.HermitianLattices.StatementLat
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.StatementLat
+
+@[expose] public section
 
 open Module
 
@@ -41,6 +45,32 @@ theorem isomAct_lattice (g : V ≃ₗ[K] V) (L : Submodule R V) (hL : Submodule.
     ext x
     simp [gmap]
   refine ⟨hL.fg.map _, ?_⟩
+  rw [e]
+  intro s hs hli
+  change s ⊆ ⇑g '' _ at hs
+  have hpre := Set.preimage_mono (f := ⇑g) hs
+  rw [Set.preimage_image_eq _ g.injective] at hpre
+  rw [← Set.image_preimage_eq s g.surjective] at hli ⊢
+  exact (linearIndepOn_id_imageₛ_iff (f := g.toLinearMap) g.injective.injOn).2
+    (hL.linearIndepOn _ hpre
+      ((linearIndepOn_id_imageₛ_iff (f := g.toLinearMap.restrictScalars R)
+        g.injective.injOn).1 hli))
+
+theorem isomAct_fullLattice (g : V ≃ₗ[K] V) (L : Submodule R V)
+    (hL : Submodule.IsFullLattice K L) : Submodule.IsFullLattice K (gmap g L) := by
+  refine { toIsLattice := isomAct_lattice g L hL.toIsLattice, span_eq_top := ?_ }
+  have e : ((gmap g L : Submodule R V) : Set V) = (g : V →ₗ[K] V) '' (L : Set V) := by
+    ext x
+    simp [gmap]
+  rw [e, Submodule.span_image, hL.span_eq_top, Submodule.map_top]
+  exact LinearEquiv.range g
+
+theorem isomAct_spanningLattice (g : V ≃ₗ[K] V) (L : Submodule R V)
+    (hL : RHCompat.SpanningLattice K L) : RHCompat.SpanningLattice K (gmap g L) := by
+  refine { fg := hL.fg.map _, span_eq_top := ?_ }
+  have e : ((gmap g L : Submodule R V) : Set V) = (g : V →ₗ[K] V) '' (L : Set V) := by
+    ext x
+    simp [gmap]
   rw [e, Submodule.span_image, hL.span_eq_top, Submodule.map_top]
   exact LinearEquiv.range g
 
@@ -99,13 +129,13 @@ theorem isomAct : IsomAct := by
       exact e
     · intro H
       rw [H]
-  have hlat : Submodule.IsLattice K (gmap g L) ↔ Submodule.IsLattice K L := by
+  have hlat : RHCompat.SpanningLattice K (gmap g L) ↔ RHCompat.SpanningLattice K L := by
     constructor
     · intro H
-      have e := isomAct_lattice g.symm (gmap g L) H
+      have e := isomAct_spanningLattice g.symm (gmap g L) H
       rwa [isomAct_gmap_symm] at e
     · intro H
-      exact isomAct_lattice g L H
+      exact isomAct_spanningLattice g L H
   refine ⟨hdual, ?_, hint_r, hunim, hlat⟩
   intro p
   unfold loc

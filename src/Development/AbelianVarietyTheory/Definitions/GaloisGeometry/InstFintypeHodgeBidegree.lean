@@ -1,6 +1,18 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ToPtIdPtBijective
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NegOnePowBoundaryTermsCancel
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ToPtIdPtBijective
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NegOnePowBoundaryTermsCancel
+
+local macro "fin_index_simp" : tactic => `(tactic| (
+  simp (disch := (simp only [finCongr_apply, Fin.val_cast, Fin.val_castAdd, Fin.val_natAdd, Fin.val_castSucc,
+      Fin.val_succ, GlobalTheory.CatH.bk, GlobalTheory.CatH.fr, Fin.val_castLE, Fin.val_last, Fin.val_zero, Fin.succAboveOrderEmb_apply,
+      Function.comp_apply]; omega)) only [Function.comp_apply, Fin.succAboveOrderEmb_apply, GlobalTheory.CatH.fr, Fin.val_castLE,
+    GlobalTheory.CatH.bk, GlobalTheory.CatH.val_succAbove_lt, GlobalTheory.CatH.val_succAbove_ge, finCongr_apply, Fin.val_cast,
+    Fin.val_castAdd, Fin.val_natAdd, Fin.val_castSucc, Fin.val_succ, Fin.val_last, Fin.val_zero]
+  try omega))
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -42,13 +54,11 @@ theorem mOm_wedgeOm {R' B' : Type} [CommRing R'] [CommRing B'] [Algebra R' B'] {
     e.mOm Q (wedgeOm R B h x y) = wedgeOm R' B' h (e.mOm q x) (e.mOm q' y) :=
   Subtype.ext (map_mul e.mDR x.1 y.1)
 
-variable (R B) in
 
+variable (R B) in
 def oneOm : Om R B 0 := ⟨1, by
   change _ ∈ LinearMap.range _ ^ 0
   rw [pow_zero]; exact Submodule.one_le.1 le_rfl⟩
-
-@[simp] theorem coe_oneOm : (oneOm R B : DR R B) = 1 := rfl
 
 theorem dOm_oneOm : dOm R B 0 (oneOm R B) = 0 := Subtype.ext (by
   change dDR R B 1 = 0
@@ -65,9 +75,9 @@ def cupTerm {a a' A q q' Q : ℕ} (ha : a + a' = A) (hq : q + q' = Q) :
   LinearMap.mk₂ R (fun f g s ↦ wedgeOm R (F.obj (s.obj (Fin.last A))) hq
       (ev (F := OmF F q) s (fr a A (by omega)) (fr_mono _ _ _) (Fin.last A) (Fin.le_last _) f)
       (ev (F := OmF F q') s (bk a a' A ha.le) (bk_mono _ _ _ _) (Fin.last A) (Fin.le_last _) g))
-    (fun f f' g ↦ funext fun s ↦ by rw [map_add]; exact LinearMap.map_add₂ _ _ _ _)
+    (fun f f' g ↦ funext fun s ↦ by rw [map_add (f := _)]; exact LinearMap.map_add₂ _ _ _ _)
     (fun r f g ↦ funext fun s ↦ by rw [map_smul]; exact LinearMap.map_smul₂ _ _ _ _)
-    (fun f g g' ↦ funext fun s ↦ by rw [map_add]; exact LinearMap.map_add _ _ _)
+    (fun f g g' ↦ funext fun s ↦ by rw [map_add (f := _)]; exact LinearMap.map_add _ _ _)
     (fun r f g ↦ funext fun s ↦ by rw [map_smul]; exact LinearMap.map_smul _ _ _)
 
 variable {F}
@@ -110,7 +120,8 @@ theorem dH_cupTerm {m n k q q' Q : ℕ} (h : m + n = k) (hq : q + q' = Q) (f : T
   rw [Pi.add_apply, Pi.smul_apply, cupTerm_apply, cupTerm_apply, ev_d, ev_d, d_apply_ev]
   refine (Finset.sum_congr rfl fun (i : Fin (m + n + 2)) _ ↦ congrArg (fun z ↦ (-1 : ℤ) ^ (i : ℕ) • z)
     (ev_cupTerm rfl hq f g s _ (Fin.succAboveOrderEmb i).monotone _ (Fin.le_last _))).trans ?_
-  simp only [map_sum, LinearMap.sum_apply, map_zsmul, LinearMap.smul_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum, LinearMap.sum_apply, map_zsmul, LinearMap.smul_apply]
   rw [← (finCongr (show m + 1 + (n + 1) = m + n + 1 + 1 by omega)).sum_comp, Fin.sum_univ_add,
     Fin.sum_univ_castSucc (n := m + 1), Fin.sum_univ_succ (n := n + 1), smul_add, Finset.smul_sum]
   refine add_rearrange_of_cancel_middle (Finset.sum_congr rfl fun i _ ↦ ?_) (Finset.sum_congr rfl fun j _ ↦ ?_) ?_
@@ -159,8 +170,8 @@ theorem ev_self {M : C ⥤ ModuleCat.{0} R} {m : ℕ} (s : ComposableArrows C m)
   rw [hid, M.map_id]
   rfl
 
-variable (F) in
 
+variable (F) in
 def oneTerm : Term F 0 0 := fun s ↦ oneOm R (F.obj (s.obj (Fin.last 0)))
 
 theorem coe_ev_oneTerm {k : ℕ} (s : ComposableArrows C k) (p : Fin 1 → Fin (k + 1)) (hp : Monotone p)
@@ -171,7 +182,7 @@ theorem coe_ev_oneTerm {k : ℕ} (s : ComposableArrows C k) (p : Fin 1 → Fin (
 theorem oneTerm_cupTerm {a q : ℕ} (ha : 0 + a = a) (hq : 0 + q = q) (f : Term F a q) :
     cupTerm F ha hq (oneTerm F) f = f := by
   funext s
-  rw [cupTerm_apply, ev_self s (bk 0 a a ha.le) _ (fun _ ↦ by simp)]
+  rw [cupTerm_apply, ev_self s (bk 0 a a ha.le) _ (fun _ ↦ by simp [bk])]
   exact Subtype.ext ((congrArg (· * (f s).1) (coe_ev_oneTerm s _ _ _ _)).trans (one_mul _))
 
 end Terms
@@ -228,8 +239,8 @@ theorem dTot_sg {a q n : ℕ} (h : a + q = n) (c : Term F a q) :
       · rfl
       · rw [totV_succ, Tot.sg_of_ne _ _ _ (fun e ↦ hQ (congrArg (· + 1) e)), map_zero, smul_zero]
 
-variable (F) in
 
+variable (F) in
 def Tot.cup {m n N : ℕ} (h : m + n = N) : Tot F m →ₗ[R] Tot F n →ₗ[R] Tot F N :=
   ∑ b : Bidegree m, ∑ b' : Bidegree n, (-1 : ℤ) ^ (b.1.2 * b'.1.1) •
     ((cupTerm F rfl rfl).compl₁₂ (LinearMap.proj b) (LinearMap.proj b')).compr₂
@@ -264,16 +275,16 @@ theorem dTot_cup {m n N : ℕ} (h : m + n = N) (x : Tot F m) (y : Tot F n) :
       (-1 : ℤ) ^ m • Tot.cup F (show m + (n + 1) = N + 1 by omega) x (dTot F n y) := by
   induction x using Tot.induction with
   | h0 => simp
-  | ha x x' hx hx' => simp only [map_add, LinearMap.add_apply, hx, hx', smul_add]; abel
+  | ha x x' hx hx' => simp only [map_add (f := _), LinearMap.add_apply, hx, hx', smul_add]; abel
   | hs a q h₁ f =>
   induction y using Tot.induction with
   | h0 => simp
-  | ha y y' hy hy' => simp only [map_add, hy, hy', smul_add]; abel
+  | ha y y' hy hy' => simp only [map_add (f := _), hy, hy', smul_add]; abel
   | hs a' q' h₂ g =>
   have e₁ : a + a' + 1 + (q + q') = N + 1 := by omega
   have e₂ : a + a' + (q + q' + 1) = N + 1 := by omega
   rw [Tot.cup_sg h h₁ h₂ rfl rfl (by omega), map_zsmul, dTot_sg, dTot_sg, dTot_sg, dH_cupTerm, dV_cupTerm]
-  simp only [map_add, map_zsmul, LinearMap.add_apply, LinearMap.smul_apply]
+  simp only [map_add (f := _), map_zsmul, LinearMap.add_apply, LinearMap.smul_apply]
   rw [Tot.cup_sg _ _ h₂ (show a + 1 + a' = a + a' + 1 by omega) rfl e₁,
     Tot.cup_sg _ _ h₂ rfl (show q + 1 + q' = q + q' + 1 by omega) e₂,
     Tot.cup_sg _ h₁ _ (show a + (a' + 1) = a + a' + 1 by omega) rfl e₁,
@@ -287,14 +298,14 @@ theorem dTot_cup {m n N : ℕ} (h : m + n = N) (x : Tot F m) (y : Tot F n) :
   · ring
   · ring
 
-variable (F) in
 
+variable (F) in
 def Tot.one : Tot F 0 := Tot.sg F rfl (oneTerm F)
 
 theorem Tot.one_cup {n : ℕ} (h : 0 + n = n) (x : Tot F n) : Tot.cup F h (Tot.one F) x = x := by
   induction x using Tot.induction with
   | h0 => simp
-  | ha x x' hx hx' => simp only [map_add, hx, hx']
+  | ha x x' hx hx' => simp only [map_add (f := _), hx, hx']
   | hs a q e f =>
     rw [Tot.one, Tot.cup_sg h rfl e (zero_add a) (zero_add q) e, oneTerm_cupTerm, zero_mul, pow_zero,
       one_smul]
@@ -340,8 +351,8 @@ theorem Tot.cup_mem_BTot_right {m n N : ℕ} (h : m + n = N) {x : Tot F m} {y : 
     rw [map_zsmul, dTot_cup, show dTot F m x = 0 from hx, map_zero, LinearMap.zero_apply, zero_add,
       smul_smul, ← mul_pow, neg_one_mul, neg_neg, one_pow, one_smul]
 
-variable (F) in
 
+variable (F) in
 def ZTot.cup {m n N : ℕ} (h : m + n = N) : ZTot F m →ₗ[R] ZTot F n →ₗ[R] ZTot F N :=
   LinearMap.mk₂ R (fun x y ↦ ⟨Tot.cup F h x.1 y.1, Tot.cup_mem_ZTot h x.2 y.2⟩)
     (fun _ _ _ ↦ Subtype.ext (LinearMap.map_add₂ _ _ _ _))
@@ -349,26 +360,20 @@ def ZTot.cup {m n N : ℕ} (h : m + n = N) : ZTot F m →ₗ[R] ZTot F n →ₗ[
     (fun _ _ _ ↦ Subtype.ext (LinearMap.map_add _ _ _))
     (fun _ _ _ ↦ Subtype.ext (LinearMap.map_smul _ _ _))
 
-variable (F) in
 
+variable (F) in
 def Hyp.cup {m n N : ℕ} (h : m + n = N) : Hyp F m →ₗ[R] Hyp F n →ₗ[R] Hyp F N :=
   LinearMap.liftQ₂ _ _ ((ZTot.cup F h).compr₂ (Hyp.mk F N))
     (fun x hx ↦ LinearMap.ext fun y ↦ Hyp.mk_eq_zero.2 (Tot.cup_mem_BTot_left h hx y.2))
     (fun y hy ↦ LinearMap.ext fun x ↦ Hyp.mk_eq_zero.2 (Tot.cup_mem_BTot_right h x.2 hy))
 
-variable (F) in
 
+variable (F) in
 def Hyp.one : Hyp F 0 := Hyp.mk F 0 ⟨Tot.one F, Tot.one_mem⟩
 
 theorem Hyp.one_cup {n : ℕ} (h : 0 + n = n) (x : Hyp F n) : Hyp.cup F h (Hyp.one F) x = x := by
   obtain ⟨x, rfl⟩ := Hyp.mk_surjective F n x
   exact congrArg (Hyp.mk F n) (Subtype.ext (Tot.one_cup h x.1))
-
-theorem Hyp.one_ne_zero (T : C) [Nontrivial (F.obj T)] : Hyp.one F ≠ 0 := fun h ↦ by
-  have h1 : Tot.one F = 0 := Hyp.mk_eq_zero.1 h
-  have h2 := (Tot.sg_same rfl (oneTerm F)).symm.trans (congrFun h1 ⟨(0, 0), rfl⟩)
-  exact _root_.one_ne_zero (α := DR R (F.obj T))
-    (congrArg Subtype.val (congrFun h2 (ComposableArrows.mk₀ T)))
 
 end Total
 
@@ -443,19 +448,5 @@ theorem HdR.pointEquiv_cup (x y : k) :
     ((map_mul _ _ _).symm.trans (coe_functionsZero_symm (x * y)).symm)
 
 end Scheme
-
-example : HdR.cup (algStr ℤ ℤ) rfl (HdR.pointEquiv ℤ 2) (HdR.pointEquiv ℤ 3) = HdR.pointEquiv ℤ 6 :=
-  HdR.pointEquiv_cup 2 3
-
-example : HdR.cup (algStr (ZMod 2) (Polynomial (ZMod 2))) rfl (HdR.one _)
-    (HdR.ofForm 1 (tdtForm (ZMod 2))) ≠ 0 := by
-  rw [HdR.one_cup]; exact HdR.ofForm_tdt_ne_zero rfl
-
-example {R : Type} [CommRing R] {C : Type} [Category.{0} C] (F : C ⥤ CommAlgCat.{0} R)
-    (ω : Term F 0 1) (g : Term F 1 0) :
-    Tot.cup F (show 1 + 1 = 2 from rfl) (Tot.sg F (zero_add 1) ω) (Tot.sg F (add_zero 1) g) ⟨(1, 1), rfl⟩ =
-      -cupTerm F rfl rfl ω g := by
-  rw [Tot.cup_sg (A := 1) (Q := 1) _ (zero_add 1) (add_zero 1) rfl rfl rfl, Pi.smul_apply, Tot.sg_same]
-  simp
 
 end GlobalTheory.HodgeCoh

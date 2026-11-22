@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+
+@[expose] public section
 
 noncomputable section
 
@@ -223,7 +227,7 @@ theorem extOrth_of (a : ℕ) (Y : TupV (E := E) v n a) (hS : OSub (E := E) v) (h
     (hO : OrthoB σ J ψ v Λ a Y) : ExtOrth σ J ψ v Λ a Y := by
   intro h hG X hX hXY
   obtain ⟨e, hePerp, heX, hee, hspan⟩ := hO h hG X hX hXY
-  have hM' := hM hG.2.1
+  have hM' := hM (by obtain ⟨L, hL, hEq⟩ := hG.2.1; exact ⟨L, hL.toIsLattice, hEq⟩)
   have hsd : IsSDLoc σ J v Λ := hG.2.2.1
   obtain ⟨w, hw0, -, hw⟩ := hG.2.2.2.2.2.2
   rw [← hXY] at hw

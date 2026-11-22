@@ -1,16 +1,20 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
-import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocPDelAtrEqLocPNabAtr
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMulOfApprox
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CharacterValueAtT
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUnitaryCarries
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationLeOneOfMemZmu
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceOverPInducedByAlgebraicPadicEmbedding
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.BaseCh
-import Formalism.LocalToGlobal.Columns.AtTOwedS
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
+public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocPDelAtrEqLocPNabAtr
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMulOfApprox
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CharacterValueAtT
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUnitaryCarries
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationLeOneOfMemZmu
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceOverPInducedByAlgebraicPadicEmbedding
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.BaseCh
+public import Formalism.LocalToGlobal.Columns.AtTOwedS
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker GlobalTheory.KerT
 open scoped Matrix
@@ -66,7 +70,7 @@ theorem hStd_adj (x : HomE E a b) (l : Sp E a) (y : Sp E b) : hStd E a l (adj x 
 
 variable {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
 
-theorem adj_mem (d : DecoSet E a ST SG) (d' : DecoSet E b ST SG') {x : HomE E a b} (hx : x ∈ suppBar d.1 d'.1) (P : ST)
+theorem adj_mem (d : DecoSet (E := E) (n := a) (ST := ST) (SG := SG)) (d' : DecoSet (E := E) (n := b) (ST := ST) (SG := SG')) {x : HomE E a b} (hx : x ∈ suppBar d.1 d'.1) (P : ST)
     {y : Sp E b} (hy : y ∈ d'.1.Lsh) : adj x y ∈ localization₂ (conjPrime₂ P.1).asIdeal d.1.Lsh := by
   rw [Deco.Lsh, mem_localization_dual d.2.L_lattice.fg]
   intro l hl
@@ -82,7 +86,7 @@ theorem mem_stdAt (P : HeightOneSpectrum (𝓞 E)) (x : Sp E n) : x ∈ stdAt E 
   rw [stdAt, mem_localization_standardLattice]
   exact forall_congr' fun i => intAt_iff _
 
-theorem exists_coeff (d : DecoSet E n ST SG) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) :
+theorem exists_coeff (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) :
     ∃ c : Fin n → 𝓞 E, ∀ x ∈ stdAt E n P.1,
       (d.1.f P x = 0 ↔ P.1.valuation E (∑ j, algebraMap (𝓞 E) E (c j) * x j) < 1) := by
   classical
@@ -108,7 +112,8 @@ theorem exists_coeff (d : DecoSet E n ST SG) (P : ST) (h : d.1.at P.1 = stdAt E 
   have h3 := d.2.f_smul P s x (h ▸ hx)
   rw [h2, h1] at h3
   have h4 : algebraMap (𝓞 E) E (∑ j, c j * r j) = algebraMap (𝓞 E) E s * ∑ j, algebraMap (𝓞 E) E (c j) * x j := by
-    rw [map_sum, Finset.mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul, hr, Pi.smul_apply, Algebra.smul_def]
     ring
@@ -118,7 +123,7 @@ theorem exists_coeff (d : DecoSet E n ST SG) (P : ST) (h : d.1.at P.1 = stdAt E 
   rw [h4, map_mul, h5, one_mul] at h6
   rw [h6, ← Ideal.Quotient.eq_zero_iff_mem, h3, mul_eq_zero, or_iff_right (mk_ne_zero hs)]
 
-theorem exists_matrix_ker (d : DecoSet E n ST SG) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) {q : E}
+theorem exists_matrix_ker (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) {q : E}
     (hq : P.1.valuation E q = WithZero.exp (-1 : ℤ)) :
     ∃ A : Matrix (Fin n) (Fin n) E, P.1.valuation E (q * A.det) = 1 ∧
       ∀ x, x ∈ localization₂ P.1.asIdeal d.1.L ↔ A *ᵥ x ∈ stdAt E n P.1 := by
@@ -207,7 +212,7 @@ theorem isBasisAt_of (Q : HeightOneSpectrum (𝓞 E)) (M : Submodule (𝓞 E) (S
   rw [e, mem_localization_gmap, ← f.apply_symm_apply y, hf, h, ← hf, f.symm_apply_apply]
   rfl
 
-theorem exists_basis_Lsh (d : DecoSet E n ST SG) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) {q : ℕ}
+theorem exists_basis_Lsh (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (h : d.1.at P.1 = stdAt E n P.1) {q : ℕ}
     (hq : P.1.valuation E (q : E) = WithZero.exp (-1 : ℤ)) :
     ∃ B : GL (Fin n) E, IsBasisAt (conjPrime₂ P.1) d.1.Lsh B ∧
       (conjPrime₂ P.1).valuation E (q * (B : Matrix (Fin n) (Fin n) E).det) = 1 := by
@@ -259,7 +264,8 @@ theorem ptMat_mulVec (ι : X.K →+* ℂ_[p]) (un : X.Tau → ℂ_[p]) (x : HomE
     ptMat ι un x τ *ᵥ (fun i => ι (X.emb τ (y i))) = un τ • fun i => ι (X.emb τ (adj x y i)) := by
   funext α
   conv_rhs => rw [← LinearMap.toMatrix'_mulVec]
-  simp only [ptMat, Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [ptMat, Matrix.mulVec, dotProduct, Matrix.of_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul,
     LinearMap.toMatrix'_apply, Finset.mul_sum, mul_assoc]
 
 theorem admissible_adjointRationalPointPadicMatrix {ι : X.K →+* ℂ_[p]} {w : HeightOneSpectrum (𝓞 X.K)} (h : Induces ι w) {un : X.Tau → ℂ_[p]}
@@ -358,7 +364,7 @@ theorem unramOver {S : Set ℕ} (mu : Tup X.F X.E X.K S) {l : ℕ} (hl : l.Prime
     exact hS
 
 theorem stdOver (hPr : Pr.Ok) {u : Pr.Word} {n : ℕ} {SG : Finset (HeightOneSpectrum (𝓞 X.E))}
-    (d : DecoSet X.E n (Pr.vT u) SG) (h : StdAtT d.1) : GlobalTheory.IndefiniteRowSideFullHecke.CharacterValuation.StdOver (Pr.T u) d.1.N := by
+    (d : DecoSet (E := X.E) (n := n) (ST := Pr.vT u) (SG := SG)) (h : StdAtT d.1) : GlobalTheory.IndefiniteRowSideFullHecke.CharacterValuation.StdOver (Pr.T u) d.1.N := by
   intro P hP
   rw [← hPr.piT_norm u] at hP
   rcases P.isPrime.mem_or_mem hP with h1 | h1
@@ -385,7 +391,7 @@ theorem sub_eq_half {R : Ranks} (W : Wts X Pr.Word R) (u : Pr.Word) {i : ℕ} (h
 
 end Step
 
-theorem barStd : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments → GlobalTheory.Published.InducedSimpleLowestAlcove → ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.host.K)) (δ : ℂ) (B : Base H cc δ) (χ : TaylorLogMetric.IdE H → ℂ) (cD : H.what₂.Tau → ℂ) (sel : HeightOneSpectrum (𝓞 Z.X.F) → HeightOneSpectrum (𝓞 Z.X.E)) (S : Set ℕ) (mu : Tup Z.X.F Z.X.E Z.X.K S) (cst : LocCst Z.X (rowSG Z.Pr sel mu)) (u : Z.Pr.Word) (i : ℕ), i < Z.R.m → Hyp Z s cc δ χ cD sel S mu cst u → JetsAll Z.W sel mu cst (ambOf s B χ cD) u i (i + 1) → AlcoveAt Z.W u (i + 1) → ∀ w : HeightOneSpectrum (𝓞 Z.X.K), seenBarC Z.Pr u w → ∀ {SG SG' : Finset (HeightOneSpectrum (𝓞 Z.X.E))} (d : DecoSet Z.X.E (Z.R.N i) (Z.Pr.vT u) SG) (fr : Frs Z.X.E (Z.R.N i) (rowSG Z.Pr sel mu)) (d' : DecoSet Z.X.E (Z.R.N (i + 1)) (Z.Pr.vT u) SG') (fr' : Frs Z.X.E (Z.R.N (i + 1)) (rowSG Z.Pr sel mu)) (Ξ₀ : HomE Z.X.E (Z.R.N i) (Z.R.N (i + 1)) → Z.X.K), StdOnly u i (i + 1) d d' → Framed d.1.N fr → Framed d'.1.N fr' → InBoxOfRowSelection sel mu cst u d.1.N d'.1.N Ξ₀ → (∀ x, w.valuation Z.X.K (Ξ₀ x) ≤ 1) → ∀ y ∈ valAt w (Z.W.lamTrue u i) d.1.Lsh, ∃ y' ∈ valAt w (Z.W.lamTrue u (i + 1)) d'.1.Lsh, term Z.W Z.Ch sel mu cst (ambOf s B χ cD) u i (i + 1) d fr d' fr' Ξ₀ y = ((Z.Pr.T u : Z.X.K) ^ (Z.X.f * ((Z.R.t + 1) / 2))) • y' := by
+theorem barStd : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments → GlobalTheory.Published.InducedSimpleLowestAlcove → ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.host.K)) (δ : ℂ) (B : Base H cc δ) (χ : TaylorLogMetric.IdE H → ℂ) (cD : H.what₂.Tau → ℂ) (sel : HeightOneSpectrum (𝓞 Z.X.F) → HeightOneSpectrum (𝓞 Z.X.E)) (S : Set ℕ) (mu : Tup Z.X.F Z.X.E Z.X.K S) (cst : LocCst Z.X (rowSG Z.Pr sel mu)) (u : Z.Pr.Word) (i : ℕ), i < Z.R.m → Hyp Z s cc δ χ cD sel S mu cst u → JetsAll Z.W sel mu cst (ambOf s B χ cD) u i (i + 1) → AlcoveAt Z.W u (i + 1) → ∀ w : HeightOneSpectrum (𝓞 Z.X.K), seenBarC Z.Pr u w → ∀ {SG SG' : Finset (HeightOneSpectrum (𝓞 Z.X.E))} (d : DecoSet (E := Z.X.E) (n := Z.R.N i) (ST := Z.Pr.vT u) (SG := SG)) (fr : Frs Z.X.E (Z.R.N i) (rowSG Z.Pr sel mu)) (d' : DecoSet (E := Z.X.E) (n := Z.R.N (i + 1)) (ST := Z.Pr.vT u) (SG := SG')) (fr' : Frs Z.X.E (Z.R.N (i + 1)) (rowSG Z.Pr sel mu)) (Ξ₀ : HomE Z.X.E (Z.R.N i) (Z.R.N (i + 1)) → Z.X.K), StdOnly u i (i + 1) d d' → Framed d.1.N fr → Framed d'.1.N fr' → InBoxOfRowSelection sel mu cst u d.1.N d'.1.N Ξ₀ → (∀ x, w.valuation Z.X.K (Ξ₀ x) ≤ 1) → ∀ y ∈ valAt w (Z.W.lamTrue u i) d.1.Lsh, ∃ y' ∈ valAt w (Z.W.lamTrue u (i + 1)) d'.1.Lsh, term Z.W Z.Ch sel mu cst (ambOf s B χ cD) u i (i + 1) d fr d' fr' Ξ₀ y = ((Z.Pr.T u : Z.X.K) ^ (Z.X.f * ((Z.R.t + 1) / 2))) • y' := by
   intro hJM hP Z H s cc δ B χ cD sel S mu cst u i hi hyp hJ hAl w hw SG SG' d fr d' fr' Ξ₀ hstd hfr hfr' hbox hint y hy
   classical
   have hX := hyp.ok.fields

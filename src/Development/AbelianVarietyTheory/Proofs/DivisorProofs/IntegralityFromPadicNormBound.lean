@@ -1,5 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ClosedBallValuationSubringToSubring
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ClosedBallValuationSubringToSubring
+
+@[expose] public section
+
 open NumberField Polynomial
 
 namespace GlobalTheory
@@ -23,7 +28,7 @@ theorem den_eq_one_of_padicNorm_le_one (c : ℚ)
     have : (1 : ℚ) < (q : ℚ) ^ (-padicValRat q c) := one_lt_zpow₀ hq1 (by omega)
     linarith
   have hden : 1 ≤ padicValNat q c.den :=
-    one_le_padicValNat_of_dvd c.den_nz hqd
+    by simpa only [Nat.padicValNat_def] using one_le_padicValNat_of_dvd c.den_nz hqd
   have hnum : padicValInt q c.num = 0 := by
     apply padicValInt.eq_zero_of_not_dvd
     intro hdvd
@@ -33,6 +38,7 @@ theorem den_eq_one_of_padicNorm_le_one (c : ℚ)
     rw [hcop] at this
     exact hq.one_lt.ne' (Nat.dvd_one.mp this)
   unfold padicValRat at hv
+  rw [← Nat.padicValNat_def] at hv
   omega
 
 theorem isIntegral_of_forall_padicAlgCl_norm_le_one :

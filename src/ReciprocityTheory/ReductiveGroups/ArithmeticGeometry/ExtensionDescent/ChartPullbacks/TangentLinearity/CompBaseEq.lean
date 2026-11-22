@@ -1,6 +1,10 @@
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.PairProp
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.WchartInlLe
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.ActActA
+module
+
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.PairProp
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.WchartInlLe
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.ActActA
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -55,8 +59,8 @@ lemma act_mem_of {K : Type} [Fintype K] (φ : K → ((thickObj R I e G).left ⟶
   rw [comp_base_eq' (hφ k) z]
   exact h1
 
-include hO in
 
+include hO in
 theorem rho_inv_loc
     (hi : ∃ t : splitTorus (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) D.toPre.X ⟶
         splitTorus (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) D.toPre.X,
@@ -124,8 +128,8 @@ theorem rho_inv_loc
     rw [← hA1]; ring
   exact ((hchi.mul hR).mul_right_cancel key).symm
 
-include hO in
 
+include hO in
 theorem rho_inv
     (hi : ∃ t : splitTorus (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) D.toPre.X ⟶
         splitTorus (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) D.toPre.X,

@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BcParamEqOfSatUEq
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeDeterminesSphericalHeckeCharacterGLStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitarySatakeTransformEqOfBaseChangeSatakeParameStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BcParamEqOfSatUEq
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeDeterminesSphericalHeckeCharacterGLStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitarySatakeTransformEqOfBaseChangeSatakeParameStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -123,7 +127,6 @@ private theorem cell_unif_lemma {L : Type} [Field L] [Valued L (WithZero (Multip
     rw [hD, htm ϖ, htm ϖ', Matrix.diagonal_mul_diagonal]
     congr 1
     funext i
-    simp only [he_def]
     rw [mul_div_cancel₀ _ (hg0 ϖ' (hne ϖ' hU') i)]
   obtain ⟨hub, hud⟩ := hu
   refine ⟨D * u * D⁻¹, ?_, D * k, Subgroup.mul_mem _ hDK hk, ?_⟩

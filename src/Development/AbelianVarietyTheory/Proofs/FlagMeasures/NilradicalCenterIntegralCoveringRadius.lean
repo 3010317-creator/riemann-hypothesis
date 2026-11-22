@@ -1,12 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
-import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.CenteredPerpendicularSets
-import Formalism.HarderNarasimhan.ShiftInvariance
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalCanonicalFiltrationStepsAutPoint
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvLeSizeQAboveOrthogonalSaturatedStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticePropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SubquotientCoveringRadiusRealPlacesStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.CenteredPerpendicularSets
+public import Formalism.HarderNarasimhan.ShiftInvariance
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalCanonicalFiltrationStepsAutPoint
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvLeSizeQAboveOrthogonalSaturatedStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SubquotientCoveringRadiusRealPlacesStatement
+
+@[expose] public section
 
 open GlobalTheory.Count GlobalTheory.IndefiniteRowSideFullHecke.CenteredPerpendicularSets Formalism.MainNotions.S Formalism.HN Formalism.REAL Matrix NumberField Finset
 
@@ -47,7 +51,8 @@ theorem mem_of_perp_perp {J : Matrix (Fin n) (Fin n) K} (hJ : Formalism.UG.IsHer
     intro z
     rw [hform_eq, star_star, dotProduct_mulVec, vecMul_vecMul,
       Matrix.nonsing_inv_mul _ (Ne.isUnit hd), vecMul_one]
-    conv_rhs => rw [← Finset.univ_sum_single z, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      conv_rhs => rw [← Finset.univ_sum_single z, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     have : (Pi.single j (z j) : Fin n → K) = z j • (Pi.single j 1 : Fin n → K) := by
       rw [← Pi.single_smul, smul_eq_mul, mul_one]
@@ -120,9 +125,6 @@ end Form
 section Norm
 
 variable {n : ℕ}
-
-theorem hs_nonneg' (a : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ hs a := by
-  unfold hs; positivity
 
 theorem hs_sub_le (a b : Matrix (Fin n) (Fin n) ℂ) : hs (a - b) ≤ 2 * hs a + 2 * hs b := by
   unfold hs

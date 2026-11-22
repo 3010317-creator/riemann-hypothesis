@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
-import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+
+@[expose] public section
 
 open NumberField Matrix GlobalTheory.Mass Formalism.HermitianLatticesTheory
 open scoped ENNReal Classical
@@ -57,9 +61,9 @@ end General
 variable {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
   [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
 
-omit [StarRing K] [FiniteDimensional K V] in
 
-theorem idxN_ne_zero {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X) (hY : Y.FG) :
+omit [StarRing K] [FiniteDimensional K V] in
+theorem idxN_ne_zero {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsFullLattice K X) (hY : Y.FG) :
     idxN Y X ≠ 0 := by
   obtain ⟨d, hd, hdY⟩ := indexBasic_denom (nonZeroDivisors (𝓞 K)) Y X hY
     (by rw [indexBasic_locS_top (K := K) X hX.span_eq_top]; exact le_top)
@@ -83,15 +87,16 @@ theorem idxN_ne_zero {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X)
   exact Nat.card_pos.ne'
 
 omit [StarRing K] [FiniteDimensional K V] in
-theorem lattice_between {X Y Z : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X)
-    (hY : Submodule.IsLattice K Y) (h1 : X ≤ Z) (h2 : Z ≤ Y) : Submodule.IsLattice K Z :=
-  Submodule.IsLattice.of_le_of_isLattice_of_fg K h1 (hY.fg.of_le h2)
+theorem lattice_between {X Y Z : Submodule (𝓞 K) V} (hX : Submodule.IsFullLattice K X)
+    (hY : Submodule.IsFullLattice K Y) (h1 : X ≤ Z) (h2 : Z ≤ Y) : Submodule.IsFullLattice K Z := by
+  letI : Submodule.IsFullLattice K X := hX
+  exact Submodule.IsFullLattice.of_le_of_fg K h1 (hY.fg.of_le h2)
 
 variable (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.Nondegenerate)
 include hs hn
 
-theorem dual_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X)
-    (hY : Submodule.IsLattice K Y) (hc : X ⋖ Y) : dual h Y ⋖ dual h X := by
+theorem dual_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsFullLattice K X)
+    (hY : Submodule.IsFullLattice K Y) (hc : X ⋖ Y) : dual h Y ⋖ dual h X := by
   have dl := dualLattice (𝓞 K) K V h hs hn star_algebraMap_ringOfIntegers_mem_range
   have an := (dualBasic (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range).1
   refine ⟨lt_of_le_of_ne (an _ _ hc.le) fun e => hc.ne ?_, fun Z h1 h2 => ?_⟩
@@ -105,8 +110,8 @@ theorem dual_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X)
     · exact h2.ne (by rw [← e, (dl Z hZ).2.1])
     · exact h1.ne (by rw [← e, (dl Z hZ).2.1])
 
-theorem idxN_dual_of_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X)
-    (hY : Submodule.IsLattice K Y) (hc : X ⋖ Y) : idxN (dual h X) (dual h Y) = idxN Y X := by
+theorem idxN_dual_of_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsFullLattice K X)
+    (hY : Submodule.IsFullLattice K Y) (hc : X ⋖ Y) : idxN (dual h X) (dual h Y) = idxN Y X := by
   obtain ⟨P, hP, hPm, hPi⟩ := exists_max_of_covBy hc
   obtain ⟨Q, hQ, hQm, hQi⟩ := exists_max_of_covBy (dual_covBy h hs hn hX hY hc)
   set σ := locBasic_sigma (genusCovol_hinj (K := K)) star_algebraMap_ringOfIntegers_mem_range with hσ
@@ -130,8 +135,8 @@ theorem idxN_dual_of_covBy {X Y : Submodule (𝓞 K) V} (hX : Submodule.IsLattic
   rw [hPi, hQi]
   exact (Nat.card_congr (Ideal.quotientEquiv P Q e hm).toEquiv).symm
 
-theorem idxN_dual {X : Submodule (𝓞 K) V} (hX : Submodule.IsLattice K X) : ∀ (n : ℕ)
-    (Y : Submodule (𝓞 K) V), Submodule.IsLattice K Y → X ≤ Y → idxN Y X = n →
+theorem idxN_dual {X : Submodule (𝓞 K) V} (hX : Submodule.IsFullLattice K X) : ∀ (n : ℕ)
+    (Y : Submodule (𝓞 K) V), Submodule.IsFullLattice K Y → X ≤ Y → idxN Y X = n →
     idxN (dual h X) (dual h Y) = n := by
   have an := (dualBasic (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range).1
   intro n
@@ -162,14 +167,14 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
   obtain ⟨an, -, -, hint, huni⟩ := dualBasic (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range
   have ld := locDual (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range
   have hMd := (hint M).1 hM.2
-  have h0 : ∀ N, IsIntLat h N → discN h N ≠ 0 := fun N hN => idxN_ne_zero hN.1 (dl N hN.1).1.fg
-  refine ⟨h0 M hM, ?_, fun M' hM' hle => ⟨idxN_ne_zero hM.1 hM'.1.fg, ?_⟩, fun N hN => ?_,
+  have h0 : ∀ N, IsIntLat h N → discN h N ≠ 0 := fun N hN => idxN_ne_zero hN.1.toIsFullLattice (dl N hN.1.toIsFullLattice).1.fg
+  refine ⟨h0 M hM, ?_, fun M' hM' hle => ⟨idxN_ne_zero hM.1.toIsFullLattice hM'.1.fg, ?_⟩, fun N hN => ?_,
     fun P hP hd => ?_, fun M' hM' hle P hP hu => ?_⟩
   · rw [huni, discN, idxN_eq_one]
     exact ⟨fun e => ⟨hM.2, e⟩, fun e => e.2⟩
   · have hMd' := (hint M').1 hM'.2
     rw [discN, discN, ← idxN_mul (hle.trans hMd') (an _ _ hle), ← idxN_mul hle hMd',
-      idxN_dual h hs hn hM.1 _ M' hM'.1 hle rfl]
+      idxN_dual h hs hn hM.1.toIsFullLattice _ M' hM'.1.toIsFullLattice hle rfl]
     ring
   · have hNi : IsIntLat h N := ⟨hN.1,
       (((genusBasic (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range).2.2 M N hM.1.fg hN.1.fg hN.2).2).1 hM.2⟩

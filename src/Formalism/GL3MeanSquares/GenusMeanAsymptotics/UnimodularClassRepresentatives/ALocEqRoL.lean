@@ -1,4 +1,8 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AbsNormLeOfMemBoxSet
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AbsNormLeOfMemBoxSet
+
+@[expose] public section
 
 open NumberField Module Filter Topology
 
@@ -14,8 +18,8 @@ def aLoc (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (𝔭 : {
     (n : 𝓞 F) : ℝ :=
   alphaN h L 𝔭.1 n / eFac K (finrank K V) 𝔭.1
 
-open scoped Classical in
 
+open scoped Classical in
 def roL (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V)
     (S : Finset {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) (𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) (j : ℕ) : ℝ :=
   if 𝔭 ∈ S then 1 else aLoc h L 𝔭 (exists_vF_eq 𝔭.2 j).choose
@@ -132,7 +136,7 @@ theorem prodS_bound (S : Finset {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) :
   have hpos : ∀ 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, 0 < eFac K (finrank K V) 𝔭.1 :=
     fun 𝔭 => eFac_pos 𝔭.2 hm1
   have h0 : ∀ 𝔭 ∈ S, 0 ≤ aLoc h L 𝔭 n := fun 𝔭 _ => div_nonneg (hC 𝔭 n hn).1 (hpos 𝔭).le
-  refine ⟨Finset.prod_nonneg h0, Finset.prod_le_prod h0 fun 𝔭 _ => ?_⟩
+  refine ⟨Finset.prod_nonneg h0, Finset.prod_le_prod₀ h0 fun 𝔭 _ => ?_⟩
   exact div_le_div_of_nonneg_right (hC 𝔭 n hn).2 (hpos 𝔭).le
 
 end Formalism.HermitianLattices.Ext.L3.A5

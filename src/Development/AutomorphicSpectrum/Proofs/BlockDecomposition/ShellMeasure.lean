@@ -1,11 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylCellStabilizerMeasure
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalWeylCellTranslate
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusConjugationWeylCell
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylCellStabilizerMeasureTwo
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCellUAbsorbUnip
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylCellStabilizerMeasure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalWeylCellTranslate
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusConjugationWeylCell
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylCellStabilizerMeasureTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCellUAbsorbUnip
+
+@[expose] public section
+
 open MeasureTheory GlobalTheory.SplitWeil GlobalTheory.SmGL GlobalTheory.SatakeBound GlobalTheory.WeylCell Formalism.UG GlobalTheory.WeylCell.WeylUnipotentShell
 open scoped NNReal ENNReal
 
@@ -80,7 +85,7 @@ theorem shell_measure' : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplic
       intro i l
       show (1 + Matrix.single a a.rev (-b) : Matrix (Fin n) (Fin n) L) i l =
         σ ((1 + Matrix.single a a.rev b : Matrix (Fin n) (Fin n) L) l.rev i.rev)
-      rw [Matrix.add_apply, Matrix.add_apply, map_add, Matrix.one_apply, Matrix.one_apply, Matrix.single_apply,
+      rw [Matrix.add_apply, Matrix.add_apply, map_add (f := _), Matrix.one_apply, Matrix.one_apply, Matrix.single_apply,
         Matrix.single_apply, apply_ite σ, apply_ite σ, map_one, map_zero, hb]
       congr 1
       · exact if_congr (by rw [Fin.rev_inj, eq_comm]) rfl rfl

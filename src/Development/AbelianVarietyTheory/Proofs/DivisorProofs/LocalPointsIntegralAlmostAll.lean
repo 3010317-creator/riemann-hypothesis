@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormRootOfUnitary
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralPropertiesStatement
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
@@ -35,7 +39,7 @@ theorem map_mem_UL (hU : Unr E) (w : Pl E) (γ : UE E n) :
 
 theorem locPt_val (hU : Unr E) (w : Pl E) (γ : UE E n) :
     (locPt w γ).1 = GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) γ.1 := by
-  rw [locPt, toSub, dif_pos (map_mem_UL hU w γ)]
+  rw [locPt, toSub, dite_eq_left (map_mem_UL hU w γ)]
 
 theorem eventually_valuation_le_one (x : E) :
     ∀ᶠ w in (cofinite : Filter (Pl E)), w.valuation E x ≤ 1 := by

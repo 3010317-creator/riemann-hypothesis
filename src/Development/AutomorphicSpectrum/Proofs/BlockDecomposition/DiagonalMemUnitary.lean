@@ -1,21 +1,25 @@
-import Mathlib
-import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.HighestVectorsRegularLine
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CliffordHighestWeightVectorStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParthasarathyRaoVaradarajanStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightAntitoneOfFiniteDimensionalStable
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RangeStable
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsDualLieFamilyStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantIntertwinesDualStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteWeightsInvariantHomStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantExtendingStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightsDominatedStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarmonicOfNormBoundStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceFactorTensorDecompStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualOperatorCommutesLieStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightTraceFormulaStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarmonicWeightsCoefficientStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedTraceWeylCharacterStatement
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.HighestVectorsRegularLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CliffordHighestWeightVectorStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParthasarathyRaoVaradarajanStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightAntitoneOfFiniteDimensionalStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RangeStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsDualLieFamilyStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantIntertwinesDualStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteWeightsInvariantHomStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantExtendingStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightsDominatedStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarmonicOfNormBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceFactorTensorDecompStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualOperatorCommutesLieStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightTraceFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarmonicWeightsCoefficientStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedTraceWeylCharacterStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -53,7 +57,7 @@ theorem hw_stable' {n : ℕ} {V : Type} [NormedAddCommGroup V] [InnerProductSpac
       have h4 : ∀ u : V, A (A u) = u := fun u => LinearMap.congr_fun hA2 u
       rw [h4] at h3
       rw [← h3, h4]
-    simp only [kF, LinearMap.add_apply, map_add, h1, h2]
+    simp only [kF, LinearMap.add_apply, map_add (f := _), h1, h2]
     abel
   intro x hx
   refine ⟨fun a => ?_, fun a b hab he => ?_⟩
@@ -93,7 +97,7 @@ theorem diagonal_mem_unitary {n : ℕ} (z : Fin n → ℂ) (hz : ∀ a, ‖z a�
     Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
   congr 1
   funext a
-  simp only [Pi.star_apply, RCLike.star_def]
+  change z a * (starRingEnd ℂ) (z a) = 1
   rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, hz a]
   simp
 
@@ -136,7 +140,7 @@ theorem countG : CountG := by
     intro i
     have := htr i.1 i.2
     unfold trOn at this
-    rwa [dif_pos (hB _)] at this
+    rwa [dite_eq_left (hB _)] at this
   haveI hWnt : ∀ i, Nontrivial (W i) := by
     intro i
     by_contra hnt
@@ -165,7 +169,7 @@ theorem countG : CountG := by
       ext ξ
       rw [hR0]
       have := hf i.1 i.2 ξ
-      rw [dif_pos i.2] at this
+      rw [dite_eq_left i.2] at this
       exact this
   let R := LinearEquiv.ofBijective R0 hbij
   let Fl := (flipA E A T).restrict (p := invA σ E) (q := invA σ E) hF
@@ -191,10 +195,10 @@ theorem countG : CountG := by
     rw [hno _ hμ'] at h1
     simpa using h1
   · have e1 : trOn (invA σ E) (flipA E A T) = LinearMap.trace ℂ (invA σ E) Fl := by
-      unfold trOn; rw [dif_pos hF]
+      unfold trOn; rw [dite_eq_left hF]
     have e2 : ∀ i : ι, trOn (hwSp E1 E2 (wtR i.1)) A = LinearMap.trace ℂ (H i) (a i) := by
       intro i
-      unfold trOn; rw [dif_pos (hA _)]
+      unfold trOn; rw [dite_eq_left (hA _)]
     rw [e1, htrace, hse, Finset.sum_image (fun x _ y _ h => wtR_injective h), Finset.mul_sum,
       ← Finset.sum_coe_sort (harmZ lam)]
     refine Finset.sum_congr rfl fun i _ => ?_

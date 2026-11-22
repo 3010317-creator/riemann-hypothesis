@@ -1,12 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberLeMinkowskiCount
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplexStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnimodularPlaneSplitAlongVectorStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardUnimodularGluingsTwoLinesLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardRealGeneratedIdealsLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorUnimodularHermitianLatticeRankTStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardRankOneHermitianLatticeClassesLeStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberLeMinkowskiCount
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnimodularPlaneSplitAlongVectorStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardUnimodularGluingsTwoLinesLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardRealGeneratedIdealsLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorUnimodularHermitianLatticeRankTStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardRankOneHermitianLatticeClassesLeStatement
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas
 
@@ -40,16 +44,16 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E]
 def LineRel (X Y : E × Submodule (𝓞 E) E) : Prop :=
   ∃ c : E, c ≠ 0 ∧ star c * Y.1 * c = X.1 ∧ ∀ y, c * y ∈ Y.2 ↔ y ∈ X.2
 
-theorem lineRel_equivalence : Equivalence (LineRel (E := E)) where
-  refl X := ⟨1, one_ne_zero, by simp, by simp⟩
-  symm := by
-    rintro X Y ⟨c, hc, h1, h2⟩
+theorem lineRel_equivalence : Equivalence (LineRel (E := E)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro X
+    exact ⟨1, one_ne_zero, by simp, by simp⟩
+  · rintro X Y ⟨c, hc, h1, h2⟩
     have hs : star c ≠ 0 := by simpa using hc
     refine ⟨c⁻¹, inv_ne_zero hc, ?_, fun y => ?_⟩
     · rw [← h1, star_inv₀]; field_simp
     · rw [← h2, mul_inv_cancel_left₀ hc]
-  trans := by
-    rintro X Y Z ⟨c, hc, h1, h2⟩ ⟨d, hd, k1, k2⟩
+  · rintro X Y Z ⟨c, hc, h1, h2⟩ ⟨d, hd, k1, k2⟩
     refine ⟨d * c, mul_ne_zero hd hc, ?_, fun y => ?_⟩
     · rw [← h1, ← k1, star_mul]; ring
     · rw [← h2, ← k2, mul_assoc]
@@ -92,16 +96,8 @@ theorem pull_isLattice {r : ℕ} (γ : GL (Fin r) E) (Λ : Submodule (𝓞 E) (F
       change (γ : Matrix (Fin r) (Fin r) E) *ᵥ (((γ⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) *ᵥ x) ∈ Λ
       rwa [mulVec_inv_cancel]
   refine ⟨hm ▸ h.fg.map _, ?_⟩
-  rw [eq_top_iff]
-  intro y _
-  have hy : (γ : Matrix (Fin r) (Fin r) E) *ᵥ y ∈ Submodule.span E (Λ : Set (Fin r → E)) := by
-    rw [h.span_eq_top]; trivial
-  have := Submodule.mem_map_of_mem (f := Matrix.mulVecLin
-      ((γ⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E)) hy
-  rw [Submodule.map_span, Matrix.mulVecLin_apply, inv_mulVec_cancel] at this
-  rw [hm]
-  exact this
-
+  intro s hs hli
+  exact (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem pull_unimodular {r : ℕ} (γ : GL (Fin r) E) (J : Matrix (Fin r) (Fin r) E)
     (Λ : Submodule (𝓞 E) (Fin r → E))
     (h : ∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, star y ⬝ᵥ (J *ᵥ x) ∈ (algebraMap (𝓞 E) E).range) (x : Fin r → E) :
@@ -152,13 +148,13 @@ abbrev Glued (X₁ X₂ : E × Submodule (𝓞 E) E) : Type :=
     (∀ x, x ∈ M ↔ ∀ y ∈ M, star y ⬝ᵥ ((Matrix.diagonal ![X₁.1, X₂.1]) *ᵥ x) ∈ (algebraMap (𝓞 E) E).range) ∧
     (∀ t, t ∈ X₁.2 ↔ ![t, 0] ∈ M) ∧ ∀ t, t ∈ X₂.2 ↔ ![0, t] ∈ M}
 
-variable (E) in
 
+variable (E) in
 def realIdeals (Y : ℝ) : Set (Ideal (𝓞 E)) :=
   {𝔫 : Ideal (𝓞 E) | 𝔫 ≠ ⊥ ∧ 𝔫 = Ideal.span {t | t ∈ 𝔫 ∧ star (t : E) = t} ∧ (Ideal.absNorm 𝔫 : ℝ) ≤ Y ^ 2}
 
-variable (E) in
 
+variable (E) in
 abbrev GlueData (Y : ℝ) : Type :=
   Σ 𝔫 : realIdeals E Y,
     Σ q₁ : LineCls (Submodule.map (Algebra.linearMap (𝓞 E) E) 𝔫.1),

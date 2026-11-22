@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AutomorphicArithmetic.CyclotomicBounds.RootsOfUnity.MassNumeric
-import Development.AutomorphicArithmetic.CyclotomicBounds.RootsOfUnity.HostTorsionOrderLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormOfClassSums
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.CyclotomicBounds.RootsOfUnity.MassNumeric
+public import Development.AutomorphicArithmetic.CyclotomicBounds.RootsOfUnity.HostTorsionOrderLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormOfClassSums
+
+@[expose] public section
 
 noncomputable section
 
@@ -52,8 +56,8 @@ theorem eventually_grpOf (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : Lev
   exact ⟨hk, GlobalTheory.ThetaIntegrand.levFn_eq_one β (Lev.finE V κ) L (fun PP hP => h3 PP (Finset.mem_union_left _ hP))
     fun PP hP => h3 PP (Finset.mem_union_right _ hP)⟩
 
-open scoped ComplexOrder in
 
+open scoped ComplexOrder in
 theorem integrableOn_lift {ψ : AddChar (AF D.host.F) ℂ} {V W : HSp D} {χS χT : (AE D)ˣ →* Circle}
     {ω : GA D V × GA D W →* Module.End ℂ (Datum.WO V W → ℂ)} (hω : Datum.IsWeilDatumO ψ V W χS χT ω) (hs : V.SigOK)
     (hp : V.IsPosDef) (c : CoefA V) (hc : c.Is) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank)
@@ -85,8 +89,8 @@ theorem exists_linear_lift {X X' Y B W Z κ₁ κ₂ : Type} [AddCommGroup X] [M
   obtain ⟨th, h⟩ := exists_linear_section (fun x y => ∀ a b, val a b (e y) = ∫ h in 𝓕, k a b h (E₂ (E₁ x) h) ∂ν)
     (fun a b => by simpa [k0] using hsm a b 0 0)
     (fun x x' y y' h h' a b => by
-      rw [map_add, hadd, h, h', ← integral_add (hint x a b) (hint x' a b)]
-      simp only [map_add, Pi.add_apply, kadd])
+      rw [map_add (f := _), hadd, h, h', ← integral_add (hint x a b) (hint x' a b)]
+      simp only [map_add (f := _), Pi.add_apply, kadd])
     (fun t x y h a b => by
       rw [map_smul, hsm, h, ← integral_const_mul]
       simp only [map_smul, Pi.smul_apply, ksm]) hex
@@ -127,7 +131,7 @@ def ptL (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) (BW : D.what₂.Tau → Ma
     (f : Datum.WO (Vc D i) (Wc D i) → ℂ) {X : Type} [AddCommGroup X] [Module ℂ X]
     (u : X →ₗ[ℂ] PolF D (Wc D i).rank (Vc D i).rank) : X →ₗ[ℂ] (Datum.WO (Vc D i) (Wc D i) → ℂ) where
   toFun w := ptAt R i σ BW f (u w)
-  map_add' w w' := by rw [map_add]; exact map_add _ _ _
+  map_add' w w' := by rw [map_add (f := _)]; exact map_add _ _ _
   map_smul' a w := by rw [map_smul]; exact map_smul _ _ _
 
 theorem ptL_apply (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) (BW : D.what₂.Tau → Matrix (Fin (Wc D i).rank) (Fin (Wc D i).rank) ℂ)

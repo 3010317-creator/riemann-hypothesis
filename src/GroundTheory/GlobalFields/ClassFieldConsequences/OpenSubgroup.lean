@@ -1,5 +1,9 @@
-import Mathlib
-import GroundTheory.GlobalFields.ClassFieldConsequences.CongruenceSubgroupLeStandardOpenSubgroup
+module
+
+public import Mathlib
+public import GroundTheory.GlobalFields.ClassFieldConsequences.CongruenceSubgroupLeStandardOpenSubgroup
+
+@[expose] public section
 
 open Topology Filter NumberField IsDedekindDomain Function
 open scoped NumberField.AdeleRing
@@ -93,12 +97,6 @@ theorem IdeleClassGroup.exists_map_congruenceSubgroup_le (H : Subgroup (IdeleCla
   obtain ⟨𝔪, h𝔪, hle⟩ := Modulus.exists_congruenceSubgroup_le (H.comap (IdeleClassGroup.mk K))
     (hH.preimage (IdeleClassGroup.continuous_mk K))
   exact ⟨𝔪, h𝔪, Subgroup.map_le_iff_le_comap.2 hle⟩
-
-theorem IdeleClassGroup.exists_map_congruenceSubgroup_le_of_finiteIndex
-    (H : Subgroup (IdeleClassGroup K)) (hH : IsOpen (H : Set (IdeleClassGroup K)))
-    (_ : H.FiniteIndex) :
-    ∃ 𝔪 : Modulus K, 𝔪.congruenceSubgroup.map (IdeleClassGroup.mk K) ≤ H :=
-  (IdeleClassGroup.exists_map_congruenceSubgroup_le H hH).imp fun _ h ↦ h.2
 
 theorem Modulus.isOpen_map_congruenceSubgroup (𝔪 : Modulus K) :
     IsOpen (𝔪.congruenceSubgroup.map (IdeleClassGroup.mk K) : Set (IdeleClassGroup K)) := by

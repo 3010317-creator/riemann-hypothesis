@@ -1,4 +1,8 @@
-import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+module
+
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+
+@[expose] public section
 
 noncomputable section
 
@@ -18,12 +22,10 @@ def l0s (V : HSp D) : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E) :=
 theorem mem_self_dual_lattice_set (V : HSp D) (x : Fin V.rank → D.host.E) : x ∈ l0s V ↔ x ∈ L0c D V := by
   simp [l0s, crd, L0c, Module.Basis.equivFun_symm_apply]
 
-theorem coe_self_dual_lattice_set (V : HSp D) : (l0s V : Set (Fin V.rank → D.host.E)) = L0c D V := by
-  ext x; exact mem_self_dual_lattice_set V x
-
 theorem hT_crd (V : HSp D) (x y : Fin V.rank → D.host.E) :
     V.hT (crd V x) (crd V y) = ∑ i, ∑ j, star (x i) * V.gram i j * y j := by
-  simp only [crd, Module.Basis.equivFun_symm_apply, map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [crd, Module.Basis.equivFun_symm_apply, map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply,
     LinearMap.smul_apply, smul_eq_mul, Finset.mul_sum, Formalism.BasicNotions.HSpace.gram]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -41,7 +43,7 @@ theorem self_dual_lattice_is_self_dual (V : HSp D) : Datum.IsSelfDualC V (l0s V)
       · intro hx; exact ⟨crd V x, hx, by simp⟩
       · rintro ⟨z, hz, rfl⟩; simpa using hz
     rw [heq]
-    refine ⟨hL.fg.map _, ?_⟩
+    refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (hL.fg.map _), span_eq_top := ?_ }
     have hc : (↑(Submodule.map (f.toLinearMap.restrictScalars (𝓞 D.host.E)) V.L0) : Set (Fin V.rank → D.host.E)) =
         f.toLinearMap '' (V.L0 : Set V.V) := by ext; simp
     rw [hc, Submodule.span_image, hL.span_eq_top, Submodule.map_top, LinearEquiv.range]

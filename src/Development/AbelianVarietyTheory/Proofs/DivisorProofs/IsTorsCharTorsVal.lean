@@ -1,8 +1,12 @@
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsCharZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsCharZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -19,8 +23,8 @@ namespace GlobalTheory.PtExt
 variable {p : ℕ} {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A] {G : PDivGroup p R}
   (t : G.TorsionTower A) (N : ℕ)
 
-open Classical in
 
+open Classical in
 def torsVal (b : G.A N) : Fn0 A := fun D _ _ x ↦
   if h : x ^ p ^ N = 1 then t.lift N x h b else 0
 

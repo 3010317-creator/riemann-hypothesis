@@ -1,15 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameAtOfUnrAt
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLatticeVacuumStabilizerSplittingCharacters
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSum
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksProperties
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinPartMulIncAMem
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplit
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameAtOfUnrAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLatticeVacuumStabilizerSplittingCharacters
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnramifiedEtaTildeOfOddExponentSum
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetTwoDiagBlocksProperties
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinPartMulIncAMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplit
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
+
+@[expose] public section
 
 noncomputable section
 
@@ -227,8 +231,8 @@ variable {Λ : AddSubgroup (WO S T)} {b : AE D} {α k₁ k₂ : GA D T} {Δ : Fi
 theorem act_inj (h : GA D T) : Function.Injective (actO S T 1 h) :=
   Function.LeftInverse.injective (g := actO S T 1 h⁻¹) fun u => by rw [← act_mul, inv_mul_cancel, act_one]
 
-open Classical in
 
+open Classical in
 theorem IsHalfReps.move (h₁ : ∀ u, u ∈ Λ ↔ actO S T 1 k₁ u ∈ Λ) (h₂ : ∀ u, u ∈ Λ ↔ actO S T 1 k₂ u ∈ Λ)
     (h : IsHalfReps Λ b α Δ) : IsHalfReps Λ b (k₁ * α * k₂) (Δ.image (actO S T 1 k₁)) := by
   have key : ∀ u, actO S T 1 (k₁ * α * k₂)⁻¹ (actO S T 1 k₁ u) ∈ Λ ↔ actO S T 1 α⁻¹ u ∈ Λ := fun u => by
@@ -272,7 +276,8 @@ theorem om_coset {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)}
   refine ⟨by rw [← hc]; convert card_halfReps hS hT hL hP hϖ hϖ2 hα h, ?_⟩
   have h3 := om_elt hW hS hT hL hP.1 hα hf hv h
   rw [Finset.card_image_of_injective Δ (act_inj k₁⁻¹), Finset.sum_image fun _ _ _ _ h => act_inj k₁⁻¹ h] at h3
-  rw [show ((1 : GA D S), k₁ * α * k₂) = (1, k₁) * (1, α) * (1, k₂) by simp, map_mul, map_mul, Module.End.mul_apply,
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [show ((1 : GA D S), k₁ * α * k₂) = (1, k₁) * (1, α) * (1, k₂) by simp, map_mul, map_mul, Module.End.mul_apply,
     Module.End.mul_apply, f₂, h3, map_smul, map_sum]
   congr 1
   refine Finset.sum_congr rfl fun u _ => ?_

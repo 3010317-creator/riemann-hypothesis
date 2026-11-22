@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.InjectiveOfIsCptGen
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StdSmoothMvPolynomial
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.InjectiveOfIsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StdSmoothMvPolynomial
+
+@[expose] public section
 
 set_option backward.isDefEq.respectTransparency false
 
@@ -17,11 +21,11 @@ section Dual
 
 variable {R R' : Type} [CommRing R] [CommRing R']
 
-@[simp] theorem dualMap_fst (φ : R →+* R') (a : DualNumber R) : (dualMap φ a).fst = φ a.fst := by
-  simp [dualMap]
+@[simp] theorem dualMap_fst (φ : R →+* R') (a : DualNumber R) : (GlobalTheory.CompanionTheory.Ar.dualMap φ a).fst = φ a.fst := by
+  simp [GlobalTheory.CompanionTheory.Ar.dualMap]
 
-@[simp] theorem dualMap_snd (φ : R →+* R') (a : DualNumber R) : (dualMap φ a).snd = φ a.snd := by
-  simp [dualMap]
+@[simp] theorem dualMap_snd (φ : R →+* R') (a : DualNumber R) : (GlobalTheory.CompanionTheory.Ar.dualMap φ a).snd = φ a.snd := by
+  simp [GlobalTheory.CompanionTheory.Ar.dualMap]
 
 @[simp] theorem epsMul_fst (c : R) (a : DualNumber R) : (epsMul c a).fst = a.fst := by
   simp [epsMul]
@@ -29,7 +33,7 @@ variable {R R' : Type} [CommRing R] [CommRing R']
 @[simp] theorem epsMul_snd (c : R) (a : DualNumber R) : (epsMul c a).snd = c * a.snd := by
   simp [epsMul]
 
-theorem dualMap_injective {φ : R →+* R'} (h : Function.Injective φ) : Function.Injective (dualMap φ) := by
+theorem dualMap_injective {φ : R →+* R'} (h : Function.Injective φ) : Function.Injective (GlobalTheory.CompanionTheory.Ar.dualMap φ) := by
   intro a b e
   have e1 := congrArg TrivSqZeroExt.fst e
   have e2 := congrArg TrivSqZeroExt.snd e
@@ -47,7 +51,7 @@ theorem spec_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A �
   rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
 
 theorem spec_dual_alg (φ : R →+* R') :
-    Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber R))) =
+    Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber R))) =
       Spec.map (CommRingCat.ofHom (algebraMap R' (DualNumber R'))) ≫ Spec.map (CommRingCat.ofHom φ) := by
   rw [spec_comp, spec_comp]
   congr 2
@@ -55,7 +59,7 @@ theorem spec_dual_alg (φ : R →+* R') :
 
 theorem spec_fst_dual (φ : R →+* R') :
     Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom R' R' R').toRingHom) ≫
-        Spec.map (CommRingCat.ofHom (dualMap φ)) =
+        Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) =
       Spec.map (CommRingCat.ofHom φ) ≫ Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom R R R).toRingHom) := by
   rw [spec_comp, spec_comp]
   congr 2
@@ -78,8 +82,8 @@ theorem spec_fst_eps (c : R) :
   exact epsMul_fst c a
 
 theorem spec_dual_eps (φ : R →+* R') (c : R) :
-    Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ Spec.map (CommRingCat.ofHom (epsMul c)) =
-      Spec.map (CommRingCat.ofHom (epsMul (φ c))) ≫ Spec.map (CommRingCat.ofHom (dualMap φ)) := by
+    Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ Spec.map (CommRingCat.ofHom (epsMul c)) =
+      Spec.map (CommRingCat.ofHom (epsMul (φ c))) ≫ Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) := by
   rw [spec_comp, spec_comp]
   congr 2
   refine RingHom.ext fun a => ?_
@@ -88,7 +92,7 @@ theorem spec_dual_eps (φ : R →+* R') (c : R) :
 variable {S : Scheme.{0}} {x : Spec (CommRingCat.of R) ⟶ S} {x' : Spec (CommRingCat.of R') ⟶ S}
 
 def epsBase (φ : R →+* R') (h : Spec.map (CommRingCat.ofHom φ) ≫ x = x') : epsAt x' ⟶ epsAt x :=
-  Over.homMk (Spec.map (CommRingCat.ofHom (dualMap φ))) (by
+  Over.homMk (Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ))) (by
     change _ ≫ _ ≫ x = _ ≫ x'
     rw [← Category.assoc, spec_dual_alg, Category.assoc, h])
 
@@ -113,7 +117,7 @@ theorem isTanAt_iff (v : epsAt x ⟶ G) : IsTanAt G x v ↔ epsZero x ≫ v = 1 
 omit [GrpObj G] in
 theorem left_eq_iff (φ : R →+* R') (h : Spec.map (CommRingCat.ofHom φ) ≫ x = x') (w : epsAt x' ⟶ G)
     (v : epsAt x ⟶ G) :
-    w.left = Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ v.left ↔ w = epsBase φ h ≫ v :=
+    w.left = Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ v.left ↔ w = epsBase φ h ≫ v :=
   ⟨fun h => Over.OverMorphism.ext h, fun h => congrArg (fun q => q.left) h⟩
 
 theorem isTanAt_one : IsTanAt G x 1 := (isTanAt_iff _).2 (comp_one _)
@@ -165,7 +169,7 @@ theorem ext_of_injective [IsLocalRing R] {φ : R →+* R'} (hφ : Function.Injec
 
 theorem tan_ext [IsLocalRing R] {φ : R →+* R'} (hφ : Function.Injective φ)
     {v v' : epsAt x ⟶ G} (h : IsTanAt G x v) (h' : IsTanAt G x v')
-    (e : Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ v.left = Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ v'.left) :
+    (e : Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ v.left = Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ v'.left) :
     v = v' := by
   have := isLocalRing_dual (R := R)
   have : IsLocalHom (CommRingCat.ofHom (TrivSqZeroExt.fstHom R R R).toRingHom).hom :=

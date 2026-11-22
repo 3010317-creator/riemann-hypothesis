@@ -1,5 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FlatSpaceComponents
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FlatSpaceComponents
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH NumberField IsDedekindDomain
 open scoped nonZeroDivisors
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -10,8 +15,8 @@ section General
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E]
 
-omit [NumberField E] in
 
+omit [NumberField E] in
 theorem star_mem_int {x : E} (h : x ∈ (algebraMap (𝓞 E) E).range) : star x ∈ (algebraMap (𝓞 E) E).range := by
   obtain ⟨b, rfl⟩ := h
   have hb : IsIntegral ℤ (algebraMap (𝓞 E) E b) := b.isIntegral_coe
@@ -111,7 +116,8 @@ theorem IsHyp.proj_mem (H : IsHyp Y U e f) (y : Y.V) :
     y - ∑ i, Y.hT (f i) y • e i - ∑ i, Y.hT (e i) y • f i ∈ U := by
   rw [H.mem]
   intro i
-  simp [map_sum, H.ee, H.ff, H.fe, hT_ef H.fe]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp [map_sum, H.ee, H.ff, H.fe, hT_ef H.fe]
 
 theorem IsHyp.pairing (H : IsHyp Y U e f) (β γ β' γ' : Fin ρ → E) {w w' : Y.V} (hw : w ∈ U) (hw' : w' ∈ U) :
     Y.hT (∑ i, β' i • e i + w' + ∑ i, γ' i • f i) (∑ i, β i • e i + w + ∑ i, γ i • f i) =
@@ -120,13 +126,14 @@ theorem IsHyp.pairing (H : IsHyp Y U e f) (β γ β' γ' : Fin ρ → E) {w w' :
   have h2 : ∀ i, Y.hT (f i) w = 0 := fun i => ((H.mem w).1 hw i).2
   have h3 : ∀ i, Y.hT w' (e i) = 0 := fun i => by rw [hT_swap, ((H.mem w').1 hw' i).1, star_zero]
   have h4 : ∀ i, Y.hT w' (f i) = 0 := fun i => by rw [hT_swap, ((H.mem w').1 hw' i).2, star_zero]
-  simp [map_sum, LinearMap.sum_apply, H.ee, H.ff, H.fe, hT_ef H.fe, h1, h2, h3, h4, mul_comm, starRingEnd_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp [map_sum, LinearMap.sum_apply, H.ee, H.ff, H.fe, hT_ef H.fe, h1, h2, h3, h4, mul_comm, starRingEnd_apply]
 
 theorem IsHyp.selfDual (H : IsHyp Y U e f) {L : Submodule (𝓞 E) Y.V} (hfg : L.FG)
     (hsp : Submodule.span E (L : Set Y.V) = U)
     (hL : ∀ y ∈ U, y ∈ L ↔ ∀ x ∈ L, Y.hD x y ∈ (algebraMap (𝓞 E) E).range)
     {J : Fin ρ → FractionalIdeal (𝓞 E)⁰ E} (hJ0 : ∀ i, J i ≠ 0) (hJ : ∀ i, ∀ x ∈ J i, star x ∈ J i) :
-    Submodule.IsLattice E (idealSum Y e J ⊔ L ⊔ idealSum Y f fun i => (J i)⁻¹) ∧
+    Submodule.IsFullLattice E (idealSum Y e J ⊔ L ⊔ idealSum Y f fun i => (J i)⁻¹) ∧
       ∀ y, y ∈ (idealSum Y e J ⊔ L ⊔ idealSum Y f fun i => (J i)⁻¹) ↔
         ∀ x ∈ (idealSum Y e J ⊔ L ⊔ idealSum Y f fun i => (J i)⁻¹), Y.hT x y ∈ (algebraMap (𝓞 E) E).range := by
   have hLU : ∀ x ∈ L, x ∈ U := fun x hx => hsp ▸ Submodule.subset_span hx
@@ -141,7 +148,7 @@ theorem IsHyp.selfDual (H : IsHyp Y U e f) {L : Submodule (𝓞 E) Y.V} (hfg : L
     obtain ⟨β, hβ, rfl⟩ := mem_idealSum.1 hb
     obtain ⟨γ, hγ, rfl⟩ := mem_idealSum.1 hc
     exact ⟨β, γ, w, hw, hβ, hγ, rfl⟩
-  refine ⟨⟨((fg_idealSum e J).sup hfg).sup (fg_idealSum f _), ?_⟩, fun y => ⟨fun hy x hx => ?_, fun hy => ?_⟩⟩
+  refine ⟨{ toIsLattice := Submodule.IsLattice.of_fg E (((fg_idealSum e J).sup hfg).sup (fg_idealSum f _)), span_eq_top := ?_ }, fun y => ⟨fun hy x hx => ?_, fun hy => ?_⟩⟩
   · rw [eq_top_iff]
     intro y _
     rw [hdec y]
@@ -179,7 +186,8 @@ theorem IsHyp.selfDual (H : IsHyp Y U e f) {L : Submodule (𝓞 E) Y.V} (hfg : L
       have h2 : ∀ i, Y.hT (f i) x = 0 := fun i => ((H.mem x).1 (hLU x hx) i).2
       rw [← hT_swap] at this
       have h3 : Y.hD x (y - ∑ i, Y.hT (f i) y • e i - ∑ i, Y.hT (e i) y • f i) = Y.hT y x := by
-        simp [HSpace.hD, map_sum, LinearMap.sum_apply, h1, h2]
+        set_option synthInstance.maxHeartbeats 100000 in
+          simp [HSpace.hD, map_sum, LinearMap.sum_apply, h1, h2]
       rwa [h3]
     · refine mem_idealSum.2 ⟨_, fun i => ?_, rfl⟩
       rw [FractionalIdeal.mem_inv_iff (hJ0 i)]
@@ -216,23 +224,29 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents Formalism.L2.He
 
 variable {D : D7}
 
-theorem isSelfDualC_crdLat (Y : HSp D) {Λ : Submodule (𝓞 D.host.E) Y.V} (h : Submodule.IsLattice D.host.E Λ)
+theorem isSelfDualC_crdLat (Y : HSp D) {Λ : Submodule (𝓞 D.host.E) Y.V} (h : Submodule.IsFullLattice D.host.E Λ)
     (hd : ∀ y, y ∈ Λ ↔ ∀ x ∈ Λ, Y.hT x y ∈ (algebraMap (𝓞 D.host.E) D.host.E).range) :
     Formalism.IndefR.Datum.IsSelfDualC Y (crdLat Y Λ) := by
   have hm : ∀ y, crd Y y ∈ crdLat Y Λ ↔ y ∈ Λ := fun y =>
     ⟨fun ⟨x, hx, hxy⟩ => (crd Y).injective hxy ▸ hx, fun hy => ⟨y, hy, rfl⟩⟩
-  refine ⟨⟨h.fg.map _, ?_⟩, fun y => ?_⟩
-  · have h1 : (crdLat Y Λ : Set (Fin Y.rank → D.host.E)) = Y.frame.equivFun.toLinearMap '' (Λ : Set Y.V) := rfl
-    rw [h1, ← Submodule.map_span, h.span_eq_top, Submodule.map_top, LinearEquiv.range]
-  · obtain ⟨y, rfl⟩ := (crd Y).surjective y
-    rw [hm, hd]
-    constructor
-    · rintro H _ ⟨x, hx, rfl⟩
-      obtain ⟨b, hb⟩ := H x hx
-      exact ⟨b, hb.trans (hT_crd D.sp.cm Y x y)⟩
-    · intro H x hx
-      obtain ⟨b, hb⟩ := H (crd Y x) ((hm x).2 hx)
-      exact ⟨b, hb.trans (hT_crd D.sp.cm Y x y).symm⟩
+  have hcrd : Submodule.IsFullLattice D.host.E (crdLat Y Λ) := by
+    refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (h.fg.map _), span_eq_top := ?_ }
+    have hs : Submodule.span D.host.E ((crdLat Y Λ : Submodule _ _) : Set (Fin Y.rank → D.host.E)) =
+        (Submodule.span D.host.E (Λ : Set Y.V)).map (crd Y).toLinearMap := by
+      rw [Submodule.map_span]
+      rfl
+    rw [hs, h.span_eq_top, Submodule.map_top]
+    exact LinearMap.range_eq_top.mpr (crd Y).surjective
+  refine ⟨hcrd, fun y => ?_⟩
+  obtain ⟨y, rfl⟩ := (crd Y).surjective y
+  rw [hm, hd]
+  constructor
+  · rintro H _ ⟨x, hx, rfl⟩
+    obtain ⟨b, hb⟩ := H x hx
+    exact ⟨b, hb.trans (hT_crd D.sp.cm Y x y)⟩
+  · intro H x hx
+    obtain ⟨b, hb⟩ := H (crd Y x) ((hm x).2 hx)
+    exact ⟨b, hb.trans (hT_crd D.sp.cm Y x y).symm⟩
 
 theorem isHyp_flatSp {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {z : Y.V} {ρ : ℕ} {e f : Fin ρ → Y.V} {c : D.host.E}
     (hc : c ≠ 0) (H : IsDec Y X ι (fun _ : Fin 1 => z) c e f) : IsHyp Y (flatSp Y X ι z) e f := by
@@ -248,7 +262,7 @@ theorem isHyp_flatSp {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {z : Y.V} {ρ
     simp only [HSpace.hD] at h1 h2
     simp [h1.1, h1.2, h2.1, h2.2]
   · have hinj : Function.Injective ι := by
-      rw [injective_iff_map_eq_zero]
+      set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
       intro x hx
       refine X.nondeg.1 x fun y => ?_
       rw [← H.isom x y, hx]

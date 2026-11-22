@@ -1,5 +1,14 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JBConjTranspose
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAdmOnOfFiniteDimensional
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdmissibleOfIwasawaDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDensityOfImmersion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapMemKfin
+
+@[expose] public section
 
 noncomputable section
 

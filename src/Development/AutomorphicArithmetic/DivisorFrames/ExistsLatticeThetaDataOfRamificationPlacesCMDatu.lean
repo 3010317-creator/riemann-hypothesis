@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicArithmetic.LocalEmbeddings.FinMatchDefs
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.LocalEmbeddings.FinMatchDefs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints GlobalTheory.Grid GlobalTheory.ChainFr GlobalTheory.SquareComm GlobalTheory.FinMatch
@@ -50,8 +54,8 @@ private theorem herm_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
     rw [eJ]
     exact GlobalTheory.TripleSpace.isCartan_neg_conj (hs _)
 
-open scoped ComplexOrder in
 
+open scoped ComplexOrder in
 private theorem skew_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau)
     (hB : ∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) (X : HSp D) {k : ℕ} (e : Fin k ≃ Fin X.rank)
     (Λ₀ : Submodule (𝓞 D.host.E) (Fin X.rank → D.host.E)) (hA : IsSelfDualC X Λ₀)

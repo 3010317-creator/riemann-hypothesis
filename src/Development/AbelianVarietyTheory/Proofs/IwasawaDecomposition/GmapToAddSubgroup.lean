@@ -1,8 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAlgOfFinite
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ThetaMovedCosetIndicatorVacuumShape
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLiftHalfLatticeRational
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAlgOfFinite
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ThetaMovedCosetIndicatorVacuumShape
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLiftHalfLatticeRational
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker Formalism.L2.Th1.H GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable GlobalTheory.MomT GlobalTheory.Mem.Col2.JetEx GlobalTheory.MomT.ThShape
 
 noncomputable section
@@ -68,7 +73,8 @@ theorem toMatrix_unitary {n : ℕ} {g : Sp E n ≃ₗ[E] Sp E n} (hg : g ∈ UF 
     ((LinearMap.toMatrix' g.toLinearMap).map τ).conjTranspose * (LinearMap.toMatrix' g.toLinearMap).map τ = 1 := by
   ext i j
   have h := congrArg τ (hg (Pi.single i 1) (Pi.single j 1))
-  simp only [Formalism.L2.Col.hStd, LinearMap.mk₂'ₛₗ_apply, map_sum, map_mul, hτ] at h
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Formalism.L2.Col.hStd, LinearMap.mk₂'ₛₗ_apply, map_sum, map_mul, hτ] at h
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.map_apply, LinearMap.toMatrix'_apply, LinearEquiv.coe_coe]
   refine Eq.trans ?_ (h.trans ?_)
   · rfl
@@ -204,7 +210,7 @@ theorem thInd_index : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Finset (Heig
       · rfl
       · rintro _ ⟨y, hy, rfl⟩ _ ⟨l, hl, rfl⟩ ⟨l', hl', e⟩
         obtain rfl := hinj e
-        rw [← map_add]
+        rw [← map_add (f := _)]
         exact congrFun (hinv y hy l' hl hl') z
     rw [e1, Finset.mul_sum, xiS, sumU]
     refine Finset.sum_congr rfl fun v hv => ?_
@@ -256,8 +262,8 @@ theorem index_per_ne_zero {X : Fields} (A : Amb X) {a b : ℕ} {S : Finset (Heig
 theorem thIndEq_of_vacEq : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S : Finset (HeightOneSpectrum (𝓞 X.E))) (M : ℕ),
     X.Ok → A.LaHyp a b S → A.AA ≠ ⊥ → 0 < M → VacEq A a b → A.ThIndEq a b S M := by
   intro X A a b S M hX hL hAA hM hV γ γ' N N' c x ⟨hN, hN', hc, _, hx⟩ z
-  have hgN : IsSdLat (gmap γ.1 N) := ⟨gmap_lattice _ _ hN.1, by rw [IsUnimodular, dual_gmap _ γ.2, hN.2]⟩
-  have hgN' : IsSdLat (gmap γ'.1 N') := ⟨gmap_lattice _ _ hN'.1, by rw [IsUnimodular, dual_gmap _ γ'.2, hN'.2]⟩
+  have hgN : IsSdLat (gmap γ.1 N) := ⟨gmap_fullLattice _ _ hN.1, by rw [IsUnimodular, dual_gmap _ γ.2, hN.2]⟩
+  have hgN' : IsSdLat (gmap γ'.1 N') := ⟨gmap_fullLattice _ _ hN'.1, by rw [IsUnimodular, dual_gmap _ γ'.2, hN'.2]⟩
   obtain ⟨t, ht, htx⟩ := exists_lift_halfAO X A a b S N N' M c hL.2.2.2.2.1 hAA hL.2.2.1 hL.2.2.2.1 hN hN' hM hc x hx
   obtain ⟨R, hR⟩ := GlobalTheory.RepsMod.exists_reps _ _ (index_per_ne_zero A hL hN hN' hc)
   have hinj : Function.Injective (conjH γ.1 γ'.1).toLinearMap.toAddMonoidHom := (conjH γ.1 γ'.1).injective

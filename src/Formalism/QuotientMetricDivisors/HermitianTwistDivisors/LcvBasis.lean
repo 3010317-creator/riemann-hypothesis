@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.ProdFormula
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HtGram
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
-import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.ProdFormula
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HtGram
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain Formalism.HermitianLatticesTheory
 
@@ -319,8 +323,8 @@ end Formalism.DivisionValues.LocalCovolumeBasis
 
 namespace Formalism.DivisionValues
 
-open LocalCovolumeBasis in
 
+open LocalCovolumeBasis in
 theorem covolume_via_basis : LcvBasis := by
   intro K _ _ _ _ d X hX L hL e he
   classical

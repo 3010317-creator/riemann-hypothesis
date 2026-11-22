@@ -1,6 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SameSetup
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBasisAtTransport
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SameSetup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBasisAtTransport
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links IsDedekindDomain NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.ExportSeries GlobalTheory.SeriesTie GlobalTheory.TwInputs GlobalTheory.TwInputs.Move
 open Formalism.MainNotions.IntegralHeckeForms (TwOK ClsQ HkIdx V0 Fm0 FullRk SgJ BasisOf)
 open Formalism.L2.Host (embLL0 CharFrame)
@@ -11,8 +16,6 @@ set_option maxHeartbeats 800000
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 noncomputable section
-
-local macro:max "kc% " e:term:max : term => `((by kexactB $e))
 
 namespace GlobalTheory.TwInputs.Move.TieUp
 
@@ -46,8 +49,8 @@ theorem vec_up {S T : HSp D} (B : Base S T) (Q ω) :
   rw [e]
   exact kc% rfl
 
-open Classical in
 
+open Classical in
 theorem vecAt_up {S T : HSp D} (B : Base S T) (Q φ) :
     (baseUp r B).vecAt (kc% Q) (kc% φ) = kc% (B.vecAt Q φ) := by
   show (baseUp r B).F.vec (baseUp r B).G (kc% (B.de.Q ∪ Q)) (kc% (B.locFn Q φ)) = _
@@ -191,13 +194,6 @@ def cellUp {hρ : ρ.Good} (hρ' : (setupUp r ρ).Good) {rd : Rd ρ D.nexp i j b
 theorem cellUp_rdV {hρ : ρ.Good} (hρ' : (setupUp r ρ).Good) {rd : Rd ρ D.nexp i j b} (t : CellTie hρ D.nexp rd) :
     HEq t.rdV (cellUp r hc hρ' t).rdV := HEq.rfl
 
-include hc in
-
-theorem rat_up (hρ : ρ.Good) (hρ' : (setupUp r ρ).Good) (rd : Rd ρ D.nexp i j b) :
-    SeriesTie.Rat hρ' (Y := (overD D r).nexp) (i := (by with_unfolding_all exact (i :))) (j := (by with_unfolding_all exact (j :))) (b := b) ((by with_unfolding_all exact (rd :))) ↔ SeriesTie.Rat hρ rd := by
-  conv_lhs => delta SeriesTie.Rat RatBase RatTwist RatUniv
-  rewrite [liftSetupOverExtendedData_isDatum_eq ρ i j b hc, liftSetupOverExtendedData_theta_eq r ρ i j b, liftSetupOverExtendedData_gens_eq r ρ i j b, liftSetupOverExtendedData_xi_eq r ρ i j b]
-  exact (by with_unfolding_all exact ((Iff.refl (SeriesTie.Rat hρ rd)) :))
 
 end Cell
 

@@ -1,21 +1,28 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall
-import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
-import Development.AutomorphicSpectrum.Definitions.MetricPeriods.VolumeInputs
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogXpow
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StrictWeightGrowthBoundStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightThresholdLimitCoefficientsStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarization
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefOnGenericOfSemipos
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSectionSupBound
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefAmpleGeneric
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PLiftBirationalAmple
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
-import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFibreNormDehomRoots
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall
+public import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsEmbeddingPieces
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogXpow
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StrictWeightGrowthBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightThresholdLimitCoefficientsStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarization
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefOnGenericOfSemipos
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSectionSupBound
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefAmpleGeneric
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PLiftBirationalAmple
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
+public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFibreNormDehomRoots
+
+@[expose] public section
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug
 
@@ -139,7 +146,7 @@ theorem exists_form_basis {L : Type} [Field L] (y : (Σ k, ι k) → Ω) (φ : L
     intro g
     induction g using MvPolynomial.induction_on with
     | C a => simpa using intCast_mem B a
-    | add p q hp hq => rw [map_add]; exact add_mem hp hq
+    | add p q hp hq => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hp hq
     | mul_X p i hp =>
       rw [map_mul, aeval_X]
       exact mul_mem hp (Algebra.subset_adjoin ⟨i, rfl⟩)
@@ -253,7 +260,7 @@ theorem eq_zero_of_trace {L : Type} [Field L] [CharZero L] (φ : L →+* Ω) (d 
       obtain ⟨i, rfl⟩ := hw
       simpa using hx i
     | zero => simp
-    | add a b _ _ ha hb => rw [map_add, ha, hb, add_zero]
+    | add a b _ _ ha hb => rw [map_add (f := _), ha, hb, add_zero]
     | smul t a _ ha => rw [map_smul, ha, smul_zero]
   exact (traceForm_nondegenerate L Ω).1 x hall
 

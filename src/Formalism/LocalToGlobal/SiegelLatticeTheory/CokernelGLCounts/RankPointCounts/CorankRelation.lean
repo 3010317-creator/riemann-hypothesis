@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.StepHeightOfNormOne
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SatGram
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.DensInertDisplayHolds
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PairCorankPositivity.FinrankOrthAddLe
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.StepHeightOfNormOne
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SatGram
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.DensInertDisplayHolds
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PairCorankPositivity.FinrankOrthAddLe
+
+@[expose] public section
 
 noncomputable section
 
@@ -26,7 +30,8 @@ theorem span_pair_orth_eq_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') 
   have hc : Formalism.L2.SG.GramJoint.gramFF F F' *ᵥ c = 0 := by
     funext i
     have h := ho i
-    rw [map_sum] at h
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum] at h
     simp only [Matrix.mulVec, dotProduct, Pi.zero_apply]
     rw [← h]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -207,7 +212,7 @@ theorem mem_Xsp_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.H
     x ∈ Xsp (Formalism.L2.SG.TermOp.mapLF γ F) ↔ γ.symm x ∈ Xsp F := by
   have h1 : Xsp (Formalism.L2.SG.TermOp.mapLF γ F) = (Xsp F).map (γ : S.V →ₗ[E] S.V) := by
     unfold Formalism.L2.SG.TermOp.mapLF
-    rw [dif_pos hγ]
+    rw [dite_eq_left hγ]
     show Submodule.span E (Set.range fun a => γ (F.fl.e a)) =
       (Submodule.span E (Set.range F.fl.e)).map (γ : S.V →ₗ[E] S.V)
     rw [Submodule.map_span, ← Set.range_comp]

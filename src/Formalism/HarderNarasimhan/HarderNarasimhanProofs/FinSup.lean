@@ -1,4 +1,8 @@
-import Formalism.HarderNarasimhan.DegSupermodZ
+module
+
+public import Formalism.HarderNarasimhan.DegSupermodZ
+
+@[expose] public section
 
 open Module Submodule
 
@@ -41,7 +45,7 @@ theorem finite_supremum_slopes : FinSup := by
     rw [← heq] at hm
     exact hm
   haveI : WellFoundedGT (Set.Iic L) := hg.wellFoundedGT
-  obtain ⟨t', ht', he⟩ := CompleteLattice.WellFoundedGT.isSupFiniteCompact (Set.Iic L)
+  obtain ⟨t', ht', he⟩ := WellFoundedGT.isSupFiniteCompact (α := Set.Iic L)
     {x | (x : Submodule R V) ∈ S}
   have hU : (t'.image Subtype.val).sup id ≤ L := by
     refine Finset.sup_le fun N hN => ?_

@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Foundations.RootOfUnityEightQMemCoeffGaloisSubfield
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Foundations.RootOfUnityEightQMemCoeffGaloisSubfield
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,7 +18,7 @@ structure Cols0 (B : Pre) where
   A_Dstar : ∀ u, (mem u).A.Dstar = B.Dstar
   A_GamP : ∀ u, (mem u).A.GamP = B.GamP
   clsLat : letI := B.host.cmStar; ∀ u i, (mem u).C.cls i → Submodule (𝓞 B.host.E) (B.sp.X i).V
-  clsLat_lat : letI := B.host.cmStar; ∀ u i c, Submodule.IsLattice B.host.E (clsLat u i c)
+  clsLat_lat : letI := B.host.cmStar; ∀ u i c, Submodule.IsFullLattice B.host.E (clsLat u i c)
 
   Tup : Type
   mu0 : Tup

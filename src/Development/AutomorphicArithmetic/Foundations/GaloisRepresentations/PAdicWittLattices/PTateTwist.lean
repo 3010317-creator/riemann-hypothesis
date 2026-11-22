@@ -1,7 +1,11 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
-import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsGTateIsoTwistOfSimilitude
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntIntCast
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericHeckeMap
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsGTateIsoTwistOfSimilitude
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntIntCast
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericHeckeMap
+
+@[expose] public section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen GlobalTheory.LKTrip GlobalTheory.LKGeo UpperTheory.Gal.G3
@@ -63,12 +67,12 @@ theorem UpperTheory.Gal.G3.pTateTwist :
       have e1 : inAf D (g.f n y) = L.actG u⁻¹ (inAf D y) - n • w := by
         rw [hgw]
         abel
-      rw [hx, e1, map_add, map_sub, map_nsmul, map_nsmul, act_inv, map_sub, smul_sub]
+      rw [hx, e1, map_add (f := _), map_sub, map_nsmul, map_nsmul, act_inv, map_sub, smul_sub]
       abel
     · rintro ⟨v, hv, hxv⟩
       apply LatDiv.eq_nsmul_of_inAf_eq_nsmul p D _ n hn hnp (w + L.actG u⁻¹ v) (add_mem hw (intUi _ hv))
       have hx : inAf D x = L.actG u⁻¹ (inAf D y) + n • L.actG u⁻¹ v := by
-        rw [← map_nsmul, ← map_add, ← hxv, inv_act]
+        rw [← map_nsmul, ← map_add (f := _), ← hxv, inv_act]
       refine (GlobalTheory.HeckeApprox.inAf_sub D x (g.f n y)).trans ?_
       rw [hx, hgw, smul_add]
       abel

@@ -1,15 +1,14 @@
-import Development.EtaleCohomology.TateTwists.EtaleTensorCyclesLocallyLiftOfRowExactAndDescent
+module
+
+public import Development.EtaleCohomology.TateTwists.EtaleTensorCyclesLocallyLiftOfRowExactAndDescent
+
+@[expose] public section
 
 noncomputable section
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex GlobalTheory.EtC
 open scoped TensorProduct DirectSum
 
 namespace LateralTheory.EtaleFoundations
-
-local macro "TI " w:term:max : term => `({p : ℤ × ℤ // p.1 + p.2 = $w})
-
-local macro "TF " C:term:max J:term:max U:term:max w:term:max : term =>
-  `(fun q : {p : ℤ × ℤ // p.1 + p.2 = $w} => Sec (HomologicalComplex.X $C q.1.1) $U ⊗[ULift.{1} _] Sec (HomologicalComplex.X $J q.1.2) $U)
 
 def stD {R : Type} [CommRing R] (C J : Cx R) (U : Scheme.{0}) (w w' : ℤ) (h : w + 1 = w') :
     Tens C J U w →ₗ[ULift.{1} R] Tens C J U w' :=
@@ -45,7 +44,7 @@ theorem stD_lift {R : Type} [CommRing R] {C J T : Cx R} (τ : Pair C J T) (U : S
     obtain ⟨⟨a, b⟩, hab⟩ := p
     refine TensorProduct.ext' fun u v => ?_
     simp only [LinearMap.comp_apply]
-    rw [stD_lof, map_add, map_zsmul, lift_lof, lift_lof, lift_lof]
+    rw [stD_lof, map_add (f := _), map_zsmul, lift_lof, lift_lof, lift_lof]
     simp only [TensorProduct.map_tmul, TensorProduct.lift.tmul, LinearMap.id_apply]
     have := τ.leibniz U a b w hab u v
     rw [Units.smul_def] at this
@@ -62,7 +61,7 @@ theorem stD_res {R : Type} [CommRing R] (C J : Cx R) {V U : Scheme.{0}} (g : V �
     have n2 := stair_map_res (J.d b (b + 1)) g v
     simp only [Sec.map, Sec.res] at n1 n2
     simp only [LinearMap.comp_apply]
-    rw [Tens.res, Tens.res, DirectSum.lmap_lof, stD_lof, stD_lof, map_add, map_zsmul, DirectSum.lmap_lof, DirectSum.lmap_lof]
+    rw [Tens.res, Tens.res, DirectSum.lmap_lof, stD_lof, stD_lof, map_add (f := _), map_zsmul, DirectSum.lmap_lof, DirectSum.lmap_lof]
     simp only [TensorProduct.map_tmul, LinearMap.id_apply]
     rw [n1, n2]
   exact LinearMap.congr_fun key y
@@ -91,7 +90,8 @@ theorem stD_low {R : Type} [CommRing R] (C J : Cx R) (U : Scheme.{0}) (w w' : �
     ∀ q : TI w', n + 1 < q.1.1 → stD C J U w w' h y q = 0 := by
   classical
   intro q hq
-  rw [← DirectSum.sum_support_of y, map_sum, DFinsupp.finset_sum_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [← DirectSum.sum_support_of y, map_sum, DFinsupp.finset_sum_apply]
   refine Finset.sum_eq_zero fun p hp => ?_
   have hpn : p.1.1 ≤ n := by
     by_contra hc; exact (DFinsupp.mem_support_iff.1 hp) (hy p (by omega))
@@ -108,7 +108,8 @@ theorem stD_top {R : Type} [CommRing R] (C J : Cx R) (U : Scheme.{0}) (w w' : �
       TensorProduct.map ((C.d s (s + 1)).hom.app (op U)).hom LinearMap.id (y ⟨(s, w - s), h0⟩) := by
   classical
   conv_lhs => rw [← DirectSum.sum_support_of y]
-  rw [map_sum, DFinsupp.finset_sum_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, DFinsupp.finset_sum_apply]
   have hz : ∀ p ∈ DFinsupp.support y, p ≠ ⟨(s, w - s), h0⟩ →
       stD C J U w w' h (DirectSum.of (TF C J U w) p (y p)) ⟨(s + 1, w - s), h1⟩ = 0 := by
     intro p hp hne

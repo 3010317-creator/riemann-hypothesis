@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
-import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+module
+
+public import Mathlib
+public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+
+@[expose] public section
 
 noncomputable section
 open NumberField Formalism.HermitianLatticeCounting.S6 GlobalTheory.HermLat
@@ -27,7 +31,7 @@ def cf (K : Type) [Field K] [NumberField K] : ℝ := 1 + Real.logb 2 (Module.fin
 def HasOrtho (K : Type) [Field K] [NumberField K] [StarRing K] : Prop :=
   ∀ (W : Type) [AddCommGroup W] [Module K W] [FiniteDimensional K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     (k : W →ₗ⋆[K] W →ₗ[K] K), k.IsSymm → GlobalTheory.Mass.PD k →
-    (∃ L : Submodule (𝓞 K) W, Submodule.IsLattice K L ∧ Formalism.HermitianLatticesTheory.IsUnimodular k L) →
+    (∃ L : Submodule (𝓞 K) W, Submodule.IsFullLattice K L ∧ Formalism.HermitianLatticesTheory.IsUnimodular k L) →
     ∃ I : Submodule (𝓞 K) W, Formalism.HermitianLatticesTheory.IsOrthoLattice k I (Module.finrank K W)
 
 structure NF (H : HermSpace K V) (r : ℕ) where

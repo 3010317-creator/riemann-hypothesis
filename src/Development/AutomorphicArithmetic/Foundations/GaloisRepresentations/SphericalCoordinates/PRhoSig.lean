@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.LevelChange
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.LevelChange
+
+@[expose] public section
 
 noncomputable section
 
@@ -36,7 +40,7 @@ private theorem comm_of_split (p : ℕ) [Fact p.Prime] {O : Type} [Ring O] [Modu
 
 private theorem a_inj {F : Type} [Field F] [NumberField F] {O : Type} [Ring O] [Algebra (𝓞 F) O] [Nontrivial O]
     [Module.Free ℤ O] : Function.Injective (algebraMap (𝓞 F) O) := by
-  rw [injective_iff_map_eq_zero]
+  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro c hc
   by_contra h0
   have hI : RingHom.ker (algebraMap (𝓞 F) O) ≠ ⊥ := fun h => h0 (by
@@ -176,7 +180,7 @@ theorem rhoSig_of : RhoSig := by
     intro τ
     have h1 := congrArg (fun x : 𝓞 D.F => τ (x : D.F)) D.tr_eq
     have h2 := congrArg (fun x : 𝓞 D.F => τ (x : D.F)) D.nm_eq
-    simp only [map_add, map_mul, map_intCast] at h1 h2
+    simp only [map_add (f := _), map_mul, map_intCast] at h1 h2
     rw [← h1, ← h2]
     ring
   have hcx : ∀ τ : D.F →+* ℂ, ComplexEmbedding.conjugate τ ≠ τ := by

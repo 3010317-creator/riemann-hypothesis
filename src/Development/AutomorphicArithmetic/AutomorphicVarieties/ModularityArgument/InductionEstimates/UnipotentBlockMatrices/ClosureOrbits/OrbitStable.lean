@@ -1,8 +1,12 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.UnipotentBlockPairs
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosureOrbits.FinClosure
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.FormsIrr
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ClsBasic
-import GroundTheory.AutomorphicForms.UnitaryAdmissible
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.UnipotentBlockPairs
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosureOrbits.FinClosure
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.FormsIrr
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ClsBasic
+public import GroundTheory.AutomorphicForms.UnitaryAdmissible
+
+@[expose] public section
 
 open MeasureTheory NumberField Set Filter Topology
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -77,7 +81,8 @@ private theorem exists_level (F : Submodule ℂ (L2 μ)) [FiniteDimensional ℂ 
       have := congrArg Subtype.val (b.sum_repr ⟨x, hx⟩)
       rw [Submodule.coe_sum] at this
       exact this.symm
-    rw [e, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [e, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, hUx i u (Subgroup.mem_iInf.1 hu i)]
 

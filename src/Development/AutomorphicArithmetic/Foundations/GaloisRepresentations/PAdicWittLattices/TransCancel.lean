@@ -1,6 +1,10 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.SplitsBasic
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.IntegOfMem
-import Development.AutomorphicArithmetic.CommutativeAlgebra.LevDefs
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.SplitsBasic
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.IntegOfMem
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.LevDefs
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -44,8 +48,8 @@ theorem Wit.w {L : Link D G} {h : G.GAf} {N N' : ℕ} {X' : GenModel gb N'} {X :
   obtain ⟨-, o, ψ, φ, -, rfl⟩ := H
   rw [Category.assoc, φ.cart.1.w, ← Category.assoc, Over.w]
 
-variable (D) in
 
+variable (D) in
 def IsSys (f : ℕ → D.La →+ D.La) (u : ℕ → ℤ) (c k : ℕ) : Prop :=
   c.Coprime p ∧ k.Coprime p ∧ c ∣ k ^ 2 ∧
   (∀ n, 0 < n → n.Coprime p → ∀ (a : D.O) (x : D.La), ∃ z, f n (a • x) = a • f n x + n • z) ∧
@@ -295,20 +299,6 @@ def TwFEt : Prop := ∀ {B : Scheme.{0}} {G : Type} [Group G] (X : Tower B G) (i
 
 def SigmaFEt : Prop := ∀ {Y Z : Scheme.{0}} (s : Y ⟶ Z) (d : ℕ) (I : Type) [Finite I], FEt s d →
   FEt (Sigma.desc fun _ : I => s) (Nat.card I * d)
-
-def TwMem : Prop := ∀ {B : Scheme.{0}} {G : Type} [Group G] (X : Tower B G) {F : Type} [Field F] (T : Th.{u} B F)
-  (m i j : X.ι) (a : X.admitted i j 1), X.K m ≤ X.K i → (∀ k ∈ X.K j, ∀ u ∈ X.K m, k * u * k⁻¹ ∈ X.K m) →
-  ∀ (I A : Type) [Fintype I] [Fintype A] (e : I → G) (he : ∀ c, X.admitted i j (e c)) (r : A → G), (∀ x, r x ∈ X.K j) →
-  (∀ k ∈ X.K j, ∃! x, k * (r x)⁻¹ ∈ X.K i) →
-  ∀ (ht : (Sigma.desc fun c : I => X.tr i j (e c) (he c).1 (he c).2) ≫ X.q j = (Sigma.desc fun _ : I => X.tr i j 1 a.1 a.2) ≫ X.q j) tr,
-  T.IsTr (X.q j) _ (Sigma.desc fun _ : I => X.tr i j 1 a.1 a.2) tr →
-  ∀ x, X.pl T m j 1 (tr (T.pull _ ht x)) = ∑ c, ∑ y, X.pl T m j (e c * r y) x
-
-def SumFn : Prop := ∀ {B : Scheme.{0}} {G : Type} [Group G] (X : Tower B G) {F : Type} [Field F] (T : Th.{u} B F)
-  (m j : X.ι) (A : Type) [Fintype A] (e : A → G), (∀ a, X.admitted m j (e a)) → ∀ f : G → F,
-  (∀ y, f y = (Nat.card {a : A // e a * y ∈ X.K j} : ℕ)) → (∀ g, f g ≠ 0 → X.admitted m j g⁻¹) ∧
-    ((∀ k ∈ X.K j, ∀ g, f (k * g) = f g) → X.IsFn j f) ∧
-    ∀ x, ∑ a, X.pl T m j (e a) x = ∑ᶠ y : G ⧸ X.K j, f y.out • X.pl T m j y.out⁻¹ x
 
 def MemOp : Prop := ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (R : Type) [Field R] [Algebra ℚ R]
   (gb : GBase D.toG R) (k : ℕ) (T : KS L gb k) (N : Lv p) (J : Type) (g : J → Mem L N) (j : J) (F : Type) [Field F] [CharZero F]

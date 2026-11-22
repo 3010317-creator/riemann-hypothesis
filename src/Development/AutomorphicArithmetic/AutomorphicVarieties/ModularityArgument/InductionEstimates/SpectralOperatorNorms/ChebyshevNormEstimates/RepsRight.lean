@@ -1,8 +1,12 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.SpectralOperatorNorms.KillExempt
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.HpSpec
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.UnipBlocks
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.TypeFin
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.SecCrit
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.SpectralOperatorNorms.KillExempt
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.HpSpec
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.UnipBlocks
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.TypeFin
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.SecCrit
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain MvPolynomial Filter Topology
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -39,7 +43,7 @@ theorem cosetSum {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     · exact (hout h).symm
     · exact h0 h fun hc => hh ⟨h, hc, rfl⟩
   conv_lhs => rw [hF']
-  rw [integral_finset_sum]
+  rw [integral_finsetSum]
   · refine Finset.sum_congr rfl fun q _ => ?_
     rw [integral_indicator_const _ (hmeas q), Measure.real, hval, Measure.real]
   · intro q _
@@ -81,8 +85,6 @@ theorem reps_right {v : L2 μ} {φ : G1 K n → ℂ} (hv : Reps μ v φ) (g : G1
   rw [h1, rightMul_mk, h2]
 
 end Reps
-
-local notation "pf" => MultiplicityOne.finProj K n
 
 theorem coe_pf {k : AdelicGLn.FiniteAdelicGL K n} (hk : k ∈ AdelicGLn.integralFiniteGL K n) :
     ((pf k : G1 K n) : AdelicGLn.AdelicGL K n) = finEmb K n k := by
@@ -145,9 +147,6 @@ end UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.FinA
 namespace UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.FinA
 
 variable {K : Type} [Field K] [NumberField K]
-
-local notation "pf" => MultiplicityOne.finProj K (2 + 2)
-local notation "GF" => AdelicGLn.FiniteAdelicGL K (2 + 2)
 
 noncomputable def dl (x : G1 K (2 + 2)) (h : GF) : ℝ := HH (x * pf h) - HH x
 
@@ -247,14 +246,14 @@ theorem lin_fix {D : TypeDat K (2 + 2)} {Kf : Subgroup GF} (hL : D.Level Kf) (hl
     have := (D.cont.mul (hc.comp (continuous_const.mul continuous_id : Continuous fun u => y * u))).continuousOn.integrableOn_compact
       (μ := D.ν) (typeFin D).1
     rwa [IntegrableOn, Measure.restrict_eq_self_of_ae_mem D.supp] at this
-  rw [integral_congr_ae (g := fun u => ∑ h ∈ s, c h * ω (dl g h) * (D.e u * f (g * pf h * u))), integral_finset_sum, lin_apply]
+  rw [integral_congr_ae (g := fun u => ∑ h ∈ s, c h * ω (dl g h) * (D.e u * f (g * pf h * u))), integral_finsetSum, lin_apply]
   · exact Finset.sum_congr rfl fun h _ => by rw [integral_const_mul, hf]
   · exact fun h _ => (hint _).const_mul _
   · filter_upwards [D.supp] with u hu
     rw [key u hu, Finset.mul_sum]
     exact Finset.sum_congr rfl fun h _ => by ring
 
-theorem lin_sec [IsTotallyComplex K] {μ₂ : Measure (G1 K 2)} [μ₂.IsHaarMeasure] {τ₁ τ₂ : Submodule ℂ (L2 μ₂)} {D : TypeDat K (2 + 2)}
+theorem lin_sec [_root_.NumberField.IsTotallyComplex K] {μ₂ : Measure (G1 K 2)} [μ₂.IsHaarMeasure] {τ₁ τ₂ : Submodule ℂ (L2 μ₂)} {D : TypeDat K (2 + 2)}
     (h₁ : CuspIrr μ₂ τ₁) (h₂ : CuspIrr μ₂ τ₂) (s : Finset GF) (c : GF → ℂ) (ω : ℝ → ℂ) {f : G1 K (2 + 2) → ℂ} (hs : IsSec τ₁ τ₂ f)
     (hf : D.Fix f) (hf' : D.Fix (lin s c ω f)) : IsSec τ₁ τ₂ (lin s c ω f) := by
   obtain ⟨hc, ⟨C, hC⟩, hn, hray, hsl⟩ := (secCrit μ₂ τ₁ τ₂ D h₁ h₂ f hf).1 hs

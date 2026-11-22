@@ -1,4 +1,8 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsEquivOfMemEndL
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsEquivOfMemEndL
+
+@[expose] public section
 
 open NumberField Module
 
@@ -22,7 +26,7 @@ theorem nondegenerate {h : V →ₗ⋆[K] V →ₗ[K] K} (hd : IsTotPosDef h) : 
 
 theorem exists_dual_bound (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {A₀ : Submodule (𝓞 K) V}
-    (hA₀ : Submodule.IsLattice K A₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
+    (hA₀ : Submodule.IsFullLattice K A₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
     ∃ e : ℕ, ∀ (k : ℕ) (x : V), (∀ y ∈ locF 𝔭 A₀, h y x ∈ pK K 𝔭 (k + e)) →
       x ∈ extP K 𝔭 ^ k • locF 𝔭 A₀ := by
   classical
@@ -45,12 +49,12 @@ theorem exists_dual_bound (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
   have : k + ∑ j, n j = k + (∑ j, n j - n j) + n j := by omega
   rw [this, pow_add, pow_add]; ring
 
-theorem exists_endL_le {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsLattice K A₀)
-    (hB₀ : Submodule.IsLattice K B₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
+theorem exists_endL_le {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsFullLattice K A₀)
+    (hB₀ : Submodule.IsFullLattice K B₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
     ∃ r : ℕ, ∀ d : ℕ, endL (locF 𝔭 A₀) (extP K 𝔭 ^ (d + r) • locF 𝔭 A₀) ≤
       endL (locF 𝔭 B₀) (extP K 𝔭 ^ d • locF 𝔭 B₀) := by
-  obtain ⟨r1, h1⟩ := exists_smul_le hA₀ hB₀ h𝔭
-  obtain ⟨r2, h2⟩ := exists_smul_le hB₀ hA₀ h𝔭
+  obtain ⟨r1, h1⟩ := exists_smul_le hA₀.toIsLattice hB₀ h𝔭
+  obtain ⟨r2, h2⟩ := exists_smul_le hB₀.toIsLattice hA₀ h𝔭
   obtain ⟨π, hπ, hπ'⟩ := exists_unif h𝔭
   have hπ0 := unif_ne_zero (K := K) hπ'
   refine ⟨r1 + r2, fun d D hD y hy => ?_⟩
@@ -63,24 +67,6 @@ theorem exists_endL_le {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsL
   rw [← map_smul, e, smul_smul, smul_smul]
   congr 1
   rw [pow_add, pow_add]; ring
-
-theorem exists_sesqL_le (hF : IsFixF K F) {A₀ B₀ : Submodule (𝓞 K) V}
-    (hA₀ : Submodule.IsLattice K A₀) (hB₀ : Submodule.IsLattice K B₀) {𝔭 : Ideal (𝓞 F)}
-    (h𝔭 : 𝔭.IsMaximal) :
-    ∃ r : ℕ, ∀ d : ℕ, sesqL (locF 𝔭 A₀) 𝔭 (d + r) ≤ sesqL (locF 𝔭 B₀) 𝔭 d := by
-  obtain ⟨r2, h2⟩ := exists_smul_le hB₀ hA₀ h𝔭
-  obtain ⟨π, hπ, hπ'⟩ := exists_unif h𝔭
-  have hπ0 := unif_ne_zero (K := K) hπ'
-  refine ⟨r2 + r2, fun d s hs x hx y hy => ?_⟩
-  have hx' := h2 ((mem_smul_iff_unif h𝔭 hπ hπ' B₀).2 ⟨x, hx, rfl⟩)
-  have hy' := h2 ((mem_smul_iff_unif h𝔭 hπ hπ' B₀).2 ⟨y, hy, rfl⟩)
-  obtain ⟨c, hc, e⟩ := (mem_pK_iff_unif h𝔭 hπ hπ').1 (hs _ hx' _ hy')
-  refine (mem_pK_iff_unif h𝔭 hπ hπ').2 ⟨c, hc, ?_⟩
-  rw [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, smul_eq_mul, starRingEnd_apply,
-    star_pow, MeanB.star_algebraMap hF] at e
-  apply mul_left_cancel₀ (pow_ne_zero (r2 + r2) hπ0)
-  rw [pow_add, pow_add] at *
-  linear_combination e
 
 theorem nSub_le_sSub (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {A₀ : Submodule (𝓞 K) V}
     (hA₀i : Formalism.HermitianLatticesTheory.IsIntegralLat h A₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (k : ℕ) :
@@ -97,8 +83,8 @@ theorem nSub_le_sSub (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {A₀ 
   · simpa using form_mem_pK hF hA₀i h𝔭 hx0 (hX' y hy)
   · exact pK_anti 𝔭 (Nat.le_add_right k k) (form_mem_pK hF hA₀i h𝔭 (hX' x hx) (hX' y hy))
 
-theorem nSub_le_glSub {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsLattice K A₀)
-    (hB₀ : Submodule.IsLattice K B₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
+theorem nSub_le_glSub {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsFullLattice K A₀)
+    (hB₀ : Submodule.IsFullLattice K B₀) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
     ∃ k₀ : ℕ, ∀ k ≥ k₀, nSub (locF 𝔭 A₀) 𝔭 k ≤ glSub (locF 𝔭 B₀) := by
   obtain ⟨r, hr⟩ := exists_endL_le hA₀ hB₀ h𝔭
   refine ⟨1 + r, fun k hk X hX => mem_glSub_of_sub_mem hB₀ h𝔭 fun y hy => ?_⟩

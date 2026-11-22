@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdND
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBwdND
+
+@[expose] public section
 
 noncomputable section
 
@@ -8,6 +12,47 @@ open NumberField Module Formalism.BasicNotions Formalism.MainNotions.S Formalism
 namespace Formalism.L2.SG.Pf.FrameGlobalPatching.FStar.BwdNA
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] (S : HSpace E)
+
+private theorem own_full_of_sd (M : Submodule (𝓞 E) S.V) (hM : Submodule.IsLattice E M)
+    (hSD : SD S M) : Submodule.IsFullLattice E M := by
+  have hmultiple : ∀ v : S.V, ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ M := by
+    intro v
+    obtain ⟨s, hs⟩ := hM.fg
+    obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E)) s (fun x => S.hT x v)
+    let P : Submodule (𝓞 E) S.V := {
+      carrier := {x | IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v)}
+      zero_mem' := by simpa using (isIntegral_zero : IsIntegral ℤ (0 : E))
+      add_mem' := by
+        intro x y hx hy
+        simpa [map_add, LinearMap.add_apply, mul_add] using hx.add hy
+      smul_mem' := by
+        intro c x hx
+        have hc : IsIntegral ℤ (star (c : E)) := isInt_star c.2
+        have := hc.mul hx
+        change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT (c • x) v)
+        rw [oSmul, hT_smulL]
+        convert this using 1 <;> ring }
+    have hsP : (s : Set S.V) ⊆ P := by
+      intro x hx
+      obtain ⟨b, hb⟩ := ha x hx
+      change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v)
+      rw [← show (b : E) = ((a : 𝓞 E) : E) * S.hT x v by simpa [Algebra.smul_def] using hb]
+      exact b.2
+    refine ⟨a, nonZeroDivisors.ne_zero a.2, ?_⟩
+    apply (hSD _).2
+    intro x hx
+    have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
+    change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v) at hxP
+    rw [oSmul, map_smul, smul_eq_mul]
+    exact hxP
+  refine { toIsLattice := hM, span_eq_top := ?_ }
+  apply top_unique
+  intro v _
+  obtain ⟨d, hd, hdv⟩ := hmultiple v
+  have hdE : (d : E) ≠ 0 := by exact_mod_cast hd
+  have hvspan : d • v ∈ Submodule.span E (M : Set S.V) := Submodule.subset_span hdv
+  have h := (Submodule.span E (M : Set S.V)).smul_mem (d : E)⁻¹ hvspan
+  simpa only [oSmul, smul_smul, inv_mul_cancel₀ hdE, one_smul] using h
 
 theorem main (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y = 0) (z : S.V) (hzX : z ∈ orth S X)
     (Λ Λ₂ : Submodule (𝓞 E) S.V) (hΛ : Submodule.IsLattice E Λ) (hΛ₂ : Submodule.IsLattice E Λ₂)
@@ -34,7 +79,37 @@ theorem main (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y =
       exact ⟨g.symm x, h, by simp⟩
   have hfg₃ : Λ₃.FG := hΛ₂.fg.map _
   have hfull₃ : ∀ u : S.V, ∃ d : 𝓞 E, d ≠ 0 ∧ d • u ∈ Λ₃ := fun u => by
-    obtain ⟨d, hd, hdu⟩ := PI.UnitaryGroupMassFormula.BetaLUniq.exists_smul_mem S Λ₂ hΛ₂ (g.symm u)
+    have hfull₂ : ∀ v : S.V, ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ₂ := by
+      intro v
+      obtain ⟨s, hs⟩ := hΛ₂.fg
+      obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E)) s (fun x => S.hT x v)
+      let P : Submodule (𝓞 E) S.V := {
+        carrier := {x | IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v)}
+        zero_mem' := by simpa using (isIntegral_zero : IsIntegral ℤ (0 : E))
+        add_mem' := by
+          intro x y hx hy
+          simpa [map_add, LinearMap.add_apply, mul_add] using hx.add hy
+        smul_mem' := by
+          intro c x hx
+          have hc : IsIntegral ℤ (star (c : E)) := isInt_star c.2
+          have := hc.mul hx
+          change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT (c • x) v)
+          rw [oSmul, hT_smulL]
+          convert this using 1 <;> ring }
+      have hsP : (s : Set S.V) ⊆ P := by
+        intro x hx
+        obtain ⟨b, hb⟩ := ha x hx
+        change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v)
+        rw [← show (b : E) = ((a : 𝓞 E) : E) * S.hT x v by simpa [Algebra.smul_def] using hb]
+        exact b.2
+      refine ⟨a, nonZeroDivisors.ne_zero a.2, ?_⟩
+      apply (hSD₂ _).2
+      intro x hx
+      have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
+      change IsIntegral ℤ (((a : 𝓞 E) : E) * S.hT x v) at hxP
+      rw [oSmul, map_smul, smul_eq_mul]
+      exact hxP
+    obtain ⟨d, hd, hdu⟩ := hfull₂ (g.symm u)
     refine ⟨d, hd, (hmem₃ _).2 ?_⟩
     rw [oSmul, map_smul, ← oSmul]
     exact hdu
@@ -73,13 +148,13 @@ theorem main (X : Submodule E S.V) (hXiso : ∀ x ∈ X, ∀ y ∈ X, S.hT x y =
       have e : g (x₂ + ξ) = x := by
         have h1 : g (x₂ + ξ) = (x₂ + ξ) + A ⟨x₂ + ξ, hlo⟩ := hgA ⟨x₂ + ξ, hlo⟩
         have h2 : A ⟨x₂ + ξ, hlo⟩ = A ⟨x₂, hx₂o⟩ + A ⟨ξ, hXo hξX⟩ := by
-          rw [← map_add]
+          rw [← map_add (f := _)]
           rfl
         rw [h1, h2, hA0 ⟨ξ, hXo hξX⟩ hξX, add_zero, hξ]
         abel
       rw [← e, g.symm_apply_apply]
       exact Λ₂.add_mem hx₂ hξΛ₂
-  obtain ⟨n₂, hn₂, hn₂o, hn₂img⟩ := stepD S X hXiso Λ Λ₃ hΛ hSD hfg₃ hfull₃ hSD₃ hM htr
+  obtain ⟨n₂, hn₂, hn₂o, hn₂img⟩ := stepD S X hXiso Λ Λ₃ (own_full_of_sd S Λ hΛ hSD) hSD hfg₃ hfull₃ hSD₃ hM htr
   refine ⟨g.trans n₂, fun a b => ?_, fun x hx => ?_, ?_, fun x hx => ?_, ?_⟩
   · show S.hT (n₂ (g a)) (n₂ (g b)) = S.hT a b
     rw [hn₂, hg]

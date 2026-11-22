@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TripleFrameBaseExists
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
@@ -39,8 +43,8 @@ theorem exists_isHerm_lat {D : D7} (B : Base D.host.F D.host.E) (τf : InfiniteP
     rw [eJ]
     exact GlobalTheory.TripleSpace.isCartan_neg_conj (hs _)
 
-open scoped ComplexOrder in
 
+open scoped ComplexOrder in
 theorem exists_isSkew_lat {D : D7} (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau)
     (hB : ∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) (X : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin X.rank → D.host.E))
     (hA : IsSelfDualC X Λ) {k : ℕ} (e : Fin k ≃ Fin X.rank)

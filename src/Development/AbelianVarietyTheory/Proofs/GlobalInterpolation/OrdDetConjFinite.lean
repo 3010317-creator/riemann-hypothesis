@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.ThDistC
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.ThDistC
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EmbHInjective
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker Formalism.MainNotions Formalism.L2.Th1.H GlobalTheory.ThetaMove GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree
 
@@ -73,7 +77,7 @@ theorem ordDet_conjP {N : Submodule (𝓞 E) (Sp E n)} (hN : IsSdLat N) (P : Hei
   rw [ordDet_eq hf, ordDet_eq hf']
   linear_combination h
 
-theorem finite_pos {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsLattice E N) :
+theorem finite_pos {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsFullLattice E N) :
     {Q : HeightOneSpectrum (𝓞 E) | 0 < ordDet Q N}.Finite := by
   rcases Set.eq_empty_or_nonempty {Q : HeightOneSpectrum (𝓞 E) | 0 < ordDet Q N} with h | ⟨P, -⟩
   · rw [h]; exact Set.finite_empty

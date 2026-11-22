@@ -1,25 +1,30 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
-import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
-import Formalism.LocalToGlobal.IndefiniteReal.PartsRow
-import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
-import Formalism.LocalToGlobal.Divisibility.TrivialExtensionSideWellFormed
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCompatFiniteIsometry
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelSubgroupConjFiniteMovesFrame
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCompletionMapsDualLattices
-import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.PNeatB
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsDefiniteSelfDualOfBaseFramePosDef
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsDual
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.AfsplitB
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
+public import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
+public import Formalism.LocalToGlobal.IndefiniteReal.PartsRow
+public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
+public import Formalism.LocalToGlobal.Divisibility.TrivialExtensionSideWellFormed
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCompatFiniteIsometry
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelSubgroupConjFiniteMovesFrame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCompletionMapsDualLattices
+public import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.PNeatB
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsDefiniteSelfDualOfBaseFramePosDef
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsDual
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.AfsplitB
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues Polynomial
 open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
@@ -64,7 +69,8 @@ theorem hform_inclE {n : ℕ} (J : Matrix (Fin n) (Fin n) D.host.E) (x y : Fin n
       (fun i => Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F) (x i))
       (fun i => Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F) (y i)) =
     Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F) (Formalism.UG.hform (D.sp.cm.sig : D.host.E →+* D.host.E) J x y) := by
-  simp only [Formalism.UG.hform, map_sum, map_mul, sigR_inclE, Matrix.map_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Formalism.UG.hform, map_sum, map_mul, sigR_inclE, Matrix.map_apply]
   rfl
 
 theorem pair_hatL {n : ℕ} (J : Matrix (Fin n) (Fin n) D.host.E) (Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E))
@@ -110,7 +116,8 @@ theorem prV_hform' {n : ℕ} (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E)
   have hs : ∀ z, Formalism.UG.prV (E := E) v (Formalism.UG.sigR σ (Formalism.L2.Herm.Af F) z) =
       Formalism.UG.sigR σ (v.adicCompletion F) (Formalism.UG.prV (E := E) v z) :=
     fun z => RingHom.congr_fun (Formalism.UG.P.afsplit_prV_comp_sigR σ v) z
-  simp only [Formalism.UG.hform, map_sum, map_mul, hs, Matrix.map_apply]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Formalism.UG.hform, map_sum, map_mul, hs, Matrix.map_apply]
   rfl
 
 theorem inv_int {n : ℕ} (σ : E →ₐ[F] E)
@@ -123,6 +130,54 @@ theorem inv_int {n : ℕ} (σ : E →ₐ[F] E)
     (hG' : Formalism.UG.cT (Formalism.UG.sigR σ (Formalism.L2.Herm.Af F)) β.val *
       J.map (Formalism.UG.inclE (F := F) (Formalism.L2.Herm.Af F)) * β.val * G' = 1) :
     ∀ i j, G' i j ∈ Formalism.L2.Herm.intAf F E := by
+  have hlatFull : Submodule.IsFullLattice E Λ := by
+    refine { toIsLattice := hlat, span_eq_top := ?_ }
+    haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hlat.fg
+    haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
+    obtain ⟨s, hs⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ Λ).FG)
+    apply eq_top_iff.mpr
+    intro y _
+    let f : Λ →+ E := {
+      toFun := fun x => Formalism.UG.hform (σ : E →+* E) J x y
+      map_zero' := by simp [Formalism.UG.hform]
+      map_add' := by
+        intro x z
+        simp [Formalism.UG.hform, map_add, add_mul, Finset.sum_add_distrib] }
+    obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E)) s f
+    have ha0 : (algebraMap (𝓞 E) E a) ≠ 0 :=
+      (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+    let P : Submodule ℤ Λ := ((1 : Submodule (𝓞 E) E).restrictScalars ℤ).comap
+      ((algebraMap (𝓞 E) E a) • f.toIntLinearMap)
+    have hsP : (s : Set Λ) ⊆ P := by
+      intro x hx
+      obtain ⟨b, hb⟩ := ha x hx
+      change (algebraMap (𝓞 E) E a) * f x ∈ (1 : Submodule (𝓞 E) E)
+      refine Submodule.mem_one.mpr ⟨b, ?_⟩
+      simpa [Algebra.smul_def] using hb
+    have hP : P = ⊤ := by
+      apply eq_top_iff.mpr
+      rw [← hs]
+      exact Submodule.span_le.mpr hsP
+    have hy : (algebraMap (𝓞 E) E a) • y ∈ Λ := by
+      apply hd
+      apply Submodule.subset_span
+      change ∀ x ∈ Λ, Formalism.UG.hform (σ : E →+* E) J x
+        ((algebraMap (𝓞 E) E a) • y) ∈ (algebraMap (𝓞 E) E).range
+      intro x hx
+      have hxP : (⟨x, hx⟩ : Λ) ∈ P := by rw [hP]; trivial
+      change (algebraMap (𝓞 E) E a) * f ⟨x, hx⟩ ∈ (1 : Submodule (𝓞 E) E) at hxP
+      have he : Formalism.UG.hform (σ : E →+* E) J x ((algebraMap (𝓞 E) E a) • y) =
+          (algebraMap (𝓞 E) E a) * f ⟨x, hx⟩ := by
+        simp [f, Formalism.UG.hform, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul,
+          mul_assoc, mul_left_comm, mul_comm]
+      rw [he]
+      exact Submodule.mem_one.mp hxP
+    have hy' : (algebraMap (𝓞 E) E a) • y ∈ Submodule.span E (Λ : Set (Fin n → E)) :=
+      Submodule.subset_span hy
+    have hz := (Submodule.span E (Λ : Set (Fin n → E))).smul_mem
+      (algebraMap (𝓞 E) E a)⁻¹ hy'
+    rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at hz
+    exact hz
   intro i j
   have key : ∀ x ∈ Formalism.L2.Herm.hatL (F := F) Λ,
       Formalism.UG.hform (Formalism.UG.sigR σ (Formalism.L2.Herm.Af F))
@@ -149,7 +204,7 @@ theorem inv_int {n : ℕ} (σ : E →ₐ[F] E)
           (Formalism.UG.tensInt (F := F) (v.adicCompletion F) (Formalism.UG.intOE E)
             (v.adicCompletionIntegers F).toSubring) Λ := by
     intro v
-    have hm := (GlobalTheory.DualCompletion.mem_latS_dualL σ J hJ v Λ hlat
+    have hm := (GlobalTheory.DualCompletion.mem_latS_dualL σ J hJ v Λ hlatFull
       (fun k => Formalism.UG.prV (E := E) v ((β.val *ᵥ (G' *ᵥ Pi.single j 1)) k))).2
     refine Submodule.span_mono (Set.image_mono hd) (hm fun u hu => ?_)
     induction hu using Submodule.span_induction with
@@ -165,7 +220,7 @@ theorem inv_int {n : ℕ} (σ : E →ₐ[F] E)
       rw [Subring.smul_def, Formalism.UG.P.csDual_hform_smul_left]
       exact mul_mem (Formalism.L2.G.RelativeIndexFlags.sigR_mem v σ s.2) ha
   have hc : β.val *ᵥ (G' *ᵥ Pi.single j 1) ∈ Formalism.L2.Herm.hatL (F := F) Λ :=
-    Formalism.L2.Geo.Def.PN.latS_of_loc Λ hlat.span_eq_top _ hloc
+    Formalism.L2.Geo.Def.PN.latS_of_loc Λ hlatFull.span_eq_top _ hloc
   have h5 := (hfr _).1 hc i
   rw [Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.one_mulVec,
     Matrix.mulVec_single_one] at h5

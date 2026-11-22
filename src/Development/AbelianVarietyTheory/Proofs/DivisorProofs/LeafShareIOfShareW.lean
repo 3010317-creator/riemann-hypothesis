@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
-import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.GreenSeriesSt
-import Formalism.LocalToGlobal.GlobalTheory.IrreducibleOfCountSizes
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
+public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.GreenSeriesSt
+public import Formalism.LocalToGlobal.GlobalTheory.IrreducibleOfCountSizes
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -20,8 +24,6 @@ section Tied
 variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
   {J : CoreJ D} [inst : Algebra J.Q.c.F D.what₂.LL] {R : RealDat D A J.Q.c.F} {F : Face D A}
   {κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)} {v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec}
-
-local instance runAlg (r : RunData J) : Algebra r.full.J.Q.c.F D.what₂.LL := inst
 
 variable {fw : FWTie J R κ v₀} {hc : LawsCore J.toCore} {run : HeightOneSpectrum (𝓞 D.what₂.LL) → RunData J}
   {h : ∀ v, LawsP (run v).full.toTop} {hinj : Function.Injective D.what₂.OtoLL} {EX : ErrX D}
@@ -124,14 +126,5 @@ end Point
 end GlobalTheory.ShareOn.Comparison₂
 
 namespace GlobalTheory.ShareOn
-
-theorem shareSt_of_shareWSt : ShareWSt → ShareSt := by
-  intro h
-  unfold ShareWSt AtRuns AtPts at h
-  unfold ShareSt AtRec
-  refine Closed.imp h fun Fm CH _ H => ⟨0, fun c _ _ => ?_⟩
-  obtain ⟨x0, hx0⟩ := H
-  exact ⟨x0, fun x hx hle i p hp hm r O hR =>
-    Comparison₂.leafShareI_of_shareW p hR (hx0 x hx hle i p hp hm r hR.1.ok hR.2)⟩
 
 end GlobalTheory.ShareOn

@@ -1,17 +1,21 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFits
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DownRight
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemPolarizationIdealOfMemConj
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaled
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleExistsSignatureRankSumLt
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijectiveStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFits
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DownRight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemPolarizationIdealOfMemConj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaled
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleExistsSignatureRankSumLt
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijectiveStatement
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
 open Formalism.DivisionValues (vw)
@@ -29,6 +33,31 @@ namespace GlobalTheory.SkewOverW
 open Matrix GlobalTheory.SkewLat GlobalTheory.SkewLat.DualPair
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels (HasSig form)
 open scoped nonZeroDivisors
+
+private theorem scLat_full {E : Type} [Field E] [NumberField E] {n : ℕ}
+    {a : FractionalIdeal (𝓞 E)⁰ E} (ha : a ≠ 0)
+    {L : Submodule (𝓞 E) (Fin n → E)} (hL : Submodule.IsFullLattice E L) :
+    Submodule.IsFullLattice E (GlobalTheory.SkewLat.scLat a L) := by
+  refine { toIsLattice := PairLatLattice.scLat_isLattice ha hL.toIsLattice, span_eq_top := ?_ }
+  obtain ⟨c, hc, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
+    (FractionalIdeal.coeToSubmodule_ne_bot.mpr ha)
+  have hmem : ∀ y ∈ L, c • y ∈ GlobalTheory.SkewLat.scLat a L := by
+    intro y hy d hd
+    have hdc : d * c ∈ (1 : FractionalIdeal (𝓞 E)⁰ E) := by
+      rw [← inv_mul_cancel₀ ha]
+      exact FractionalIdeal.mul_mem_mul hd hc
+    obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp hdc
+    rw [smul_smul, ← hr, algebraMap_smul]
+    exact L.smul_mem r hy
+  apply top_unique
+  rw [← hL.span_eq_top]
+  apply Submodule.span_le.mpr
+  intro y hy
+  have hcy : c • y ∈ Submodule.span E (GlobalTheory.SkewLat.scLat a L : Set (Fin n → E)) :=
+    Submodule.subset_span (hmem y hy)
+  have heq : y = c⁻¹ • (c • y) := by rw [smul_smul, inv_mul_cancel₀ hc0, one_smul]
+  rw [heq]
+  exact Submodule.smul_mem _ _ hcy
 
 private theorem hasSignature_of_smul {n r s : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} {κ : ℝ} (hκ : 0 < κ)
     (h : HasSig ((κ : ℂ) • M) r s) : Formalism.UG.HasSignature M r s := by
@@ -191,7 +220,9 @@ theorem _root_.GlobalTheory.T.exists_selfDual_orientedModel_scaled_skewHermitian
     simp only [dotProduct, Matrix.mulVec, Finset.mul_sum, Pi.star_apply, mul_assoc]
   have hdual := dual_iff Z.J Z.L hZ.dual
   have hlat : Submodule.IsLattice D.host.E (scLat D.host.AA⁻¹ Z.L) :=
-    PairLatLattice.scLat_isLattice (inv_ne_zero DualPair.AA_ne) hZ.lat
+    PairLatLattice.scLat_isLattice (inv_ne_zero DualPair.AA_ne) hZ.lat.toIsLattice
+  have hlatFull : Submodule.IsFullLattice D.host.E (scLat D.host.AA⁻¹ Z.L) :=
+    scLat_full (inv_ne_zero DualPair.AA_ne) hZ.lat
   have herm : (sesq D G).IsSymm := by
     refine ⟨fun x v => ?_⟩
     simp only [sesq_apply, starRingEnd_apply, dotProduct, Matrix.mulVec, star_sum, star_mul',
@@ -219,8 +250,8 @@ theorem _root_.GlobalTheory.T.exists_selfDual_orientedModel_scaled_skewHermitian
     rw [hdual x]
     refine forall₂_congr fun v _ => ?_
     rw [hform, Submodule.mem_one]
-  have hgram := gram_hspOf G herm nd _ hlat hU (fun _ => (r, y))
-  refine ⟨hspOf D G herm nd _ hlat hU (fun _ => (r, y)), scLat D.host.AA⁻¹ Z.L, ⟨hlat, fun v => ?_⟩, fun τ => ?_,
+  have hgram := gram_hspOf G herm nd _ hlatFull hU (fun _ => (r, y))
+  refine ⟨hspOf D G herm nd _ hlatFull hU (fun _ => (r, y)), scLat D.host.AA⁻¹ Z.L, ⟨hlatFull, fun v => ?_⟩, fun τ => ?_,
     rfl, ?_, fun v => mem_iff Z.L v⟩
   · rw [hgram]
     refine (hdual v).trans (forall₂_congr fun x _ => ?_)

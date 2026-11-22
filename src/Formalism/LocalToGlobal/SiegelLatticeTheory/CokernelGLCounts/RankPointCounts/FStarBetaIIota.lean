@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBetaIIotaB
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarBetaIIotaB
+
+@[expose] public section
 
 noncomputable section
 
@@ -19,23 +23,15 @@ variable {D : Formalism.BasicNotions.D7} (Zd : LocDat D) {u u' : D.what₂.Word}
 namespace IotaBP
 
 theorem isLattice_NgX {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsLattice D.host.E Λ) {T T' : D.host.E}
-    (F : LFlag (VS D) D.R.rS T) (F' : LFlag (VS D) D.R.rS T') : Submodule.IsLattice D.host.E (NgX Λ (gS D) F F') := by
+    (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') : Submodule.IsLattice D.host.E (NgX Λ (gS D) F F') := by
   have hle : NgX Λ (gS D) F F' ≤ Λ := by
     refine sup_le (sup_le ?_ inf_le_left) inf_le_left
     exact Submodule.smul_le_right
   refine ⟨hΛ.fg.of_le hle, ?_⟩
-  rw [eq_top_iff, ← hΛ.span_eq_top, Submodule.span_le]
-  intro v hv
-  have h0 : ((gS D : ℕ) : D.host.E) ≠ 0 := Formalism.L2.SG.Pf.StabIntSh.gS_ne
-  have hm : ((gS D : ℕ) : 𝓞 D.host.E) • v ∈ NgX Λ (gS D) F F' :=
-    Submodule.mem_sup_left (Submodule.mem_sup_left (Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) hv))
-  have e : v = (((gS D : ℕ) : D.host.E))⁻¹ • (((gS D : ℕ) : 𝓞 D.host.E) • v) := by
-    rw [← algebraMap_smul D.host.E ((gS D : ℕ) : 𝓞 D.host.E) v, map_natCast, smul_smul, inv_mul_cancel₀ h0, one_smul]
-  rw [SetLike.mem_coe, e]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span hm)
-
-theorem NgX_dec {Λ : Submodule (𝓞 D.host.E) (VS D).V} {T T' : D.host.E} {F : LFlag (VS D) D.R.rS T}
-    {F' : LFlag (VS D) D.R.rS T'} {x : (VS D).V} (hx : x ∈ NgX Λ (gS D) F F') :
+  intro s hs hli
+  exact (LinearIndependent.iff_fractionRing _ _).mp hli
+theorem NgX_dec {Λ : Submodule (𝓞 D.host.E) (VS D).V} {T T' : D.host.E} {F : LFlag (D.sp.Y 0) D.R.rS T}
+    {F' : LFlag (D.sp.Y 0) D.R.rS T'} {x : (VS D).V} (hx : x ∈ NgX Λ (gS D) F F') :
     ∃ l ∈ Λ, ∃ ξ ∈ XLam Λ F, ∃ ξ' ∈ XLam Λ F', x = ((gS D : ℕ) : D.host.E) • l + ξ + ξ' := by
   obtain ⟨a, ha, ξ', hξ', rfl⟩ := Submodule.mem_sup.1 hx
   obtain ⟨b, hb, ξ, hξ, rfl⟩ := Submodule.mem_sup.1 ha
@@ -57,14 +53,14 @@ theorem representative_admissible_one (hC : CtxP u u' F0 what₂) {γ : TermDef.
   rw [hrep]
   exact hex.choose_spec.2.1
 
-abbrev t2 (p : PlF D) (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E))
+abbrev t2 (p : PlF D) (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E))
     (Λ₂ : Submodule (𝓞 D.host.E) (VS D).V) : Loc.Term (Vp D p) (Zd.M p) D.R.rS :=
   ⟨lattice₂ D Zd.M p Λ₂, (tLoc Zd p γ).f, locF' Zd p F'₂, (tLoc Zd p γ).T, (tLoc Zd p γ).T'⟩
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem fwd_typed (p : PlF D) (g : Loc.SplitG (Zd.M p).L) (hsp : (Zd.M p).split = some g)
-    (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E))
+    (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E))
     (Λ₂ : Submodule (𝓞 D.host.E) (VS D).V)
     (φ' : (locH Zd p).Wb (tLoc Zd p γ).f' ≃ₗ[(D.s.atP p).Ep] (locH Zd p).Wb (locF' Zd p F'₂))
     (hR : Prod.map φ' (LinearEquiv.refl (D.s.atP p).Ep ((locH Zd p).Wb (tLoc Zd p γ).f)) ''
@@ -119,14 +115,14 @@ theorem fwd_typed (p : PlF D) (g : Loc.SplitG (Zd.M p).L) (hsp : (Zd.M p).split 
     (hβΛ _ (add_mem hx'Λ (xi_mem hξ'))) hp₂ hq₂ hG2 hA2 hB2
   have hβξ : β ξ' ∈ NgX Λ₂ (gS D) (lf D F0) (liftF F'₂) :=
     Submodule.mem_sup_right (Submodule.mem_inf.2 ⟨hβΛ _ (xi_mem hξ'), hβX _ hξ'X⟩)
-  have e : l₂ - β x' = (l₂ - β (x' + ξ')) + β ξ' := by rw [map_add]; abel
-  rw [e, map_add]
+  have e : l₂ - β x' = (l₂ - β (x' + ξ')) + β ξ' := by rw [map_add (f := _)]; abel
+  rw [e, map_add (f := _)]
   exact add_mem hfin (Submodule.subset_span ⟨_, hβξ, rfl⟩)
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem bwd_typed (p : PlF D) (g : Loc.SplitG (Zd.M p).L) (hsp : (Zd.M p).split = some g)
-    (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E))
+    (γ : TermDef.Term D u u' F0 what₂) (F'₂ : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E))
     (Λ₂ : Submodule (𝓞 D.host.E) (VS D).V)
     (φ' : (locH Zd p).Wb (tLoc Zd p γ).f' ≃ₗ[(D.s.atP p).Ep] (locH Zd p).Wb (locF' Zd p F'₂))
     (hR : Prod.map φ' (LinearEquiv.refl (D.s.atP p).Ep ((locH Zd p).Wb (tLoc Zd p γ).f)) ''
@@ -183,8 +179,8 @@ theorem bwd_typed (p : PlF D) (g : Loc.SplitG (Zd.M p).L) (hsp : (Zd.M p).split 
 
 end IotaBP
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem iotaB_of (hP : PinB Zd u u' F0 what₂) : IotaB Zd u u' F0 what₂ := by
   intro γ Z F'₂ φ φ' Λ₂ hB β₀ hiso hfr hW hO v hv hvf hvX hgm
   have hB0 := hB

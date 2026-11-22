@@ -1,17 +1,21 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.KerDatTuple
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapOfOfExtends
-import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
-import Formalism.LocalToGlobal.IndefiniteReal.RhoGeo
-import Formalism.LocalToGlobal.IndefiniteReal.FWExist
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsDeltaDelAtOwnAt
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsMulAddEqOneOfNotMem
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.BaseCh
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EqZeroOfFischSelf
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FFVMap
-import Formalism.LocalToGlobal.Columns.StdLatUnimodular
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.KerDatTuple
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapOfOfExtends
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
+public import Formalism.LocalToGlobal.IndefiniteReal.RhoGeo
+public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsDeltaDelAtOwnAt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsMulAddEqOneOfNotMem
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.BaseCh
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EqZeroOfFischSelf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FFVMap
+public import Formalism.LocalToGlobal.Columns.StdLatUnimodular
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.Indef Formalism.L2.Indef.Tree
 open Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.FWT Formalism.IndefR.Datum Formalism.IndefR.Lev
@@ -74,7 +78,7 @@ theorem exists_nat_smul_mem_nabAtr {E K : Type} [Field E] [NumberField E] [Field
     obtain ⟨j, hj, y, hy, hjy⟩ := Submodule.mem_sup.1 h1mem
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.1 hy
     have h1 : Ideal.Quotient.mk J (c * (p : 𝓞 K)) = 1 := by
-      rw [← map_one (Ideal.Quotient.mk J), ← hjy, map_add, Ideal.Quotient.eq_zero_iff_mem.2 hj, zero_add]
+      rw [← map_one (Ideal.Quotient.mk J), ← hjy, map_add (f := _), Ideal.Quotient.eq_zero_iff_mem.2 hj, zero_add]
     have hpz : p • z = 0 := hz ▸ addOrderOf_nsmul_eq_zero z
     have hz0 : z = 0 := by
       calc z = Ideal.Quotient.mk J (c * (p : 𝓞 K)) * z := by rw [h1, one_mul]
@@ -106,7 +110,7 @@ theorem coeff_aeval_scale {σ K : Type} [Field K] (t : K) (P : MvPolynomial σ K
     by_cases h : d = m
     · subst h; simp
     · simp [h]
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq, mul_add]
+  | add p q hp hq => rw [map_add (f := _), MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} (c : Coeff l)
@@ -139,7 +143,8 @@ theorem scale_mem_symO {n : ℕ} (Λ : GenLat E n) (k : ℕ) (hk : ∀ b ∈ Λ.
     · refine Subring.subset_closure (Or.inl ⟨o, ?_⟩)
       simp [φ]
     · refine Subring.subset_closure (Or.inr ⟨σ, i, (k : 𝓞 E) • b, hk b hb, ?_⟩)
-      simp only [φ, letB, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_sum, map_mul, aeval_C, aeval_X,
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [φ, letB, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_sum, map_mul, aeval_C, aeval_X,
         algebraMap_eq, Pi.smul_apply]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [← mul_assoc, ← C_mul]
@@ -193,8 +198,8 @@ namespace GlobalTheory.HarmInCoef
 
 open NumberField IsDedekindDomain MvPolynomial Formalism.L2.Pj Formalism.L2.DIV Formalism.IndefR.FWT
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem harm_mem_coefLat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type) (A : FamIn D.what₂.LL G Pl0 T0 D.R.m) (T : Full D) [Algebra T.J.Q.c.F D.what₂.LL] (R : RealDat D A T.J.Q.c.F) (F : Face D A) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec) (fw : FWTie T.J R κ v₀) (O : ∀ i, OMDat T.J.toCore R i Unit (fun _ => A.μ0)) (hT : LawsFull T), GlobalTheory.Hk3.Core R F → ∀ (i : Fin D.R.m), OMPins T.J R κ v₀ O i → ∀ (Λ : GenLat D.host.E (Vc D i).rank) (h : GA D (Vc D i)), SplitOffBad (Vc D i) (badN D * (T.dδ ((i : ℕ) + 1) (Vc D i).rank).l₂.M) h → (∀ w, w ∈ Λ.La ↔ (fun b => star (w b)) ∈ Bridge.hLat (Vc D i) (fin (Vc D i) h)) → ∀ (lam : HeightOneSpectrum (𝓞 D.what₂.LL)), Λ.TrivAt (Formalism.EigenvalueLevelCeiling.plc lam) → ∀ P ∈ harmL (Dw := T.Q.Dw ((i : ℕ) + 1)) T.Q.c Λ (wtA (κ i)), ∃ (y : VsV D i (O i).c'.F) (s : ℕ), (O i).io y = MvPolynomial.map (incF T.J.toCore.Q.c (O i).c' (O i).hle) P ∧ (s : 𝓞 D.what₂.LL) ∉ lam.asIdeal ∧ InCoefLat R i h ((s : ℂ) • (O i).c0' y) := by
   intro D G _ _ Pl0 T0 A T _ R F κ v₀ fw O hT _hk i hpins Λ h _hsplit hLa lam htriv P hP
 
@@ -297,6 +302,7 @@ theorem harm_mem_coefLat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
   set r : (O i).c'.F := f ((k : T.Q.c.F) ^ Dg) with hrdef
   have hr : r = (k : (O i).c'.F) ^ Dg := by rw [hrdef]; erw [map_pow, map_natCast]
   have hr0 : r ≠ 0 := by rw [hr]; exact pow_ne_zero _ (Nat.cast_ne_zero.2 hk0)
+  set_option synthInstance.maxHeartbeats 200000 in
   refine ⟨r⁻¹ • y0, s * k ^ Dg, ?_, ?_, ?_⟩
   · rw [map_smul, hy0io]
     exact inv_smul_smul₀ hr0 _
@@ -306,6 +312,7 @@ theorem harm_mem_coefLat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
     · exact hs h1
     · exact hklam (lam.isPrime.mem_of_pow_mem _ h1)
   · refine ⟨gramR, c0R, c0L, hFT, s • x0, hsx, ?_⟩
+    set_option synthInstance.maxHeartbeats 200000 in
     have hsm : (s * k ^ Dg) • (r⁻¹ • y0) = s • y0 := by
       rw [← Nat.cast_smul_eq_nsmul (O i).c'.F, ← Nat.cast_smul_eq_nsmul (O i).c'.F s, smul_smul, Nat.cast_mul,
         Nat.cast_pow, ← hr, mul_assoc, mul_inv_cancel₀ hr0, mul_one]

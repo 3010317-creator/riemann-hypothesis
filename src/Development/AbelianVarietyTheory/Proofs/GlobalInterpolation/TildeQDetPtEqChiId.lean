@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.JetsInIffStepField
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MkDetPtEqRelDetQ
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrdSubDetSubStdL
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.JetsInIffStepField
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MkDetPtEqRelDetQ
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrdSubDetSubStdL
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker GlobalTheory.Mem.Col2
 
@@ -18,7 +22,7 @@ theorem tildeQ_detPt_eq_chiId : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host
   have hK := (GlobalTheory.Mem.KerDet.kernel_open_and_factor R H).2.2.2 C.chiPsi hχ.triv (fun v y hy _ => hχ.unr v y hy)
     fun v _ => hχ.unr v
   rw [tildeQ_eq_comp H SQ hK, MonoidHom.comp_apply]
-  exact tildeD_eq_chiId R H C.chiPsi hχ n _ p.deco.2.lat _
+  exact tildeD_eq_chiId R H C.chiPsi hχ n _ p.deco.2.lat.toIsLattice _
     (congrArg (toDtTMod H SQ) (mk_detPt_eq_relDetQ R H n ST SG Q SQ p hL))
 
 end GlobalTheory.Mem.ChiDet

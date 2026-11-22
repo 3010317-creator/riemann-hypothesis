@@ -1,6 +1,10 @@
-import Formalism.ThetaLiftIndependence.Statement
-import Formalism.HermitianLattices.FinalNeighbourConstruct
-import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
+module
+
+public import Formalism.ThetaLiftIndependence.Statement
+public import Formalism.HermitianLattices.FinalNeighbourConstruct
+public import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
+
+@[expose] public section
 
 noncomputable section
 
@@ -23,8 +27,8 @@ def isoSetoid (h : V →ₗ⋆[K] V →ₗ[K] K) :
     · rintro N M P ⟨g, hg, e⟩ ⟨g', hg', e'⟩
       exact ⟨g' * g, (isom h).mul_mem hg' hg, by rw [gmap_mul, e, e']⟩
 
-open Classical in
 
+open Classical in
 def pick (h : V →ₗ⋆[K] V →ₗ[K] K) (s₀ : Finset (Submodule (NumberField.RingOfIntegers K) V))
     (q : Quotient (isoSetoid h)) : Submodule (NumberField.RingOfIntegers K) V :=
   if hq : ∃ N ∈ s₀, Quotient.mk (isoSetoid h) N = q then Classical.choose hq else ⊥
@@ -85,7 +89,7 @@ theorem classRepsDefinite : ClassRepsDefinite := by
 
   have hcard : ∀ M ∈ genus h L, 0 < Nat.card (autL h M) := by
     intro M hM
-    have hfin : Set.Finite (autL h M) := final_autFinite K V h hsymm hpos M hM.1
+    have hfin : Set.Finite (autL h M) := final_autFinite K V h hsymm hpos M hM.1.toIsFullLattice
     have : Finite (autL h M) := hfin.to_subtype
     have : Nonempty (autL h M) := ⟨⟨1, (isom h).one_mem, gmap_one M⟩⟩
     exact Nat.card_pos

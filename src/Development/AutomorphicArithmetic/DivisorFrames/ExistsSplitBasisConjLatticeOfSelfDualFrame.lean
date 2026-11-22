@@ -1,9 +1,14 @@
-import Mathlib
-import Development.AutomorphicArithmetic.LocalEmbeddings.StageGeoDefs
-import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
-import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-import Development.AutomorphicArithmetic.DivisorFrames.ExistsMaxCompactEqFrameGramSplitBasis
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.LocalEmbeddings.StageGeoDefs
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AutomorphicArithmetic.DivisorFrames.ExistsMaxCompactEqFrameGramSplitBasis
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints GlobalTheory.Grid GlobalTheory.ChainFr GlobalTheory.SquareComm GlobalTheory.FinMatch
 open scoped TensorProduct ComplexConjugate GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels Classical
@@ -24,8 +29,26 @@ theorem UpperTheory.exists_splitBasis_conj_lattice_of_selfDual_frame :
   obtain rfl : L = GlobalTheory.TripleSpaceW.conjSub Λ := by
     ext y
     rw [hL, GlobalTheory.TripleSpaceW.mem_conjSub]
-  haveI := GlobalTheory.TripleSpaceW.conjSub_isLattice hΛ.1
-  obtain ⟨b₀, hb₀⟩ := GlobalTheory.AdelicU.exists_isSplitBasis t (GlobalTheory.TripleSpaceW.conjSub Λ) (GlobalTheory.AdelicU.isCMExt_host D)
+  haveI : Submodule.IsFullLattice D.host.E (GlobalTheory.TripleSpaceW.conjSub Λ) := by
+    refine { toIsLattice := GlobalTheory.TripleSpaceW.conjSub_isLattice hΛ.1.toIsLattice, span_eq_top := ?_ }
+    apply eq_top_iff.mpr
+    intro y _
+    have hy : star y ∈ Submodule.span D.host.E (Λ : Set (Fin S.rank → D.host.E)) := by
+      rw [hΛ.1.span_eq_top]; trivial
+    have hy' := GlobalTheory.TripleSpaceW.star_mem_span star GlobalTheory.TripleSpaceW.star_smulE hy
+    have heq : star '' (Λ : Set (Fin S.rank → D.host.E)) =
+        (GlobalTheory.TripleSpaceW.conjSub Λ : Set (Fin S.rank → D.host.E)) := by
+      ext z
+      constructor
+      · rintro ⟨x, hx, rfl⟩
+        change star (star x) ∈ Λ
+        simpa only [star_star, SetLike.mem_coe] using hx
+      · intro hz
+        exact ⟨star z, GlobalTheory.TripleSpaceW.mem_conjSub.mp hz, star_star z⟩
+    simpa only [star_star, heq] using hy' 
+  obtain ⟨b₀, hb₀⟩ : ∃ b : GL (Fin S.rank) (Fv D.host.F v),
+      IsSplitBasis t (GlobalTheory.TripleSpaceW.conjSub Λ) b :=
+    GlobalTheory.AdelicU.exists_isSplitBasis t (GlobalTheory.TripleSpaceW.conjSub Λ) (GlobalTheory.AdelicU.isCMExt_host D)
   obtain ⟨g, hg, hgv⟩ := UpperTheory.exists_maxCompact_eq_frame_gram_splitBasis D S Λ β hΛ hβ v t b₀ hb₀
   rw [← (GlobalTheory.AdelicU.GLint_eq_KO_and_princ_eq_KOne v S.rank).1] at hg
   have h1 : IsSplitBasis t (GlobalTheory.TripleSpaceW.conjSub Λ) (b₀ * g⁻¹) := by

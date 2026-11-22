@@ -1,6 +1,10 @@
-import Development.WeilBound.CoreStatements.PublishedTheorems.CasselmanWallach.SmoothSeminormAndSobolevBounds
-import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.HarishChandraModulesIndefiniteUnitaryGroup
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Unitary
+module
+
+public import Development.WeilBound.CoreStatements.PublishedTheorems.CasselmanWallach.SmoothSeminormAndSobolevBounds
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.HarishChandraModulesIndefiniteUnitaryGroup
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Unitary
+
+@[expose] public section
 
 noncomputable section
 
@@ -30,7 +34,7 @@ def Eop (hK : ∀ v : H, IsKFin ε σ v → v ∈ ReciprocityTheory.ChartRestric
     (h2 : ∀ a b, ∀ v ∈ CompanionTheory.D.gk.HC.KF ε σ, ReciprocityTheory.ChartRestriction.DS.smE ε σ a b v ∈ CompanionTheory.D.gk.HC.KF ε σ)
     (a b : Fin n) : Module.End ℂ (kfin ε σ) where
   toFun v := ⟨(ReciprocityTheory.ChartRestriction.DS.smE ε σ a b (incl hK v) : H), h2 a b (incl hK v) v.2⟩
-  map_add' x y := Subtype.ext (by simp only [map_add, Submodule.coe_add])
+  map_add' x y := Subtype.ext (by simp only [map_add (f := _), Submodule.coe_add])
   map_smul' c x := Subtype.ext (by simp only [map_smul, Submodule.coe_smul, RingHom.id_apply])
 
 variable (hK : ∀ v : H, IsKFin ε σ v → v ∈ ReciprocityTheory.ChartRestriction.DS.smD ε σ)
@@ -41,7 +45,8 @@ theorem incl_E (a b : Fin n) (v : kfin ε σ) :
 
 theorem incl_actM (X : Mx n) (v : kfin ε σ) :
     incl hK (ReciprocityTheory.ChartRestriction.DS.actM (Eop hK h2) X v) = ReciprocityTheory.ChartRestriction.DS.actM (ReciprocityTheory.ChartRestriction.DS.smE ε σ) X (incl hK v) := by
-  simp only [ReciprocityTheory.ChartRestriction.DS.actM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, incl_E]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [ReciprocityTheory.ChartRestriction.DS.actM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, incl_E]
 
 end PositivityTheory.CW.KFiniteInclusion
 

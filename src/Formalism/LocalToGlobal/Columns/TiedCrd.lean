@@ -1,5 +1,9 @@
-import Formalism.LocalToGlobal.Columns.WordFin
-import Formalism.LocalToGlobal.Columns.TiedCB
+module
+
+public import Formalism.LocalToGlobal.Columns.WordFin
+public import Formalism.LocalToGlobal.Columns.TiedCB
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Module Matrix
 open scoped TensorProduct
@@ -47,7 +51,7 @@ theorem clsCrd_eq (u : d.what₂.Word) (i : ℕ) (hi : i ≤ d.R.m) (c : StCl (P
   show (d.clsLat u i c).map (((d.crd i hi : (d.sp.X i).V ≃ₗ[d.host.E] (Fin (d.R.N i) → d.host.E)) :
     (d.sp.X i).V →ₗ[d.host.E] (Fin (d.R.N i) → d.host.E)).restrictScalars (𝓞 d.host.E)) = _
   unfold ColDat.clsLat
-  rw [dif_pos hi, ← Submodule.map_comp]
+  rw [dite_eq_left hi, ← Submodule.map_comp]
   convert Submodule.map_id _
   ext x j
   simp

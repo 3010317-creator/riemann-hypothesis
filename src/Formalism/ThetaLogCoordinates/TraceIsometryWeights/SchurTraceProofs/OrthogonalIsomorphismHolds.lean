@@ -1,5 +1,9 @@
-import Formalism.ThetaLogCoordinates.TraceIsometryWeights.SchurTraceProofs.WeightCompApply
-import Formalism.ThetaLogCoordinates.TraceIsometryWeights.SchurTraceProofs.FischerAdjointnessHolds
+module
+
+public import Formalism.ThetaLogCoordinates.TraceIsometryWeights.SchurTraceProofs.WeightCompApply
+public import Formalism.ThetaLogCoordinates.TraceIsometryWeights.SchurTraceProofs.FischerAdjointnessHolds
+
+@[expose] public section
 
 namespace Formalism.InvariantFactorPaths.PW
 
@@ -108,7 +112,8 @@ private theorem le_iSup_gS_highestWeight_of_stable_of_finW {K V : Type} [Field K
     intro a b hab
     have hsh := G.shift a b (μ + dl a b) (G.cprod cs v)
     rw [add_sub_cancel_right] at hsh
-    rw [← hsh, G.E_cprod, ← hf2 a b hab, Finsupp.sum, map_sum, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [← hsh, G.E_cprod, ← hf2 a b hab, Finsupp.sum, map_sum, map_sum]
     refine Finset.sum_eq_zero fun i hi => ?_
     have hi1 := hf1 a b i
     have hCasi : G.Cas (f a b i) = ((GlW.casI i.2.2.2.choose : ℤ) : K) • f a b i :=
@@ -313,7 +318,7 @@ theorem projection_lattice_holds : ProjP := by
     have e2 : A.projectionOnto B hcompl h2 = 0 :=
       Submodule.linearProjOfIsCompl_apply_right hcompl ⟨h2, hh2⟩
     refine ⟨h1, hh1, h2, hh2, rfl, ?_⟩
-    rw [LinearMap.comp_apply, map_add, e1, e2, add_zero]
+    rw [LinearMap.comp_apply, map_add (f := _), e1, e2, add_zero]
     rfl
   refine ⟨A.subtype ∘ₗ A.projectionOnto B hcompl, ⟨?_, ?_, ?_⟩, ?_⟩
   · ext x

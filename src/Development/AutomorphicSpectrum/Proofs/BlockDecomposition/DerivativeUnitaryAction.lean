@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryExpSkewHermitian
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryExpSkewHermitian
+
+@[expose] public section
 
 noncomputable section
 
@@ -62,7 +66,7 @@ theorem intertwines_unitary : ∀ {n : ℕ} (H V : Type) [NormedAddCommGroup H] 
     have := congrArg Units.val hk
     have h4 : ((uG k : _ˣ) : Matrix (Fin n) (Fin n) ℂ) = k.1 := rfl
     rw [h4] at this
-    simpa [onePar] using this.symm
+    simpa [onePar, GLK.expG] using this.symm
   let Tc : H →L[ℝ] V :=
     (⟨T, T.continuous_of_finiteDimensional⟩ : H →L[ℂ] V).restrictScalars ℝ
   have hsub : ∀ u s : ℝ, onePar X hX (u - s) * onePar X hX s = onePar X hX u := by

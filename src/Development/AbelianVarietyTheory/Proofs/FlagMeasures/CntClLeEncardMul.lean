@@ -1,19 +1,23 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
-import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IdxNOneMulAbsNorm
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeProdReal
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesBoundedDetLeSum
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPowLeCardFlagQuotientStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentBookkeepingDivisorSumLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberRootDiscFactorLeHHZStatement
-import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IdxNOneMulAbsNorm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeProdReal
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesBoundedDetLeSum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPowLeCardFlagQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentBookkeepingDivisorSumLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberRootDiscFactorLeHHZStatement
+public import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
+
+@[expose] public section
 
 namespace GlobalTheory.LoopC.GenericMean
 
@@ -30,8 +34,8 @@ theorem lead_eq {E : Type} [Field E] {n : ℕ} {Z Z₂ : Matrix (Fin n) (Fin n) 
       (fun i j hij => by simp [hA0 i j hij]) (fun i => by simp [hB1]) (fun i j hij => by simp [hB0 i j hij])
   · rfl
 
-open GlobalTheory.Mass GlobalTheory.LoopC.DetCard Formalism.HermitianLatticesTheory in
 
+open GlobalTheory.Mass GlobalTheory.LoopC.DetCard Formalism.HermitianLatticesTheory in
 theorem det_index {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
     [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K)
     (hK : IsCMUnram K) (hs : h.IsSymm) (M P : Submodule (𝓞 K) V) (hM : M.FG) (hI : IsIntegralLat h M) (hP : P ≤ M)
@@ -68,7 +72,7 @@ theorem le_finrank_orth {E : Type} [Field E] [NumberField E] [StarRing E] {S : H
     have hv' : ∀ i, S.hT (Sum.elim F.fvec F'.fvec i) v = 0 := fun i => congrFun (LinearMap.mem_ker.1 hv) i
     refine (Formalism.MainNotions.mem_orth_iff _ _).2 fun x hx => ?_
     obtain ⟨p, hp, q, hq, rfl⟩ := Submodule.mem_sup.1 hx
-    rw [map_add, LinearMap.add_apply,
+    rw [map_add (f := _), LinearMap.add_apply,
       Formalism.MainNotions.hT_zero_of_mem_Xplus F (fun a => by simpa [FlagG.fvec] using hv' (.inl a.castSucc))
         (by simpa [FlagG.fvec] using hv' (.inl (Fin.last r))) p hp,
       Formalism.MainNotions.hT_zero_of_mem_Xplus F' (fun a => by simpa [FlagG.fvec] using hv' (.inr a.castSucc))

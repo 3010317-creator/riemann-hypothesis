@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+
+@[expose] public section
 
 open NumberField IsDedekindDomain
 
@@ -118,7 +122,7 @@ def homG (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) : 
   zero_mem' := fun _ _ => zero_mem _
   smul_mem' := fun r _ hx y hy => Submodule.smul_mem _ r (hx y hy)
 
-theorem homG_fg (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) (hN : Submodule.IsLattice E N)
+theorem homG_fg (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) (hN : Submodule.IsFullLattice E N)
     (hN' : Submodule.IsLattice E N') : (homG N N').FG := by
   obtain ⟨G, hG⟩ := hN.fg
   have : Module.Finite (𝓞 E) ↥N' := Module.Finite.iff_fg.2 hN'.fg
@@ -130,8 +134,8 @@ theorem homG_fg (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E
     intro x x' h
     apply Subtype.ext
     have hspan : Submodule.span E (G : Set (Sp E a)) = ⊤ := by
-      rw [eq_top_iff, ← hN.span_eq_top, Submodule.span_le, ← hG]
-      exact fun y hy => Submodule.span_subset_span (𝓞 E) E _ hy
+      rw [← Submodule.span_span_of_tower (𝓞 E), hG]
+      exact hN.span_eq_top
     refine LinearMap.ext_on hspan fun g hg => ?_
     exact congrArg Subtype.val (congrFun h ⟨g, hg⟩)
   have : Module.Finite (𝓞 E) ↥(homG N N') := Module.Finite.of_injective ev hinj
@@ -169,7 +173,7 @@ theorem homAt_clear (S : Finset (HeightOneSpectrum (𝓞 E))) (N : Submodule (�
       rw [hc, mul_comm, mul_smul]
       exact N'.smul_mem _ (hsx g hg)
     | zero => rw [map_zero]; exact N'.zero_mem
-    | add y y' _ _ h h' => rw [map_add]; exact N'.add_mem h h'
+    | add y y' _ _ h h' => rw [map_add (f := _)]; exact N'.add_mem h h'
     | smul r y _ h => rw [LinearMap.map_smul_of_tower]; exact N'.smul_mem _ h
 
 theorem homAt_div (S : Finset (HeightOneSpectrum (𝓞 E))) (N : Submodule (𝓞 E) (Sp E a)) (N' : Submodule (𝓞 E) (Sp E b)) (k : ℕ) (hk : 0 < k)
@@ -198,7 +202,7 @@ theorem homAt_div (S : Finset (HeightOneSpectrum (𝓞 E))) (N : Submodule (𝓞
 
 theorem latFin (X : Fields) (a b : ℕ) (Sall : Finset (HeightOneSpectrum (𝓞 X.E))) : LatFin (X := X) a b Sall := by
   intro N N' c c' hN hN' _ hc'
-  obtain ⟨F, hF, hFM⟩ := semilocal_reps Sall (homG N N') (homAt Sall N N') (homG_fg N N' hN.1 hN'.1) (homG_le Sall N N')
+  obtain ⟨F, hF, hFM⟩ := semilocal_reps Sall (homG N N') (homAt Sall N N') (homG_fg N N' hN.1 hN'.1.toIsLattice) (homG_le Sall N N')
     (fun x hx P hP => homAt_clear Sall N N' hN.1.fg x hx P hP) c' hc' (fun x hx j hj => homAt_div Sall N N' c' hc' x hx j hj)
   exact finite_quot_of_reps _ c c' F hF hFM
 

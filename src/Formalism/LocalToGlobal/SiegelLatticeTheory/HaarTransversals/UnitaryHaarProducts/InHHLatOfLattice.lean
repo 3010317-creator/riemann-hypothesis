@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHFinOrd
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictAll
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHFinOrd
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictAll
+
+@[expose] public section
 
 noncomputable section
 
@@ -28,34 +32,19 @@ theorem gv_crd (y : (VS D).V) : gv X (X.crd y) = y := by
   simp only [RingEquiv.apply_symm_apply, ← Module.Basis.equivFun_apply]
   exact X.bas.equivFun.symm_apply_apply y
 
-abbrev sO : 𝓞 D.host.E →+* 𝓞 X.B.I.E := (RingOfIntegers.mapRingEquiv X.ιE.symm : 𝓞 D.host.E →+* 𝓞 X.B.I.E)
-
 abbrev sO' : 𝓞 X.B.I.E →+* 𝓞 D.host.E := (RingOfIntegers.mapRingEquiv X.ιE : 𝓞 X.B.I.E →+* 𝓞 D.host.E)
 
 abbrev sE : X.B.I.E →+* D.host.E := (X.ιE : X.B.I.E →+* D.host.E)
-
-def crdO : (VS D).V →ₛₗ[sO X] (Fin X.B.I.n → X.B.I.E) where
-  toFun := X.crd
-  map_add' y z := by
-    funext i
-    show X.ιE.symm (X.bas.repr (y + z) i) = X.ιE.symm (X.bas.repr y i) + X.ιE.symm (X.bas.repr z i)
-    rw [map_add, Finsupp.add_apply, map_add]
-  map_smul' a y := by
-    funext i
-    show X.ιE.symm (X.bas.repr (a • y) i) = (sO X a) • X.ιE.symm (X.bas.repr y i)
-    have ha : a • y = (a : D.host.E) • y := (algebraMap_smul D.host.E a y).symm
-    rw [ha, map_smul, Finsupp.smul_apply, smul_eq_mul, map_mul, Algebra.smul_def]
-    rfl
 
 def gvO : (Fin X.B.I.n → X.B.I.E) →ₛₗ[sO' X] (VS D).V where
   toFun := gv X
   map_add' v w := by
     show X.bas.equivFun.symm (fun i => X.ιE ((v + w) i)) =
       X.bas.equivFun.symm (fun i => X.ιE (v i)) + X.bas.equivFun.symm (fun i => X.ιE (w i))
-    rw [← map_add]
+    rw [← map_add (f := _)]
     congr 1
     funext i
-    simp [map_add]
+    simp [map_add (f := _)]
   map_smul' c v := by
     show X.bas.equivFun.symm (fun i => X.ιE ((c • v) i)) = (sO' X c) • X.bas.equivFun.symm (fun i => X.ιE (v i))
     have hc : (sO' X c) • X.bas.equivFun.symm (fun i => X.ιE (v i)) =
@@ -64,31 +53,30 @@ def gvO : (Fin X.B.I.n → X.B.I.E) →ₛₗ[sO' X] (VS D).V where
     rw [hc, ← map_smul]
     congr 1
     funext i
-    simp only [Pi.smul_apply, smul_eq_mul]
-    rw [Algebra.smul_def, map_mul]
-    rfl
+    change X.ιE ((c : X.B.I.E) * v i) = X.ιE (c : X.B.I.E) * X.ιE (v i)
+    exact map_mul X.ιE _ _
 
 def gvE : (Fin X.B.I.n → X.B.I.E) →ₛₗ[sE X] (VS D).V where
   toFun := gv X
   map_add' v w := by
     show X.bas.equivFun.symm (fun i => X.ιE ((v + w) i)) =
       X.bas.equivFun.symm (fun i => X.ιE (v i)) + X.bas.equivFun.symm (fun i => X.ιE (w i))
-    rw [← map_add]
+    rw [← map_add (f := _)]
     congr 1
     funext i
-    simp [map_add]
+    simp [map_add (f := _)]
   map_smul' c v := by
     show X.bas.equivFun.symm (fun i => X.ιE ((c • v) i)) = (sE X c) • X.bas.equivFun.symm (fun i => X.ιE (v i))
     rw [← map_smul]
     congr 1
     funext i
-    simp only [Pi.smul_apply, smul_eq_mul, map_mul]
-    rfl
+    change X.ιE (c * v i) = X.ιE c * X.ιE (v i)
+    exact map_mul X.ιE _ _
 
 end LatticeCoordinateLemmas
 
-open LatticeCoordinateLemmas in
 
+open LatticeCoordinateLemmas in
 theorem latOfLattice_holds {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : LatOfLattice X u := by
   intro h
   haveI : RingHomSurjective (sO' X) := ⟨(RingOfIntegers.mapRingEquiv X.ιE).surjective⟩
@@ -104,7 +92,7 @@ theorem latOfLattice_holds {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : L
       exact hv
     · intro hy
       exact ⟨X.crd y, hy, gv_crd X y⟩
-  · refine ⟨hfg.map _, ?_⟩
+  · refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (hfg.map (gvO X)), span_eq_top := ?_ }
     rw [Submodule.map_coe, show ⇑(gvO X) = ⇑(gvE X) from rfl, Submodule.span_image, hspan,
       Submodule.map_top, LinearMap.range_eq_top]
     exact fun y => ⟨X.crd y, gv_crd X y⟩

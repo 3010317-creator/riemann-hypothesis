@@ -1,24 +1,28 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.StepUnfold
-import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ClassFunctionSumIntegral
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousReGLSymm
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfOfMulFinOf
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KerFockMovedReal
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KerMovedVec
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MvZOneEqMapUnivSubst
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsInvertibleFamilyEvalSpan
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockSubstitutionIdentities
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EvalAtJetMap
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PsiTContinuous
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRank
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBelow
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLaws
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsRealFnNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.StepUnfold
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicInfFinSplitPeriodsUnimodular
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ClassFunctionSumIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousReGLSymm
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfOfMulFinOf
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KerFockMovedReal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KerMovedVec
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MvZOneEqMapUnivSubst
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsInvertibleFamilyEvalSpan
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockSubstitutionIdentities
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EvalAtJetMap
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PsiTContinuous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBelow
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterInfinityExponentGroupLaws
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsRealFnNeZero
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.DefStep
@@ -43,15 +47,15 @@ theorem integrable_term {K : Type} [Group K] [TopologicalSpace K] [IsTopological
     Integrable (fun k => ℓ (mvZ (fun τ => (r k τ)⁻¹) (fun _ => 1) P) * evalAt (fun τ => r k τ * y τ) F) ν := by
   have key : ∀ k, ℓ (mvZ (fun τ => (r k τ)⁻¹) (fun _ => 1) P) =
       ∑ m ∈ (GlobalTheory.KJAvg.univSubst P).support,
-        eval (fun w => r k⁻¹ w.1 w.2.1 w.2.2) (coeff m (GlobalTheory.KJAvg.univSubst P)) * ℓ (monomial m 1) := by
+        eval (fun w => r k⁻¹ w.1 w.2.1 w.2.2) (AddMonoidAlgebra.coeff (GlobalTheory.KJAvg.univSubst P) m) * ℓ (monomial m 1) := by
     intro k
     rw [GlobalTheory.KJAvg.mvZ_one_eq_map_univSubst, GlobalTheory.KJAvg.linear_eq_sum_coeff ℓ _ _ (MvPolynomial.support_map_subset _ _)]
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [MvPolynomial.coeff_map]
     simp only [GlobalTheory.KJAvg.ontoUni_inv hr]
   simp_rw [key, Finset.sum_mul]
-  refine integrable_finset_sum _ fun m _ => ?_
-  have hm := (GlobalTheory.KJAvg.integrable_avg_term ν hr (coeff m (GlobalTheory.KJAvg.univSubst P)) y F).mul_const (ℓ (monomial m 1))
+  refine integrable_finsetSum _ fun m _ => ?_
+  have hm := (GlobalTheory.KJAvg.integrable_avg_term ν hr (AddMonoidAlgebra.coeff (GlobalTheory.KJAvg.univSubst P) m) y F).mul_const (ℓ (monomial m 1))
   refine hm.congr (Filter.Eventually.of_forall fun k => ?_)
   simp only
   ring
@@ -163,7 +167,7 @@ theorem avg_eq_jet (hab : a ≤ b) (ha : 0 < a) (lam : ι → DomWeight a) (lam'
       ((ℓ.comp (mvZ (fun _ => 1) h).toLinearMap) (mvZ (fun τ => (r k τ)⁻¹) (fun _ => 1) P) *
         evalAt (fun τ => r k τ * y j τ) (v.1 * (∏ τ, (frDet ℂ a τ : PY ι a) ^ n τ)))) ν :=
     fun j _ => (integrable_term ν hr P _ (y j) _).const_mul (Pc j)
-  rw [integral_congr_ae (Filter.Eventually.of_forall hmain), integral_const_mul, integral_finset_sum _ hint]
+  rw [integral_congr_ae (Filter.Eventually.of_forall hmain), integral_const_mul, integral_finsetSum _ hint]
   simp only [integral_const_mul, hS _ _ hFV]
   simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply,
     Submodule.subtype_apply, evalLin_apply, smul_eq_mul, hu, evalAt_smul', evalAt_lft_eq,
@@ -181,7 +185,8 @@ theorem substF_rename (g : ι → Matrix (Fin a) (Fin a) ℂ) (h : ι → Matrix
   rw [MvPolynomial.aeval_rename, ← AlgHom.comp_apply, MvPolynomial.comp_aeval]
   refine congrArg (fun f => aeval f P) ?_
   funext v
-  simp only [Function.comp_apply, map_sum, map_mul, MvPolynomial.rename_C, MvPolynomial.rename_X,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Function.comp_apply, map_sum, map_mul, MvPolynomial.rename_C, MvPolynomial.rename_X,
     Matrix.transpose_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -444,8 +449,8 @@ theorem map_conj_of_unitary {n : ℕ} {u : Matrix (Fin n) (Fin n) ℂ} (hu : u �
 
 end Grid
 
-open GlobalTheory.KJInf GlobalTheory.SeeSaw in
 
+open GlobalTheory.KJInf GlobalTheory.SeeSaw in
 theorem real_average_jet : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {U : Set T} (S : GridChoice W U) {μ0 : T},
     L.Is μ0 → ∀ (i : ℕ), i < D.R.m →
     ∀ (a b : D.what₂.Tau → ℚ), (∀ τ, HasInfExp D (G.chrS (.chi i D.R.m : Pair T)) τ (a τ)) → (∀ τ, HasInfExp D (G.chrT (.chi i D.R.m : Pair T)) τ (b τ)) →

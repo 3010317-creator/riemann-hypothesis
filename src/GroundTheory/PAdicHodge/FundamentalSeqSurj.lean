@@ -1,6 +1,11 @@
-import Mathlib
-import GroundTheory.PAdicHodge.FundamentalSeqLog
-import GroundTheory.PAdicHodge.GalSmulAlgebraMapPadicPlus
+module
+
+public import Mathlib
+public import GroundTheory.PAdicHodge.FundamentalSeqLog
+public import GroundTheory.PAdicHodge.GalSmulAlgebraMapPadicPlus
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 noncomputable section
@@ -14,10 +19,8 @@ namespace ACris
 variable {p : ℕ} [hp : Fact p.Prime]
 
 local notation "𝒪" => normInteger ℂ_[p]
-local notation "𝒪♭" => PreTilt (normInteger ℂ_[p]) p
-local notation "𝔹" => BDeRhamPlus (normInteger ℂ_[p]) p
+local notation "𝒪♭" => PreTilt 𝒪 p
 local notation "𝔭" => Ideal.span {(p : ACris ℂ_[p] p)}
-local notation "θdR" => IsPerfectoidField.thetaBDeRhamPlusField (K := ℂ_[p]) p
 
 theorem exists_untilt_eq_of_cp (π : 𝒪) : ∃ x : 𝒪♭, PreTilt.untilt x = π := by
   have hp0 : 0 < p := hp.out.pos
@@ -62,16 +65,16 @@ theorem exists_phi_eq_p_mul_theta_eq (c : 𝒪) :
     exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton.2 (pow_dvd_pow _ hn))⟩
   obtain ⟨s, hs⟩ := exists_isAdicSum ha
   refine ⟨s, ?_, ?_⟩
-  · have h1 := (hs.map (phi ℂ_[p] p) span_p_le_comap_phi).congr
+  · have h1 := (hs.map (phi (K := ℂ_[p]) (p := p)) span_p_le_comap_phi).congr
       (b := fun n => (p : ACris ℂ_[p] p) * a n) (fun n => by
         simp only [ha_def]
         rw [map_mul, map_pow, map_natCast, hgφ]
         ring)
     exact h1.unique (hs.mul_left _)
-  · have hle : 𝔭 ≤ (Ideal.span {(p : 𝒪)}).comap (theta ℂ_[p] p) := by
+  · have hle : 𝔭 ≤ (Ideal.span {(p : 𝒪)}).comap (theta (K := ℂ_[p]) (p := p)) := by
       rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, map_natCast]
       exact Ideal.mem_span_singleton_self _
-    have h1 := hs.map (theta ℂ_[p] p) hle
+    have h1 := hs.map (theta (K := ℂ_[p]) (p := p)) hle
     have htel : ∀ M, ∑ j ∈ Finset.range M, theta ℂ_[p] p (a j) =
         (p : 𝒪) ^ 2 * c - (p : 𝒪) ^ (M + 2) * cs M := by
       intro M
@@ -90,8 +93,10 @@ theorem exists_phi_eq_p_mul_theta_eq (c : 𝒪) :
 
 section Plus
 
-set_option maxHeartbeats 1600000 in
+local notation "𝔹" => BDeRhamPlus 𝒪 p
+local notation "θdR" => IsPerfectoidField.thetaBDeRhamPlusField (K := ℂ_[p]) p
 
+set_option maxHeartbeats 1600000 in
 theorem phiPlus_eq_of_mul_eq {y : (BCrisPlus ℂ_[p] p)} {a : ACris ℂ_[p] p} {k m : ℕ}
     (hy : y * (p : (BCrisPlus ℂ_[p] p)) ^ k = algebraMap (ACris ℂ_[p] p) (BCrisPlus ℂ_[p] p) a)
     (ha : phi ℂ_[p] p a = (p : ACris ℂ_[p] p) ^ m * a) :
@@ -101,8 +106,8 @@ theorem phiPlus_eq_of_mul_eq {y : (BCrisPlus ℂ_[p] p)} {a : ACris ℂ_[p] p} {
     ← hy] at h
   exact (isUnit_p_bCrisPlus.pow k).mul_right_cancel (by rw [h]; ring)
 
-set_option maxHeartbeats 1600000 in
 
+set_option maxHeartbeats 1600000 in
 theorem exists_phiPlus_eq_theta_eq (c : ℂ_[p]) :
     ∃ y : (BCrisPlus ℂ_[p] p), phiPlus ℂ_[p] p y = (p : (BCrisPlus ℂ_[p] p)) * y ∧ θdR (iotaPlus ℂ_[p] p y) = c := by
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ‖(p : ℂ_[p]) ^ N * c‖ ≤ 1 := by
@@ -130,8 +135,8 @@ theorem exists_phiPlus_eq_theta_eq (c : ℂ_[p]) :
   rw [hc'']
   ring
 
-set_option maxHeartbeats 1600000 in
 
+set_option maxHeartbeats 1600000 in
 theorem exists_phiPlus_eq_pow_theta_eq {m : ℕ} (hm : 1 ≤ m) (c : ℂ_[p]) :
     ∃ y : (BCrisPlus ℂ_[p] p), phiPlus ℂ_[p] p y = (p : (BCrisPlus ℂ_[p] p)) ^ m * y ∧ θdR (iotaPlus ℂ_[p] p y) = c := by
   obtain ⟨k, rfl⟩ : ∃ k, m = k + 1 := ⟨m - 1, by omega⟩
@@ -153,18 +158,19 @@ theorem phiPlus_periodTPlus : phiPlus ℂ_[p] p (periodTPlus hε) = (p : (BCrisP
 
 set_option maxHeartbeats 1600000 in
 theorem iotaPlus_periodTPlus : iotaPlus ℂ_[p] p (periodTPlus hε) = fontaineT ε hε := by
-  rw [periodTPlus, iotaPlus_algebraMap, iota_periodT]
+  rw [periodTPlus, iotaPlus_algebraMap]
+  exact iota_periodT hε
+
 
 include hζ in
-
 theorem mem_span_fontaineT_of_theta_eq_zero {r : 𝔹} (hr : θdR r = 0) :
     r ∈ Ideal.span {fontaineT ε hε} := by
   rw [← maximalIdeal_eq_span_fontaineT hε hζ, IsPerfectoidField.maximalIdeal_bDeRhamPlus]
   exact hr
 
+
 set_option maxHeartbeats 1600000 in
 include hζ in
-
 theorem exists_phiPlus_eq_pow_iotaPlus_sub_mem {m n : ℕ} (hnm : n ≤ m) (w : 𝔹) :
     ∃ y : (BCrisPlus ℂ_[p] p), phiPlus ℂ_[p] p y = (p : (BCrisPlus ℂ_[p] p)) ^ m * y ∧
       iotaPlus ℂ_[p] p y - w ∈ Ideal.span {fontaineT ε hε ^ n} := by
@@ -180,13 +186,13 @@ theorem exists_phiPlus_eq_pow_iotaPlus_sub_mem {m n : ℕ} (hnm : n ≤ m) (w : 
     refine ⟨y + periodTPlus hε ^ n * z, ?_, ?_⟩
     · have hpm : (p : (BCrisPlus ℂ_[p] p)) ^ m = (p : (BCrisPlus ℂ_[p] p)) ^ n * (p : (BCrisPlus ℂ_[p] p)) ^ (m - n) := by
         rw [← pow_add, Nat.add_sub_cancel' (by omega)]
-      rw [map_add, map_mul, map_pow, hy, hz, phiPlus_periodTPlus, mul_pow, hpm]
+      rw [map_add (f := _), map_mul, map_pow, hy, hz, phiPlus_periodTPlus, mul_pow, hpm]
       ring
-    · have h0 : θdR (d + iotaPlus ℂ_[p] p z) = 0 := by rw [map_add, hz', add_neg_cancel]
+    · have h0 : θdR (d + iotaPlus ℂ_[p] p z) = 0 := by rw [map_add (f := _), hz', add_neg_cancel]
       obtain ⟨e, he⟩ := Ideal.mem_span_singleton'.1 (mem_span_fontaineT_of_theta_eq_zero hε hζ h0)
       rw [Ideal.mem_span_singleton']
       refine ⟨e, ?_⟩
-      rw [map_add, map_mul, map_pow, iotaPlus_periodTPlus, add_sub_right_comm, ← hd, pow_succ]
+      rw [map_add (f := _), map_mul, map_pow, iotaPlus_periodTPlus, add_sub_right_comm, ← hd, pow_succ]
       linear_combination (fontaineT ε hε ^ n) * he
 
 end Plus

@@ -1,15 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPairLat
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHermitianSignaturePosSmulBlockDiagonalReindexStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCartanInvolutionHermitianSmulBlockDiagonalReinStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemPolarizationIdealOfMemConjStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaledStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewFormStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPairLat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHermitianSignaturePosSmulBlockDiagonalReindexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCartanInvolutionHermitianSmulBlockDiagonalReinStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemPolarizationIdealOfMemConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaledStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledBlockSumSelfDualTraceSkewFormStatement
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links
 open IsDedekindDomain NumberField MeasureTheory Matrix
@@ -43,6 +47,57 @@ theorem isLattice_pairLat {E : Type} [Field E] [NumberField E] {a b d : ℕ} {�
     (hB : Submodule.IsLattice E ΛB) (e : Fin a ⊕ Fin b ≃ Fin d) :
     Submodule.IsLattice E (pairLat (scLat 𝔞 ΛA) (scLat 𝔞 ΛB) e) :=
   GlobalTheory.T.isLattice_latticeBlockDirectSum_scaled h𝔞 hA hB e
+
+private theorem scLat_isFull {E : Type} [Field E] [NumberField E] {n : ℕ}
+    {𝔞 : FractionalIdeal (𝓞 E)⁰ E} (h𝔞 : 𝔞 ≠ 0)
+    {M : Submodule (𝓞 E) (Fin n → E)} (hM : Submodule.IsFullLattice E M) :
+    Submodule.IsFullLattice E (scLat 𝔞 M) := by
+  haveI := GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice h𝔞 hM.toIsLattice
+  obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
+    (FractionalIdeal.coeToSubmodule_ne_bot.mpr h𝔞)
+  have ha' : a ∈ 𝔞 := ha
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro x _
+  have hle : Submodule.span E (M : Set (Fin n → E)) ≤ Submodule.span E (scLat 𝔞 M : Set (Fin n → E)) := by
+    apply Submodule.span_le.mpr
+    intro y hy
+    have hay : a • y ∈ scLat 𝔞 M := by
+      intro c hc
+      have hca : c * a ∈ (1 : FractionalIdeal (𝓞 E)⁰ E) := by
+        rw [← inv_mul_cancel₀ h𝔞]
+        exact FractionalIdeal.mul_mem_mul hc ha'
+      obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp hca
+      rw [smul_smul, ← hr, algebraMap_smul]
+      exact M.smul_mem r hy
+    have := (Submodule.span E (scLat 𝔞 M : Set (Fin n → E))).smul_mem a⁻¹ (Submodule.subset_span hay)
+    simpa [smul_smul, inv_mul_cancel₀ ha0] using this
+  apply hle
+  rw [Submodule.IsFullLattice.span_eq_top (self := hM)]
+  trivial
+
+private theorem pairLat_isFull {E : Type} [Field E] [NumberField E] {a b d : ℕ}
+    {M : Submodule (𝓞 E) (Fin a → E)} {N : Submodule (𝓞 E) (Fin b → E)}
+    (hM : Submodule.IsFullLattice E M) (hN : Submodule.IsFullLattice E N)
+    (e : Fin a ⊕ Fin b ≃ Fin d) : Submodule.IsFullLattice E (pairLat M N e) := by
+  haveI := GlobalTheory.SkewLat.PairLatLattice.pairLat_isLattice hM.toIsLattice hN.toIsLattice e
+  let φ : (Fin d → E) ≃ₗ[E] (Fin a → E) × (Fin b → E) :=
+    (LinearEquiv.funCongrLeft E E e).trans (LinearEquiv.sumArrowLequivProdArrow _ _ E E)
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro x _
+  have hle : Submodule.span E ((M.prod N : Submodule (𝓞 E) ((Fin a → E) × (Fin b → E))) : Set _) ≤
+      (Submodule.span E (pairLat M N e : Set (Fin d → E))).comap φ.symm.toLinearMap := by
+    apply Submodule.span_le.mpr
+    intro y hy
+    apply Submodule.subset_span
+    change φ.symm y ∈ pairLat M N e
+    rw [mem_pairLat]
+    simpa [φ, LinearEquiv.sumArrowLequivProdArrow, Equiv.sumArrowEquivProdArrow] using hy
+  have hx : φ x ∈ Submodule.span E ((M.prod N : Submodule (𝓞 E) ((Fin a → E) × (Fin b → E))) : Set _) := by
+    rw [GlobalTheory.SkewLat.PairLatLattice.prod_span_eq_top hM hN]
+    trivial
+  simpa using hle hx
 
 theorem dual_pairLat {D : D7} (hc : ∀ c ∈ D.host.AAbar, star c ∈ D.host.AA) (A B : HSp D)
     {ΛA : Submodule (𝓞 D.host.E) (Fin A.rank → D.host.E)} {ΛB : Submodule (𝓞 D.host.E) (Fin B.rank → D.host.E)}
@@ -78,8 +133,8 @@ theorem I_smul_skewGram_map {D : D7} (A B : HSp D) {d : ℕ} (e : Fin A.rank ⊕
       Matrix.transpose_apply, Matrix.zero_apply, map_zero, mul_zero, hg, Formalism.BasicNotions.TH.gramAt, Matrix.map_apply]
   all_goals linear_combination (-(((tauE D τ D.host.xi0).im : ℝ) : ℂ) * tauE D τ (HSpace.gram _ _ _)) * hI
 
-open GlobalTheory.SkewLat in
 
+open GlobalTheory.SkewLat in
 theorem bigSpace_isSkew : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (_hL : L.Is μ₀) (W : G.Weil)
     (i j : Fin D.R.m) (e : Num G i j) (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau),
     (∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) →
@@ -103,10 +158,12 @@ theorem bigSpace_isSkew : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} 
     exact zero_ne_one this
   set Λ := pairLat (scLat D.host.AA (G.Λ (.grid (i : ℕ) ((j : ℕ) + 1)))) (scLat D.host.AA (G.Λ (.grid ((i : ℕ) + 1) (j : ℕ)))) e
     with hΛ
-  have hlat : Submodule.IsLattice D.host.E Λ := isLattice_pairLat hAA hV.sd.1 hV₁.sd.1 e
+  have hlat : Submodule.IsLattice D.host.E Λ := isLattice_pairLat hAA hV.sd.1.toIsLattice hV₁.sd.1.toIsLattice e
+  have hfull : Submodule.IsFullLattice D.host.E Λ :=
+    pairLat_isFull (scLat_isFull hAA hV.sd.1) (scLat_isFull hAA hV₁.sd.1) e
   have hex : ∀ v : B.P, ∃ β, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ β := fun v => GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) Λ hcm
   classical
-  refine ⟨Λ, fun v => if h : v ∈ B.P then (hex ⟨v, h⟩).choose else 1, ?skew, ?sig, hlat, ?dual, ?cartan, ?bas⟩
+  refine ⟨Λ, fun v => if h : v ∈ B.P then (hex ⟨v, h⟩).choose else 1, ?skew, ?sig, hfull, ?dual, ?cartan, ?bas⟩
   case skew =>
     intro k l
     obtain ⟨k, rfl⟩ := e.surjective k
@@ -147,7 +204,7 @@ theorem bigSpace_isSkew : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} 
   case bas =>
     intro v
     show GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ (if h : (v : HeightOneSpectrum (𝓞 D.host.F)) ∈ B.P then (hex ⟨v, h⟩).choose else 1)
-    rw [dif_pos v.2]
+    rw [dite_eq_left v.2]
     exact (hex v).choose_spec
 
 end GlobalTheory.SkewLat

@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSFinVolSk
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSAdTup
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSOmDecomp
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MassComputations.LatHat
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.RPGlue
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSFinVolSk
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSAdTup
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NcSOmDecomp
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MassComputations.LatHat
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.RPGlue
+
+@[expose] public section
 
 noncomputable section
 
@@ -33,7 +37,7 @@ theorem int_smul_mem {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (M : ℤ) (hM : 
   rw [e]
   exact S.smul_mem _ hy
 
-theorem ev_latLoc_std {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsLattice E L) :
+theorem ev_latLoc_std {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) :
     ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, latLoc (E := E) v (L : Set (Fin n → E)) =
       latLoc (E := E) v ((MassDataMassesW.KCptW.stdSub : Submodule (𝓞 E) (Fin n → E)) : Set (Fin n → E)) := by
   obtain ⟨N, hN0, hN⟩ := MassDataMassesW.KCptW.std_mult L hL.span_eq_top
@@ -99,9 +103,11 @@ theorem ev_crd_oev {d : ℕ} (b : Module.Basis (Fin d) F E) :
     rw [hcrd]
     have ho : (o : E) = ∑ t, (B.repr o t) • ((B t : 𝓞 E) : E) := by
       have := congrArg (algebraMap (𝓞 E) E) (B.sum_repr o)
-      rw [map_sum] at this
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum] at this
       simpa [map_zsmul] using this.symm
-    rw [ho, map_sum, Finsupp.finset_sum_apply, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [ho, map_sum, Finsupp.finsetSum_apply, map_sum]
     refine Subring.sum_mem _ fun t _ => ?_
     rw [map_zsmul, Finsupp.smul_apply, map_zsmul]
     exact Subring.zsmul_mem _ (hv t l) _
@@ -114,7 +120,7 @@ theorem ev_crd_oev {d : ℕ} (b : Module.Basis (Fin d) F E) :
     exact hgen o l
   | zero => simp [PI.VolStabS.PositiveNearLattice.crd]
   | add a c _ _ ha hc =>
-    simp only [PI.VolStabS.PositiveNearLattice.crd, map_add, Finsupp.add_apply] at *
+    simp only [PI.VolStabS.PositiveNearLattice.crd, map_add (f := _), Finsupp.add_apply] at *
     exact Subring.add_mem _ ha hc
   | smul c a _ ha =>
     have e : PI.VolStabS.PositiveNearLattice.crd b (Fv F v) (c • a) l =

@@ -1,6 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConjSplit
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConjSplit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX GlobalTheory.HeightCounting NumberField IsDedekindDomain Polynomial
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
@@ -53,7 +58,7 @@ theorem mem_iSup_range_locMap : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
       exact Submodule.mem_iSup_of_mem ⟨T'', hT''⟩ ⟨_, rfl⟩
     · rw [map_zero]; exact zero_mem _
     · intro f₁ f₂ h₁ h₂
-      rw [map_add]; exact add_mem h₁ h₂
+      rw [map_add (f := _)]; exact add_mem h₁ h₂
   rcases π.irrS.2.2 I hsub hIS with hbot | htop
   · exfalso
     obtain ⟨a, ha⟩ := exists_ne_zero_of_irrRep σ

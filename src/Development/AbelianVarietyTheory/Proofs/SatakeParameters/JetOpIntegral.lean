@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NotDvdCardOfInjective
-import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.FourierColumnIndicator
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SourceLatticeInvariance
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.CharacterValuation
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.JetSumTable
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NotDvdCardOfInjective
+public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.FourierColumnIndicator
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SourceLatticeInvariance
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.CharacterValuation
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.JetSumTable
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
+
+@[expose] public section
 
 noncomputable section
 
@@ -26,8 +30,8 @@ def AwayAt (P : HeightOneSpectrum (𝓞 E)) (w : HeightOneSpectrum (𝓞 K)) (B 
     (N' : Submodule (𝓞 E) (Sp E b)) (Φ : HomE E a b → K) : Prop :=
   (∀ x, w.valuation K (Φ x) ≤ 1) ∧ ∀ x z, z ∈ homAt {P} N N' → Φ (x + ((qOf P : E) ^ B) • z) = Φ x
 
-open Classical in
 
+open Classical in
 def DatumAt (Sg S : Finset (HeightOneSpectrum (𝓞 E))) (g c : ℕ) (w : HeightOneSpectrum (𝓞 K)) (N : Submodule (𝓞 E) (Sp E a))
     (N' : Submodule (𝓞 E) (Sp E b)) (Ξ : HomE E a b → K) : Prop :=
   (∀ x, w.valuation K (Ξ x) ≤ 1) ∧ (∀ x, Ξ x ≠ 0 → x ∈ homAt Sg N N') ∧
@@ -48,11 +52,6 @@ def JetLossAt {X : Fields} (Pr : Primes X) (R : Ranks) (A : Amb X)
     w.valuation X.K ((Pr.g i : X.K) ^ (X.f * R.N j * b) *
       (e.prod fun k n => X.emb k.1 (star ((Pr.piG i : 𝓞 X.E) : X.E)) ^ n) *
       jetSum A (Sall sel mu u) (cAof sel mu cst) (cBof sel mu cst u) N N' Ξ e) ≤ 1
-
-def JetLoss (D : D7) (EX : ErrX D) (sel : HeightOneSpectrum (𝓞 D.host.F) → HeightOneSpectrum (𝓞 D.host.E))
-    {δ : ℂ} (B : Base D D.host.ccK δ) (χ : TaylorLogMetric.IdE D → ℂ) (cD : D.what₂.Tau → ℂ) : Prop :=
-  HostTie EX → IsSel (recFields D) sel → AnTie D δ χ cD →
-    JetLossAt (recPrimes EX) D.R (ambOf (recSeam D) B χ cD) sel (badS D)
 
 def LevelPrimes : Prop :=
   ∀ (X : Fields) (Pr : Primes X) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S : Set ℕ)

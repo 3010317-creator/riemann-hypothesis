@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ValuationLocalVolumes.OmVBadTOfStepsX
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ValuationLocalVolumes.OmVBadTOfStepsX
+
+@[expose] public section
 
 noncomputable section
 
@@ -60,7 +64,7 @@ theorem idxVP_of (a : ℕ) (Y : TupV (E := E) v n a) (hB : LatBasOP σ J ψ v Λ
       obtain ⟨d, rfl⟩ := (hmem z).1 hz
       refine ⟨d i, ?_⟩
       have e : ∑ i, (c i : Fv F v) • b i = ∑ i, (ϖ * d i) • b i := by
-        have : (DistribMulAction.toAddMonoidHom (Fin n → Fv F v ⊗[F] E) (sc (E := E) v ϖ))
+        have : (DistribSMul.toAddMonoidHom (Fin n → Fv F v ⊗[F] E) (sc (E := E) v ϖ))
             (∑ i, (d i : Fv F v) • b i) = ∑ i, (ϖ * d i) • b i := by
           show sc (E := E) v ϖ • ∑ i, (d i : Fv F v) • b i = _
           rw [Finset.smul_sum]
@@ -133,17 +137,6 @@ theorem omVBadT_of_primDual_cls (hStd : OmVStd X ψ) (hLat : OmVLat X) (hGram : 
     OmVBadT X u' ψ :=
   omVBadT_of_steps X u' ψ hStd hLat hGram hExt hPC hPD (fun v => MeasP₂ _ _ _ _ _ _ _)
     (fun v => idxP_holds _ _ _ _ _ _ _) hCl
-
-theorem omVBadT_of_fourX (hStd : Formalism.L2.SG.Pf.NcX.OmVSt.OmVStd X ψ) (hLat : Formalism.L2.SG.Pf.NcX.OmVSt.OmVLat X)
-    (hGram : Formalism.L2.SG.Pf.NcX.OmVSt.OmVGram X u')
-    (hExt : ∀ v : PlX X, ((Tw u' : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal →
-      ExtP X.B.I.cm.sig X.B.I.J ψ v (abelian₂ X) (D.R.rS + 1 + D.R.rS) (yTup X u' v))
-    (hPC : ∀ v : PlX X, PrimCos X.B.I.cm.sig X.B.I.J ψ v (abelian₂ X) (D.R.rS + 1 + D.R.rS))
-    (hPD : ∀ v : PlX X, PrimDual X.B.I.cm.sig X.B.I.J ψ v (abelian₂ X) (D.R.rS + 1 + D.R.rS))
-    (hCl : ∀ v : PlX X, ((Tw u' : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal →
-      ClsP X.B.I.cm.sig X.B.I.J ψ v (abelian₂ X) (D.R.rS + 1 + D.R.rS) (yTup X u' v)) :
-    Formalism.L2.SG.Pf.NcX.OmVSt.OmVBadT X u' ψ :=
-  omVBadT_of_primDual_cls X u' ψ hStd hLat hGram hExt hPC hPD hCl
 
 end Loc
 

@@ -1,8 +1,21 @@
-import Formalism.PolynomialDimension.ChainOrderLetters
-import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.TheoremMCKap7
-import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.NatLogLeOfLe
-import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.GammaZeroIntegral
-import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.TheoremMXBOfPoint
+module
+
+public import Formalism.PolynomialDimension.ChainOrderLetters
+public import Formalism.ThetaLogCoordinates.TraceIsometryWeights.StatementF
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.StatementC
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.StatementH
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.LetterChainEmbeddings.PairStep
+public import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.GamIntC
+public import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.PartnerConditionHolds
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.RestrictedSaturationHolds
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.HighestVectorProjectionPos
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.GramBoundPosOfProjSat
+public import Formalism.ThetaLogCoordinates.BihomogeneousPairs.FinalLL
+public import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.NatLogLeOfLe
+public import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.GammaZeroIntegral
+public import Formalism.ThetaLogCoordinates.PartnerMeanCoordinates.PartnerMeanProofs.TheoremMXBOfPoint
+
+@[expose] public section
 
 namespace Formalism.InvariantFactorPaths.MC
 
@@ -155,7 +168,7 @@ theorem theoremMV7Of : TheoremMV7Of := by
       have hdA : degreeAtPosition (LL.setTies T fun i => n₀ i + dd i * (Yl i - 1)) (T.pos i) =
           (LL.setTies T fun i => n₀ i + dd i * (Yl i - 1)).deg ⟨T.pos i, h⟩ := by
         unfold degreeAtPosition
-        rw [dif_pos h]
+        rw [dite_eq_left h]
       rw [hdA] at h1
       push_cast at h1 ⊢
       have h4 := (Nat.cast_nonneg (degreeAtPosition (LL.setTies T fun i => n₀ i + dd i * (Yl i - 1)) (T.pos i + 1)) : (0 : ℝ) ≤ _)

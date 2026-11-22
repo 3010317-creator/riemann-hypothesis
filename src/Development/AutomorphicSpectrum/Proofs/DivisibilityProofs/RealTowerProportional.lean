@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeLinearFunctionalsStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerGeometricAgreementStatement
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeLinearFunctionalsStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerGeometricAgreementStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -32,12 +36,13 @@ theorem eval_toWt {Ψ : Type} {N : ℕ} (lam : Ψ × Fin N → ℝ) (P : MvPolyn
   unfold PB.toWt
   induction P using MvPolynomial.induction_on with
   | C a => simp
-  | add p q hp hq => simp only [map_add, hp, hq]
+  | add p q hp hq => simp only [map_add (f := _), hp, hq]
   | mul_X p n hp => simp only [map_mul, hp, aeval_X, eval_X, PB.gap]
 
 theorem eval_degPoly_comap_some {e : ℕ} {σ : Type} [Fintype σ] (S : PB.AnSys e (Option σ)) (c : σ → ℝ) :
     eval c (S.comap some).degPoly = eval (fun o : Option σ => o.elim 0 c) S.degPoly := by
-  simp only [PB.AnSys.degPoly, PB.formPoly, map_sum, map_mul, map_prod, eval_C, eval_X]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [PB.AnSys.degPoly, PB.formPoly, map_sum, map_mul, map_prod, eval_C, eval_X]
   refine Fintype.sum_of_injective (fun w j => some (w j)) ?_ _ _ ?_ ?_
   · intro w w' hw
     funext j
@@ -97,7 +102,7 @@ theorem degree_mapDomain_some {J : Type} (m : J →₀ ℕ) : (m.mapDomain some)
   show ∑ i ∈ (m.mapDomain some).support, (m.mapDomain some) i = ∑ i ∈ m.support, m i
   rw [Finsupp.mapDomain_support_of_injective (Option.some_injective _), Finset.sum_image
     (fun x _ y _ hxy => Option.some_injective _ hxy)]
-  exact Finset.sum_congr rfl fun x _ => Finsupp.mapDomain_apply (Option.some_injective _) m x
+  exact Finset.sum_congr rfl fun x _ => Finsupp.mapDomain_apply_of_injective (Option.some_injective _) m x
 
 theorem geoFun_monomial {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel Ψ N) (m : Option (Ψ × Fin N) →₀ ℕ) :
     M.geoFun (monomial m 1) = M.geoMono m := by
@@ -111,7 +116,8 @@ theorem geoFun_monomial_of_ne {Ψ : Type} [Fintype Ψ] {N : ℕ} (M : RootModel 
 
 theorem neg_sum_eq_linA {Ψ : Type} [Fintype Ψ] {N : ℕ} (a : Option (Ψ × Fin N) → ℝ) :
     (-∑ x, C (a x) * X x : RPA Ψ N) = linA (fun τ i => a (some (τ, i))) (-a none) := by
-  simp only [linA, toA, linRoot, Fintype.sum_option, map_neg, map_sum, map_mul, rename_C, rename_X]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [linA, toA, linRoot, Fintype.sum_option, map_neg, map_sum, map_mul, rename_C, rename_X]
   ring
 
 theorem dimFl_eq_antisymDegree (Ψ : Type) [Fintype Ψ] (N : ℕ) : dimFl Ψ N = antisymDegree Ψ N := by
@@ -148,8 +154,8 @@ theorem exists_geoFun_eq (hProp : PB.Proportional) (hI : PB.Inputs) (II : Inters
 
 end RealProp
 
-open RealProp in
 
+open RealProp in
 theorem rootTower_proportional_of_unif : PB.Proportional → PB.Inputs → ∀ II : IntersectionSystem,
     IsFullIntersectionSystem II → ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) [Nonempty Ψ] (T : RootTower Ψ N)
     (R : RealTower T), R.Unif → T.Proportional := by

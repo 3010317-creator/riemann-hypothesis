@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NablaSchur
-import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
-import Formalism.GradedWeylDivisibility.FinalC
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NablaSchur
+public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+public import Formalism.GradedWeylDivisibility.FinalC
+
+@[expose] public section
 
 open MvPolynomial Formalism.GradedWeylDivisibility TensorProduct
 
@@ -122,7 +126,7 @@ theorem mul_mem_range_lTensor {A B : Type} [CommRing A] [CommRing B] (N : Submod
   induction w using TensorProduct.induction_on with
   | zero => simp
   | tmul a n => exact ⟨(u * a) ⊗ₜ n, by simp⟩
-  | add x y hx hy => rw [map_add, mul_add]; exact add_mem hx hy
+  | add x y hx hy => rw [map_add (f := _), mul_add]; exact add_mem hx hy
 
 theorem mul_mem_range_rTensor {A B : Type} [CommRing A] [CommRing B] (N : Submodule ℤ A) (u : B)
     (x : A ⊗[ℤ] B) (hx : x ∈ LinearMap.range (LinearMap.rTensor B N.subtype)) :
@@ -131,7 +135,7 @@ theorem mul_mem_range_rTensor {A B : Type} [CommRing A] [CommRing B] (N : Submod
   induction w using TensorProduct.induction_on with
   | zero => simp
   | tmul n b => exact ⟨n ⊗ₜ (u * b), by simp⟩
-  | add x y hx hy => rw [map_add, mul_add]; exact add_mem hx hy
+  | add x y hx hy => rw [map_add (f := _), mul_add]; exact add_mem hx hy
 
 theorem resT_mem_lTensor (hS : SubstMem) (p q : ℕ) (ν : Fin (p + q) → ℕ)
     (f : MvPolynomial (Fin (p + q) × Fin (p + q)) ℤ) (hf : f ∈ dualWeyl ℤ (p + q) (p + q) ν) :

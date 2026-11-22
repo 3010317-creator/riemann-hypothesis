@@ -1,5 +1,9 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.L2Cusps.AbsCompactAlt
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.L2Cusps.HomFin
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.L2Cusps.AbsCompactAlt
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.L2Cusps.HomFin
+
+@[expose] public section
 
 open NumberField MeasureTheory
 open GroundTheory.Automorphic GroundTheory.Automorphic.AutomorphicForm GroundTheory.Automorphic.CuspidalSpectrum
@@ -60,7 +64,7 @@ theorem UpperTheory.V.KernelIndexFullLattice.pvFin_holds :
       rw [hv u hu, ← hcomm, h1] at h2
       exact h2
     | zero => exact map_zero _
-    | add x y _ _ hx hy => rw [map_add, hx, hy]
+    | add x y _ _ hx hy => rw [map_add (f := _), hx, hy]
     | smul c x _ hx => rw [map_smul, hx]
   obtain ⟨φ, hφ, e⟩ := hP x
   refine ⟨⟨φ, hφ⟩, fun u hu => hj ?_, e⟩

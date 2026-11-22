@@ -1,17 +1,21 @@
-import Mathlib
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.CuspLinesIrr
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.TwistedKernels.ExPhiPlusOnto
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.GeometricLemmaFiltration
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalIsGenericStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinrankEqProdOfNonemptyEquiv
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwKerWhitCharReflect
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionTensorProductHasFiniteLength
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIrreducibleSmoothQuotient
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductHasFiniteLengthGL
-import CompanionTheory.AutomorphicTheory.HeckeStandardModules.EqZeroOfCompAt
+module
+
+public import Mathlib
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.CuspLinesIrr
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.TwistedKernels.ExPhiPlusOnto
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.GeometricLemmaFiltration
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalIsGenericStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinrankEqProdOfNonemptyEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwKerWhitCharReflect
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionTensorProductHasFiniteLength
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIrreducibleSmoothQuotient
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductHasFiniteLengthGL
+public import CompanionTheory.AutomorphicTheory.HeckeStandardModules.EqZeroOfCompAt
+
+@[expose] public section
 
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.BZSeg GlobalTheory.BZMir Zc
 
@@ -31,7 +35,10 @@ theorem apply_mem_twKer {σ : Representation ℂ G V} {τ : Representation ℂ G
     refine Submodule.subset_span ⟨n, q u, ?_⟩
     rw [map_sub, map_smul, q.isIntertwining]
   | zero => simp
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+  | add x y _ _ hx hy =>
+    have hq : q (x + y) = q x + q y := q.toLinearMap.map_add x y
+    rw [hq]
+    exact add_mem hx hy
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ _ hx
 
 theorem exists_subquotient_subsingleton [TopologicalSpace G] [IsTopologicalGroup G] (π : Representation ℂ G V)
@@ -90,7 +97,7 @@ theorem exists_subquotient_subsingleton [TopologicalSpace G] [IsTopologicalGroup
     have hpe : p v = p (v - c • s) := by
       have h0 : p (c • s) = 0 := (Submodule.Quotient.mk_eq_zero U).2 (U.smul_mem c hsS)
       have h2 : v = (v - c • s) + c • s := by abel
-      conv_lhs => rw [h2, map_add, h0, add_zero]
+      conv_lhs => rw [h2, map_add (f := _), h0, add_zero]
     rw [hpe]
     exact apply_mem_twKer q H χ (apply_mem_twKer p H χ hk)
 
@@ -101,7 +108,7 @@ section Local
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem finrank_twJacquet_of_isCusp (hW : WhitRankIrr k) {ψ : AddChar k Circle} (hc : Continuous ψ) (h1 : ψ ≠ 1)
-    {x : IrrGL k} (hx : x.IsCusp) :
+    {x : IrrGL (k := k)} (hx : x.IsCusp) :
     Module.finrank ℂ (TwJacquet x.rep (unipB k (Fin x.1)) (whitChar ψ x.1)) = 1 := by
   obtain ⟨d, c⟩ := x
   obtain ⟨n, rfl⟩ : ∃ n, d = n + 1 := ⟨d - 1, by have := hx.1; simp at this; omega⟩
@@ -120,7 +127,7 @@ theorem finrank_twJacquet_of_isCusp (hW : WhitRankIrr k) {ψ : AddChar k Circle}
 
 theorem exists_nongeneric_subquotient : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     WhitRankIrr k → ∀ (ψ : AddChar k Circle), Continuous ψ → ψ ≠ 1 →
-    ∀ (x y : IrrGL k) (N : ℕ) (hd : ∑ a, (![x, y] a).1 = N), x.IsCusp → y.IsCusp →
+    ∀ (x y : IrrGL (k := k)) (N : ℕ) (hd : ∑ a, (![x, y] a).1 = N), x.IsCusp → y.IsCusp →
       ¬ (prodIrr ![x, y] hd).IsIrreducible →
       ∃ τ : IrrRep (GL (Fin N) k), IsSubquotient τ.ρ (prodIrr ![x, y] hd) ∧ ¬ IsGenericFor ψ τ.ρ := by
   intro k _ _ _ _ hW ψ hc h1 x y N hd hx hy hn

@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockRaisingLowering.SameSign
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockRaisingLowering.SameSign
+
+@[expose] public section
 
 noncomputable section
 
@@ -95,7 +99,7 @@ private theorem homogeneousComponent_eq_ite_of_isHomogeneous {σ : Type} {m n : 
        · exact (h.coeff_eq_zero hd).symm
      · rw [if_neg hmn]
        ext d
-       rw [coeff_homogeneousComponent, coeff_zero]
+       rw [coeff_homogeneousComponent, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
        split_ifs with hd
        · exact h.coeff_eq_zero (by omega)
        · rfl)
@@ -129,7 +133,8 @@ private theorem homogeneousComponent_pderiv_monomial {σ : Type} (l : σ) (e : �
 private theorem homogeneousComponent_pderiv {σ : Type} (l : σ) (e : ℕ) (P : MvPolynomial σ ℂ) :
     homogeneousComponent e (pderiv l P) = pderiv l (homogeneousComponent (e + 1) P) := by
   rw [P.as_sum]
-  simp only [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum]
   exact Finset.sum_congr rfl fun u _ => homogeneousComponent_pderiv_monomial l e u _
 
 theorem pderiv_homog_zero {σ : Type} (l : σ) {P : MvPolynomial σ ℂ} (h : P.IsHomogeneous 0) :
@@ -251,9 +256,11 @@ theorem hc_pderiv {σ : Type} (l : σ) (e : ℕ) (P : MvPolynomial σ ℂ) :
 theorem Lop_shift (M : Matrix (FockH1Action.Ln p q r s) (FockH1Action.Ln p q r s) ℂ) (e : ℕ)
     (P : FockH1Action.Pol p q r s) :
     homogeneousComponent e (Lop M P) = Lop M (homogeneousComponent (e + 2) P) := by
-  rw [show e + 2 = e + 1 + 1 from rfl, Lop_apply, Lop_apply, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [show e + 2 = e + 1 + 1 from rfl, Lop_apply, Lop_apply, map_sum]
   refine Finset.sum_congr rfl fun l _ => ?_
-  rw [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum]
   refine Finset.sum_congr rfl fun l' _ => ?_
   split_ifs
   · rw [map_smul, map_neg, hc_pderiv, hc_pderiv]

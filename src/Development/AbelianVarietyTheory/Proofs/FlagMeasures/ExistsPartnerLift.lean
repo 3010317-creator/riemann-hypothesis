@@ -1,11 +1,15 @@
-import Mathlib
-import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
-import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardLeOfSpan
+module
+
+public import Mathlib
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardLeOfSpan
+
+@[expose] public section
 
 open NumberField Module IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat
 open scoped Classical
@@ -105,14 +109,15 @@ theorem comp_eq_zero (F : FlagG S r T) (F' : FlagG S r T') (hG : Gflag F F' ≠ 
     exact hG) (by
     funext i
     have := h _ (Submodule.mem_sup_left (fvec_mem_Xplus F i))
-    rw [map_add, hT_fvec_sum, neg_add_eq_zero] at this
+    rw [map_add (f := _), hT_fvec_sum, neg_add_eq_zero] at this
     rw [this]
     simp [Matrix.mulVec, dotProduct, Zhat, brS, mul_comm]) (by
     funext i
     have := h _ (Submodule.mem_sup_right (fvec_mem_Xplus F' i))
-    rw [map_add, hT_fvec_sum, add_neg_eq_zero] at this
+    rw [map_add (f := _), hT_fvec_sum, add_neg_eq_zero] at this
     rw [← this]
-    simp only [Matrix.mulVec, dotProduct, Zhat, brS, map_sum, map_smul, Matrix.conjTranspose_apply, smul_eq_mul]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [Matrix.mulVec, dotProduct, Zhat, brS, map_sum, map_smul, Matrix.conjTranspose_apply, smul_eq_mul]
     exact Finset.sum_congr rfl fun j _ => by rw [mul_comm, ← S.herm.eq (F.fvec j), starRingEnd_apply])
   simp [this.1, this.2]
 
@@ -285,8 +290,8 @@ theorem idx_le_of_rel {R V W : Type} [CommRing R] [AddCommGroup V] [Module R V] 
   rw [← c.out_eq', ← c'.out_eq', QuotientAddGroup.eq]
   exact h2 _ _ _ _ (hR _ c.out.2) (hR _ c'.out.2) (QuotientAddGroup.eq.1 h)
 
-open GlobalTheory.Mass GlobalTheory.LoopC.DetCard Formalism.HermitianLatticesTheory in
 
+open GlobalTheory.Mass GlobalTheory.LoopC.DetCard Formalism.HermitianLatticesTheory in
 theorem det_sq {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
     [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K)
     (hK : IsCMUnram K) (hs : h.IsSymm) (M : Submodule (𝓞 K) V) (hM : M.FG) (hI : IsIntegralLat h M)
@@ -450,7 +455,7 @@ theorem det_seen_le {T : D.host.E} (F : Fg D T) (hΛ : Submodule.IsLattice D.hos
       rw [e]
       exact Λ.add_mem (Λ.sub_mem b3 a3) (hM h)
     · convert (Xsp F).sub_mem b2 a2 using 1
-      rw [map_add, map_neg]
+      rw [map_add (f := _), map_neg]
       abel
 
 end Rec

@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.FrMIsIsom
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SCompact
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.FrMIsIsom
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SCompact
+
+@[expose] public section
 
 noncomputable section
 
@@ -12,6 +16,8 @@ namespace Formalism.L2.SG.RealObj.InfCut.NilradicalHermitianFrames.NH
 open Formalism.L2.SG.RealObj Formalism.L2.SG.HidaSetting Formalism.REAL Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates Formalism.L2.SG.RealObj.InfCut.NilradicalHermitianFrames
 
 variable {n r k : ℕ} {ε : Fin n → Bool} {e p : Fin r → Fin n → ℂ} {z : Fin n → ℂ} {T : ℝ}
+
+local notation "NS" => NG ε e z
 
 theorem HG_compact {w : Fin k → Fin n → ℂ} (Fw : Frm ε e p z w T) (hdim : n = 2 * r + 1 + k) :
     IsCompact (HG ε e p z : Set (UJ ε)) := by
@@ -38,12 +44,7 @@ def conjH (h : UJ ε) : UJ ε ≃ₜ UJ ε := (Homeomorph.mulLeft h).trans (Home
 
 theorem conjH_apply (h x : UJ ε) : conjH h x = h * x * h⁻¹ := rfl
 
-theorem conjH_symm_apply (h x : UJ ε) : (conjH h).symm x = h⁻¹ * x * h := by
-  simp [conjH, Homeomorph.mulLeft, Homeomorph.mulRight, mul_assoc]
-
 section Conj
-
-local notation "NS" => (NG ε e z)
 
 theorem map_conj_isHaarS {μ : Measure (UJ ε)} (hμ : IsHaarS (NLoc ε e z) μ) {h : UJ ε}
     (hh : h ∈ HG ε e p z) : IsHaarS (NLoc ε e z) (μ.map (conjH h)) := by
@@ -124,7 +125,7 @@ theorem conj_haar_eq {w : Fin k → Fin n → ℂ} (Fw : Frm ε e p z w T) (hdim
       Measure.isMulLeftInvariant_eq_smul ν' Measure.haar
     refine ⟨ν'.haarScalarFactor Measure.haar, ?_⟩
     conv_lhs => rw [← hmapν, hνeq]
-    rw [Measure.map_smul]
+    rw [Measure.map_smul _ measurable_subtype_coe.aemeasurable]
 
   obtain ⟨C', hC'c, hC'n⟩ : ∃ C' : Set NS, IsCompact C' ∧ C' ∈ 𝓝 (1 : NS) := by
     obtain ⟨C', h1, h2⟩ := exists_compact_mem_nhds (1 : NS)

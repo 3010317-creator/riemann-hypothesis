@@ -1,5 +1,10 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsMaxHeight
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsMaxHeight
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -16,8 +21,9 @@ theorem height_eq_of_isMaximal_mvPolynomial_fin (F : Type u) [Field F] :
     intro M hM
     have h := Ideal.height_le_ringKrullDim_of_ne_top hM.ne_top
     rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, ringKrullDim_eq_zero_of_field] at h
-    simp only [Nat.card_eq_fintype_card, Fintype.card_fin, CharP.cast_eq_zero, add_zero] at h
-    have h' : M.height ≤ 0 := by exact_mod_cast h
+    have h' : M.height ≤ 0 := by
+      simpa only [ENat.card_eq_coe_natCard, Nat.card_fin, Nat.cast_zero, add_zero] using
+        (WithBot.coe_le_coe.mp h)
     simpa using h'
   | succ n ih =>
     intro M hM
@@ -50,7 +56,7 @@ theorem MaximalIdealHeightFG.proof : MaximalIdealHeightFG.Statement.{u} := by
       (PrimeSpectrum.comap (algebraMap (MvPolynomial (Fin s) F) A)) fun p q hpq => ?_
     exact Ideal.IsIntegral.comap_lt_comap (R := MvPolynomial (Fin s) F) hpq
   let n := m.under (MvPolynomial (Fin s) F)
-  have : n.IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal m
+  have : n.IsMaximal := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := MvPolynomial (Fin s) F) m
   have h1 := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown n m
   rw [height_eq_of_isMaximal_mvPolynomial_fin F s n inferInstance] at h1
   refine le_antisymm (Ideal.height_le_ringKrullDim_of_ne_top hm.ne_top) (hdim.trans ?_)

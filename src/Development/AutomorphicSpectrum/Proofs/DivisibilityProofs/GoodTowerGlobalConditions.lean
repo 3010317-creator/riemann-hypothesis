@@ -1,32 +1,37 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
-import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeLatticeFlagBound
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.TrivFlagOnHodge
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NumberField
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrobeniusLabelsShapeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompRootModelPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelBlockPullbackStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsIsometricHermLineStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerConvI2Statement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVarStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ImageCptReflOfGenPt
-import GroundTheory.HeightsAndTheta.Heights.Intersections.PBlockRatioAlg
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoReline
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginComparisonSubsetStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightBoundOfArithVarStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginHeightComparisonThreeStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginHeightComparisonTwoStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoEqRelinedIsometricVertStatement
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
+public import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeLatticeFlagBound
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.TrivFlagOnHodge
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NumberField
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrobeniusLabelsShapeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompRootModelPrimesStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelBlockPullbackStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsIsometricHermLineStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerConvI2Statement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVarStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ImageCptReflOfGenPt
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.PBlockRatioAlg
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoReline
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginComparisonSubsetStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightBoundOfArithVarStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginHeightComparisonThreeStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginHeightComparisonTwoStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoEqRelinedIsometricVertStatement
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Top
 open GroundTheory.Heights₂.Heights.LowerBoundFree (ComponentData ComponentSetting degMu ArLimExists slX)
 open MvPolynomial Filter Topology
@@ -45,7 +50,7 @@ theorem mCoordIdeal_map {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype 
     intro f
     induction f using MvPolynomial.induction_on with
     | C a => simp [mConeMap]
-    | add p q hp hq => simp only [map_add, hp, hq]
+    | add p q hp hq => simp only [map_add (f := _), hp, hq]
     | mul_X p n hp => simp only [map_mul, hp]; simp [mConeMap]
   ext f
   show mConeMap _ f = 0 ↔ mConeMap _ f = 0
@@ -64,8 +69,8 @@ theorem imageZ_of_restr {K₀ K : Type} [Fintype K₀] [Fintype K] {J₀ : K₀ 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
   {Xo : Moduli D l} {c : Coeff l} {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} [DecidableEq (CMType H)]
 
-open Classical in
 
+open Classical in
 theorem link_step (hSeg : GroundTheory.Heights₂.Heights.NumbersDVR.NumericalSegre.Statement) (hM3 : HodgeLatticeFlagBound) (hTv : TrivFlagOnHodge)
     (S₀ S : Finset ℕ) (M₀ M₁ Rf : RootModel (CMType H) (D.p + D.q))
     (Sys : PB.AnSys (dimFl (CMType H) (D.p + D.q)) (Option (RootIx D))) (Fx : FixedData Y Sys)

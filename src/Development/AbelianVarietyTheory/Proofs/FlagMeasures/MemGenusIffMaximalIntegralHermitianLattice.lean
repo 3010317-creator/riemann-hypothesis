@@ -1,15 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodUnramUnique
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemHcompl
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodulaStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMaximalIntegralHermitianLatticeOrthonormalStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeLocalStructureDiscriminanStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryOfUnimodularLatticesAtPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeBadPrimesIffGramDetStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodUnramUnique
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemHcompl
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodulaStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMaximalIntegralHermitianLatticeOrthonormalStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeLocalStructureDiscriminanStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryOfUnimodularLatticesAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeBadPrimesIffGramDetStatement
+
+@[expose] public section
 
 open NumberField Matrix GlobalTheory.Mass Formalism.HermitianLatticesTheory IsDedekindDomain
 open scoped ENNReal Classical
@@ -115,15 +119,15 @@ theorem norm_onto {k : Type} [Field k] [Finite k] (σ : k →+* k) (hσ : ∀ a,
     {θ : k} (hθ : θ - σ θ ≠ 0) {u : k} (hu : σ u = u) : ∃ c, σ c * c = u := by
   let F := RingHom.eqLocusField σ (RingHom.id k)
   have mF : ∀ a, a ∈ F ↔ σ a = a := fun a => Iff.rfl
-  obtain ⟨a, b, e⟩ := unimodUnramUnique_ff (k := F) ⟨θ + σ θ, (mF _).2 (by rw [map_add, hσ, add_comm])⟩
+  obtain ⟨a, b, e⟩ := unimodUnramUnique_ff (k := F) ⟨θ + σ θ, (mF _).2 (by rw [map_add (f := _), hσ, add_comm])⟩
     ⟨θ * σ θ, (mF _).2 (by rw [map_mul, hσ, mul_comm])⟩ ⟨u, hu⟩ (fun e => by
       have := congrArg F.subtype e
       simp only [map_sub, map_pow, map_mul, map_ofNat, map_zero, Subfield.coe_subtype] at this
       exact pow_ne_zero 2 hθ (by linear_combination this))
   have := congrArg F.subtype e
-  simp only [map_add, map_pow, map_mul, Subfield.coe_subtype] at this
+  simp only [map_add (f := _), map_pow, map_mul, Subfield.coe_subtype] at this
   refine ⟨a + b * θ, ?_⟩
-  rw [map_add, map_mul, (mF a).1 a.2, (mF b).1 b.2]
+  rw [map_add (f := _), map_mul, (mF a).1 a.2, (mF b).1 b.2]
   linear_combination this
 
 end Abstract
@@ -344,18 +348,8 @@ theorem exists_ext [FiniteDimensional K V] {h : V →ₗ⋆[K] V →ₗ[K] K} (h
       · rw [mul_comm s, mul_smul]; exact Submodule.smul_mem _ _ h1
       · rw [mul_smul]; exact Submodule.smul_mem _ _ h2
   refine ⟨L, ⟨(hM.1.1.fg.map _).sup (Submodule.fg_span_singleton w), ?_⟩, ?_, ?_, ⟨w, ?_, ?_⟩, ?_⟩
-  · rw [eq_top_iff]
-    intro z _
-    rw [dec z]
-    refine Submodule.add_mem _ ?_ (Submodule.smul_mem _ _ (Submodule.subset_span
-      (Submodule.mem_sup_right (Submodule.mem_span_singleton_self w))))
-    have : z.1 - (z.2 * c) • x ∈ Submodule.span K (M : Set V) := by
-      rw [hM.1.1.span_eq_top]; trivial
-    have := Submodule.mem_map_of_mem (f := LinearMap.inl K V K) this
-    rw [Submodule.map_span] at this
-    refine Submodule.span_mono ?_ this
-    rintro _ ⟨m, hm, rfl⟩
-    exact Submodule.mem_sup_left ⟨m, hm, rfl⟩
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
   · ext z
     rw [locDual_mem_dualAt]
     simp only [mL', mem_locR hc]

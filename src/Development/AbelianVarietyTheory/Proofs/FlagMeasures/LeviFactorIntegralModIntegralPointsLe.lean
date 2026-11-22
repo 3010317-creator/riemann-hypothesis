@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryLatticeStabilizerDetRoot
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralRpowNegChangeOfVariable
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSqStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagLeviRealPlacesProductMeasureStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamentalStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryLatticeStabilizerDetRoot
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralRpowNegChangeOfVariable
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSqStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagLeviRealPlacesProductMeasureStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamentalStatement
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.FlagBase
 
@@ -93,7 +97,7 @@ theorem lintegral_pi_comp (ρ : Measure ℝ) [SigmaFinite ρ] : ∀ (a : ℕ) (X
             ring
         _ = _ := lintegral_const_mul _ (hKt t)
     have hmL : Measurable fun z : (∀ i, X i) => F (fun i => p i (z i)) :=
-      hF.comp (measurable_pi_lambda _ fun i => (hp i).comp (measurable_pi_apply i))
+      hF.comp (Measurable.of_eval fun i => (hp i).comp (measurable_pi_apply i))
     have hmR : Measurable fun τ : Fin (a + 1) → ℝ => F τ * ∏ i, w i (τ i) :=
       hF.mul (Finset.measurable_prod _ fun i _ => (hw i).comp (measurable_pi_apply i))
     calc ∫⁻ z, F (fun i => p i (z i)) ∂Measure.pi ν
@@ -469,7 +473,7 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
     have hψf : ψ = fun z₁ => F (fun i => (detNorm I.E (j i) (z₁ i) / κ i) ^ (-(1 / (2 * (I.f : ℝ) * j i)))) :=
       funext hψdef
     rw [hψf]
-    exact hF.comp (measurable_pi_lambda _ fun i =>
+    exact hF.comp (Measurable.of_eval fun i =>
       ((measurable_detNorm.comp (measurable_pi_apply i)).div_const _).pow_const _)
   have hBoxm : MeasurableSet ((Set.univ.pi D) ×ˢ D₀) := (MeasurableSet.univ_pi hDm).prod hD₀m
   have hBoxpos : ∀ z ∈ (Set.univ.pi D) ×ˢ D₀, ∀ i, 0 < detNorm I.E (j i) (z.1 i) :=
@@ -494,9 +498,9 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
       refine lintegral_congr fun z₂ => ?_
       by_cases h2 : z₂ ∈ D₀
       · rw [Set.indicator_of_mem (Set.mk_mem_prod h h2), Set.indicator_of_mem h2]
-      · rw [Set.indicator_of_notMem (fun hh => h2 hh.2), Set.indicator_of_notMem h2]
+      · rw [Set.indicator_of_notMem (by exact fun hh => h2 hh.2), Set.indicator_of_notMem h2]
     · rw [Set.indicator_of_notMem h, zero_mul]
-      exact (lintegral_congr fun z₂ => Set.indicator_of_notMem (fun hh => h hh.1) _).trans lintegral_zero
+      exact (lintegral_congr fun z₂ => Set.indicator_of_notMem (by exact fun hh => h hh.1) _).trans lintegral_zero
   have hset : {τ : Fin a → ℝ | ∀ i, 0 < τ i} = Set.univ.pi fun _ => Set.Ioi 0 := by
     ext τ; simp
   have hsetm : MeasurableSet {τ : Fin a → ℝ | ∀ i, 0 < τ i} := by

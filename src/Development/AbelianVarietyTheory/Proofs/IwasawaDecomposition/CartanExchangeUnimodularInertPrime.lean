@@ -1,12 +1,17 @@
-import Mathlib
-import Formalism.LocalToGlobal.Columns.HeckeInertComm
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PatchAtSelf
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SameAtOfLocalizationEq
-import Formalism.LocalRingCardinality.SpanPowerMembership.Places
-import Formalism.LocalToGlobal.Columns.TwQCmp
-import Formalism.LocalToGlobal.Columns.ReferenceActionRationalLevels
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.Columns.HeckeInertComm
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PatchAtSelf
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SameAtOfLocalizationEq
+public import Formalism.LocalRingCardinality.SpanPowerMembership.Places
+public import Formalism.LocalToGlobal.Columns.TwQCmp
+public import Formalism.LocalToGlobal.Columns.ReferenceActionRationalLevels
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Formalism.L2.Col GlobalTheory.InertExchange
 open Classical
 
@@ -15,6 +20,55 @@ noncomputable section
 namespace GlobalTheory.CartanInertPf
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E]
+
+private theorem full_of_unimod {n : ℕ} {N : Submodule (𝓞 E) (Sp E n)}
+    (hN : Submodule.IsLattice E N) (hNu : IsUnimodular (hStd E n) N) :
+    Submodule.IsFullLattice E N := by
+  letI := hN
+  refine ⟨?_⟩
+  obtain ⟨s, hs⟩ := hN.fg
+  apply eq_top_iff.mpr
+  intro y _
+  let f : Sp E n → E := fun x => hStd E n x y
+  obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E)) s f
+  have ha0 : (algebraMap (𝓞 E) E a) ≠ 0 :=
+    (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+  let P : Submodule (𝓞 E) (Sp E n) := {
+    carrier := {x | ∃ b : 𝓞 E, (b : E) = (algebraMap (𝓞 E) E a) * f x}
+    zero_mem' := by refine ⟨0, ?_⟩; simp [f]
+    add_mem' := by
+      rintro x z ⟨b, hb⟩ ⟨c, hc⟩
+      refine ⟨b + c, ?_⟩
+      change (b : E) + c = _
+      rw [hb, hc]
+      simp [f, map_add, mul_add]
+    smul_mem' := by
+      rintro c x ⟨b, hb⟩
+      refine ⟨cO E c * b, ?_⟩
+      change (algebraMap (𝓞 E) E (cO E c)) * (b : E) = _
+      rw [algebraMap_cO, hb]
+      dsimp only [f]
+      rw [← algebraMap_smul E c x, LinearMap.map_smulₛₗ₂, smul_eq_mul, starRingEnd_apply]
+      ring }
+  have hsP : (s : Set (Sp E n)) ⊆ P := by
+    intro x hx
+    obtain ⟨b, hb⟩ := ha x hx
+    exact ⟨b, by simpa [Algebra.smul_def] using hb⟩
+  have hy : (algebraMap (𝓞 E) E a) • y ∈ N := by
+    rw [← hNu]
+    apply (dualBasic_mem_dual _ _ _).2
+    intro x hx
+    obtain ⟨b, hb⟩ := (hs ▸ Submodule.span_le.mpr hsP) hx
+    refine Submodule.mem_one.2 ⟨b, ?_⟩
+    change (b : E) = _
+    rw [hb]
+    dsimp only [f]
+    rw [LinearMap.map_smul, smul_eq_mul]
+  have hy' : (algebraMap (𝓞 E) E a) • y ∈ Submodule.span E (N : Set (Sp E n)) :=
+    Submodule.subset_span hy
+  have := (Submodule.span E (N : Set (Sp E n))).smul_mem
+    (algebraMap (𝓞 E) E a)⁻¹ hy'
+  rwa [smul_smul, inv_mul_cancel₀ ha0, one_smul] at this
 
 theorem conjP_eq_conjW (P : HeightOneSpectrum (𝓞 E)) : conjPrime₂ P = Formalism.BasicNotions.Examples₂.PlacesToy.conjW P := by
   ext r
@@ -43,7 +97,7 @@ theorem exists_trace_one (P : HeightOneSpectrum (𝓞 E)) (hin : ∃ x : 𝓞 E,
     rw [e]
     exact sub_mem h2 (Ideal.mul_mem_left _ _ h1)
   have e1 : ((u : E) + star (u : E)) = algebraMap (𝓞 E) E (u + cO E u) := by
-    rw [map_add, algebraMap_cO]
+    rw [map_add (f := _), algebraMap_cO]
   have hv : P.valuation E ((u : E) + star (u : E)) = 1 := by
     rw [e1]; exact (P.valuation_eq_one_iff_notMem (K := E)).2 hu
   have hne : ((u : E) + star (u : E)) ≠ 0 := by
@@ -77,7 +131,7 @@ theorem exists_unif_star (P : HeightOneSpectrum (𝓞 E)) (hP : conjPrime₂ P =
   have hfix : ∀ r : 𝓞 E, star ((r + cO E r : 𝓞 E) : E) = ((r + cO E r : 𝓞 E) : E) := by
     intro r
     change star (algebraMap (𝓞 E) E (r + cO E r)) = algebraMap (𝓞 E) E (r + cO E r)
-    rw [map_add, algebraMap_cO, star_add, star_star, add_comm]
+    rw [map_add (f := _), algebraMap_cO, star_add, star_star, add_comm]
   by_cases h1 : P.valuation E (r1 : E) = WithZero.exp (-1 : ℤ)
   · exact ⟨r1, hfix a, h1⟩
   by_cases h2 : P.valuation E (r2 : E) = WithZero.exp (-1 : ℤ)
@@ -88,7 +142,7 @@ theorem exists_unif_star (P : HeightOneSpectrum (𝓞 E)) (hP : conjPrime₂ P =
   have key : (x : E) * (r1 : E) - (r2 : E) = ((x : E) - star (x : E)) * star (a : E) := by
     change algebraMap (𝓞 E) E x * algebraMap (𝓞 E) E (a + cO E a) - algebraMap (𝓞 E) E (x * a + cO E (x * a)) =
       (algebraMap (𝓞 E) E x - star (algebraMap (𝓞 E) E x)) * star (algebraMap (𝓞 E) E a)
-    simp only [map_add, map_mul, algebraMap_cO, star_mul]
+    simp only [map_add (f := _), map_mul, algebraMap_cO, star_mul]
     ring
   have hvx : P.valuation E ((x : E) - star (x : E)) = 1 := by
     have e : ((x : E) - star (x : E)) = -(algebraMap (𝓞 E) E (cO E x - x)) := by
@@ -171,7 +225,7 @@ theorem mem_localization_iff_of_isUnimodular {n : ℕ} (P : HeightOneSpectrum (�
       ring
     | zero => simp
     | add x z _ _ hx hz =>
-      rw [map_add, LinearMap.add_apply]
+      rw [map_add (f := _), LinearMap.add_apply]
       exact add_mem hx hz
     | smul r x _ hx =>
       rw [← algebraMap_smul E r x, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply,
@@ -199,7 +253,7 @@ theorem cartanInert : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] (n :
     intro M hM v
     rw [SetLike.mem_coe, hM v]
     simp only [Submodule.mem_top, true_and, SetLike.mem_coe, GlobalTheory.UnitarySwap.mem_int, hv]
-  obtain ⟨d, hd0, hd⟩ := exists_smul_le_of_lattice (K := E) hN'.fg hN
+  obtain ⟨d, hd0, hd⟩ := exists_smul_le_of_lattice (K := E) hN'.fg (full_of_unimod hN hNu)
   have hdE : algebraMap (𝓞 E) E d ≠ 0 := by rwa [Ne, FaithfulSMul.algebraMap_eq_zero_iff]
   have hV0 : P.valuation E (algebraMap (𝓞 E) E d) ≠ 0 := (Valuation.ne_zero_iff _).2 hdE
   set k : ℕ := (-WithZero.log (P.valuation E (algebraMap (𝓞 E) E d))).toNat with hkdef
@@ -229,7 +283,8 @@ theorem cartanInert : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] (n :
   have hσ : ∀ x : E, Valued.v (starRingEnd E x) = Valued.v x := fun x => by
     rw [hv, hv, starRingEnd_apply, valuation_star P hP]
   have hB : ∀ u v : Sp E n, starRingEnd E (hStd E n u v) = hStd E n v u := fun u v => by
-    simp only [hStd_apply, map_sum, starRingEnd_apply, star_mul, star_star]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [hStd_apply, map_sum, starRingEnd_apply, star_mul, star_star]
   have hτO : τ ∈ Formalism.UG.intL E := by rw [GlobalTheory.UnitarySwap.mem_int, hv]; exact hτ
   have hϖ' : Valued.v (ϖ : E) = WithZero.exp (-1 : ℤ) := by rw [hv]; exact hϖv
   obtain ⟨s, hs, -, hs1, hs2⟩ := GlobalTheory.UnitarySwap.exists_swap (L := E) (V := Sp E n) (B := hStd E n)

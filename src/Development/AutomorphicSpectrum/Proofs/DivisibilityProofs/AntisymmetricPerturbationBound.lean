@@ -1,14 +1,18 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalLinRootPowerStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
-import Development.WeilBound.CoreStatements.FlagImmersions.DegLApply
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalLinRootPowerStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
+public import Development.WeilBound.CoreStatements.FlagImmersions.DegLApply
+
+@[expose] public section
 
 open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo Filter Topology GlobalTheory.CompanionTheory.Ar.Top
 open RootFieldNumerics
@@ -23,7 +27,7 @@ theorem inv_linear_eval (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (l
   obtain ⟨h1, h2⟩ := hl
   rw [homogeneousSubmodule_one_eq_span_X] at h1
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℝ).1 h1
-  have hcoef : ∀ p, coeff (Finsupp.single p 1) l = c p := by
+  have hcoef : ∀ p, AddMonoidAlgebra.coeff l (Finsupp.single p 1) = c p := by
     intro p
     rw [← hc, coeff_sum, Finset.sum_eq_single p]
     · simp
@@ -61,7 +65,8 @@ theorem inv_linear_eval (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (l
   choose a ha using ha
   choose b hb using hb
   refine ⟨a, b, fun x => ?_⟩
-  rw [← hc, map_sum, Fintype.sum_prod_type, ← Finset.sum_add_distrib]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [← hc, map_sum, Fintype.sum_prod_type, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Finset.sum_filter, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_

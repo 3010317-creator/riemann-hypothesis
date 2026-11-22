@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousExtensionAdicCompletion
-import Formalism.LocalRingCardinality.SpanPowerMembership.ExistsHomOfBasis
-import ReciprocityTheory.ReductiveGroups.LatticeEmbeddings.IotaPlace
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousExtensionAdicCompletion
+public import Formalism.LocalRingCardinality.SpanPowerMembership.ExistsHomOfBasis
+public import ReciprocityTheory.ReductiveGroups.LatticeEmbeddings.IotaPlace
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -79,7 +83,7 @@ theorem exists_ext (φ : F →+* PadicAlgCl l) :
     rw [hj', norm_le_one_iff]
     rw [SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers, ReciprocityTheory.Aut.adic_valued_algebraMap] at hy1
     exact hy1
-  · haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  · haveI : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
     have hKc : IsClosed (K : Set (PadicAlgCl l)) := (completeSpace_coe_iff_isComplete.mp ‹_›).isClosed
     exact hd.induction_on (p := fun y => j y ∈ K) y (hKc.preimage hjc) fun x => by
       show j (algebraMap F _ x) ∈ K

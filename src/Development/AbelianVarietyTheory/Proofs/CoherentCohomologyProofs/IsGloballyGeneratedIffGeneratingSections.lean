@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
-import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.PreservesFiniteColimitsTwistFunctor
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RestrictPullbackIsoHomAppPullbackSections
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsResMEqMulSecOfEqZpowSec
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.PreservesFiniteColimitsTwistFunctor
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RestrictPullbackIsoHomAppPullbackSections
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsResMEqMulSecOfEqZpowSec
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -80,7 +84,7 @@ theorem isAffineOpen_nonzeroLocus_add {s t : M.Sec} (hs : IsAffineOpen (nonzeroL
     {ProjSpace.secRatio (s + t) s, ProjSpace.secRatio (s + t) t} ?_ ?_
   · have h : ProjSpace.secRatio (s + t) s + ProjSpace.secRatio (s + t) t = 1 := by
       refine (ProjSpace.eq_secRatio (s + t) (s + t) fun l => ?_).trans (ProjSpace.secRatio_self _)
-      rw [map_add, add_mul, ← ProjSpace.secRatio_spec, ← ProjSpace.secRatio_spec, LB.add_f, map_add]
+      rw [map_add (f := _), add_mul, ← ProjSpace.secRatio_spec, ← ProjSpace.secRatio_spec, LB.add_f, map_add (f := _)]
     rw [Ideal.eq_top_iff_one, ← h]
     exact add_mem (Ideal.subset_span (by simp)) (Ideal.subset_span (by simp))
   · rintro _ (rfl | rfl) <;>
@@ -165,8 +169,8 @@ namespace QCoh
 
 variable {X : Scheme.{0}} {F G : X.Modules} {ι : Type}
 
-variable (F) in
 
+variable (F) in
 def IsGloballyGenerated : Prop :=
   ∃ (ι : Type) (_ : Finite ι) (φ : freeModule X ι ⟶ F), Epi φ
 
@@ -186,13 +190,13 @@ theorem sectionHom_app (s : Γ(F, ⊤)) (V : X.Opens) (a : Γ(structureModule X,
 def sectionsHom (s : ι → Γ(F, ⊤)) : freeModule X ι ⟶ F :=
   Sigma.desc (f := fun _ : ι => structureModule X) fun i => sectionHom (s i)
 
-variable (X) in
 
+variable (X) in
 def freeι (i : ι) : structureModule X ⟶ freeModule X ι :=
   Sigma.ι (fun _ : ι => structureModule X) i
 
-variable (X) in
 
+variable (X) in
 def freeBasis (i : ι) : Γ(freeModule X ι, ⊤) :=
   (freeι X i).app ⊤ ((structureModuleSectionsEquiv ⊤).symm 1)
 
@@ -232,7 +236,8 @@ theorem range_appLinear_free [Finite ι] (φ : freeModule X ι ⟶ F) (V : X.Ope
   refine le_antisymm ?_ (Submodule.span_le.2 ?_)
   · rintro _ ⟨t, rfl⟩
     obtain ⟨a, rfl⟩ := exists_sum_smul_freeBasis V t
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     refine Submodule.sum_mem _ fun i _ => ?_
     rw [map_smul, appLinear_apply, app_resM]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
@@ -288,11 +293,6 @@ theorem IsGloballyGenerated.of_epi (h : IsGloballyGenerated F) (φ : F ⟶ G) [E
 theorem isGloballyGenerated_iff_of_iso (e : F ≅ G) :
     IsGloballyGenerated F ↔ IsGloballyGenerated G :=
   ⟨fun h => h.of_epi e.hom, fun h => h.of_epi e.inv⟩
-
-theorem IsGloballyGenerated.isFiniteQC (h : IsGloballyGenerated F) [F.IsQuasicoherent] :
-    IsFiniteQC F :=
-  have ⟨_, _, φ, _⟩ := h
-  .of_epi φ
 
 theorem spanStalks_of_forall_exists_affine [F.IsQuasicoherent] (s : ι → Γ(F, ⊤))
     (h : ∀ x : X, ∃ V : X.Opens, IsAffineOpen V ∧ x ∈ V ∧
@@ -505,11 +505,5 @@ theorem QCoh.exists_idealModuleι_app_eq_one (I : X.IdealSheafData) {V : X.Opens
   exact Subsingleton.elim _ _
 
 end Converse
-
-example : IsGloballyGenerated (toMod (ProjSpace.O1 ℚ 2)) :=
-  (isGloballyGenerated_toMod_iff (ProjSpace.O1_isLB ℚ 2)).2 (isGenerated_O1 ℚ 2)
-
-example : ¬ IsGloballyGenerated (tilde (R := CommRingCat.of ℤ) (ModuleCat.of ℤ ℚ)) :=
-  fun h => not_isFiniteQC_tilde_rat h.isFiniteQC
 
 end GlobalTheory

@@ -1,6 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsDeco
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsDeco
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -32,7 +37,8 @@ theorem rowAct_smul_of_weight {R : Type} [CommRing R] {ν : Fin n → ℕ} (c : 
   classical
   conv_lhs => rw [f.as_sum]
   conv_rhs => rw [f.as_sum]
-  rw [map_sum, map_sum, Finset.smul_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   rw [← degree_of_colWeight m (hf (mem_support_iff.mp hm))]
   have h1 : ∀ v : Fin n × Fin n, (∑ b : Fin n, C ((c • g) v.1 b) * X (b, v.2) : MvPolynomial (Fin n × Fin n) R) =
@@ -64,7 +70,7 @@ theorem blockAct_smul_of_mem (lam : ι → DomWeight n) (a : K) (M : ι → Matr
       smul_eq_C_mul]
     rfl
   | zero => simp
-  | add x y _ _ hx hy => rw [map_add, map_add, hx, hy, smul_add]
+  | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy, smul_add]
   | smul c x _ hx => rw [map_smul, map_smul, hx, smul_comm]
 
 variable [StarRing K]

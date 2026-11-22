@@ -1,4 +1,8 @@
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.AevalElimEqRenameLinearSubstitution
+module
+
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.AevalElimEqRenameLinearSubstitution
+
+@[expose] public section
 
 namespace ReciprocityTheory.ChartRestriction.G.T0.WH
 
@@ -41,21 +45,23 @@ theorem psiP_monomial (s : σ →₀ ℕ) (a : K) :
 
 theorem psiP_eq_of_isWeightedHomogeneous (n : ℕ) (f : MvPolynomial σ K) (hf : ∀ s ∈ f.support, wt p s = n) :
     psiP p f = Polynomial.C f * Polynomial.X ^ n := by
-  have h : ∀ s ∈ f.support, psiP p (monomial s (coeff s f))
-      = Polynomial.C (monomial s (coeff s f)) * Polynomial.X ^ n := fun s hs => by
+  have h : ∀ s ∈ f.support, psiP p (monomial s (AddMonoidAlgebra.coeff f s))
+      = Polynomial.C (monomial s (AddMonoidAlgebra.coeff f s)) * Polynomial.X ^ n := fun s hs => by
     rw [psiP_monomial, hf s hs]
   conv_lhs => rw [f.as_sum]
-  rw [map_sum, Finset.sum_congr rfl h, ← Finset.sum_mul, ← map_sum, ← f.as_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, Finset.sum_congr rfl h, ← Finset.sum_mul, ← map_sum, ← f.as_sum]
 
 private theorem psiP_eq_sum_monomial (f : MvPolynomial σ K) :
-    psiP p f = ∑ s ∈ f.support, Polynomial.C (monomial s (coeff s f)) * Polynomial.X ^ wt p s := by
+    psiP p f = ∑ s ∈ f.support, Polynomial.C (monomial s (AddMonoidAlgebra.coeff f s)) * Polynomial.X ^ wt p s := by
   conv_lhs => rw [f.as_sum]
-  rw [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum]
   simp only [psiP_monomial]
 
 private theorem coeff_psiP (f : MvPolynomial σ K) (k : ℕ) :
-    (psiP p f).coeff k = ∑ s ∈ f.support.filter (fun s => wt p s = k), monomial s (coeff s f) := by
-  rw [psiP_eq_sum_monomial, Polynomial.finset_sum_coeff, Finset.sum_filter]
+    (psiP p f).coeff k = ∑ s ∈ f.support.filter (fun s => wt p s = k), monomial s (AddMonoidAlgebra.coeff f s) := by
+  rw [psiP_eq_sum_monomial, Polynomial.finsetSum_coeff, Finset.sum_filter]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [Polynomial.coeff_C_mul_X_pow]
   by_cases h : wt p s = k
@@ -66,10 +72,10 @@ private theorem coeff_psiP (f : MvPolynomial σ K) (k : ℕ) :
 theorem coeff_psiP_ne_zero (f : MvPolynomial σ K) (s : σ →₀ ℕ) (hs : s ∈ f.support) :
     (psiP p f).coeff (wt p s) ≠ 0 := by
   intro h
-  have h' := congrArg (MvPolynomial.coeff s) h
+  have h' := congrArg (AddMonoidAlgebra.coeff · s) h
   rw [coeff_psiP, MvPolynomial.coeff_sum, Finset.sum_eq_single s] at h'
   · classical
-    rw [coeff_monomial, if_pos rfl, coeff_zero] at h'
+    rw [coeff_monomial, if_pos rfl, AddMonoidAlgebra.coeff_zero] at h'
     exact (mem_support_iff.mp hs) h'
   · classical
     intro t _ hts

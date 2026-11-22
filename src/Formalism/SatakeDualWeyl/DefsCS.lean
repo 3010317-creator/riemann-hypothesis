@@ -1,7 +1,11 @@
-import Formalism.SatakeDualWeyl.StatementC
-import Formalism.SatakeDualWeyl.StatementB
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf
-import Formalism.HermitianLattices.DefsCS
+module
+
+public import Formalism.SatakeDualWeyl.StatementC
+public import Formalism.SatakeDualWeyl.StatementB
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf
+public import Formalism.HermitianLattices.DefsCS
+
+@[expose] public section
 
 noncomputable section
 
@@ -41,7 +45,7 @@ def globLat (g : GL n 𝒜) (Λ : Submodule (𝓞 E) (n → E)) : Submodule (�
     latS (F := F) (FiniteAdeleRing (𝓞 F) F) 𝒮 Λ}
   add_mem' := by
     intro x y hx hy
-    simp only [Set.mem_setOf_eq, Pi.add_apply, map_add] at *
+    simp only [Set.mem_setOf_eq, Pi.add_apply, map_add (f := _)] at *
     rw [show (fun i => ιA (x i) + ιA (y i)) = (fun i => ιA (x i)) + (fun i => ιA (y i)) from rfl,
       mulVec_add]
     exact add_mem hx hy
@@ -86,7 +90,7 @@ def GlobLatLattice : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (n : Type) [Fintype n] [DecidableEq n] (Λ : Submodule (𝓞 E) (n → E)),
     Module.Finite (𝓞 E) Λ → Submodule.span E (Λ : Set (n → E)) = ⊤ →
-    ∀ g : GL n (E ⊗[F] FiniteAdeleRing (𝓞 F) F), Submodule.IsLattice E (globLat g Λ)
+    ∀ g : GL n (E ⊗[F] FiniteAdeleRing (𝓞 F) F), Submodule.IsFullLattice E (globLat g Λ)
 
 def GlobLatOne : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -157,7 +161,7 @@ def CovolOfDual : Prop :=
     (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
     ∀ (N : ℕ) (ι : V →+ EuclideanSpace ℝ (Fin N)),
       (∀ x y : V, inner ℝ (ι x) (ι y) = ((Algebra.trace ℚ K (h x y) : ℚ) : ℝ)) →
-    ∀ e : 𝓞 K, e ≠ 0 → ∃ C : ℝ, ∀ M : Submodule (𝓞 K) V, Submodule.IsLattice K M →
+    ∀ e : 𝓞 K, e ≠ 0 → ∃ C : ℝ, ∀ M : Submodule (𝓞 K) V, Submodule.IsFullLattice K M →
       (∀ x ∈ Formalism.HermitianLatticesTheory.dual h M, (e : K) • x ∈ M) →
       ∀ [DiscreteTopology (Formalism.HermitianLatticesTheory.zmap ι M)] [IsZLattice ℝ (Formalism.HermitianLatticesTheory.zmap ι M)],
         ZLattice.covolume (Formalism.HermitianLatticesTheory.zmap ι M) ≤ C
@@ -167,7 +171,7 @@ def ClassSetFiniteBdd : Prop :=
     [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
     (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
     ∀ d e : 𝓞 K, d ≠ 0 → e ≠ 0 →
-    ∃ s : Finset (Submodule (𝓞 K) V), ∀ M : Submodule (𝓞 K) V, Submodule.IsLattice K M →
+    ∃ s : Finset (Submodule (𝓞 K) V), ∀ M : Submodule (𝓞 K) V, Submodule.IsFullLattice K M →
       (∀ x ∈ M, ∀ y ∈ M, (d : K) * h x y ∈ (1 : Submodule (𝓞 K) K)) →
       (∀ x ∈ Formalism.HermitianLatticesTheory.dual h M, (e : K) • x ∈ M) →
       ∃ N ∈ s, ∃ g ∈ Formalism.HermitianLatticesTheory.isom h, Formalism.HermitianLatticesTheory.gmap g N = M
@@ -176,15 +180,5 @@ def StdLatFull : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] (n : Type) [Fintype n] [DecidableEq n],
     Module.Finite (𝓞 E) (stdLat (n := n) (A := E) (𝓞 E)) ∧
     Submodule.span E ((stdLat (n := n) (A := E) (𝓞 E) : Submodule (𝓞 E) (n → E)) : Set (n → E)) = ⊤
-
-def WeakApproxV : Prop :=
-  ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (n : Type) [Fintype n] [DecidableEq n] (σ : E →ₐ[F] E) (J : Matrix n n E),
-    (∀ τ : E →+* ℂ, τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ) →
-    IsHerm (σ : E →+* E) J → IsUnit J.det → IsTotDef σ J →
-    ∀ (Λ : Submodule (𝓞 E) (n → E)), Module.Finite (𝓞 E) Λ →
-    Submodule.span E (Λ : Set (n → E)) = ⊤ → ∀ (v : HeightOneSpectrum (𝓞 F)),
-    ∀ g ∈ UPts σ J (v.adicCompletion F), ∃ γ ∈ UJ (σ : E →+* E) J,
-      (bc (inclE (F := F) (v.adicCompletion F)) γ)⁻¹ * g ∈ levelVL σ J v Λ
 
 end Formalism.UG.CS

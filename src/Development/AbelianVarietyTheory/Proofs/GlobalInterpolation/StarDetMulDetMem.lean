@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MaxVSpanSingleton
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MaxVSpanSingleton
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker Formalism.MainNotions GlobalTheory.CharVal GlobalTheory.IndefiniteRowSideFullHecke.CharacterValuation
 open Matrix
@@ -73,7 +77,7 @@ theorem star_mul_mem {N : Submodule (𝓞 E) (Sp E n)} (hN : dual (hStd E n) N =
     exact Submodule.smul_mem _ s hx
 
 omit [StarRing E] in
-theorem exists_det_ne_zero {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsLattice E N) :
+theorem exists_det_ne_zero {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsFullLattice E N) :
     ∃ A : Matrix (Fin n) (Fin n) E, (∀ j, A.col j ∈ N) ∧ A.det ≠ 0 := by
   have h : ∀ j : Fin n, ∃ t : nonZeroDivisors (𝓞 E), t • (Pi.single j 1 : Sp E n) ∈ N := by
     intro j

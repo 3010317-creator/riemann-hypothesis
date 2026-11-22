@@ -1,12 +1,16 @@
-import Mathlib
-import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.StDefinite
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactLevelOffFinEmpty
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonarchimedeanGroupOfIsCompactIsOpen
-import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.ArchimedeanDenseStabilizers.DenseRangeOfNotIsReal
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHeightBasePairEqModuleProduct
-import Formalism.SatakeDualWeyl.KpqSubgroupCompact
-import Formalism.LocalToGlobal.IndefiniteReal.CoreTExist
-import Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp
+module
+
+public import Mathlib
+public import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.StDefinite
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactLevelOffFinEmpty
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonarchimedeanGroupOfIsCompactIsOpen
+public import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.ArchimedeanDenseStabilizers.DenseRangeOfNotIsReal
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHeightBasePairEqModuleProduct
+public import Formalism.SatakeDualWeyl.KpqSubgroupCompact
+public import Formalism.LocalToGlobal.IndefiniteReal.CoreTExist
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.AdelicU
 open scoped TensorProduct Matrix Pointwise
@@ -162,7 +166,7 @@ theorem mem_range_of_sigma_eq (h : IsCMExt F E σ) {y : E} (hy : σ y = y) : y �
       · simp
       · simpa using hy
     | zero => simp
-    | add a b _ _ ha hb => rw [map_add, ha, hb]
+    | add a b _ _ ha hb => rw [map_add (f := _), ha, hb]
     | smul c a _ ha =>
       have e : σ (c • a) = c • σ a := σ.toLinearMap.map_smul c a
       rw [e, ha]
@@ -173,7 +177,11 @@ theorem isTotDef_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compa
   refine ⟨h.1, fun ι => Or.inl fun x hx => ?_⟩
   letI : Algebra F ℂ := (Complex.ofRealHom.comp ι).toAlgebra
   haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
-  let τ : E →ₐ[F] ℂ := IsAlgClosed.lift
+  let τ : E →ₐ[F] ℂ := (by
+    refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
+    solve_by_elim* (maxDepth := 2) only [*,
+      @_root_.DivisionSemiring.to_moduleIsTorsionFree,
+      @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hτ : ∀ a, τ (algebraMap F E a) = (ι a : ℂ) := fun a => τ.commutes a
   set y := Formalism.UG.hform (σ : E →+* E) J x x with hy
   have ey : y = dotProduct (fun i => σ (x i)) (J.mulVec x) := by
@@ -181,7 +189,8 @@ theorem isTotDef_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compa
     rfl
   have hfix : σ y = y := by
     rw [ey]
-    simp only [dotProduct, Matrix.mulVec, map_sum, map_mul, sigma_invol h]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [dotProduct, Matrix.mulVec, map_sum, map_mul, sigma_invol h]
     simp only [Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -213,7 +222,7 @@ theorem mulVec_fv (h : IsCMExt F E σ) (γ : GRat σ J) (x : Fin n → E) :
 theorem stab_of_mem_levelOpen (h : IsCMExt F E σ) {L : Submodule (𝓞 E) (Fin n → E)} [Submodule.IsLattice E L]
     {γ : GRat σ J} (hg : ratEmb σ J γ ∈ levelOpen σ J L) (x : Fin n → E) :
     x ∈ L ↔ (γ.1 : Matrix (Fin n) (Fin n) E).mulVec x ∈ L := by
-  have hfg : L.FG := Submodule.IsLattice.fg (A := E)
+  have hfg : L.FG := Submodule.IsLattice.fg (A := E) L
   have hfin : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hfg
   have hsp : Submodule.span E (L : Set (Fin n → E)) = ⊤ := Submodule.IsLattice.span_eq_top
   have h1 := (mem_levelOpen_iff_latHat σ J hfg (ratEmb σ J γ)).1 hg (fun i => (1 : Af F) ⊗ₜ[F] x i)
@@ -227,7 +236,7 @@ theorem stab_of_mem_levelOpen (h : IsCMExt F E σ) {L : Submodule (𝓞 E) (Fin 
 theorem finite_level_rat (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : CompanionTheory.Rg.Fl.IsPosDef σ J)
     (L : Submodule (𝓞 E) (Fin n → E)) [Submodule.IsLattice E L] :
     {γ : GRat σ J | ratEmb σ J γ ∈ levelOpen σ J L}.Finite := by
-  have hfg : L.FG := Submodule.IsLattice.fg (A := E)
+  have hfg : L.FG := Submodule.IsLattice.fg (A := E) L
   have hfin : Finite (Formalism.UG.level (σ : E →+* E) J L) := Formalism.UG.Final.StabFinite F E (Fin n) σ J
     (fun τ => RingHom.ext fun x => h.2.2.2 τ x) (by
       ext i j
@@ -244,7 +253,7 @@ theorem exists_class_cover (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compa
     (L : Submodule (𝓞 E) (Fin n → E)) [Submodule.IsLattice E L] :
     ∃ T : Finset (GAd σ J), ∀ x, ∃ (γ : GRat σ J), ∃ a ∈ T, ∃ k ∈ levelOpen σ J L, x = ratEmb σ J γ * a * k := by
   classical
-  have hfg : L.FG := Submodule.IsLattice.fg (A := E)
+  have hfg : L.FG := Submodule.IsLattice.fg (A := E) L
   have hsp : Submodule.span E (L : Set (Fin n → E)) = ⊤ := Submodule.IsLattice.span_eq_top
   letI := cmStarRing h
   let c : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext (sigma_invol h)) (AlgHom.ext (sigma_invol h))

@@ -1,7 +1,12 @@
-import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+
+@[expose] public section
+
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap epsR IsTangent IsGrpPullback)
 open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB)
@@ -21,7 +26,8 @@ theorem main : ∀ (R D : Type) [CommRing R] [CommRing D] [Algebra R D] (B : Ove
   refine ⟨fun hb ↦ ?_, fun D' _ _ φ ↦ ?_⟩
   · intro E _ _ E' _ _ E'' _ _ φ ψ z _
     have hα : ptAlg (spOver φ ≫ z ≫ fst _ _) = φ.comp (ptAlg (z ≫ fst _ _)) := ptAlg_comp _ _
-    simp only [sumMul, hα, map_sum, map_mul, AlgHom.comp_apply, Category.assoc]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [sumMul, hα, map_sum, map_mul, AlgHom.comp_apply, Category.assoc]
     rw [← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ ↦ ?_
     have h := hb i E E' E'' φ ψ (z ≫ snd _ _) (sm_whole _)

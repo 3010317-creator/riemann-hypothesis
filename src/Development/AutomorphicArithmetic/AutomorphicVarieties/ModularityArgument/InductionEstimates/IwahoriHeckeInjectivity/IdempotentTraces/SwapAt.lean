@@ -1,14 +1,18 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.HeckeInj
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.IdempotentTraces.GalLoc
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.TwUnitary
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.Places
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ConjCarries
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfIff
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
-import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.AdUnique
-import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.InfinitesimalCharacterPullback.HasInfCharPullSub
-import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSGalAdEx
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.HeckeInj
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.IdempotentTraces.GalLoc
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.TwUnitary
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.Places
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ConjCarries
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SInfIff
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
+public import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.AdUnique
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.InfinitesimalCharacterPullback.HasInfCharPullSub
+public import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSGalAdEx
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain Filter Topology
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -20,7 +24,7 @@ open scoped ComplexConjugate Classical
 open UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E
 
 open Formalism.L2.Host.CT UpperTheory.V.FieldIso in
-private theorem swap_one {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {n : ℕ} {μ : Measure (G1 E n)}
+private theorem swap_one {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {n : ℕ} {μ : Measure (G1 E n)}
     [μ.IsHaarMeasure] (σ : E ≃+* E) (θ : Twist μ) (hθ : UpperTheory.ConvolutionTheory.K.IsGal σ θ) {V V' : Submodule ℂ (L2 μ)}
     (hV : IsSummand μ V) (e : V'.map (θ.U : L2 μ →ₗ[ℂ] L2 μ) = V) :
     (∀ (τ : E →+* ℂ) m, SInf μ V τ m ↔ SInf μ V' (τ.comp σ.toRingHom) m) ∧

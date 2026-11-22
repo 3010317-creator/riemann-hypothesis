@@ -1,5 +1,9 @@
-import Formalism.SharpRestriction.LevelLetterCocycles.LatticeMembershipAevalUniformizer
-import Formalism.SharpRestriction.LevelLetterCocycles.FinLev
+module
+
+public import Formalism.SharpRestriction.LevelLetterCocycles.LatticeMembershipAevalUniformizer
+public import Formalism.SharpRestriction.LevelLetterCocycles.FinLev
+
+@[expose] public section
 
 noncomputable section
 
@@ -17,8 +21,6 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     {PD : PeriodData G Qp K₀ K B BdR}
     {LL O : Type} [Field LL] [Algebra Qp LL] [TopologicalSpace LL] [CommRing O] [Algebra O LL]
     {v : AddValuation LL (WithTop ℚ)} {n : ℕ} (W : LocWach PD LL O v n)
-
-local notation "ιE" => algebraMap (LetA O n) W.EE
 
 section Mod
 
@@ -65,7 +67,7 @@ def Isub : Submodule O (Fin d → W.EE) where
     rintro f f' ⟨hf, g, hg, hfg⟩ ⟨hf', g', hg', hfg'⟩
     refine ⟨(Msub W A c e Rst).add_mem hf hf', g + g',
       Formalism.MainNotions.UnusedSlot80.UnivC.inNL_add W T A c e b hg hg', fun k => ?_⟩
-    simp only [Pi.add_apply, map_add]
+    simp only [Pi.add_apply, map_add (f := _)]
     rw [mul_add, ← hfg k, ← hfg' k]; ring
   zero_mem' := ⟨(Msub W A c e Rst).zero_mem, 0, Formalism.MainNotions.UnusedSlot80.UnivC.inNL_zero W T A c e b,
     fun k => by simp⟩

@@ -1,14 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocCO
-import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGLintOfEntries
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesApart
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjPlaceIntegerMem
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PadOneMemSecondBlockTriangular
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AuxiliaryVectorDecompositionEqZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocCO
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGLintOfEntries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesApart
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjPlaceIntegerMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PadOneMemSecondBlockTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AuxiliaryVectorDecompositionEqZero
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links
 open IsDedekindDomain NumberField Matrix MeasureTheory
 open scoped TensorProduct nonZeroDivisors ComplexOrder
@@ -40,15 +45,80 @@ theorem frame_change {n : ℕ} {β β' : GL (Fin n) (Lev.EAf D)} {Λ : Submodule
   rw [Matrix.mulVec_mulVec, Matrix.mulVec_single_one] at h2
   exact h2
 
+private theorem full_of_dualL_eq {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
+    (hL : Submodule.IsLattice D.host.E Λ) (hd : Formalism.L2.Herm.dualL D.sp.cm V Λ = Λ) :
+    Submodule.IsFullLattice D.host.E Λ := by
+  haveI : Submodule.IsLattice D.host.E Λ := hL
+  refine ⟨?_⟩
+  obtain ⟨s, hs⟩ := hL.fg
+  apply eq_top_iff.mpr
+  intro y _
+  let f : (Fin V.rank → D.host.E) → D.host.E := fun x =>
+    ∑ i, ∑ j, (D.sp.cm.sig : D.host.E →+* D.host.E) (x i) * V.gram i j * y j
+  obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 D.host.E)) s f
+  have ha0 : (algebraMap (𝓞 D.host.E) D.host.E a) ≠ 0 := by
+    exact (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+  let P : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E) := {
+    carrier := {x | ∃ b : 𝓞 D.host.E, (b : D.host.E) = (algebraMap (𝓞 D.host.E) D.host.E a) * f x}
+    zero_mem' := by refine ⟨0, ?_⟩; simp [f]
+    add_mem' := by
+      rintro x z ⟨b, hb⟩ ⟨c, hc⟩
+      refine ⟨b + c, ?_⟩
+      change (b : D.host.E) + c = _
+      rw [hb, hc]
+      simp [f, map_add, add_mul, Finset.sum_add_distrib, mul_add]
+    smul_mem' := by
+      rintro c x ⟨b, hb⟩
+      refine ⟨RingOfIntegers.mapRingHom (D.sp.cm.sig : D.host.E →+* D.host.E) c * b, ?_⟩
+      simp only [map_mul, hb, f, Pi.smul_apply, Algebra.smul_def, map_mul, RingOfIntegers.mapRingHom_apply, map_mul]
+      simp only [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro i _
+      apply Finset.sum_congr rfl
+      intro j _
+      change (D.sp.cm.sig : D.host.E →+* D.host.E) (c : D.host.E) * _ = _
+      ring }
+  have hsP : (s : Set (Fin V.rank → D.host.E)) ⊆ P := by
+    intro x hx
+    obtain ⟨b, hb⟩ := ha x hx
+    exact ⟨b, by simpa [Algebra.smul_def] using hb⟩
+  have hy : (algebraMap (𝓞 D.host.E) D.host.E a) • y ∈ Λ := by
+    rw [← hd]
+    apply Submodule.subset_span
+    intro x hx
+    have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
+    obtain ⟨b, hb⟩ := hxP
+    refine ⟨b, ?_⟩
+    change (b : D.host.E) = _
+    rw [hb]
+    dsimp only [f, Pi.smul_apply, Formalism.UG.hform]
+    simp only [smul_eq_mul, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro j _
+    ring
+  have hy' : (algebraMap (𝓞 D.host.E) D.host.E a) • y ∈ Submodule.span D.host.E (Λ : Set (Fin V.rank → D.host.E)) :=
+    Submodule.subset_span hy
+  have := (Submodule.span D.host.E (Λ : Set (Fin V.rank → D.host.E))).smul_mem
+    (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy' 
+  change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ •
+    ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
+  rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
+  exact this
+
 theorem dual_frame {V : HSp D} {β : GL (Fin V.rank) (Lev.EAf D)} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
     (hβ : IsFrame β Λ) (hd : Formalism.L2.Herm.dualL D.sp.cm V Λ = Λ) :
     ∃ β' : GL (Fin V.rank) (Lev.EAf D), Formalism.UG.cT (cjA D) β.val * V.gram.map (inc D) * β'.val = 1 ∧
       (∀ i j, (β⁻¹ * β').1 i j ∈ OA D) ∧ (∀ i j, (β'⁻¹ * β).1 i j ∈ OA D) := by
   have hL := GlobalTheory.DiagLiftFix.isLattice_of_isFrame hβ
-  have hΛ := GlobalTheory.StdFrames.eq_lat hβ hL
   obtain ⟨β', h1, -⟩ := exists_dual_frame V β
-  have e : GlobalTheory.NormSum.AdLattice.lat β' = Λ := by rw [← dualL_lat_eq h1, ← hΛ, hd]
-  have h' : IsFrame β' Λ := e ▸ GlobalTheory.StdFrames.isFrame_lat β'
+  have h' : IsFrame β' Λ := by
+    intro y
+    rw [← hd, ← mem_hat, mem_hat_dualL_iff (full_of_dualL_eq hL hd)]
+    rw [← dual_frame_gen (OA D) (cjA D) (fun _ => cjA_mem) h1]
+    refine forall_congr' fun x => ?_
+    rw [mem_hat, hβ, ← cjA_mem_iff, cjA_hA, hA_eq]
   exact ⟨β', h1, frame_change hβ h', frame_change h' hβ⟩
 
 end GlobalTheory.ConjPlaceUnitary
@@ -105,7 +175,8 @@ theorem cpt_conj_mem {n : ℕ} (w : Pl D.host.E) (P C M : Matrix (Fin n) (Fin n)
     cpt (Formalism.DivisionValues.conjPl w) ((P * Formalism.UG.cT (cjA D) C * M) i j) ∈
       (Formalism.DivisionValues.conjPl w).adicCompletionIntegers D.host.E := by
   rw [GlobalTheory.FunObj.conjPl_eq_cP]
-  simp only [Matrix.mul_apply, map_sum, map_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Matrix.mul_apply, map_sum, map_mul]
   refine sum_mem fun l _ => mul_mem (sum_mem fun k _ => mul_mem ?_ ?_) ?_
   · exact (mem_OA_iff _).1 (hP i k) _
   · exact ConjugatePlaceIntegrality.GlobalTheory.CompanionTheory.ConjPlaceInt.cpt_sg_mem_integers w (C l k) (hC l k)

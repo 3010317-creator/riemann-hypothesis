@@ -1,6 +1,10 @@
-import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
-import Formalism.LocalToGlobal.Columns.LocWLemmas
-import Lemmata.GeneralBFactSecondBisAlt.Imports
+module
+
+public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
+public import Formalism.LocalToGlobal.Columns.LocWLemmas
+public import Lemmata.GeneralBFactSecondBisAlt.Imports
+
+@[expose] public section
 
 open MvPolynomial NumberField IsDedekindDomain
 open scoped Matrix
@@ -227,7 +231,7 @@ theorem lc_exists_smul_mem (M : Submodule (𝓞 K) V) {x : V} (hx : x ∈ Submod
 
 end Gen
 
-theorem lc_sandwich (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsLattice K M) :
+theorem lc_sandwich (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsFullLattice K M) :
     ∃ d : 𝓞 K, d ≠ 0 ∧ (∀ x ∈ M, d • x ∈ colLat (1 : GL (Fin n) K)) ∧
       (∀ x ∈ colLat (1 : GL (Fin n) K), d • x ∈ M) := by
   classical

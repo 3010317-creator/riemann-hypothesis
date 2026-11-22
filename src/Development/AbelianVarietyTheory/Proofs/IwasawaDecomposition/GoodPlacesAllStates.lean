@@ -1,5 +1,10 @@
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsHecke
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSplitPlaceEqFixedTypePrimePlace
+module
+
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsHecke
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSplitPlaceEqFixedTypePrimePlace
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 open Formalism.AUTREP (GAf)
 open Neutral.B1 (Ideles)
@@ -15,8 +20,6 @@ noncomputable section
 namespace GlobalTheory.TypePlacesCover
 
 variable {D : D7}
-
-local notation "cO" => IsCMField.ringOfIntegersComplexConj D.host.E
 
 theorem isConjPl_conjPlE (P : PlE D.host) : Formalism.BasicNotions.IsConjPl D.host P (GlobalTheory.SplitConjPlace.conjPlE P) := by
   intro x y hxy
@@ -78,8 +81,8 @@ theorem cover (k : Fin 2) (w : PlE D.host) (hw : ((D.host.g k : ℕ) : 𝓞 D.ho
   · exact ⟨v, Or.inl (congrArg Subtype.val hx).symm⟩
   · exact ⟨v, Or.inr (congrArg Subtype.val hx).symm⟩
 
-open GlobalTheory.LevCmp in
 
+open GlobalTheory.LevCmp in
 theorem gPlaces (D : D7) : GPlaces D := by
   refine ⟨fun k v => ⟨D.naut.plGw_over k v, GlobalTheory.SplitPlaceOfFixed.exists_splitPlace_plGw D ⟨k, v⟩⟩, ?_, ?_⟩
   · rintro u ⟨w, hwu, k, hwk⟩
@@ -98,9 +101,5 @@ theorem gPlaces (D : D7) : GPlaces D := by
 
 end GlobalTheory.TypePlacesCover
 
-open GlobalTheory.TypePlacesCover in
-
-theorem GlobalTheory.TypePlacesCover.gPlaces_all : ∀ hL : GlobalTheory.Published.LocalLanglandsGL, AllSt fun _ _ _ _ _ _ x => LA hL x → GPlaces (Dof x) :=
-  fun _ => StepW.of_all fun _ _ _ _ _ _ _ _ _ x _ => gPlaces (Dof x)
 
 end

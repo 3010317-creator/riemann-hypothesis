@@ -1,8 +1,12 @@
-import Development.AbelianVarietyTheory.Definitions.Divisors.DatumEquiv
-import Development.AbelianVarietyTheory.Definitions.Divisors.VdmSplit
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VandermondeSplitsCompactNoncompact
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointDetOnCompactTorus
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NumShiftHolds
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumEquiv
+public import Development.AbelianVarietyTheory.Definitions.Divisors.VdmSplit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VandermondeSplitsCompactNoncompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointDetOnCompactTorus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NumShiftHolds
+
+@[expose] public section
 
 section
 open GlobalTheory.PsCo.PcEG
@@ -47,8 +51,8 @@ private theorem prod_tor_pow_eq_wtVal_mul {n : ℕ} (lam : Fin n → ℝ) (m : F
 
 end WeylCompactTorusIdentity
 
-open WeylCompactTorusIdentity in
 
+open WeylCompactTorusIdentity in
 theorem weylFormulaCompactTorusIdentity_of_ingredients : VdmSplit → PhysTor → NumShift → TorusId := by
   intro hV hP hN n ε lam Λ m hm hΛ θ hinj x hx
   have ht0 : ∀ a, tor θ a ≠ 0 := fun a => Complex.exp_ne_zero _

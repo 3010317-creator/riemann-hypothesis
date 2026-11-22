@@ -1,9 +1,14 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.StLocB
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.StGlob
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.SphDict
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.MemIffLocal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDetEqOne
-import GroundTheory.GlobalFields.LocalFieldAtPlace
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.StLocB
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.StGlob
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.SphDict
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SmoothRepresentationsGL.MemIffLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDetEqOne
+public import GroundTheory.GlobalFields.LocalFieldAtPlace
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.DefU
@@ -13,7 +18,7 @@ namespace UpperTheory.Gal.Gen
 
 private theorem eig_of_hasSat {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) {a : ℕ} {V : Type}
     [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (GL (Fin a) (w.adicCompletion E)) V) {B : Multiset ℂˣ}
-    (hB : GlobalTheory.LFun.HasSatGL w ρ B) {v : V} (hv : v ∈ GlobalTheory.PRep.fixed ρ (GlobalTheory.LFun.KGL w a)) (hv0 : v ≠ 0)
+    (hB : GlobalTheory.LFun.HasSatGL w ρ B) {v : V} (hv : v ∈ GlobalTheory.PRep.fixed ρ (GlobalTheory.LFun.KGL w (n := a))) (hv0 : v ≠ 0)
     (l : Module.Dual ℂ V) : UpperTheory.V.Af.Smo.Eig w B fun g => l (ρ g v) := by
   refine ⟨hB.card, fun y k hk => ?_, fun ϖ hϖ j hj y => ?_⟩
   · rw [map_mul, Module.End.mul_apply, GlobalTheory.LGrp.mem_fixed.1 hv k hk]
@@ -36,6 +41,54 @@ private theorem eigen_top {E : Type} [Field E] [NumberField E] (w : HeightOneSpe
     eigenSubalgebra μ z f hf = ⊤ := by
   obtain ⟨hKeq, hu, hq, -⟩ := UpperTheory.V.Af.Smo.sphDict E a w
   have hTj := UpperTheory.V.Af.Smo.tjSet UpperTheory.V.Af.Smo.sphDict E a w
+  have hT : T.card = r := by
+        simp [T, Fin.card_filter_val_lt, hr]
+      have hD : ((Iwasawa.torusPow F n (Spherical.lamS T) : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) =
+          Formalism.UG.diagJ n (GLnLocal.uniformizer F : F) r := by
+        rw [Iwasawa.coe_torusPow, Formalism.UG.diagJ]
+        congr 1
+        funext i
+        by_cases hi : i.val < r <;> simp [Spherical.lamS, T, hi]
+      have hU : ∀ (S : Finset (Fin n)) c, Spherical.unipC (F := F) S c ∈ GLnLocal.integralGL F n := by
+        intro S c
+        have := (Spherical.torusPow_conj_unipC_mem (l := 0) antitone_const S c).2
+        have h0 : Iwasawa.torusPow F n 0 = 1 := Units.ext (by simp [Iwasawa.coe_torusPow])
+        simpa [h0] using this
+      rw [← hD]
+      constructor
+      · intro hg
+        obtain ⟨S, hS, c, hc⟩ := Spherical.exists_gMat hg
+        have hk := QuotientGroup.eq.1 hc
+        obtain ⟨σ, hσ⟩ := lamS_perm S T (hS.trans hT.symm)
+        have hp := GLnLocal.permGL_mem_integralGL F n σ
+        refine ⟨_, mul_mem (hU S c) (inv_mem hp), _, mul_mem hp hk, ?_⟩
+        rw [← Units.val_mul, ← Units.val_mul]
+        congr 1
+        have h1 := Spherical.permGL_conj_torusPow (F := F) σ (Spherical.lamS T)
+        rw [hσ] at h1
+        rw [Spherical.gMat, ← h1]
+        group
+      · rintro ⟨a, ha, b, hb, e⟩
+        rw [← Units.val_mul, ← Units.val_mul] at e
+        have e' := Units.ext e
+        have h0 := Spherical.gMat_mem_minusculeSet (F := F) T (fun _ => 0)
+        rw [hT] at h0
+        have := Spherical.mul_mem_minusculeSet h0 (mul_mem ha (inv_mem (hU T fun _ => 0))) hb
+        rw [e']
+        convert this using 1
+        rw [Spherical.gMat]
+        group
+    
+    intro E _ _ n w r hr
+    let hd := UpperTheory.V.Af.Smo.sphDict
+    have hK : GLnLocal.integralGL (w.adicCompletion E) n = Formalism.UG.GLint (Fin n) (Formalism.UG.Ov E w) :=
+      (hd E n w).1
+    unfold Formalism.UG.Tj
+    rw [← hK]
+    congr 1
+    ext g
+    exact (mem_iff_local hr g).symm
+  have hTj := hTj E a w
   have hT : ∀ r ≤ a, minusculeHecke μ r ∈ eigenSubalgebra μ z f hf := by
     intro r hr
     refine GlobalTheory.HenQ.ShellOp.minuscule_mem_of z hf hr fun g => ?_
@@ -90,7 +143,8 @@ theorem UpperTheory.Gal.Gen.locOp_pf :
     simp only [one_mul, map_one, Module.End.one_apply] at h2
     have h3 := hT.2 (fun g => l (σ.ρ g v)) hf
     have h4 : l (opOf σ.ρ h v) = (m : ℂ) * ∑ g ∈ T, (H : HeckeAlgebra μ) g * l (σ.ρ g v) := by
-      rw [opOf, Finsupp.sum_of_support_subset h hsupp _ (by simp), map_sum, Finset.mul_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [opOf, Finsupp.sum_of_support_subset h hsupp _ (by simp), map_sum, Finset.mul_sum]
       refine Finset.sum_congr rfl fun g hg => ?_
       rw [map_smul, hval g hg, smul_eq_mul, mul_assoc]
     rw [map_sub, map_smul, smul_eq_mul, h4, hm, ← h3, h2, sub_self]

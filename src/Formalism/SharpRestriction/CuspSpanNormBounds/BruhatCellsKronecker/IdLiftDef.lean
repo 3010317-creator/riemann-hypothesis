@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.UnitriangularFrameLift
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.UnitriangularFrameLift
+
+@[expose] public section
 
 noncomputable section
 
@@ -18,14 +22,14 @@ def IntegralAdjointUnimodular : Prop :=
 
 def IntegralRetraction : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : HSpace E) (Λ : Submodule (𝓞 E) S.V) (X : Submodule E S.V),
-    Submodule.IsLattice E Λ → ∃ P : S.V →ₗ[E] S.V, (∀ x ∈ X, P x = x) ∧ (∀ y, P y ∈ X) ∧ LInt Λ P
+    Submodule.IsFullLattice E Λ → ∃ P : S.V →ₗ[E] S.V, (∀ x ∈ X, P x = x) ∧ (∀ y, P y ∈ X) ∧ LInt Λ P
 
 def IntegralTraceSurjective : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [StarRing E], Formalism.HermitianLatticesTheory.IsCMUnram E → ∃ θ : 𝓞 E, (θ : E) + star (θ : E) = 1
 
 def IsotropicIntegralRetraction : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : HSpace E) (Λ : Submodule (𝓞 E) S.V) (X : Submodule E S.V),
-    Formalism.HermitianLatticesTheory.IsCMUnram E → Submodule.IsLattice E Λ → Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ → (∀ x ∈ X, ∀ y ∈ X, S.hT x y = 0) →
+    Formalism.HermitianLatticesTheory.IsCMUnram E → Submodule.IsFullLattice E Λ → Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ → (∀ x ∈ X, ∀ y ∈ X, S.hT x y = 0) →
     ∃ P P' : S.V →ₗ[E] S.V, LAdj S P P' ∧ (∀ x ∈ X, P x = x) ∧ (∀ y, P y ∈ X) ∧ LInt Λ P ∧ LInt Λ P' ∧
       ∀ w y, S.hT (P' w) (P' y) = 0
 

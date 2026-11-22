@@ -1,5 +1,10 @@
-import Mathlib
-import Formalism.FockGram.StatementHerm
+module
+
+public import Mathlib
+public import Formalism.FockGram.StatementHerm
+public import Formalism.Compatibility.SpanningLattice
+
+@[expose] public section
 
 open Module
 
@@ -78,16 +83,10 @@ def SameGenus (h : V →ₗ⋆[K] V →ₗ[K] K) (L M : Submodule R V) : Prop :=
   ∀ p : Ideal R, p.IsMaximal → ∃ g ∈ isom h, gmap g (loc (K := K) p L) = loc (K := K) p M
 
 def genus (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule R V) : Set (Submodule R V) :=
-  {M | Submodule.IsLattice K M ∧ SameGenus h L M}
+  {M | RHCompat.SpanningLattice K M ∧ SameGenus h L M}
 
 def conjIdeal (P : Ideal R) : Ideal R :=
   Ideal.span {r | ∃ s ∈ P, algebraMap R K r = star (algebraMap R K s)}
-
-def IsNeighbour (P : Ideal R) (L M : Submodule R V) : Prop :=
-  (∀ q : Ideal R, q.IsMaximal → q ≠ P → q ≠ conjIdeal (K := K) P →
-    loc (K := K) q L = loc (K := K) q M) ∧
-  Nonempty ((L ⧸ (L ⊓ M).comap L.subtype) ≃ₗ[R] (R ⧸ conjIdeal (K := K) P)) ∧
-  Nonempty ((M ⧸ (L ⊓ M).comap M.subtype) ≃ₗ[R] (R ⧸ P))
 
 def locLen (p : Ideal R) [p.IsPrime] (A B : Submodule R V) : ℕ :=
   (Module.length R ((localization₂ p A) ⧸ (localization₂ p B).comap (localization₂ p A).subtype)).toNat
@@ -116,8 +115,8 @@ def DualLattice : Prop :=
     [IsFractionRing R K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module R V]
     [IsScalarTower R K V] (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → h.Nondegenerate →
     (∀ r : R, star (algebraMap R K r) ∈ Set.range (algebraMap R K)) →
-    ∀ L : Submodule R V, Submodule.IsLattice K L →
-      Submodule.IsLattice K (dual h L) ∧ dual h (dual h L) = L ∧
+    ∀ L : Submodule R V, Submodule.IsFullLattice K L →
+      Submodule.IsFullLattice K (dual h L) ∧ dual h (dual h L) = L ∧
       ∀ a : K, a ≠ 0 → dual h (L.map ((LinearMap.lsmul K V a).restrictScalars R)) =
         (dual h L).map ((LinearMap.lsmul K V (star a)⁻¹).restrictScalars R)
 
@@ -157,7 +156,7 @@ def IsomAct : Prop :=
       (∀ p : Ideal R, loc (K := K) p (gmap g L) = gmap g (loc (K := K) p L)) ∧
       (IsIntegralLat h (gmap g L) ↔ IsIntegralLat h L) ∧
       (IsUnimodular h (gmap g L) ↔ IsUnimodular h L) ∧
-      (Submodule.IsLattice K (gmap g L) ↔ Submodule.IsLattice K L)
+      (RHCompat.SpanningLattice K (gmap g L) ↔ RHCompat.SpanningLattice K L)
 
 def GenusBasic : Prop :=
   ∀ (R K V : Type) [CommRing R] [IsDomain R] [Field K] [StarRing K] [Algebra R K]
@@ -175,19 +174,9 @@ def ClassSetFinite : Prop :=
     [IsScalarTower (NumberField.RingOfIntegers K) K V]
     (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm →
     (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
-    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K L →
+    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K L →
       ∃ s : Finset (Submodule (NumberField.RingOfIntegers K) V), (∀ M ∈ s, M ∈ genus h L) ∧
         ∀ M ∈ genus h L, ∃ N ∈ s, ∃ g ∈ isom h, gmap g N = M
-
-def NeighbourBasic : Prop :=
-  ∀ (R K V : Type) [CommRing R] [IsDedekindDomain R] [Field K] [StarRing K] [Algebra R K]
-    [IsFractionRing R K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module R V]
-    [IsScalarTower R K V] (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → h.Nondegenerate →
-    (∀ r : R, star (algebraMap R K r) ∈ Set.range (algebraMap R K)) →
-    ∀ (P : Ideal R), P.IsMaximal → ∀ L M : Submodule R V,
-      Submodule.IsLattice K L → Submodule.IsLattice K M → IsNeighbour (K := K) P L M →
-      IsNeighbour (K := K) (conjIdeal (K := K) P) M L ∧
-      (Finite (R ⧸ P) → IsUnimodular h L → IsIntegralLat h M → IsUnimodular h M)
 
 def IndexBasic : Prop :=
   ∀ (R K V : Type) [CommRing R] [IsDedekindDomain R] [Field K] [StarRing K] [Algebra R K]
@@ -195,22 +184,11 @@ def IndexBasic : Prop :=
     [IsScalarTower R K V] (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm → h.Nondegenerate →
     (∀ r : R, star (algebraMap R K r) ∈ Set.range (algebraMap R K)) →
     ∀ (p : Ideal R) [p.IsMaximal] (A B C : Submodule R V),
-      Submodule.IsLattice K A → Submodule.IsLattice K B → Submodule.IsLattice K C →
+      Submodule.IsFullLattice K A → Submodule.IsFullLattice K B → Submodule.IsFullLattice K C →
       lidx p A A = 0 ∧ lidx p A B = - lidx p B A ∧
       lidx p A C = lidx p A B + lidx p B C ∧
       (B ≤ A → lidx p A B = locLen p A B) ∧
       (IsUnimodular h A → jIdx h p A = 0) ∧
       (IsIntegralLat h A → (jIdx h p A ≤ 0 ∧ (jIdx h p A = 0 ↔ localization₂ p (dual h A) = localization₂ p A)))
-
-def ExampleZ : Prop :=
-  ∀ h : ℚ →ₗ⋆[ℚ] ℚ →ₗ[ℚ] ℚ, (∀ x y, h x y = x * y) →
-    Submodule.IsLattice ℚ (1 : Submodule ℤ ℚ) ∧ IsUnimodular h (1 : Submodule ℤ ℚ) ∧
-    IsIntegralLat h (Submodule.span ℤ {(2 : ℚ)}) ∧
-    dual h (Submodule.span ℤ {(2 : ℚ)}) = Submodule.span ℤ {(1 / 2 : ℚ)} ∧
-    ¬ IsUnimodular h (Submodule.span ℤ {(2 : ℚ)}) ∧
-    (∀ (p : Ideal ℤ) [p.IsPrime], p = Ideal.span {2} →
-      lidx p (1 : Submodule ℤ ℚ) (Submodule.span ℤ {(2 : ℚ)}) = 1) ∧
-    (∀ (p : Ideal ℤ) [p.IsPrime], p = Ideal.span {3} →
-      lidx p (1 : Submodule ℤ ℚ) (Submodule.span ℤ {(2 : ℚ)}) = 0)
 
 end Formalism.HermitianLatticesTheory

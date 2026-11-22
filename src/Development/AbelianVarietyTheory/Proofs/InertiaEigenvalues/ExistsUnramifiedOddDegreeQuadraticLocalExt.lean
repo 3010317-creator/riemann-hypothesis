@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.IsPrecompleteOfBasis
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.IsPrecompleteOfBasis
+
+@[expose] public section
 
 noncomputable section
 
@@ -87,8 +91,8 @@ theorem root_unique (f : W[X]) (hsep : (f.map v).Separable) {a b : W} (ha : f.ev
 
 end Hensel
 
-open ReciprocityTheory.ChartRestriction.G.Semi in
 
+open ReciprocityTheory.ChartRestriction.G.Semi in
 theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] (p : ℕ) [Fact p.Prime] [CharP (ResidueField O) p]
     {q f d : ℕ} (hq : Nat.card (ResidueField O) = q ^ 2) (hf : q = p ^ f) (hd : Odd d) (c : O →+* O)
@@ -290,7 +294,7 @@ theorem exists_unramified_ext : ∀ (K : UQ) (d : ℕ), Odd d → ∃ (K' : UQ) 
       map_one' := hi (by rw [← hc0]; simp)
       map_mul' := fun x y => hi (by rw [map_mul, ← hc0, ← hc0, ← hc0]; simp)
       map_zero' := hi (by rw [← hc0]; simp)
-      map_add' := fun x y => hi (by rw [map_add, ← hc0, ← hc0, ← hc0]; simp) }
+      map_add' := fun x y => hi (by rw [map_add (f := _), ← hc0, ← hc0, ← hc0]; simp) }
   have hc : ∀ x, K.c (algebraMap K.O K.E x) = algebraMap K.O K.E (c x) := hc0
   have hcc : ∀ x, c (c x) = x := fun x => hi (by rw [← hc, ← hc, K.c_c])
   let ce : K.O ≃+* K.O := RingEquiv.ofRingHom c c (RingHom.ext hcc) (RingHom.ext hcc)
@@ -344,7 +348,7 @@ theorem exists_unramified_ext : ∀ (K : UQ) (d : ℕ), Odd d → ∃ (K' : UQ) 
         obtain rfl : x = z := hx
         exact IntermediateField.mem_adjoin_simple_self _ _
       | algebraMap r => rw [← hφ]; exact IntermediateField.algebraMap_mem _ _
-      | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+      | add x y _ _ hx hy => rw [map_add (f := _)]; exact add_mem hx hy
       | mul x y _ _ hx hy => rw [map_mul]; exact mul_mem hx hy
     show Algebra.adjoin K.E {algebraMap W L z} = ⊤
     rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic, eq_top_iff]

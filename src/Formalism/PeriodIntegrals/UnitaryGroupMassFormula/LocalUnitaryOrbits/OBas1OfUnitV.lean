@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.NearTIff
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.NearTIff
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,7 +18,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   (v : HeightOneSpectrum (𝓞 F)) (Λ : Set (Fin n → E))
 
 def OBas1 : Prop :=
-  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
+  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), RHCompat.SpanningLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
     IsSDLoc σ J v Λ → UnramAt (E := E) v →
     ∃ e : Fin n → Fin n → Fv F v ⊗[F] E, Orb.IsOBas v Λ e ∧ gramR (Fv F v) σ J e = 1
 
@@ -30,11 +34,17 @@ def ResAlg : Prop :=
 
 theorem oBas1_of_unitV (hU : Orb.UnitV σ J ψ v Λ) : OBas1 σ J ψ v Λ := by
   intro hstd hL hsd hun
-  obtain ⟨e, he, -, he1, hsp⟩ := Orb.orthoGen σ J ψ v Λ hU hstd hL hsd hun n (Fin 0)
+  have hLf : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, he⟩ := hL
+    exact ⟨L, hL.toIsFullLattice, he⟩
+  have hLw : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, he⟩ := hLf
+    exact ⟨L, hL.toIsLattice, he⟩
+  obtain ⟨e, he, -, he1, hsp⟩ := Orb.orthoGen σ J ψ v Λ hU hstd hLf hsd hun n (Fin 0)
     (fun i => i.elim0) (by simp) (fun i => i.elim0) ⟨1, (Orb.oSub v).1, by simp [Matrix.det_isEmpty]⟩
   refine ⟨e, fun x => ⟨fun hx => hsp x ⟨hx, fun i => i.elim0⟩, ?_⟩, he1⟩
   rintro ⟨c, hc, rfl⟩
-  exact Submodule.sum_mem _ fun i _ => Orb.oSmul v Λ hL (c i) (hc i) (e i) (he i).1
+  exact Submodule.sum_mem _ fun i _ => Orb.oSmul v Λ hLw (c i) (hc i) (e i) (he i).1
 
 theorem det_red {K : Type} [CommRing K] (π : OR (E := E) v →+* K) {a : ℕ}
     (T : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) (hT : ∀ i j, T i j ∈ OR (E := E) v)
@@ -60,7 +70,10 @@ theorem redU_of (hU : Orb.UnitV σ J ψ v Λ) (hR : ResAlg σ J ψ v) (a : ℕ) 
   have hstd := hG.1
   have hcm := hstd.1
   have hJ : ∀ i j, σ (J j i) = J i j := hstd.2.1.1
-  obtain ⟨e, he, he1⟩ := oBas1_of_unitV σ J ψ v Λ hU hstd hG.2.1 hG.2.2.1 hG.2.2.2.1
+  have hLsp : ∃ L : Submodule (𝓞 E) (Fin n → E), RHCompat.SpanningLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, he⟩ := hG.2.1
+    exact ⟨L, RHCompat.SpanningLattice.ofFull hL, he⟩
+  obtain ⟨e, he, he1⟩ := oBas1_of_unitV σ J ψ v Λ hU hstd hLsp hG.2.2.1 hG.2.2.2.1
   have hT := gY_mem σ J ψ v Λ hG
   obtain ⟨w, hw, -, hd⟩ := hG.2.2.2.2.2.2
   have hconj : ∀ i j, gramR (Fv F v) σ J Y i j = sigR (Fv F v) σ (gramR (Fv F v) σ J Y j i) := fun i j =>

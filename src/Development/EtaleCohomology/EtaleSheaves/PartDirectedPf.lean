@@ -1,7 +1,10 @@
-import Development.EtaleCohomology.EtaleSheaves.PartDiagCut
+module
+
+public import Development.EtaleCohomology.EtaleSheaves.PartDiagCut
+
+@[expose] public section
 
 namespace LateralTheory.E.PartDirectedPf
-local notation "PT" => LateralTheory.E.PartDiagCut.Part
 
 variable {A : Type} [CommRing A]
 
@@ -18,8 +21,8 @@ theorem prod_eq_zero_of_ne {a b c d : A} (P : PT A) (Q : PT A)
     calc a * b * (c * d) = a * c * (b * d) := by ring
       _ = 0 := by rw [this, zero_mul]
 
-open Classical in
 
+open Classical in
 noncomputable def meet (P Q : PT A) : PT A where
   blocks := ((P.blocks ×ˢ Q.blocks).filter (fun x => x.1 * x.2 ≠ 0)).image (fun x => x.1 * x.2)
   idem := by

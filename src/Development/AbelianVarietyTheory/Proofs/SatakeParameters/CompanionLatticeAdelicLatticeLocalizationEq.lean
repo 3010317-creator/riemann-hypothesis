@@ -1,9 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PulledLatticeVectorMemDualBaseLatticeCompletion
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicLatticeCompletionLocalGlobal
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLatticeBidual
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsGlob
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PulledLatticeVectorMemDualBaseLatticeCompletion
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicLatticeCompletionLocalGlobal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLatticeBidual
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsGlob
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Matrix Formalism.BasicNotions Formalism.UG Formalism.L2.Col Formalism.L2.PairingIndexBounds.F Formalism.MainNotions.G.KAat Formalism.L2.Forms Formalism.L2.Ker Formalism.MainNotions Formalism.L2.DIV Formalism.MainNotions.G GlobalTheory.TwU GlobalTheory.TwV
 open scoped TensorProduct
 
@@ -40,7 +45,7 @@ theorem dualL_fg {n : ℕ} (τ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (hJ :
       | zero => simp [hform]
       | add x x' _ _ hx hx' =>
         have e : hform τ J (x + x') y = hform τ J x y + hform τ J x' y := by
-          simp only [hform, Pi.add_apply, map_add, add_mul, Finset.sum_add_distrib]
+          simp only [hform, Pi.add_apply, map_add (f := _), add_mul, Finset.sum_add_distrib]
         rw [e, hx, hx', add_zero]
       | smul c x _ hx => rw [GlobalTheory.LevelHecke.DualConj.hform_smul_left, hx, mul_zero]
     have hJy : J *ᵥ y = 0 := by
@@ -140,9 +145,8 @@ theorem isLattice_compan {R : Ranks} {F E : Type} [Field F] [NumberField F] [Fie
     Submodule.IsLattice E (compan (sp := sp) J a M) := by
   refine ⟨?_, ?_⟩
   · exact hM.fg.sup ((Submodule.FG.smul (IsNoetherian.noetherian (Ideal.span {a})) (dualL_fg (sp.cm.sig : E →+* E) J hJ M hM)))
-  · rw [eq_top_iff, ← hM.span_eq_top]
-    exact Submodule.span_mono (SetLike.coe_subset_coe.2 le_sup_left)
-
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem compan_latAd_eq {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     (sp : Spaces R F E) {N : ℕ} (σ : E →ₐ[F] E) (hσ : (σ : E →+* E) = sp.cm.sig) (J : Matrix (Fin N) (Fin N) E)
     (hJ : IsUnit J.det) (a : 𝓞 E) (x : GL (Fin N) (E ⊗[F] FiniteAdeleRing (𝓞 F) F))

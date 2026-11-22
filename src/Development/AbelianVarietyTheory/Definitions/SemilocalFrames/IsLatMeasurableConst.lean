@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset
 
@@ -55,13 +59,10 @@ def dualAt (L : Submodule ℤ (VecInf E j)) : Submodule ℤ (VecInf E j) :=
   Submodule.span ℤ {y | ∀ x ∈ L, ∃ z : ℤ, ∑ w, (x w ⬝ᵥ y w).re = z}
 
 def latMean (F : Submodule ℤ (VecInf E j) → ENNReal) : ENNReal :=
-  ∑' c : Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsLattice E Λ} =>
+  ∑' c : Quot (fun Λ Λ' : {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ} =>
       ∃ γ : GL (Fin j) E, ∀ y, (γ : Matrix (Fin j) (Fin j) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1),
     covol (autGL E j (Quot.out c).1) ((haarGL E j).withDensity fun g => F (latAt E j (Quot.out c).1 g))
       {g | 0 < detNorm E j g}
-
-def IsLatMeasurable (F : Submodule ℤ (VecInf E j) → ENNReal) : Prop :=
-  ∀ Λ : Submodule (𝓞 E) (Fin j → E), Submodule.IsLattice E Λ → Measurable fun g : MatInf E j => F (latAt E j Λ g)
 
 def covAt (L : Submodule ℤ (VecInf E j)) : ℝ := ZLattice.covolume L volume
 

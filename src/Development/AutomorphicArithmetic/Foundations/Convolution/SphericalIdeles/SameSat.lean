@@ -1,16 +1,20 @@
-import Mathlib
-import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.SphConj
-import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.LiftAll
-import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.SmoEq
-import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.PowSat
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.PowTwist
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CarryLift
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamParts
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CoreLift
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExTwist
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
-import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.NormCharPowHolds
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.SphConj
+public import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.LiftAll
+public import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.SmoEq
+public import Development.AutomorphicArithmetic.Foundations.Convolution.SphericalIdeles.PowSat
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.PowTwist
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CarryLift
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamParts
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CoreLift
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExTwist
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
+public import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.NormCharPowHolds
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain Filter
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction
@@ -20,7 +24,7 @@ open UpperTheory.V.Published UpperTheory.CBC PositivityTheory.RgJS
 section SlopeTestRemainingChoices
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-  [IsTotallyComplex F] [IsTotallyComplex E] {n : ℕ}
+  [_root_.NumberField.IsTotallyComplex F] [_root_.NumberField.IsTotallyComplex E] {n : ℕ}
 
 private theorem bc_tw {χ : HChar F} {χ' : HChar E} {s : ℂ} (h : IsPow χ s) (h' : IsPow χ' s)
     (π : CuspSub F n) (P : CuspSub E n) (H : WeakBC (Cusp.cx π).sat (Cusp.cx P).sat) :

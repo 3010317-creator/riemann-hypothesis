@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockOfApply
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmT4OfRootsInField
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesIntegralFormsEqSpanDedekindCoefRingStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentComplexOfSubfieldCoeffLatticeStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockOfApply
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmT4OfRootsInField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesIntegralFormsEqSpanDedekindCoefRingStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentComplexOfSubfieldCoeffLatticeStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.IndefR.FWT IsDedekindDomain NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.ExportSeries GlobalTheory.SeriesTie GlobalTheory.TwInputs GlobalTheory.ConjTwist GlobalTheory.ChoiceRead
 open Formalism.MainNotions.IntegralHeckeForms (TwOK ClsQ)
 open Formalism.L2.Host (embLL0)
@@ -57,7 +62,8 @@ theorem injective_of_indep {W : Type} [AddCommGroup W] [Module E W] {ε : E →+
   refine (injective_iff_map_eq_zero φ).2 fun y hy => ?_
   have hy' : y ∈ Submodule.span E (Set.range u) := hu ▸ Submodule.mem_top
   obtain ⟨l, rfl⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 hy'
-  rw [Finsupp.sum, map_sum] at hy
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [Finsupp.sum, map_sum] at hy
   simp only [map_smulₛₗ] at hy
   have h := linearIndependent_iff'.1 hi _ _ hy
   refine Finset.sum_eq_zero fun i hi' => ?_
@@ -69,7 +75,8 @@ theorem indep_fieldRange {e : K →+* ℂ} (g : V →ₛₗ[e] A) (hg : Function
   refine linearIndependent_iff'.2 fun t c h i hi => ?_
   choose d hd using fun i => RingHom.mem_fieldRange.1 (c i).2
   have h1 : g (∑ i ∈ t, d i • v i) = 0 := by
-    rw [map_sum, ← h]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, ← h]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smulₛₗ, hd]
     rfl
@@ -131,7 +138,7 @@ theorem rdE_injective_lattice : ∀ (D : D7) (c : NChoice D) (w : D.what₂.plac
         rw [TensorProduct.mk_apply, rdE_tmul, map_one, one_smul]
         exact Submodule.subset_span ((T.rdV_mem hok).1 hf)
       | zero => rw [map_zero]; exact zero_mem _
-      | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+      | add x y _ _ hx hy => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hy
       | smul a x _ hx =>
         rw [hsm]
         exact Submodule.smul_mem _ (⟨ε (algebraMap _ _ a), a, rfl⟩ : ringOf ε) hx

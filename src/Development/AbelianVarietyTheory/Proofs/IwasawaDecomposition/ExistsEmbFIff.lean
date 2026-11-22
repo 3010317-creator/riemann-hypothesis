@@ -1,19 +1,24 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemPrinCongOfSm
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryOfIsON
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBasisAtOfIsLocBasis
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EmbFColZeroMemMram
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedLtOfMem
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PlacesOverConjPrimes
-import Formalism.LocalToGlobal.Columns.RecLevelStep
-import Formalism.LocalToGlobal.Columns.ChainInst
-import Formalism.LocalToGlobal.Columns.TiedValRat
-import Formalism.LocalToGlobal.HermitianForms.FramesLemmas
-import Formalism.LocalToGlobal.GlobalTheory.GL6.FrobeniusNoKernelOfFrobeniusSimilitude
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UfGLRatHom
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemPrinCongOfSm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryOfIsON
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBasisAtOfIsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EmbFColZeroMemMram
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedLtOfMem
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PlacesOverConjPrimes
+public import Formalism.LocalToGlobal.Columns.RecLevelStep
+public import Formalism.LocalToGlobal.Columns.ChainInst
+public import Formalism.LocalToGlobal.Columns.TiedValRat
+public import Formalism.LocalToGlobal.HermitianForms.FramesLemmas
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.FrobeniusNoKernelOfFrobeniusSimilitude
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UfGLRatHom
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
@@ -54,8 +59,8 @@ section Gen2
 variable {F E K ι : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E] [Field K] [NumberField K]
   [StarRing K] [Fintype ι] {n : ℕ} (S : GStep E K n) (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : ι → DomWeight n)
 
-omit [StarRing E] [NumberField K] [StarRing K] in
 
+omit [StarRing E] [NumberField K] [StarRing K] in
 theorem mem_Fi_iff {σ' : E →ₐ[F] E} {J : Matrix (Fin n) (Fin n) E} {T f : ℕ} {bad : Set (HeightOneSpectrum (𝓞 F))}
     (L : StepLevel F E σ' J T f bad) {e : ι → E →+* ℂ} (he : e = embAt σ emb) {lam' : ι → DomWeight n} (hl : lam = lam')
     (y : S.Cl → UPts σ' J (FiniteAdeleRing (𝓞 F) F)) (hy : Function.Bijective fun c => (Quotient.mk'' (y c) : Cls L))
@@ -68,7 +73,9 @@ theorem mem_Fi_iff {σ' : E →ₐ[F] E} {J : Matrix (Fin n) (Fin n) E} {T f : �
     (z : S.Cl → Fr emb σ n → ℂ) :
     z ∈ S.Fi emb σ lam ↔ (show S.Cl → Frames (gramC J e) → ℂ from z) ∈ FiC L e lam' y := by
   subst he hl
-  refine Iff.trans ?_ (mem_FiC_iff L _ _ y hy _).symm
+  let zC : S.Cl → Frames (gramC J (embAt σ emb)) → ℂ := z
+  change z ∈ S.Fi emb σ lam ↔ zC ∈ FiC L (embAt σ emb) lam y
+  rw [RowTie.mem_FiC_iff L (embAt σ emb) lam y hy zC]
   refine forall_congr' fun c => and_congr Iff.rfl ⟨fun h γ hγ κ e zz zz' hz => ?_, fun H g => ?_⟩
   · obtain ⟨s, hs⟩ := (hr c ⟨γ, hγ⟩).2 ⟨κ.1⁻¹, inv_mem κ.2, by
       show (y c).1 * κ.1⁻¹ * (y c).1⁻¹ = bc (inclE (F := F) (FiniteAdeleRing (𝓞 F) F)) γ
@@ -120,7 +127,7 @@ theorem lat_iff (hS : S.Ok) {G : ι → Matrix (Fin n) (Fin n) ℂ} {sh : ι →
       ∃ Q ∈ Sp w, (show Frames G → ℂ from S.embF emb σ lam h x c) =
         fnOf G sh (Formalism.L2.Forms.atInf e (B⁻¹ : GL (Fin n) E).1) Q := by
   subst hsh he
-  have hL : ∀ c, Submodule.IsLattice E (lat c) := fun c => hlat c ▸ hS.lsh_lat c.1 _
+  have hL : ∀ c, Submodule.IsFullLattice E (lat c) := fun c => hlat c ▸ hS.lsh_lat c.1 _
   have key : ∀ (w : P) (c : S.Cl) (B : GL (Fin n) E), IsLocBasis (rc w) (lat c : Set _) B →
       (x.1 c ∈ Formalism.HermitianLatticesTheory.localization₂ (pl w).asIdeal (delAtr emb lam (lat c)) ↔
       ∃ Q ∈ Sp w, (show Frames G → ℂ from S.embF emb σ lam h x c) =
@@ -184,7 +191,7 @@ theorem sgHC_eq {R : Ranks} (P : HCParam R) (i : Fin (R.N R.m - 1)) :
   by_cases h1 : (i : ℕ) < R.k - 1
   · rw [dif_pos h1, dif_pos h1]
     rfl
-  · rw [dif_neg h1, dif_neg h1]
+  · rw [dite_eq_right h1, dite_eq_right h1]
     have h2 : ((i : ℕ) - (R.k - 1)) / (R.t + 1) < R.m := by
       rw [Nat.div_lt_iff_lt_mul (Nat.succ_pos _)]
       have := R.two_le_m
@@ -204,8 +211,8 @@ namespace GlobalTheory.Mem.Col2.TC
 
 open GlobalTheory.Mem.Col2.RowTie
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem clsP_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)),
     ∀ u : B.Word, ∃ (KP : ClsPTied (D := (I.rec7 l Z)) u) (W : ValPTied u KP),
       I.ReadsP I.mu0 KP.lev.Lb KP.lev.U KP.lev.chi (fun c => (KP.y c).1) KP.lat (fun c s => (KP.stabI c s).1) ∧
@@ -219,7 +226,7 @@ theorem clsP_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.P
   have hbad : badG (I.rec7 l Z) = plUnder B.host.F (B.primes X).vGs := by
     ext v
     exact (plUnder_vGs B.sp.cm (BasePrimes.primes_ok B X).1 v).symm
-  obtain ⟨L, R, hLb, hpt, hlev, hchr, hst, hstc⟩ := exists_cls (X := B.fields) B.sp.cm (rowTyG I.Ch I.Ps)
+  obtain ⟨L, R, hLb, hpt, hlev, hchr, hst, hstc⟩ := RowTie.exists_cls (X := B.fields) (n := B.R.N B.R.m - 1) B.sp.cm (rowTyG I.Ch I.Ps)
     (levQX B.R I.sel (I.tup I.mu0)) (fun _ => True) B.embLL hQ (levOk_base B X).split B.R.f (gramP (I.rec7 l Z)) hgP
     (badG (I.rec7 l Z)) hbad
   let KP : ClsPTied (D := I.rec7 l Z) u :=

@@ -1,7 +1,12 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CechDoubleSt
-import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDSq
-import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDoubleStair
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CechDoubleSt
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDSq
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.PCechDoubleStair
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.Kleiman
@@ -18,8 +23,8 @@ section General
 
 variable {S : Type u} [CommRing S] {E : Type v} [AddCommGroup E] [Module S E] {m : ℕ} {U : Finset (Fin m)}
 
-variable (S E U) in
 
+variable (S E U) in
 abbrev dE (p : ℕ) : Cochain (fun _ : Cell U => E) p →ₗ[S] Cochain (fun _ : Cell U => E) (p + 1) :=
   Cech.d (fun _ : Cell U => E) (Cech.idRes S E U) p
 
@@ -95,17 +100,17 @@ section Double
 variable {S : Type u} [CommRing S] {E : Type v} [AddCommGroup E] [Module S E] {Ω : Type w} [Field Ω] {N r : ℕ}
   {x : Fin (N + 1) → Ω} {y : Fin (r + 1) → Ω}
 
-variable (E x y) in
 
+variable (E x y) in
 abbrev W (p q : ℕ) : Type v := Cochain (fun _ : Chart x => Cochain (fun _ : Chart y => E) q) p
 
-variable (S E x y) in
 
+variable (S E x y) in
 def vW (p q : ℕ) : W E x y p q →ₗ[S] W E x y (p + 1) q :=
   Cech.d (fun _ : Chart x => Cochain (fun _ : Chart y => E) q) (Cech.idRes S _ (support x)) p
 
-variable (S E x y) in
 
+variable (S E x y) in
 def hW (p q : ℕ) : W E x y p q →ₗ[S] W E x y p (q + 1) :=
   Cech.mapC (fun _ : Chart x => dE S E (support y) q) p
 
@@ -175,7 +180,7 @@ def dbl (hM₁ : ∀ (I I' : Chart x) (J : Chart y), I.1 ⊆ I'.1 → M I J ≤ 
 theorem dbl_good (hM₁ : ∀ (I I' : Chart x) (J : Chart y), I.1 ⊆ I'.1 → M I J ≤ M I' J)
     (hM₂ : ∀ (I : Chart x) (J J' : Chart y), J.1 ⊆ J'.1 → M I J ≤ M I J')
     (hA : ∀ I, Cech.AugExact S (M I) (Ax I)) (hB : ∀ J, Cech.AugExact S (fun I => M I J) (Bx J)) :
-    (dbl Ax Bx hM₁ hM₂ hA hB).Good where
+    (dbl Ax Bx hM₁ hM₂ hA hB).Good := {
   ha p := LinearMap.ext fun s => Subtype.ext (funext fun I' => funext fun J => by
     change dE S E (support x) p s.1 I' = vW S E x y p 0 (fun I _ => s.1 I) I' J
     rw [vW_apply])
@@ -241,6 +246,7 @@ theorem dbl_good (hM₁ : ∀ (I I' : Chart x) (J : Chart y), I.1 ⊆ I'.1 → M
       exact congrFun (htf J) I'
     · rintro ⟨s, rfl⟩
       exact Subtype.ext (vW_vW p q s.1)
+}
 
 end Double
 

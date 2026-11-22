@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.GenSmulMem
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.GenSmulMem
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,7 @@ def UniG {ι : Type} [Fintype ι] [DecidableEq ι] (X : ι → Fin n → Fv F v 
   ∃ w ∈ OEv (E := E) v, (gramG σ J v X).det * w = 1
 
 def UnitV : Prop :=
-  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
+  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
     IsSDLoc σ J v Λ → UnramAt (E := E) v →
     ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (X : ι → Fin n → Fv F v ⊗[F] E), (∀ i, X i ∈ latLoc (E := E) v Λ) →
       UniG σ J v X → Fintype.card ι < n →
@@ -62,7 +66,7 @@ theorem perp_full {ι : Type} [Fintype ι] [DecidableEq ι] (X : ι → Fin n �
   simpa [mulVec_mulVec, nonsing_inv_mul _ hdA] using h3
 
 theorem orthoGen (hU : UnitV σ J ψ v Λ) (hstd : StdHyp σ J ψ)
-    (hL : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ)
+    (hL : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ)
     (hsd : IsSDLoc σ J v Λ) (hun : UnramAt (E := E) v) :
     ∀ (k : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] (X : ι → Fin n → Fv F v ⊗[F] E),
       Fintype.card ι + k = n → (∀ i, X i ∈ latLoc (E := E) v Λ) → UniG σ J v X →
@@ -119,7 +123,7 @@ theorem orthoGen (hU : UnitV σ J ψ v Λ) (hstd : StdHyp σ J ψ)
       set c := hR (Fv F v) σ J p w with hcdef
       have hc0 : c ∈ OEv (E := E) v := (hsd w).1 hw.1 p hp.1
       have hw' : w - c • p ∈ PerpG σ J v Λ X' := by
-        refine ⟨Submodule.sub_mem _ hw.1 (oSmul v Λ hL c hc0 p hp.1), ?_⟩
+        refine ⟨Submodule.sub_mem _ hw.1 (oSmul v Λ (by rcases hL with ⟨L, hL, rfl⟩; exact ⟨L, hL.toIsLattice, rfl⟩) c hc0 p hp.1), ?_⟩
         rintro (i | ⟨⟩)
         · show hR (Fv F v) σ J (X i) (w - c • p) = 0
           rw [hR_sub_right, hR_smul_right, hw.2 i, hp.2 i, mul_zero, sub_zero]

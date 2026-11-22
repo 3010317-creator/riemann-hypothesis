@@ -1,6 +1,10 @@
-import Development.WeilBound.CoreStatements.HodgeTatePoints.IsFractionRingOfIntegers
-import Development.WeilBound.CoreStatements.HodgeTatePoints.FinrankWAddConj
-import Development.WeilBound.CoreStatements.HodgeTatePoints.GeneratesDiffMap
+module
+
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.IsFractionRingOfIntegers
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.FinrankWAddConj
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.GeneratesDiffMap
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,7 @@ theorem red_omHT_bc : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
   have hδ : algebraMap O C (algebraMap A O d) ≠ 0 :=
     (different_generator_dualInt O C E σ' _ hv.hom_inj
       (exists_diff_generator C v O hv E σ').1 hd').1
-  obtain ⟨j₀, hj₀, -, hj₀'⟩ := bc_iso A K Ω D.om C v O hv Ω' P.om ι D.om_lat D.om_proj P.om_lat
+  obtain ⟨j₀, hj₀, -, hj₀'⟩ := bc_iso A K Ω D.om C v O hv Ω' P.om ι D.om_lat.toIsFullLattice D.om_proj P.om_lat.toIsFullLattice
     hred.span_eq hred.rank_eq
   have hfg : (D.omHT σ).FG := by
     have : IsNoetherian A D.om := isNoetherian_of_fg_of_noetherian _ D.om_lat.fg
@@ -59,7 +63,7 @@ theorem red_omHT_bc : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
     refine LinearMap.ext fun t => ?_
     induction t using TensorProduct.induction_on with
     | zero => rw [map_zero, map_zero]
-    | add x y hx hy => rw [map_add, map_add, hx, hy]
+    | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
     | tmul o z =>
       have : o ⊗ₜ[A] z = o • ((1 : O) ⊗ₜ[A] z) := by simp [TensorProduct.smul_tmul']
       rw [this, map_smul, map_smul, hj₁, LinearMap.comp_apply j₀, LinearMap.baseChange_tmul, hj₀']

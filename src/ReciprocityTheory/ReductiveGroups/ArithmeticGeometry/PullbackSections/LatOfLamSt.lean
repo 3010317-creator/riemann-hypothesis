@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+module
+
+public import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,6 +18,6 @@ def LatOfLamSt : Prop :=
     (large₂ : SizeData₂ D) (C A : ℝ), (∀ i, 0 < D.host.g i) → S.sK ≠ 0 →
     (∀ F : B.Cusp j ka, F ∈ B.Mlat j ka → F ≠ 0 →
       -(WeightFamilies.PP0v D large₂ C A * (1 + Real.log ka.size) * ka.size) ≤ WeightFamilies.meanLogSup B F) →
-    SpanAt X ka → H2 X S ka wL wF → Submodule.IsLattice B.KO (B.Mlat j ka)
+    SpanAt X ka → H2 X S ka wL wF → Submodule.IsFullLattice B.KO (B.Mlat j ka)
 
 end ReciprocityTheory.ChartRestriction.G.PullbackSections

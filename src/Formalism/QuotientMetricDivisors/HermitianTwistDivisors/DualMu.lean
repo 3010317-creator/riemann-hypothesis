@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.ProdFormula
-import Formalism.QuotientMetricDivisors.DualMu
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DualPl
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.ProdFormula
+public import Formalism.QuotientMetricDivisors.DualMu
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DualPl
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
+
+@[expose] public section
 
 open Module NumberField
 
@@ -14,7 +18,7 @@ namespace Formalism.DivisionValues
 theorem dual_lattice_measure : DualMu := by
   intro K _ _ _ _ D hD X hX R hR
   have hFG : R.FG := hR.fg
-  have hsp : Submodule.span K (R : Set (Fin D → K)) = ⊤ := hR.2
+  have hsp : Submodule.span K (R : Set (Fin D → K)) = ⊤ := hR.span_eq_top
   obtain ⟨hdFG, hdsp, -, hsize, -⟩ :=
     Formalism.HN.dual_polygon_identity K (Fin D → K) (Fin D) (Pi.basisFun K (Fin D)) X hX R hFG hsp
   have hdX : ∀ v, IsUnit (Formalism.HN.dualFrame X v).det := by

@@ -1,10 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
-import Development.AbelianVarietyTheory.Definitions.Degenerations.CompanionTheory
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.RegularOfBoundedAtPadicAlgClPoints
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobsonClosedPointsToolsInt
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.CompanionTheory
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.RegularOfBoundedAtPadicAlgClPoints
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobsonClosedPointsToolsInt
+
+@[expose] public section
+
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open scoped CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
@@ -42,14 +47,14 @@ theorem valF_comp_appIso {F : Type} [Field F] {X Y : Scheme.{0}} (f : Y ⟶ X) [
     rw [Scheme.Hom.comp_preimage, Scheme.Hom.preimage_image_eq]
   unfold valF
   by_cases h : ⊤ ≤ y₀ ⁻¹ᵁ V
-  · rw [dif_pos h, dif_pos (e ▸ h)]
+  · rw [dite_eq_left h, dite_eq_left (e ▸ h)]
     congr 1
     rw [← Scheme.Hom.appLE_comp_appLE y₀ f (f ''ᵁ V) V ⊤ (f.preimage_image_eq V).ge h,
       ← Scheme.Hom.appIso_hom']
     change (y₀.appLE V ⊤ h).hom (((f.appIso V).inv ≫ (f.appIso V).hom).hom u) = _
     rw [Iso.inv_hom_id]
     rfl
-  · rw [dif_neg h, dif_neg (e ▸ h)]
+  · rw [dite_eq_right h, dite_eq_right (e ▸ h)]
 
 theorem val_res_pullU {X Y : Scheme.{0}} (f : Y ⟶ X) (W : X.Opens) (V : Y.Opens)
     (h : V ≤ f ⁻¹ᵁ W) (ψ : Γ(X, W)ˣ) :
@@ -220,8 +225,8 @@ theorem exists_coord (X A₀ : Scheme.{0}) [IsIntegral X] (π : X ⟶ Sp ℤ) [F
     rw [← h, valF_eq_of_gm z (show (x' ≫ W₀.ι) z ∈ L.U j ⊓ a ⁻¹ᵁ W from ⟨h₁, h₂⟩) (mem_pull.2 h₁) (hs j _ x' z h₁ h₂)]
 
 end NormGlue
-open NormGlue in
 
+open NormGlue in
 theorem exists_lineBundle_of_normOne_generators : ∀ (X A₀ : Scheme.{0}) [IsIntegral X] (π : X ⟶ Sp ℤ) [Flat π] [LocallyOfFiniteType π], Geo.Tor.IsNormalScheme X → ∀ (a : A₀ ⟶ X) [IsOpenImmersion a] (L : LB A₀), L.IsLB → ∀ ν : Nrm L, IsNrm L ν → (∀ w : X, IsClosed ({w} : Set X) → ∃ (W : X.Opens) (W₀ : A₀.Opens) (gen₀ : LB.Gen (L.pull W₀.ι)), w ∈ W ∧ (W₀ : Set A₀).Nonempty ∧ gen₀.IsGen ∧ ∀ (p : ℕ) [Fact p.Prime] (x : Sp (PadicAlgCl p) ⟶ W₀.toScheme), IntAt (W₀.ι ≫ a) W x → NormOne ν gen₀ x) → ∃ (M : LB X) (w : LB.Iso (M.pull a) L) (D : M.ι → A₀.Opens), M.IsLB ∧ w.IsGen ∧ (∀ i, (D i : Set A₀).Nonempty) ∧ ∀ (p : ℕ) [Fact p.Prime] (x : Sp (PadicAlgCl p) ⟶ A₀) (i : M.ι) (j : L.ι), IntAt a (M.U i) x → Set.range x ⊆ L.U j → Set.range x ⊆ D i → ‖valF x _ (w.s (j, fun _ => i)).val‖ * ν p x j = 1 := by
   intro X A₀ _ π _ _ hX a _ L hL ν hν H
   obtain ⟨-, -, hJ, hcl, -⟩ := GlobalTheory.jacobson_closedPoints_tools_int X π

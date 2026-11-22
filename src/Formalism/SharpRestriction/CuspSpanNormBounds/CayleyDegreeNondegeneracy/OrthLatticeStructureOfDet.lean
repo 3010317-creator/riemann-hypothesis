@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.InnerMemOneOfMemDualOrthLattice
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.InnerMemOneOfMemDualOrthLattice
+
+@[expose] public section
 
 noncomputable section
 
@@ -16,8 +20,8 @@ variable {D : D7} {V : Type} [AddCommGroup V] [Module D.host.E V] [Module (𝓞 
   (hgen : ∀ w ∈ Formalism.HermitianLatticesTheory.dual h M, ∃ a : 𝓞 D.host.E, w + a • w₁ ∈ M)
   (hann : ∀ a : 𝓞 D.host.E, a • w₁ ∈ M ↔ ((T : ℕ) : 𝓞 D.host.E) ∣ a)
 
-include hw₁ hgen in
 
+include hw₁ hgen in
 theorem discriminant_one_generator : DiscGen h M 1 := by
   refine ⟨{Submodule.Quotient.mk ⟨w₁, hw₁⟩}, by simp, ?_⟩
   rw [eq_top_iff, Finset.coe_singleton]
@@ -31,8 +35,8 @@ theorem discriminant_one_generator : DiscGen h M 1 := by
   rw [e]
   exact M.neg_mem ha
 
-include hw₁ hgen hann in
 
+include hw₁ hgen hann in
 theorem corank_one_mod_prime_over (p : Ideal (𝓞 D.host.F)) (hp : p.IsMaximal) (hTp : ((T : ℕ) : 𝓞 D.host.F) ∈ p) :
     eP h M p = 1 := by
   set P : Ideal (𝓞 D.host.E) := pE D.host.F D.host.E p with hP
@@ -92,7 +96,7 @@ theorem corank_one_mod_prime_over (p : Ideal (𝓞 D.host.F)) (hp : p.IsMaximal)
   have hcard : Nat.card (Md ⧸ K) = Ideal.absNorm p ^ 2 := by
     rw [← Nat.card_congr (φ.quotKerEquivOfSurjective hsurj).toEquiv,
       Nat.card_congr (Submodule.quotEquivOfEq _ _ hker).toEquiv, ← Formalism.MainNotions.BridgeLemma.absNorm_pE]
-    rfl
+    exact (Ideal.absNorm_eq_natCard P).symm
   have hq := Formalism.MainNotions.BridgeLemma.absNorm_ge_two p hp
   show Nat.log (Ideal.absNorm p ^ 2) (Nat.card (Md ⧸ K)) = 1
   rw [hcard]
@@ -106,8 +110,8 @@ theorem orthLattice_structure_of_det (D : D7) (u : D.what₂.Word)
       latDetH (D.sp.X 0).hT (L0X D Λ (lf D F0)) = ((Tu D u ^ D.R.f : ℕ) : ℝ)) : BaseLatticeStructure D u := by
   intro hTp h3 hsp F0 he hz Λ hrow
   obtain ⟨hΛ, hu, hlift, hconv⟩ := hrow.2.1
-  obtain ⟨w₁, hw₁, hgen, hann⟩ := dual_orthLattice_quotient_cyclic F0 he hz Λ hΛ hu hlift.1 hconv.2 hTp.ne_zero
-  exact ⟨orthLattice_isLattice F0 he hz Λ hΛ hu, orthLattice_isIntegral_of_unimodular Λ (lf D F0) hu, hdet hTp h3 hsp F0 he hz Λ hrow,
+  obtain ⟨w₁, hw₁, hgen, hann⟩ := dual_orthLattice_quotient_cyclic F0 he hz Λ hΛ.toIsLattice hu hlift.1 hconv.2 hTp.ne_zero
+  exact ⟨(orthLattice_isLattice F0 he hz Λ hΛ hu).toIsLattice, orthLattice_isIntegral_of_unimodular Λ (lf D F0) hu, hdet hTp h3 hsp F0 he hz Λ hrow,
     discriminant_one_generator _ _ w₁ hw₁ hgen, fun p hp hTpp => corank_one_mod_prime_over _ _ (Tu D u) w₁ hw₁ hgen hann p hp hTpp⟩
 
 end Formalism.MainNotions.BridgeLemma₂

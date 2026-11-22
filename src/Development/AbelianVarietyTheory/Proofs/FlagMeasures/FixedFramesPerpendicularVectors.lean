@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
-import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsExtra
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLatticeStatement
+public import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsExtra
+
+@[expose] public section
+
 open NumberField Module Matrix Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt GlobalTheory.LoopC
 open scoped ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -209,7 +214,8 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
     have hE : ∀ a, (hS D).hT (F0.e a) om = 0 := fun a => by
       have h := congrFun (Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.kernelRowSpace _ _
         ((Zhat F0 F'.fl).submatrix Fin.castSucc id)).1 a
-      rw [hom, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [hom, map_sum]
       simp only [map_smul, smul_eq_mul]
       rw [← hκ] at h
       simpa [Matrix.mulVec, dotProduct, Zhat, brS, FlagG.fvec, mul_comm] using h
@@ -229,7 +235,7 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
         rw [map_sub, map_smul, F0.z_norm, hζ, smul_eq_mul]
         field_simp
         ring
-      rw [map_add, LinearMap.add_apply, h1, h2, add_zero]
+      rw [map_add (f := _), LinearMap.add_apply, h1, h2, add_zero]
     rw [← hW.1] at hperp
     obtain ⟨_, ⟨y, rfl⟩, x, hx, hyx⟩ := Submodule.mem_sup.1 hperp
     have hWp : ∀ (σ : (D.sp.X 0).V), ∀ v ∈ Xplus (lf D F0), (hS D).hT v (D.sp.iXY 0 σ) = 0 := fun σ =>
@@ -238,13 +244,14 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
     have hdec : om = x + D.sp.iXY 0 y + ζ • F0.z := by
       rw [add_comm x, hyx]; abel
     have hσom : ∀ σ, (hS D).hT (D.sp.iXY 0 σ) om = (D.sp.X 0).hT σ y := fun σ => by
-      rw [hdec, map_add, map_add, map_smul, hT_zero _ (hWp σ x (Submodule.mem_sup_left hx)),
+      rw [hdec, map_add (f := _), map_add (f := _), map_smul, hT_zero _ (hWp σ x (Submodule.mem_sup_left hx)),
         hT_zero _ (hWp σ _ hzp), hiso]
       simp
     have hyP : y ∈ perpE D P := by
       refine (mem_perpE D P y).2 fun p hp => ?_
       have h1 : (hS D).hT (D.sp.iXY 0 p + φ ⟨p, hp⟩) om = 0 := by
-        rw [hom, map_sum]
+        set_option synthInstance.maxHeartbeats 100000 in
+          rw [hom, map_sum]
         refine Finset.sum_eq_zero fun b _ => ?_
         rw [map_smul, horth ⟨p, hp⟩ b, smul_zero]
       rwa [map_add, LinearMap.add_apply, hXom _ (hφ ⟨p, hp⟩).2, add_zero, hσom] at h1
@@ -253,7 +260,8 @@ theorem main : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D),
         sub_mem hyP (Submodule.sum_mem _ fun b _ => Submodule.smul_mem _ _ (hw b).1)
       refine sub_eq_zero.1 (han _ ?_)
       have h1 : ∀ σ ∈ perpE D P, (D.sp.X 0).hT σ (y - ∑ b, κ b • w b) = 0 := fun σ hσ => by
-        rw [map_sub, ← hσom, hom, map_sum, map_sum, sub_eq_zero]
+        set_option synthInstance.maxHeartbeats 100000 in
+          rw [map_sub, ← hσom, hom, map_sum, map_sum, sub_eq_zero]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_smul, map_smul, ← (hw b).2 σ hσ]
       exact h1 _ hd

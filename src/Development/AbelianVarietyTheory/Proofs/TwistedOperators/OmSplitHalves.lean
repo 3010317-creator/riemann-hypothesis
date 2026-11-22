@@ -1,13 +1,17 @@
-import Mathlib
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnramifiedCharacter
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacter
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorLatticeStabiliserFixesVacuumNonsplit
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsDetAtUnram
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdelicLatticeIffLocalSelfDualCompletion
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnramifiedCharacter
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacter
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorLatticeStabiliserFixesVacuumNonsplit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumFixesVacuumNonSplitPlaceUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLocalHomLatticeOfKeepsCompletedLattices
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsDetAtUnram
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdelicLatticeIffLocalSelfDualCompletion
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
+
+@[expose] public section
 
 noncomputable section
 
@@ -73,17 +77,17 @@ theorem suppPl_of {v : HeightOneSpectrum (𝓞 D.host.F)} {ε : AF D.host.F} (h�
     fun w hw => map_sub_one ((compFin D w).comp (finPart D)) _ (hk.2.1 w hw) i j⟩
 
 theorem det_int {V : HSp D} {L : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
-    (hL : Submodule.IsLattice D.host.E L) (g : GA D V)
+    (hL : Submodule.IsFullLattice D.host.E L) (g : GA D V)
     (h : ∀ y ∈ latHat D.host.F D.host.E (L : Set (Fin V.rank → D.host.E)),
       (finMat D.sp.cm.sig V.gram g).mulVec y ∈ latHat D.host.F D.host.E (L : Set (Fin V.rank → D.host.E))) :
     finPart D (Formalism.L2.Theta.mt V g).det ∈ intAE D := by
   have hd : finPart D (Formalism.L2.Theta.mt V g).det = (finMat D.sp.cm.sig V.gram g).det :=
     RingHom.map_det (finPart D) (Formalism.L2.Theta.mt V g)
   rw [hd, GlobalTheory.CharFin.integralFiniteAdeles_eq_adelicCompletion_integers]
-  exact GlobalTheory.DetTranslate.det_mem_int D.host.F L _ hL.fg hL.span_eq_top h
+  exact GlobalTheory.DetTranslate.det_mem_int D.host.F L _ hL.fg (Submodule.IsLattice.span_eq_top (self := hL)) h
 
 theorem unram_detAt {V : HSp D} {L : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)}
-    (hL : Submodule.IsLattice D.host.E L) {g : GA D V}
+    (hL : Submodule.IsFullLattice D.host.E L) {g : GA D V}
     (h : ∀ y, y ∈ latHat D.host.F D.host.E (L : Set (Fin V.rank → D.host.E)) ↔
       (finMat D.sp.cm.sig V.gram g).mulVec y ∈ latHat D.host.F D.host.E (L : Set (Fin V.rank → D.host.E)))
     {e : AE D} (he : e * e = e) {ε : AF D.host.F} (hs : algebraMap (AF D.host.F) (AE D) ε * e = e)
@@ -94,8 +98,8 @@ theorem unram_detAt {V : HSp D} {L : Submodule (𝓞 D.host.E) (Fin V.rank → D
   · rw [← MonoidHom.map_inv]
     exact GlobalTheory.Mem.DetUnit.part_mem_intAE he (det_int hL g⁻¹ (GlobalTheory.LocalLatStab.inv_keeps V _ g h))
 
-open GlobalTheory.SplitScalar GlobalTheory.SplitHecke in
 
+open GlobalTheory.SplitScalar GlobalTheory.SplitHecke in
 theorem om_split_halves {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
     {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)}
     {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
@@ -142,7 +146,18 @@ theorem om_split_halves {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
       rintro _ ⟨γ, rfl⟩ w
       exact (congrArg norm (hf.quasi γ w)).trans (by rw [norm_mul, hψ.2.1, one_mul]))
   have hn : nrm2 μ 𝓕 (c • f) = 1 := hc μ 𝓕 hμ.1 hμ.2.1 hμ.2.2
-  have hcf := GlobalTheory.WeilVacMove.isTheta_smul c hf
+  have hcf : IsThetaFunO ψ S T (c • f) := {
+    quasi γ w := by
+      rw [Pi.smul_apply, Pi.smul_apply, hf.quasi, smul_eq_mul, smul_eq_mul, mul_left_comm]
+    level := by
+      obtain ⟨U, hU, h1⟩ := hf.level
+      refine ⟨U, hU, fun u hu h0 => ?_⟩
+      funext w
+      have e1 := congrFun (h1 u hu h0) w
+      unfold heisO at e1 ⊢
+      rw [Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_left_comm, e1]
+    cont := hf.cont.const_smul c
+    smooth k L h1 h2 w := contDiff_const.mul (hf.smooth k L h1 h2 w) }
   have h1 := hom _ hcf (fun u hu hh => by rw [heisO_smul, v1 u hu hh])
     fun u hu hh => by rw [heisO_smul, v2 u hu hh]
   have h2 : nrm2 μ 𝓕 (om (g, h) (c • f)) = 1 := by

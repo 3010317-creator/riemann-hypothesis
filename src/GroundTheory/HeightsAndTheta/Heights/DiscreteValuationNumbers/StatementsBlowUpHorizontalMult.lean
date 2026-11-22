@@ -1,5 +1,10 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBlowUpHorizontal
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBlowUpHorizontal
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -20,7 +25,7 @@ def BlowUpHorizontalMinimal.Statement : Prop :=
     (∀ W : Ideal (MRing ι O), W.IsPrime → P ≤ W → IsRelevant W → (C ϖ : MRing ι O) ∉ W →
       ∃ j, ∀ j', ∃ v w : MRing ι O, v ∉ W ∧ v * u j' - w * u j ∈ P) →
     ∀ (c : K → ℕ) (x : MRing ι O), IsMultiHomog x c → x ∉ P →
-    ∀ W : Ideal (MRing (extIdx ι J) O), divCycle (blowUpOf P u) (liftForm x) W ≠ 0 →
+    ∀ W : Ideal (MRing (extIdx ι J) O), ((GroundTheory.Heights₂.Heights.NumbersDVR.divCycle (blowUpOf P u) (liftForm x)) W : ℤ) ≠ 0 →
       (C ϖ : MRing (extIdx ι J) O) ∉ W →
       W.comap (liftForm (ι := ι) (J := J) (R := O)) ∈ (P ⊔ Ideal.span {x}).minimalPrimes
 
@@ -32,7 +37,7 @@ def BlowUpHorizontalChartLength.Statement : Prop :=
     (∀ W : Ideal (MRing ι O), W.IsPrime → P ≤ W → IsRelevant W → (C ϖ : MRing ι O) ∉ W →
       ∃ j, ∀ j', ∃ v w : MRing ι O, v ∉ W ∧ v * u j' - w * u j ∈ P) →
     ∀ (c : K → ℕ) (x : MRing ι O), IsMultiHomog x c → x ∉ P →
-    ∀ W : Ideal (MRing (extIdx ι J) O), divCycle (blowUpOf P u) (liftForm x) W ≠ 0 →
+    ∀ W : Ideal (MRing (extIdx ι J) O), ((GroundTheory.Heights₂.Heights.NumbersDVR.divCycle (blowUpOf P u) (liftForm x)) W : ℤ) ≠ 0 →
       (C ϖ : MRing (extIdx ι J) O) ∉ W →
       ∀ hW : W.IsPrime,
       haveI := hW

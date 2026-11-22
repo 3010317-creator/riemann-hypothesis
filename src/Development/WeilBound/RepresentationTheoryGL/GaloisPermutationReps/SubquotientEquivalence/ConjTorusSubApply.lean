@@ -1,8 +1,12 @@
-import Mathlib
-import Development.WeilBound.RepresentationTheoryGL.GaloisPermutationReps.SubquotientEquivalence.IsTypeMap
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ApplyMemTwKerOfNormalizer
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsCommensuratedKO
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubsingletonJacquetOfPerm
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.GaloisPermutationReps.SubquotientEquivalence.IsTypeMap
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ApplyMemTwKerOfNormalizer
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsCommensuratedKO
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubsingletonJacquetOfPerm
+
+@[expose] public section
 
 noncomputable section
 
@@ -104,7 +108,8 @@ theorem torus_mem_twKer {τ : Representation ℂ (GL (Fin n) 𝓀[k]) W} (hτ : 
 
   have hsum : ∑ u : unipRad 𝓀[k] e, τ u w = 0 := by
     refine hτ 2 _ e hne _ fun x hx => ?_
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     refine Fintype.sum_equiv (Equiv.mulLeft (⟨x, hx⟩ : unipRad 𝓀[k] e)) _ _ fun u => ?_
     rw [Equiv.coe_mulLeft]
     show _ = τ (x * (u : GL (Fin n) 𝓀[k])) w
@@ -137,7 +142,8 @@ theorem torus_mem_twKer {τ : Representation ℂ (GL (Fin n) 𝓀[k]) W} (hτ : 
   have hcard : (Fintype.card (unipRad 𝓀[k] e) : ℂ) • π t (j w) ∈ twKer π (KOne k (Fin n)) 1 := by
     have h2 := Submodule.sum_mem (twKer π (KOne k (Fin n)) 1) fun u (_ : u ∈ Finset.univ) => hterm u
     have h3 : ∑ u : unipRad 𝓀[k] e, π t (j (τ u w)) = 0 := by
-      rw [← map_sum (π t), ← map_sum j, hsum, map_zero, map_zero]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [← map_sum (π t), ← map_sum j, hsum, map_zero, map_zero]
     rw [Finset.sum_sub_distrib, h3, sub_zero, Finset.sum_const, Finset.card_univ,
       ← Nat.cast_smul_eq_nsmul ℂ] at h2
     exact h2
@@ -167,7 +173,7 @@ theorem apply_mem_sup {τ : Representation ℂ (GL (Fin n) 𝓀[k]) W} (hτ : Fi
       rw [hc, torusElt_const, hω]
       exact Submodule.mem_sup_left (Submodule.smul_mem _ _ ⟨w', rfl⟩)
   obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.1 hmid
-  rw [← hyz, map_add]
+  rw [← hyz, map_add (f := _)]
   obtain ⟨w'', rfl⟩ := hy
   refine add_mem (Submodule.mem_sup_left ⟨_, hj.2 ⟨k1, h1⟩ w''⟩) (Submodule.mem_sup_right ?_)
   exact apply_mem_twKer_of_normalizer (mem_normalizer_KOne h1) hz
@@ -187,7 +193,7 @@ theorem st6 : St6 := by
       refine Submodule.subset_span ⟨g * h, w, ?_⟩
       rw [map_mul, Module.End.mul_apply]
     | zero => simp
-    | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+    | add x y _ _ hx hy => rw [map_add (f := _)]; exact add_mem hx hy
     | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
   let U : Subrepresentation π.ρ := ⟨S, fun g _ hx => hS g _ hx⟩
   obtain ⟨w0, hw0⟩ := exists_ne (0 : W)

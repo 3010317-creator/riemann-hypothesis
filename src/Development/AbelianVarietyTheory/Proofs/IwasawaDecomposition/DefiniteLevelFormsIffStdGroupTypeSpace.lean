@@ -1,6 +1,11 @@
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DatVtEq
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemRationalGLOfUnitaryGroupGramUnitGram
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdFrameLevelSubgroupBoundedOpenHyperspecialStatement
+module
+
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DatVtEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemRationalGLOfUnitaryGroupGramUnitGram
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StdFrameLevelSubgroupBoundedOpenHyperspecialStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice IsDedekindDomain NumberField Formalism.L2 Formalism.L2.Host Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.MtIn
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -157,9 +162,6 @@ section Main
 variable {V : HSp D} {hr : D.R.r ≤ V.rank} {Pg Q : Finset (Pl D.host.E)} {chi xi : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ}
   {c : CoefA V} {P : principalLevelFrame.RowPsi V V.rank} {e : ReciprocityTheory.Aut.GQ D.host.E V.rank ≃* Formalism.L2.Theta.GQ V}
   {G₀ : Type} [Group G₀] {eG : G₀ ≃* G0 Pg D.R.r} {P₀ : Subgroup G₀} {ψ₀ : P₀ →* D.what₂.LLˣ}
-
-local notation "LE" => levEnv V 1 (datV D V.rank hr Pg Q (LevelP.triv _ _ _) chi xi)
-local notation "LP" => datV D V.rank hr Pg Q (levPOf eG D.what₂.embLL P₀ ψ₀) chi xi
 
 theorem fwd_rat (hR : RatIso P e) {F : Bridge.Gf V → c.W} (hA : F ∈ Bridge.AdForms (Bridge.ratF V) c.coef.ρ (LE).J (LE).χ)
     (γ : ReciprocityTheory.Aut.GQ D.host.E V.rank) (g : Formalism.AUTREP.GAf D.host.E V.rank) :

@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RowFrameCoherence.FrameZEqLinZu
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarEquivalenceGenerators.ScalarEquivOfGen
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RowFrameCoherence.FrameZEqLinZu
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarEquivalenceGenerators.ScalarEquivOfGen
+
+@[expose] public section
 
 noncomputable section
 
@@ -29,8 +33,9 @@ theorem gval_ne (s : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.w
       (Formalism.L2.SG.TermDef.mk _ _ _ x) = Gval (lf D (X.Fu u)) x.1 :=
     hGF _ _ ((hEq _ _).1 (Quot.out_eq (Formalism.L2.SG.TermDef.mk s.lam (lf D (X.Fu u))
       (Formalism.L2.SG.TermDef.PD D s.lam (lf D (X.Fu u)) u') x)))
-  rw [← gv]
-  exact hG'
+  intro hz
+  apply hG'
+  exact gv.trans (by with_unfolding_all exact hz)
 
 variable (s : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u'))
 

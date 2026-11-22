@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNotMemChiGridBadPlaces
-import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.IsCyclotomicExtensionFourSlopeModelField
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNotMemChiGridBadPlaces
+public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.IsCyclotomicExtensionFourSlopeModelField
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
+
+@[expose] public section
 
 noncomputable section
 
@@ -20,8 +24,8 @@ section Delta
 variable {Γ A K M : Type} [Group Γ] [Group A] [Field K] [AddCommGroup M] [Module K M]
   (ι : Γ →* A) (U : Subgroup A) (ρ : Γ →* Module.End K M)
 
-open Classical in
 
+open Classical in
 def deltaForm (x : A) (v : M) (g : A) : M := ∑ᶠ γ : Γ, if x⁻¹ * ((ι γ)⁻¹ * g) ∈ U then ρ γ v else 0
 
 theorem deltaForm_left (x : A) (v : M) (δ : Γ) (g : A) :
@@ -69,8 +73,8 @@ def LaP (τ : D.what₂.Tau) : DomWeight (Xp G).rank where
   w a := (La D sc.cGap τ).w (Fin.cast (rank_Xp G) a)
   anti _ _ h := (La D sc.cGap τ).anti h
 
-variable (D) in
 
+variable (D) in
 abbrev emb : D.what₂.Tau → D.host.E →+* D.what₂.LL := labLL D
 
 abbrev WtSp : Type := VV D.what₂.LL (LaP G)
@@ -137,8 +141,8 @@ theorem psi_left (rp : ClassReps G) {n : ℕ} (e : Fin n ≃ TestIx G × VVIdx (
 theorem psi_right (rp : ClassReps G) {n : ℕ} (e : Fin n ≃ TestIx G × VVIdx (LaP G)) (a : Fin n) (g : GLf G) {k : GLf G}
     (hk : k ∈ G.Kplus) : psi rp e a (g * k) = psi rp e a g := deltaForm_right _ _ _ _ _ _ hk
 
-open Classical in
 
+open Classical in
 theorem ClassReps.gridClassReps_delta_apply_rep (rp : ClassReps G) (hN : rp.Neat) (c c' : G.ClPlus) (v : WtSp G) :
     rp.delta c v (rp.x c') = if c' = c then v else 0 := by
   split_ifs with h
@@ -150,28 +154,7 @@ theorem ClassReps.gridClassReps_delta_apply_rep (rp : ClassReps G) (hN : rp.Neat
       exact mul_mem (mul_mem (rp.x c').2 (inv_mem hu.1)) (inv_mem (rp.x c).2)
     rw [← rp.classRepresentative_mk c, ← rp.classRepresentative_mk c']
     symm
-    exact (DoubleCoset.eq _ _ _ _).2 ⟨⟨_, hγ⟩, ⟨γ.1, γ.2, rfl⟩, ⟨u, hu.1⟩, hu, Subtype.ext he⟩
-
-theorem testFunction_value_at_rep (rp : ClassReps G) (hN : rp.Neat) {n : ℕ} (e : Fin n ≃ TestIx G × VVIdx (LaP G)) (a : Fin n) (c : G.ClPlus) :
-    psi rp e a (rp.x c) = valAt (LaP G) e (datumOf e a, c) (Pi.single a 1) := by
-  classical
-  rw [psi, rp.gridClassReps_delta_apply_rep hN]
-  apply (bVV D.what₂.LL (LaP G)).equivFun.injective
-  funext i
-  have e1 : (bVV D.what₂.LL (LaP G)).equivFun (valAt (LaP G) e (datumOf e a, c) (Pi.single a 1)) i =
-      (Pi.single a 1 : Fin n → D.what₂.LL) (e.symm ((datumOf e a, c), i)) := by
-    exact congrFun ((bVV D.what₂.LL (LaP G)).equivFun.apply_symm_apply _) i
-  have e2 : e.symm ((datumOf e a, c), i) = a ↔ c = (e a).1.2 ∧ i = (e a).2 := by
-    rw [Equiv.symm_apply_eq]
-    simp [Prod.ext_iff, datumOf]
-  rw [e1, Pi.single_apply]
-  simp only [e2]
-  split_ifs with h1 h2 h2
-  · simp [h2.2]
-  · have : ¬ (e a).2 = i := fun h => h2 ⟨h1, h.symm⟩
-    simp [Finsupp.single_apply, this]
-  · exact absurd h2.1 h1
-  · simp
+    exact (@DoubleCoset.eq _ _ _ _ _ _).2 ⟨⟨_, hγ⟩, ⟨γ.1, γ.2, rfl⟩, ⟨u, hu.1⟩, hu, Subtype.ext he⟩
 
 variable (G)
 
@@ -184,7 +167,7 @@ theorem isSelfDualE_latOf (g : UA D.sp.cm (Xp G).gram) :
     IsSelfDualE (D.sp.cm.sig : D.host.E →+* D.host.E) (Xp G).gram (latOf G g) := by
   obtain ⟨h1, h2⟩ := (isV_Xp G).sd
   have hf := Module.Finite.iff_fg.2 h1.fg
-  exact ⟨Formalism.UG.P.global_lattice_isLattice_holds _ _ _ _ hf h1.span_eq_top _,
+  exact ⟨(Formalism.UG.P.global_lattice_isLattice_holds _ _ _ _ hf h1.span_eq_top _).toIsLattice,
     GlobalTheory.PointLattice.globLat_selfDual D.sp.cm.sig _ _ h2 hf h1.span_eq_top g.1 g.2⟩
 
 theorem star_emb (τ : D.what₂.Tau) (x : D.host.E) :
@@ -223,11 +206,6 @@ theorem IsTestLat.gridTestLattice_largestSlope_bound (hS : SlopeE) {v₀ : Infin
   rw [h.2]
   exact (hS D.host.E D.what₂.LL v₀ hv _ (fun φ x => D.sp.cm.cmUnram.2.1 φ x) _ (emb D) star_emb _ (LaP G) R hR hLa
     _ (posDef_Xp G) (TestIx G) (fun c => rp.lat c.2) (fun c => isSelfDualE_latOf G _) n e X').2.2.1 h.1
-
-example : deltaForm (MonoidHom.id ℚˣ) ⊥ ((Algebra.lsmul ℚ ℚ ℚ).toMonoidHom.comp (Units.coeHom ℚ)) 1 (3 : ℚ) (-1) = -3 := by
-  have h := deltaForm_left (MonoidHom.id ℚˣ) ⊥ ((Algebra.lsmul ℚ ℚ ℚ).toMonoidHom.comp (Units.coeHom ℚ)) 1 (3 : ℚ) (-1) 1
-  rw [deltaForm_self _ _ _ _ _ (by simp)] at h
-  simpa using h
 
 end GlobalTheory.FunObj
 

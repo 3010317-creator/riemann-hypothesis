@@ -1,11 +1,16 @@
-import Mathlib
-import GroundTheory.ProfiniteCohomology.RestrictedRamification.ClassFieldGSDefs
-import GroundTheory.ProfiniteCohomology.RestrictedRamification.IsUnramifiedOutsideIffLeMaxUnramifiedOutside
-import GroundTheory.GlobalFields.ClassFieldConsequences.Conductor
-import GroundTheory.GlobalFields.ClassFieldConsequences.RayClassField
-import GroundTheory.GlobalFields.KummerTheory.LocalIndexAtPlace
-import GroundTheory.GlobalFields.KummerTheory.Splitting
-import GroundTheory.GlobalFields.IdeleGroups.LocalConditionIndex
+module
+
+public import Mathlib
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.ClassFieldGSDefs
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.IsUnramifiedOutsideIffLeMaxUnramifiedOutside
+public import GroundTheory.GlobalFields.ClassFieldConsequences.Conductor
+public import GroundTheory.GlobalFields.ClassFieldConsequences.RayClassField
+public import GroundTheory.GlobalFields.KummerTheory.LocalIndexAtPlace
+public import GroundTheory.GlobalFields.KummerTheory.Splitting
+public import GroundTheory.GlobalFields.IdeleGroups.LocalConditionIndex
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.ProfCoh
@@ -16,8 +21,8 @@ noncomputable section
 
 variable {K : Type*} [Field K] [NumberField K] (S : Set (HeightOneSpectrum (𝓞 K)))
 
-open Classical in
 
+open Classical in
 theorem finiteProj_prod_finiteEmbedding (T : Finset (HeightOneSpectrum (𝓞 K)))
     (b : ∀ u : HeightOneSpectrum (𝓞 K), (u.adicCompletion K)ˣ) (v : HeightOneSpectrum (𝓞 K)) :
     finiteProj v (∏ u ∈ T, finiteEmbedding u (b u)) = if v ∈ T then b v else 1 := by

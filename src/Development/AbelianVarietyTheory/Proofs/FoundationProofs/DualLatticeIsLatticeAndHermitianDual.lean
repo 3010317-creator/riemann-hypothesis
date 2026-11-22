@@ -1,13 +1,18 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
-import Formalism.GradedWeylDivisibility.StatementE
-import Formalism.HarderNarasimhan.ShiftInvariance
-import Formalism.QuotientMetricDivisors.ReductionLemmaZero
-import Formalism.QuotientMetricDivisors.ProdFormula
-import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ImportsFurther
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
+public import Formalism.GradedWeylDivisibility.StatementE
+public import Formalism.HarderNarasimhan.ShiftInvariance
+public import Formalism.QuotientMetricDivisors.ReductionLemmaZero
+public import Formalism.QuotientMetricDivisors.ProdFormula
+public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ImportsFurther
+
+@[expose] public section
+
 open NumberField IsDedekindDomain MvPolynomial Formalism.BasicNotions Formalism.L2.DIV Formalism.DivisionValues GlobalTheory.TestLat Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
 open scoped Matrix ComplexOrder
 
@@ -28,10 +33,6 @@ theorem star_mem_one [StarRing K] {x : K} (h : x ∈ (1 : Submodule (𝓞 K) K))
   rw [mem_one_iff] at h ⊢
   exact map_isIntegral_int (starRingEnd K) h
 
-theorem exists_den (x : K) : ∃ d : 𝓞 K, d ≠ 0 ∧ d • x ∈ (1 : Submodule (𝓞 K) K) := by
-  obtain ⟨⟨d, hd⟩, y, hy⟩ := IsLocalization.exists_integer_multiple (nonZeroDivisors (𝓞 K)) x
-  exact ⟨d, nonZeroDivisors.ne_zero hd, Submodule.mem_one.2 ⟨y, hy⟩⟩
-
 theorem exists_den_finset (s : Finset K) :
     ∃ d : 𝓞 K, d ≠ 0 ∧ ∀ x ∈ s, d • x ∈ (1 : Submodule (𝓞 K) K) := by
   obtain ⟨⟨d, hd⟩, hy⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors (𝓞 K)) s
@@ -48,10 +49,10 @@ theorem exists_smul_mem {M : Submodule (𝓞 K) (Fin n → K)}
   | (intros; apply @_root_.GlobalTheory.DeterminantSimpLemma.main <;> first | assumption | infer_instance)
   | (intros; exact _root_.GlobalTheory.DeterminantSimpLemma.main ..)
 
-theorem isLattice_dualFr (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsLattice K M) :
-    Submodule.IsLattice K (dualFr M) := by
+theorem isLattice_dualFr (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsFullLattice K M) :
+    Submodule.IsFullLattice K (dualFr M) := by
   classical
-  refine ⟨?_, ?_⟩
+  refine { toIsLattice := Submodule.IsLattice.of_fg K ?_, span_eq_top := ?_ }
   · have h : ∀ i : Fin n, ∃ d : 𝓞 K, d ≠ 0 ∧ d • (Pi.single i (1 : K) : Fin n → K) ∈ M := fun i =>
       exists_smul_mem (by rw [hM.span_eq_top]; trivial)
     choose d hd hdM using h
@@ -90,7 +91,7 @@ theorem isLattice_dualFr (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.
     exact Submodule.smul_mem _ _ (Submodule.subset_span hx)
 
 theorem isLattice_hdualFr [StarRing K] (G : Matrix (Fin n) (Fin n) K) (M : Submodule (𝓞 K) (Fin n → K))
-    (hG : IsUnit G.det) (hM : Submodule.IsLattice K M) : Submodule.IsLattice K (hdualFr G M) := by
+    (hG : IsUnit G.det) (hM : Submodule.IsFullLattice K M) : Submodule.IsFullLattice K (hdualFr G M) := by
   classical
   obtain ⟨S, hS⟩ := hM.fg
   set f : (Fin n → K) → (Fin n → K) := fun y => star y ᵥ* G with hf
@@ -112,8 +113,9 @@ theorem isLattice_hdualFr [StarRing K] (G : Matrix (Fin n) (Fin n) K) (M : Submo
         (star_mem_one (Submodule.mem_one.2 ⟨a, rfl⟩ : algebraMap (𝓞 K) K a ∈ (1 : Submodule (𝓞 K) K)))
       rw [← algebraMap_smul K a y, hsm, ← hb, algebraMap_smul]
       exact M'.smul_mem _ hy
-  have hL : Submodule.IsLattice K M' := by
-    refine ⟨Submodule.fg_span ((S.finite_toSet).image _), ?_⟩
+  have hL : Submodule.IsFullLattice K M' := by
+    refine { toIsLattice := Submodule.IsLattice.of_fg K (Submodule.fg_span ((S.finite_toSet).image _))
+             span_eq_top := ?_ }
     have key : ∀ y ∈ Submodule.span K (M : Set (Fin n → K)),
         f y ∈ Submodule.span K (M' : Set (Fin n → K)) := by
       intro y hy

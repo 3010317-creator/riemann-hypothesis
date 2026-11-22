@@ -1,14 +1,19 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.VolPin
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.Vanish
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometry
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameAdaptedIsometryOfFixingBothFrames
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ActFrame
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RatIota
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.VolPin
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.Vanish
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometry
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameAdaptedIsometryOfFixingBothFrames
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ActFrame
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RatIota
+
+@[expose] public section
+
 open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full Formalism.L2.SG.RowsConc Formalism.L2.SG.NGData Formalism.L2.SG.TermLoc GlobalTheory.HL GlobalTheory.LocOver
 open scoped Pointwise ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -204,7 +209,7 @@ theorem nu_keepX {f : Fin (r + 1) → V} {g : V ≃ₗ[E] V} (hg : g ∈ NU H f)
     have e : g (f a.castSucc) = (g (f a.castSucc) - f a.castSucc) + f a.castSucc := by abel
     rw [e]; exact add_mem (h2 h1) (Submodule.subset_span ⟨a, rfl⟩)
   | zero => simp
-  | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+  | add x y _ _ hx hy => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hy
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
 
 theorem nu_X_iff {f : Fin (r + 1) → V} {g : V ≃ₗ[E] V} (hg : g ∈ NU H f) (hg' : g.symm ∈ NU H f) (z : V) :
@@ -249,7 +254,7 @@ theorem X_le_perp_of (f : Fin (r + 1) → V) (h0 : ∀ a b : Fin r, H.h (f a.cas
   | mem x hx => obtain ⟨b, rfl⟩ := hx; exact s1 y hy b
   | zero => rw [H.h_herm 0 y, H.h_zero_left, map_zero]
   | add x x' _ _ hx hx' =>
-    rw [H.h_herm (x + x') y, H.h_add_left, map_add, ← H.h_herm, ← H.h_herm, hx, hx', add_zero]
+    rw [H.h_herm (x + x') y, H.h_add_left, map_add (f := _), ← H.h_herm, ← H.h_herm, hx, hx', add_zero]
   | smul c x _ hx => rw [h_smul_right, hx, mul_zero]
 
 end Gen
@@ -258,7 +263,7 @@ section Glob
 
 variable {D : D7}
 
-theorem scaled_iso (Z : LocDat D) (p : PlF D) {T : D.host.E} (F : LFlag (VS D) D.R.rS T) :
+theorem scaled_iso (Z : LocDat D) (p : PlF D) {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) :
     (locH Z p).X (scaled Z p (frame F)) ≤ (locH Z p).perp ((locH Z p).X (scaled Z p (frame F))) := by
   refine X_le_perp_of _ fun a b => ?_
   simp only [scaled, GlobalTheory.LocExt.frame_castSucc]
@@ -278,7 +283,7 @@ theorem ext_symm {p : PlF D} {a : (VS D).V ≃ₗ[D.host.E] (VS D).V} {g : Vp D 
   show baseChange₂ D p x = baseChange₂ D p (a (a.symm x))
   rw [LinearEquiv.apply_symm_apply]
 
-theorem nu_of_ext (Z : LocDat D) (p : PlF D) {T : D.host.E} {F : LFlag (VS D) D.R.rS T}
+theorem nu_of_ext (Z : LocDat D) (p : PlF D) {T : D.host.E} {F : LFlag (D.sp.Y 0) D.R.rS T}
     {γ : (VS D).V ≃ₗ[D.host.E] (VS D).V} {g : Vp D p ≃ₗ[(D.s.atP p).Ep] Vp D p} (hN : γ ∈ NRat F) (h : Ext p γ g) :
     g ∈ NU (locH Z p) (scaled Z p (frame F)) := by
   rw [GlobalTheory.LocExt.locEquiv_unique p γ g h]

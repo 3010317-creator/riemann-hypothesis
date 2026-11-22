@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CardQuotSmulTopCongr
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AlgebraMapIntCastSmul
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CardQuotSmulTopCongr
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AlgebraMapIntCastSmul
+
+@[expose] public section
 
 open NumberField Module
 
@@ -12,9 +16,6 @@ open Formalism.HermitianLattices.Ext.L3 Formalism.L2.SG.Pf.Cnt
 
 variable {K F V : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
   [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
-
-local notation "ι" => algebraMap (𝓞 F) (𝓞 K)
-local notation "jK" => algebraMap (𝓞 K) K
 
 theorem mem_dual_iff (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (x : V) :
     x ∈ Formalism.HermitianLatticesTheory.dual h L ↔ ∀ y ∈ L, h y x ∈ (1 : Submodule (𝓞 K) K) := by
@@ -64,7 +65,8 @@ variable {h : V →ₗ⋆[K] V →ₗ[K] K} {X : Submodule K V} {L : Submodule (
 
 theorem h_sum (horth : ∀ i j, i ≠ j → h (b i) (b j) = 0) (hdiag : ∀ i, h (b i) (b i) = jK (ι (a i)))
     (c : Fin n → K) (k : Fin n) : h (b k) (∑ i, c i • b i) = c k * jK (ι (a k)) := by
-  simp only [map_sum, map_smul, smul_eq_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum, map_smul, smul_eq_mul]
   rw [Finset.sum_eq_single k]
   · rw [hdiag]
   · intro i _ hik
@@ -169,7 +171,8 @@ theorem mem_locF_dualIn_iff (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) (hL : IsL
       intro y hy
       have hyB : y ∈ locF 𝔭 L := Formalism.HermitianLattices.Ext.L3.localizedQuotients.le_locF 𝔭 L hy
       obtain ⟨hyX, hc⟩ := (mem_B_iff hbX hloc horth hdiag ha h𝔭.isPrime hL y).mp hyB
-      rw [coords hbX hloc horth hdiag ha h𝔭.isPrime hL hyX, map_sum, LinearMap.sum_apply]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [coords hbX hloc horth hdiag ha h𝔭.isPrime hL hyX, map_sum, LinearMap.sum_apply]
       refine Subring.sum_mem _ fun i _ => ?_
       rw [LinearMap.map_smulₛₗ₂, starRingEnd_apply, smul_eq_mul]
       exact Subring.mul_mem _ (star_mem_HU_SP hF (hc i)) (hq i)
@@ -195,7 +198,7 @@ theorem mem_locF_dualIn_iff (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) (hL : IsL
       | mem y hy => exact hgen ⟨y, hy⟩
       | zero => simp
       | add y w _ _ hy hw =>
-        rw [map_add, LinearMap.add_apply]
+        rw [map_add (f := _), LinearMap.add_apply]
         exact Submodule.add_mem _ hy hw
       | smul r y _ hy =>
         obtain ⟨r', hr'⟩ := star_jK r

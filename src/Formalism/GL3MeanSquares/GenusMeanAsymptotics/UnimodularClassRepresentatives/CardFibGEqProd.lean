@@ -1,7 +1,11 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SumOrbitsEquivariant
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AdjoinIntegralOfNonempty
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.IsUnimodularAtIffVd
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsIsomLocFOfVdZero
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SumOrbitsEquivariant
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AdjoinIntegralOfNonempty
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.IsUnimodularAtIffVd
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsIsomLocFOfVdZero
+
+@[expose] public section
 
 open NumberField Module
 
@@ -16,15 +20,34 @@ variable {K F V V' : Type} [Field K] [NumberField K] [StarRing K] [Field F] [Num
 
 variable {h : V →ₗ⋆[K] V →ₗ[K] K} {h' : V' →ₗ⋆[K] V' →ₗ[K] K}
 
+private theorem full_adjoin (S : VecSplit h h') (L' : Submodule (𝓞 K) V')
+    (hL : Submodule.IsFullLattice K L') : Submodule.IsFullLattice K (S.adjoin L') := by
+  refine { toIsLattice := (S.isLattice_adjoin_iff L').2 hL.toIsLattice, span_eq_top := ?_ }
+  rw [eq_top_iff]
+  intro v _
+  obtain ⟨c, a, rfl⟩ := S.cover v
+  refine add_mem (Submodule.smul_mem _ c (Submodule.subset_span (S.x₀_mem_adjoin' L'))) ?_
+  have ha : a ∈ Submodule.span K (L' : Set V') := by
+    rw [hL.span_eq_top]
+    exact Submodule.mem_top
+  have hle : Submodule.map S.ι (Submodule.span K (L' : Set V')) ≤
+      Submodule.span K (S.adjoin L' : Set V) := by
+    rw [Submodule.map_span]
+    apply Submodule.span_mono
+    rintro _ ⟨b, hb, rfl⟩
+    unfold VecSplit.adjoin
+    exact Submodule.mem_sup_right (Submodule.mem_map_of_mem hb)
+  exact hle (Submodule.mem_map_of_mem ha)
+
 theorem fibLoc_eq_one (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (hs : h.IsSymm)
     (hd : IsTotPosDef h) (S : VecSplit h h') {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {Λ' : Submodule (𝓞 K) V'}
-    (hΛ' : Submodule.IsLattice K Λ') (hΛi : Formalism.HermitianLatticesTheory.IsIntegralLat h' Λ') {𝔭 : Ideal (𝓞 F)}
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {Λ' : Submodule (𝓞 K) V'}
+    (hΛ' : Submodule.IsFullLattice K Λ') (hΛi : Formalism.HermitianLatticesTheory.IsIntegralLat h' Λ') {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : h S.x₀ S.x₀ = algebraMap F K (n : F))
     (hvL : vd h L 𝔭 = 0) (hvn : vF 𝔭 n = 0) (hvΛ : vd h' Λ' 𝔭 = 0) : fibLoc S L 𝔭 Λ' = 1 := by
   classical
   rw [LocalizedFibreSets.fibLoc_eq_card]
-  have hN : Submodule.IsLattice K (S.adjoin Λ') := (VecSplit.isLattice_adjoin_iff S Λ').2 hΛ'
+  have hN : Submodule.IsFullLattice K (S.adjoin Λ') := full_adjoin S Λ' hΛ'
   have hmk : algebraMap (𝓞 K) K (algebraMap (𝓞 F) (𝓞 K) n) = algebraMap F K (n : F) := rfl
   have hn1 : h S.x₀ S.x₀ ∈ (1 : Submodule (𝓞 K) K) := by
     rw [hn, ← hmk]
@@ -64,12 +87,12 @@ theorem fibLoc_eq_one (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
 
 theorem card_fibG_eq_prod (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (hs : h.IsSymm)
     (hd : IsTotPosDef h) (S : VecSplit h h') {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {Λ' : Submodule (𝓞 K) V'}
-    (hΛ' : Submodule.IsLattice K Λ') :
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {Λ' : Submodule (𝓞 K) V'}
+    (hΛ' : Submodule.IsFullLattice K Λ') :
     (Nat.card (fibG S L Λ') : ℝ) = ∏' 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, (fibLoc S L 𝔭.1 Λ' : ℝ) := by
   classical
   by_cases hne : ∀ 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, (LocalizedFibreSets.fibSet S L 𝔭.1 Λ').Nonempty
-  · have hN : Submodule.IsLattice K (S.adjoin Λ') := (VecSplit.isLattice_adjoin_iff S Λ').2 hΛ'
+  · have hN : Submodule.IsFullLattice K (S.adjoin Λ') := full_adjoin S Λ' hΛ'
     have hNi := LocalizedFibreSets.adjoin_integral_of_nonempty hK hF S hLi hne
     obtain ⟨t, ht⟩ : ∃ t : Finset {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal},
         ∀ 𝔭 ∉ t, vd h L 𝔭.1 = 0 ∧ vd h (S.adjoin Λ') 𝔭.1 = 0 := by

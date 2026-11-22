@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.HTIntLeft
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.HTIntLeft
+
+@[expose] public section
 
 noncomputable section
 
@@ -13,12 +17,67 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem inW_neg (D : Formalism.BasicNotions.D7) {x : (VS D).V} (hx : InW D x) : InW D (-x) := by
   simpa using inW_smul D (-1) hx
 
+private theorem full_of_unimodular (D : Formalism.BasicNotions.D7)
+    {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsLattice D.host.E Λ)
+    (hU : Formalism.HermitianLatticesTheory.IsUnimodular (VS D).hT Λ) :
+    Submodule.IsFullLattice D.host.E Λ := by
+  refine { toIsLattice := hΛ, span_eq_top := ?_ }
+  obtain ⟨s, hs⟩ := hΛ.fg
+  apply eq_top_iff.mpr
+  intro y _
+  let f : (VS D).V → D.host.E := fun x => (VS D).hT x y
+  obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 D.host.E)) s f
+  have ha0 : (algebraMap (𝓞 D.host.E) D.host.E a) ≠ 0 :=
+    (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+  let P : Submodule (𝓞 D.host.E) (VS D).V := {
+    carrier := {x | ∃ b : 𝓞 D.host.E, (b : D.host.E) = (algebraMap (𝓞 D.host.E) D.host.E a) * f x}
+    zero_mem' := by refine ⟨0, ?_⟩; simp [f]
+    add_mem' := by
+      rintro x z ⟨b, hb⟩ ⟨c, hc⟩
+      refine ⟨b + c, ?_⟩
+      change (b : D.host.E) + c = _
+      rw [hb, hc]
+      simp [f, map_add, mul_add]
+    smul_mem' := by
+      rintro c x ⟨b, hb⟩
+      refine ⟨NumberField.RingOfIntegers.mapRingHom (starRingEnd D.host.E) c * b, ?_⟩
+      simp only [map_mul, NumberField.RingOfIntegers.mapRingHom_apply, starRingEnd_apply]
+      change star (c : D.host.E) * (b : D.host.E) =
+        (algebraMap (𝓞 D.host.E) D.host.E a) * (VS D).hT (c • x) y
+      rw [← algebraMap_smul D.host.E c x, LinearMap.map_smulₛₗ₂]
+      change _ = (algebraMap (𝓞 D.host.E) D.host.E a) * (star (c : D.host.E) * f x)
+      rw [hb]
+      ring }
+  have hsP : (s : Set (VS D).V) ⊆ P := by
+    intro x hx
+    obtain ⟨b, hb⟩ := ha x hx
+    exact ⟨b, by simpa [Algebra.smul_def] using hb⟩
+  have hy : (algebraMap (𝓞 D.host.E) D.host.E a) • y ∈ Λ := by
+    change Formalism.HermitianLatticesTheory.dual (VS D).hT Λ = Λ at hU
+    rw [← hU]
+    simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual,
+      Submodule.mem_iInf, Submodule.mem_comap, LinearMap.restrictScalars_apply]
+    intro x hx
+    have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
+    obtain ⟨b, hb⟩ := hxP
+    refine Submodule.mem_one.2 ⟨b, ?_⟩
+    change (b : D.host.E) = (VS D).hT x ((algebraMap (𝓞 D.host.E) D.host.E a) • y)
+    rw [map_smul, smul_eq_mul]
+    exact hb
+  have hy' : (algebraMap (𝓞 D.host.E) D.host.E a) • y ∈ Submodule.span D.host.E (Λ : Set (VS D).V) :=
+    Submodule.subset_span hy
+  have h := (Submodule.span D.host.E (Λ : Set (VS D).V)).smul_mem
+    (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ hy'
+  change (algebraMap (𝓞 D.host.E) D.host.E a)⁻¹ • ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at h
+  rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at h
+  exact h
+
 theorem stage1_of_unipotentIntegralIsGroup (hN : UnipotentIntegralIsGroup) : Stage1 := by
   intro D T T' F0 Λ hF Z R hR
   have hF' := hF
   obtain ⟨hlat, hU, he, heΛ0, c0, hc0, hz⟩ := hF
   have heΛ : ∀ a, D.sp.hypE a ∈ Λ := fun a => by rw [← he]; exact heΛ0 a
-  obtain ⟨d, hd0, hdv, hdk⟩ := common_mult D hlat
+  obtain ⟨d, hd0, hdv, hdk⟩ := common_mult D (full_of_unimodular D hlat hU)
     (Finset.univ.image D.sp.hypF ∪ {((D.sp.T : D.host.E)⁻¹) • D.sp.zm})
     (Finset.univ.image (fun p : Fin (D.R.rS + 1) × Fin D.R.rS => R p.1 p.2) ∪
       Finset.univ.image (fun p : Fin (D.R.rS + 1) × Fin (D.R.rS + 1) => Pm D Z R p.1 p.2))

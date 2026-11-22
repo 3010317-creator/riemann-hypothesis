@@ -1,9 +1,14 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFibreVar
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.IsMultiHomogIdealSpanSingleton
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsCN
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsComponentDim
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsGenericDimGe
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFibreVar
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.IsMultiHomogIdealSpanSingleton
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsCN
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsComponentDim
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsGenericDimGe
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -27,7 +32,8 @@ private theorem withBot_eq_of_add_one_eq (a : WithBot ℕ∞) (m : ℕ)
       simp at h
       have e : ((m : ℕ∞) : WithBot ℕ∞) = (m : WithBot ℕ∞) := rfl
       rw [← e] at h
-      exact ENat.top_ne_natCast m (WithBot.coe_injective h)
+      have htop : (⊤ : ℕ∞) = (m : ℕ∞) + 1 := by exact_mod_cast h
+      exact ENat.top_ne_natCast (m + 1) (by exact_mod_cast htop)
     | coe a =>
       have h' : ((a + 1 : ℕ) : WithBot ℕ∞) = ((m + 1 : ℕ) : WithBot ℕ∞) := by
         rw [← h]; push_cast; rfl

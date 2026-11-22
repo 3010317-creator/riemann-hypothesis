@@ -1,12 +1,16 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDefs
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsSat
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDiff
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.AdjointActionReduction
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.FrameReduction
-import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDefs
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsSat
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LatExistsDiff
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.AdjointActionReduction
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SesquilinearRowSplitting.FrameReduction
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+
+@[expose] public section
 
 noncomputable section
 
@@ -127,9 +131,11 @@ theorem decomp {r : ℕ} (e f : Fin r → S.V) (hee : ∀ a b, S.hT (e a) (e b) 
       S.hT (f b) (y - ∑ a, S.hT (f a) y • e a - ∑ a, S.hT (e a) y • f a) = 0 := by
   have hfe := hfe_of hef
   constructor
-  · simp only [map_sub, map_sum, map_smul, hee, hef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
+  set_option synthInstance.maxHeartbeats 100000 in
+    · simp only [map_sub, map_sum, map_smul, hee, hef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
       mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
-  · simp only [map_sub, map_sum, map_smul, hff, hfe, smul_eq_mul, mul_zero, Finset.sum_const_zero,
+  set_option synthInstance.maxHeartbeats 100000 in
+    · simp only [map_sub, map_sum, map_smul, hff, hfe, smul_eq_mul, mul_zero, Finset.sum_const_zero,
       mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
 
 theorem key_split (Λ : Submodule (𝓞 E) S.V) {r : ℕ} (e f : Fin r → S.V)
@@ -203,7 +209,8 @@ theorem zero_of_dual {r : ℕ} {e f : Fin r → S.V} (hfe : ∀ a b, S.hT (f a) 
   have ht : ∀ b, t b = 0 := by
     intro b
     have h := h0 b
-    simp only [map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
       Finset.mem_univ, if_true] at h
     exact h
   simp [ht]
@@ -284,7 +291,8 @@ theorem genFrame_holds : GenFrame := by
     intro b y hy
     have hy' : y ∈ latSpan c e := by rw [← hX]; exact hy
     obtain ⟨x, hx, rfl⟩ := (mem_latSpan c e y).1 hy'
-    simp only [map_sum, map_smul, hcf, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, hcf, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
       Finset.mem_univ, if_true]
     exact hx b
   have hw := fun b : Fin n =>
@@ -357,13 +365,16 @@ theorem genFrame_holds : GenFrame := by
   refine ⟨fun b => f0 b + ∑ k, cc k b • e k, ?_, ?_, ?_⟩
   · intro a b
     have h := hsum a b
-    simp [map_sum, hf0e, hef0, hiso, Finset.sum_ite_eq', starRingEnd_apply]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp [map_sum, hf0e, hef0, hiso, Finset.sum_ite_eq', starRingEnd_apply]
     linear_combination h
   · intro a b
-    simp [map_sum, hiso, hef0]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp [map_sum, hiso, hef0]
   · intro b y hy
     have hexp : S.hT (f0 b + ∑ k, cc k b • e k) y = S.hT (f0 b) y + ∑ k, star (cc k b) * S.hT (e k) y := by
-      simp [map_sum, starRingEnd_apply]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp [map_sum, starRingEnd_apply]
     rw [hexp]
     exact PI.SRW.fi_add (hf0Λ b y hy) (fi_sum _ (fun k => hterm k b y hy))
 
@@ -580,7 +591,8 @@ theorem latExists_of_steps (hSB : SatBasis) (hH : HypRep) (hI : IsoW D) (hDd : D
     have hc : ∀ j : Fin D.R.rS, g (Fin.castSucc j) = 0 := by
       intro j
       have h1 := congrArg ((VS D).hT (D.sp.hypF j)) hg
-      rw [map_sum, map_zero, Fin.sum_univ_castSucc] at h1
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum, map_zero, Fin.sum_univ_castSucc] at h1
       simp only [wf, map_smul, Fin.snoc_castSucc, Fin.snoc_last, (hwo j).2, hfe_hyp, smul_eq_mul, mul_zero,
         add_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
       exact h1
@@ -693,7 +705,7 @@ theorem latExists_of_steps (hSB : SatBasis) (hH : HypRep) (hI : IsoW D) (hDd : D
     choose cl hclI hclP hcl1 using hgen
     refine ⟨cl, fun a h0 => hclP a (by rw [h0]; exact FractionalIdeal.zero_mem _), fun hg a => hcl1 a hg, ?_⟩
     exact localization_latSpan P.asIdeal (aaS D) eX cl hclI (fun a => locgen (haa a).1 (hclI a) (hclP a))
-  have hprim : ∀ u (γ : D.host.E), γ • zu u ∈ Lsub (VS D).L0 (⟨Fu u, zu u⟩ : LFlag (VS D) D.R.rS _) →
+  have hprim : ∀ u (γ : D.host.E), γ • zu u ∈ Lsub (VS D).L0 (⟨Fu u, zu u⟩ : LFlag (D.sp.Y 0) D.R.rS _) →
       ∃ o : 𝓞 D.host.E, (o : D.host.E) = γ := by
     intro u γ hγ
     obtain ⟨h1, -⟩ := Submodule.mem_inf.1 hγ

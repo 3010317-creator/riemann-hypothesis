@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionCoreProjMulCoreEqOne
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LevAtZ
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCHyperbolicExtensionLatticeConjStable
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittDecompositionCoreProjMulCoreEqOne
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LineLatAt
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.BaseMatrixGlApply
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCHyperbolicExtensionLatticeConjStable
+
+@[expose] public section
 
 noncomputable section
 
@@ -113,29 +117,36 @@ theorem isLattice_splitL (h𝔟 : ∀ i, 𝔟 i ≠ 0) (hL₀ : Submodule.IsLatt
       (Submodule.mem_sup_right ?_)
     · exact sum_mem fun i _ => Submodule.mem_iSup_of_mem i ⟨_, h1 i, rfl⟩
     · exact sum_mem fun i _ => Submodule.mem_iSup_of_mem i ⟨_, hγ i (h3 i), rfl⟩
-  · rw [eq_top_iff]
-    intro y _
-    rw [decomp d y]
-    refine add_mem (add_mem ?_ ?_) ?_
-    · rw [← Finset.univ_sum_single (d.qX *ᵥ y), Matrix.mulVec_sum]
-      refine sum_mem fun i _ => ?_
-      obtain ⟨β, hβ, hβ0⟩ := exists_ne_zero (h𝔟 i)
-      rw [mulVec_single_smul d.e i hβ0]
-      exact Submodule.smul_mem _ _ (Submodule.subset_span
-        (e_mem (single_mem_of_mem (I := fun j => (𝔟 j : Submodule (𝓞 D.host.E) D.host.E)) i hβ)))
-    · have hx : d.q0 *ᵥ y ∈ Submodule.span D.host.E (L₀ : Set (Fin S₀.rank → D.host.E)) := by
-        rw [hL₀.span_eq_top]; trivial
-      generalize d.q0 *ᵥ y = x₀ at hx ⊢
-      induction hx using Submodule.span_induction with
-      | mem x hx => exact Submodule.subset_span (i₀_mem hx)
-      | zero => rw [Matrix.mulVec_zero]; exact zero_mem _
-      | add x x' _ _ hx hx' => rw [Matrix.mulVec_add]; exact add_mem hx hx'
-      | smul a x _ hx => rw [Matrix.mulVec_smul]; exact Submodule.smul_mem _ a hx
-    · rw [← Finset.univ_sum_single (d.qY *ᵥ y), Matrix.mulVec_sum]
-      refine sum_mem fun i _ => ?_
-      obtain ⟨c, hc, hc0⟩ := exists_ne_zero_dualC (𝔟 i)
-      rw [mulVec_single_smul d.e' i hc0]
-      exact Submodule.smul_mem _ _ (Submodule.subset_span (e'_mem (single_mem_of_mem (I := fun j => dualC (𝔟 j)) i hc)))
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+private theorem isFullLattice_splitL (h𝔟 : ∀ i, 𝔟 i ≠ 0)
+    (hL₀ : Submodule.IsFullLattice D.host.E L₀) :
+    Submodule.IsFullLattice D.host.E (splitL d L₀ 𝔟) := by
+  classical
+  refine { toIsLattice := isLattice_splitL d h𝔟 hL₀.toIsLattice, span_eq_top := ?_ }
+  let P := Submodule.span D.host.E (splitL d L₀ 𝔟 : Set (Fin S.rank → D.host.E))
+  have he (z : Fin ρ → D.host.E) : d.e *ᵥ z ∈ P := by
+    rw [← Finset.univ_sum_single z, Matrix.mulVec_sum]
+    refine sum_mem fun i _ => ?_
+    obtain ⟨b, hb, hb0⟩ := exists_ne_zero (h𝔟 i)
+    rw [mulVec_single_smul _ _ hb0]
+    exact P.smul_mem _ (Submodule.subset_span
+      (e_mem (L₀ := L₀) (single_mem_of_mem (I := fun j => (𝔟 j : Submodule (𝓞 D.host.E) D.host.E)) i hb)))
+  have he' (z : Fin ρ → D.host.E) : d.e' *ᵥ z ∈ P := by
+    rw [← Finset.univ_sum_single z, Matrix.mulVec_sum]
+    refine sum_mem fun i _ => ?_
+    obtain ⟨b, hb, hb0⟩ := exists_ne_zero_dualC (𝔟 i)
+    rw [mulVec_single_smul _ _ hb0]
+    exact P.smul_mem _ (Submodule.subset_span
+      (e'_mem (L₀ := L₀) (single_mem_of_mem (I := fun j => dualC (𝔟 j)) i hb)))
+  have hle : Submodule.span D.host.E (L₀ : Set (Fin S₀.rank → D.host.E)) ≤
+      P.comap (Matrix.mulVecLin d.i₀) :=
+    Submodule.span_le.mpr fun x hx => Submodule.subset_span (i₀_mem (d := d) (𝔟 := 𝔟) hx)
+  apply top_unique
+  intro y _
+  have h0 : d.i₀ *ᵥ (d.q0 *ᵥ y) ∈ P := hle (by rw [hL₀.span_eq_top]; trivial)
+  rw [decomp d y]
+  exact add_mem (add_mem (he _) h0) (he' _)
 
 theorem isSelfDualC_splitL (h𝔟 : ∀ i, 𝔟 i ≠ 0) (hL₀ : IsSelfDualC S₀ L₀) : IsSelfDualC S (splitL d L₀ 𝔟) := by
   have hR : ∀ z : D.host.E, (∃ b : 𝓞 D.host.E, (b : D.host.E) = z) ↔ z ∈ (algebraMap (𝓞 D.host.E) D.host.E).range :=
@@ -144,7 +155,7 @@ theorem isSelfDualC_splitL (h𝔟 : ∀ i, 𝔟 i ≠ 0) (hL₀ : IsSelfDualC S�
       (algebraMap (𝓞 D.host.E) D.host.E).range := fun y₀ => by
     rw [hL₀.2 y₀]
     simp only [hR, sum_pair_eq]
-  refine ⟨isLattice_splitL d h𝔟 hL₀.1, fun y => ?_⟩
+  refine ⟨isFullLattice_splitL d h𝔟 hL₀.1, fun y => ?_⟩
   simp only [hR, sum_pair_eq]
   constructor
   · intro hy x hx

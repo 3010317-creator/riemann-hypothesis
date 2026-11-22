@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.SubMemOfIndQ
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.SubMemOfIndQ
+
+@[expose] public section
 
 noncomputable section
 
@@ -115,14 +119,14 @@ section Unip
 
 variable {K M : Type*} [Field K] [CharZero K] [AddCommGroup M] [Module K M]
 
-open Polynomial in
 
+open Polynomial in
 theorem unip_fin (A : Module.End K M) {k N : ℕ} (hk : 0 < k) (h1 : A ^ k = 1) (h2 : (A - 1) ^ N = 0) : A = 1 := by
   set B := A - 1 with hB
   have hA : A = B + 1 := by rw [hB]; abel
 
   have hd : X ∣ ((X + 1 : K[X]) ^ k - 1) := by
-    rw [X_dvd_iff, coeff_sub, coeff_X_add_one_pow, coeff_one_zero, Nat.choose_zero_right, Nat.cast_one, sub_self]
+    rw [X_dvd_iff, coeff_sub, coeff_X_add_one_pow, coeff_one, if_pos rfl, Nat.choose_zero_right, Nat.cast_one, sub_self]
   obtain ⟨q, hq⟩ := hd
   have hq0 : q.coeff 0 = (k : K) := by
     have := congrArg (fun p : K[X] => p.coeff 1) hq
@@ -133,8 +137,8 @@ theorem unip_fin (A : Module.End K M) {k N : ℕ} (hk : 0 < k) (h1 : A ^ k = 1) 
   obtain ⟨r0, hr0⟩ := hd2
   have hq' : q = C (k : K) + X * r0 := by rw [← hr0]; ring
   have hev : aeval B ((X + 1 : K[X]) ^ k - 1) = 0 := by
-    rw [map_sub, map_pow, map_add, aeval_X, map_one, ← hA, h1, sub_self]
-  rw [hq, hq', map_mul, map_add, map_mul, aeval_X, aeval_C] at hev
+    rw [map_sub, map_pow, map_add (f := _), aeval_X, map_one, ← hA, h1, sub_self]
+  rw [hq, hq', map_mul, map_add (f := _), map_mul, aeval_X, aeval_C] at hev
 
   have step : ∀ i, B ^ (i + 1 + 1) = 0 → B ^ (i + 1) = 0 := by
     intro i hi

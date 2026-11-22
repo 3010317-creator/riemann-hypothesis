@@ -1,5 +1,9 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.InfinitesimalDecay.DecBoundJ
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.TraceFormula
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.InfinitesimalDecay.DecBoundJ
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.TraceFormula
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -25,7 +29,7 @@ theorem NE_add (E : Fin n → Fin n → Module.End ℂ D) (j : ℕ) (x y : D) :
     NE E j (x + y) ≤ NE E j x + NE E j y := by
   simp only [NE, ← sum_add_distrib]
   refine sum_le_sum fun l _ => sum_le_sum fun w _ => ?_
-  rw [map_add, Submodule.coe_add]
+  rw [map_add (f := _), Submodule.coe_add]
   exact norm_add_le _ _
 
 theorem NE_smul (E : Fin n → Fin n → Module.End ℂ D) (j : ℕ) (c : ℂ) (x : D) :
@@ -57,11 +61,6 @@ theorem NE_zero_eq (E : Fin n → Fin n → Module.End ℂ D) (x : D) : NE E 0 x
 
 theorem NT_nonneg (E : Fin n → Fin n → Module.End ℂ D) (j : ℕ) (f : Fin n → D) : 0 ≤ NT E j f :=
   sum_nonneg fun _ _ => NE_nonneg E j _
-
-theorem NT_add (E : Fin n → Fin n → Module.End ℂ D) (j : ℕ) (f g : Fin n → D) :
-    NT E j (f + g) ≤ NT E j f + NT E j g := by
-  simp only [NT, ← sum_add_distrib]
-  exact sum_le_sum fun c _ => NE_add E j _ _
 
 theorem NT_smul (E : Fin n → Fin n → Module.End ℂ D) (j : ℕ) (c : ℂ) (f : Fin n → D) :
     NT E j (c • f) = ‖c‖ * NT E j f := by

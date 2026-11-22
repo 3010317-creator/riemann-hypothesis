@@ -1,13 +1,17 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIntOv
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNonvanishingFiniteDatumDefiniteLift
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitProjAdeleComponentChartProperties
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentPrimeProjectionCorrespondence
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DegreeOnePrimeReductionSplitPlaceDictionary
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentityStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaFunctionSplitProductDatumIsPureTensorStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIntOv
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNonvanishingFiniteDatumDefiniteLift
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitProjAdeleComponentChartProperties
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentPrimeProjectionCorrespondence
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DegreeOnePrimeReductionSplitPlaceDictionary
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaFunctionSplitProductDatumIsPureTensorStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -114,8 +118,8 @@ theorem map_eq_one_iff (z : Matrix (Fin a) (Fin a) (v.adicCompletionIntegers D.h
   rw [this, this]
   simp only [red_eq_zero_iff r hr]
 
-open Classical in
 
+open Classical in
 theorem phi_princ (ht : a + t = n) (mu : (Fv D.host.F v)ˣ →* ℂˣ)
     (hmu : ∀ u : (Fv D.host.F v)ˣ, Valued.v ((u : Fv D.host.F v) - 1) < 1 → mu u = 1)
     (y : Matrix (Fin n) (Fin a) (v.adicCompletionIntegers D.host.F)) :
@@ -133,8 +137,8 @@ theorem phi_princ (ht : a + t = n) (mu : (Fv D.host.F v)ˣ →* ℂˣ)
     rw [← h2]
     exact congrArg Units.val hg
 
-open Classical in
 
+open Classical in
 theorem phi_top (ht : a + t = n) (mu : (Fv D.host.F v)ˣ →* ℂˣ) (ξ : kˣ →* ℂˣ)
     (hmu : ∀ (u : (Fv D.host.F v)ˣ) (b : kˣ) (h : (u : Fv D.host.F v) ∈ v.adicCompletionIntegers D.host.F),
       r ⟨u, h⟩ = b → mu u = ξ b)
@@ -158,13 +162,13 @@ end Pure
 
 section Local
 
-open Classical in
 
+open Classical in
 def locK {k : Type} [CommRing k] {n a : ℕ} (y : Matrix (Fin n) (Fin a) k) : ℂ :=
   if LowZero a y ∧ topL a y = 1 then 1 else 0
 
-open Classical in
 
+open Classical in
 def locQ {k : Type} [CommRing k] {n a : ℕ} (ξ : kˣ →* ℂˣ) (y : Matrix (Fin n) (Fin a) k) : ℂ :=
   if h : LowZero a y ∧ IsUnit (topL a y).det then ((ξ h.2.unit : ℂˣ) : ℂ) ^ (-1 : ℤ) else 0
 
@@ -223,8 +227,8 @@ theorem mem_int_of_rdE {v : FinPl D} {φ : SplitProj D v} {e : AE D} (he : IsIde
   rw [hφ] at h
   exact GlobalTheory.IdemRes.toEAf_mem_of_finPart ((hc.2.2.2 w).2 (GlobalTheory.SplitHecke.isInt_Ov.2 h))
 
-open Classical in
 
+open Classical in
 def redFun (a : AE D) (PP : Formalism.L2.DIV.Pl D.host.E) (ω : Matrix (Fin S.rank) (Fin T.rank) (Formalism.L2.DIV.kP PP) → ℂ) :
     WO S T → ℂ :=
   fun x => if IsHalf a x ∧ IsIntM (frMapAdj S T βS βT x) then ω (redM PP (frMapAdj S T βS βT x)) else 0
@@ -279,8 +283,8 @@ theorem isSBHalf_redFun {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.
     (GlobalTheory.PlaceVec.frMapAdj_up S T βS βT) (GlobalTheory.PlaceVec.frMapAdj_down S T βS βT) {PP} (fun y => ω (y PP))
     fun _ _ h => by rw [h PP (Finset.mem_singleton_self _)]
 
-open Classical in
 
+open Classical in
 theorem prod_redFun (s : Finset (Formalism.L2.DIV.Pl D.host.E)) (es : Formalism.L2.DIV.Pl D.host.E → AE D)
     (hes : ∀ PP ∈ s, Formalism.L2.NTheta.IsIdemAt (es PP) PP)
     (ω : ∀ PP : Formalism.L2.DIV.Pl D.host.E, Matrix (Fin S.rank) (Fin T.rank) (Formalism.L2.DIV.kP PP) → ℂ) (x : WO S T)
@@ -305,7 +309,8 @@ theorem prod_redFun (s : Finset (Formalism.L2.DIV.Pl D.host.E)) (es : Formalism.
       by_contra h
       push_neg at h
       refine hi fun i j => ?_
-      rw [← frMapAdj_half S T βS βT hx i j, map_sum, Finset.sum_mul]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [← frMapAdj_half S T βS βT hx i j, map_sum, Finset.sum_mul]
       exact sum_mem fun PP hPP => h PP hPP i j
     obtain ⟨PP, hPP, h⟩ := this
     refine Finset.prod_eq_zero hPP ?_
@@ -331,7 +336,7 @@ theorem thetaVecLocal : ∀ D : D7, ThetaVecLocal D := by
     fun PP => if PP ∈ Pg then locK else locQ (ξ PP)
   have ω1 : ∀ PP ∈ Pg, ω PP = locK := fun PP h => if_pos h
   have ω2 : ∀ PP ∈ Q, ω PP = locQ (ξ PP) := fun PP h => if_neg fun h' => Finset.disjoint_left.1 hdis h' h
-  let v : Formalism.L2.DIV.Pl D.host.E → FinPl D := fun PP => PP.under (𝓞 D.host.F)
+  let v : Formalism.L2.DIV.Pl D.host.E → FinPl D := fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)
   have hvφ : ∀ {w : FinPl D} {φ : SplitProj D w} {PP}, IsProjAt φ PP → w = v PP := fun h =>
     HeightOneSpectrum.ext (d2 _ _ _ h).1.symm
   have hφ : ∀ PP ∈ Pg ∪ Q, ∃ φ : SplitProj D (v PP), IsIdemOf φ (es PP) ∧ IsProjAt φ PP := fun PP h => by

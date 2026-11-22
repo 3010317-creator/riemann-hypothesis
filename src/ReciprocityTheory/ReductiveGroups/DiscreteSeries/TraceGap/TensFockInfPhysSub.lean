@@ -1,6 +1,10 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.WKTensFockGenSub
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.DetOneSubEqSumMinors
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.TraceEqTraceRestrictOfRangeLe
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.WKTensFockGenSub
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.DetOneSubEqSumMinors
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.TraceEqTraceRestrictOfRangeLe
+
+@[expose] public section
 
 noncomputable section
 
@@ -41,7 +45,8 @@ theorem tensFock_inf_physSub (L : Submodule ℂ N) :
     have hmem : ∀ s, tcoef ((fockBasis n).coord s) y ∈ L := fun s => tcoef_mem hyT _
     refine ⟨∑ S : LfIdx ε, (⟨tcoef ((fockBasis n).coord S.1) y, hmem S.1⟩ : L) ⊗ₜ
       (⟨fockBasis n S.1, physWedge_mem S⟩ : physFock ε), ?_⟩
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     simp only [TensorProduct.map_tmul, Submodule.coe_subtype]
     symm
     calc y = ∑ s, tcoef ((fockBasis n).coord s) y ⊗ₜ fockBasis n s := tcoef_expand y
@@ -72,7 +77,7 @@ theorem tensFock_inf_physSub (L : Submodule ℂ N) :
         simp only [physFock, Submodule.mem_iInf, LinearMap.mem_ker] at hf
         simp only [TensorProduct.map_tmul, cmT, LinearMap.id_apply, Submodule.coe_subtype, hf j b hjb,
           TensorProduct.tmul_zero]
-      | add x x' hx hx' => rw [map_add, map_add, hx, hx', add_zero]
+      | add x x' hx hx' => rw [map_add (f := _), map_add (f := _), hx, hx', add_zero]
 
 end Supp
 
@@ -99,7 +104,7 @@ theorem str_tensFock_physSub (hD : IsDerivedOn ε σ D E) {k : Matrix (Fin n) (F
     induction x using TensorProduct.induction_on with
     | zero => simp
     | tmul l f => rfl
-    | add x x' hx hx' => rw [map_add, map_add, hx, hx', map_add, map_add]
+    | add x x' hx hx' => rw [map_add (f := _), map_add (f := _), hx, hx', map_add (f := _), map_add (f := _)]
   have hconj : (gradT ∘ₗ wK hD hk).restrict hY0 = e.conj (TensorProduct.map sL fP) := by
     apply LinearMap.ext
     intro y

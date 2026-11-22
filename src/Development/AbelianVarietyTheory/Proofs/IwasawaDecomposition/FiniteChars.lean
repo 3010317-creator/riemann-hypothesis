@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+
+@[expose] public section
 
 open IsDedekindDomain NumberField
 
@@ -84,8 +88,10 @@ theorem heckeFin_of
     exact MonoidHom.mem_ker.2 ((χ * χ0⁻¹).2.2 k)
   · have e : χ.inf k = χ0.inf k := Units.ext ((hχ.1 k).trans (hχ0.1 k).symm)
     rw [Formalism.L2.Host.HChar.inf_mul, Formalism.L2.Host.HChar.inf_inv, e, mul_inv_cancel]
-  · rw [Formalism.L2.Host.HChar.loc_mul, Formalism.L2.Host.HChar.loc_inv, hχ.2.1 v hv x hx, hχ0.2.1 v hv x hx, inv_one, one_mul]
-  · rw [Formalism.L2.Host.HChar.loc_mul, Formalism.L2.Host.HChar.loc_inv, hχ.2.2 v hv x hx hle, hχ0.2.2 v hv x hx hle, inv_one,
+  · change χ.loc v x * (χ0.loc v x)⁻¹ = 1
+    rw [hχ.2.1 v hv x hx, hχ0.2.1 v hv x hx, inv_one, one_mul]
+  · change χ.loc v x * (χ0.loc v x)⁻¹ = 1
+    rw [hχ.2.2 v hv x hx hle, hχ0.2.2 v hv x hx hle, inv_one,
       one_mul]
 
 end GlobalTheory.LevelChars

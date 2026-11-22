@@ -1,10 +1,14 @@
-import Mathlib
-import Formalism.HermitianLattices.GenusCovolBound
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusScale
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
-import Formalism.FockGram.FockGramProofs.CovolGram
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.GenusCovolBound
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusScale
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+public import Formalism.FockGram.FockGramProofs.CovolGram
+
+@[expose] public section
 
 open Module NumberField
 
@@ -70,7 +74,8 @@ theorem genusCovolBound_covol_le (h : V →ₗ⋆[K] V →ₗ[K] K) (N : ℕ)
   let y : n → V := fun j => ∑ k, ((Hq k j : ℚ) : K) • x k
   have hy : ∀ j, ι (y j) = w j := by
     intro j
-    simp only [y, w, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [y, w, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_ratCast_smul ι K ℝ, hxb]
   have hbw : ∀ i j, inner ℝ (b i) (w j) = (((1 : Matrix n n ℚ) i j : ℚ) : ℝ) := by
@@ -179,10 +184,12 @@ theorem genusCovolBound_dualAt_gmap (h : V →ₗ⋆[K] V →ₗ[K] K) (g : V �
 theorem genusCovolBound_dual_genus [FiniteDimensional K V] (h : V →ₗ⋆[K] V →ₗ[K] K)
     (hs : h.IsSymm) (hnd : h.Nondegenerate)
     (hstar : ∀ r : 𝓞 K, star (algebraMap (𝓞 K) K r) ∈ Set.range (algebraMap (𝓞 K) K))
-    (L : Submodule (𝓞 K) V) (hL : Submodule.IsLattice K L) (M : Submodule (𝓞 K) V)
+    (L : Submodule (𝓞 K) V) (hL : Submodule.IsFullLattice K L) (M : Submodule (𝓞 K) V)
     (hM : M ∈ genus h L) : dual h M ∈ genus h (dual h L) := by
   obtain ⟨hMl, hMg⟩ := hM
-  refine ⟨(dualLattice (𝓞 K) K V h hs hnd hstar M hMl).1, ?_⟩
+  have hMfull : Submodule.IsFullLattice K M := hMl.toIsFullLattice
+  refine ⟨RHCompat.SpanningLattice.ofFull
+    (dualLattice (𝓞 K) K V h hs hnd hstar M hMfull).1, ?_⟩
   intro p hp
   obtain ⟨g, hg, hgL⟩ := hMg p hp
   refine ⟨g, hg, ?_⟩
@@ -223,7 +230,8 @@ theorem genusCovolBound_discr (a : K)
         ∑ j, (NumberField.integralBasis K).repr a j *
           Algebra.trace ℚ K (NumberField.integralBasis K i * NumberField.integralBasis K j) := by
       conv_lhs => rw [← (NumberField.integralBasis K).sum_repr a]
-      rw [Finset.sum_mul, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [Finset.sum_mul, map_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [smul_mul_assoc, LinearMap.map_smul, smul_eq_mul,
         mul_comm (NumberField.integralBasis K j)]
@@ -254,7 +262,8 @@ theorem genusCovolBound_discr (a : K)
     rfl
   rw [Submodule.mem_one]
   refine ⟨∑ i, Matrix.mulVec (Matrix.of T).adjugate m i • RingOfIntegers.basis K i, ?_⟩
-  rw [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum]
   conv_rhs => rw [← (NumberField.integralBasis K).sum_repr a, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_zsmul, zsmul_eq_mul, ← NumberField.integralBasis_apply, Rat.smul_def]

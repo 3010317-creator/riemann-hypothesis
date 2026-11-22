@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.SameGenusFix
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SpanPowMulLe
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLocalData
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MemSmulOfMemSmulLocF
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteDimensionalOfOrtho
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.SameGenusFix
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SpanPowMulLe
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLocalData
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MemSmulOfMemSmulLocF
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteDimensionalOfOrtho
+
+@[expose] public section
 
 open NumberField Module
 
@@ -14,9 +18,6 @@ namespace Formalism.L2.SG.Pf.G2
 open Formalism.HermitianLattices.Ext.L3
 
 variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
-
-local notation "ι" => algebraMap (𝓞 F) (𝓞 K)
-local notation "jK" => algebraMap (𝓞 K) K
 
 theorem jK_ι (t : 𝓞 F) : jK (ι t) = algebraMap F K (t : F) := rfl
 
@@ -126,25 +127,5 @@ theorem star_jK (w : 𝓞 K) : ∃ w' : 𝓞 K, jK w' = star (jK w) := StandardS
 
 theorem star_jK_ι (hF : IsFixF K F) (t : 𝓞 F) : star (jK (ι t)) = jK (ι t) :=
   (hF _).2 ⟨(t : F), rfl⟩
-
-theorem exists_common {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {ι' : Type} (s : Finset ι') (r : ι' → K)
-    (hr : haveI := h𝔭.isPrime; ∀ i ∈ s, r i ∈ HU.SP K 𝔭) :
-    ∃ t : 𝓞 F, t ∉ 𝔭 ∧ ∀ i ∈ s, ∃ w : 𝓞 K, jK w = jK (ι t) * r i := by
-  classical
-  have := h𝔭.isPrime
-  induction s using Finset.induction_on with
-  | empty => exact ⟨1, fun h => h𝔭.ne_top ((Ideal.eq_top_iff_one _).2 h), by simp⟩
-  | insert j s hj ih =>
-    obtain ⟨t, ht, hts⟩ := ih (fun i hi => hr i (Finset.mem_insert_of_mem hi))
-    obtain ⟨t', ht', w', hw'⟩ := HU.mem_SP.1 (hr j (Finset.mem_insert_self j s))
-    refine ⟨t * t', fun hm => (h𝔭.isPrime.mem_or_mem hm).elim ht ht', fun i hi => ?_⟩
-    rcases Finset.mem_insert.1 hi with rfl | hi
-    · refine ⟨ι t * w', ?_⟩
-      rw [map_mul, hw', map_mul, map_mul]
-      ring
-    · obtain ⟨w, hw⟩ := hts i hi
-      refine ⟨ι t' * w, ?_⟩
-      rw [map_mul, hw, map_mul, map_mul]
-      ring
 
 end Formalism.L2.SG.Pf.G2

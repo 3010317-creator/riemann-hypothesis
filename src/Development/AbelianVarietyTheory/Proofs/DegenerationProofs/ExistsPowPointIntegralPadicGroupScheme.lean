@@ -1,7 +1,11 @@
-import Mathlib
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsClosedEmbeddingOfAffine
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
+module
+
+public import Mathlib
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsClosedEmbeddingOfAffine
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
+
+@[expose] public section
 
 noncomputable section
 
@@ -41,7 +45,7 @@ theorem eventually_extends {V C : Type} [CommRing V] [IsLocalRing V] [CommRing C
       rw [← valR_eq]
       exact ⟨a, (valR_constFn_of_over q σ x hxq U hxU a).symm⟩
     | add f g _ _ hf hg =>
-      rw [map_add]
+      rw [map_add (f := _)]
       exact add_mem hf hg
     | mul f g _ _ hf hg =>
       rw [map_mul]
@@ -67,8 +71,8 @@ section Group
 
 variable {C : Type} [CommRing C] [TopologicalSpace C] {S : Scheme.{0}} (t : Sp C ⟶ S)
 
-omit [TopologicalSpace C] in
 
+omit [TopologicalSpace C] in
 abbrev leftPt {A : Over S} (x : Over.mk t ⟶ A) : Sp C ⟶ A.left := x.left
 
 abbrev ptTopology (A : Over S) : TopologicalSpace (Over.mk t ⟶ A) :=
@@ -98,12 +102,13 @@ theorem continuous_lift (A B : Over S) :
 
 theorem isTopologicalGroup (G : Over S) [GrpObj G] : IsTopologicalGroup (Over.mk t ⟶ G) where
   continuous_mul := (continuous_comp_over t (μ[G])).comp (continuous_lift t G G)
-  continuous_inv := continuous_comp_over t (GrpObj.inv (X := G))
+  toContinuousInv :=
+    ⟨by simpa only [Hom.inv_def] using continuous_comp_over t (GrpObj.inv (X := G))⟩
 
 end Group
 
-attribute [local instance] ptTopology in
 
+attribute [local instance] ptTopology in
 theorem exists_pow_extends {V F : Type} [CommRing V] [IsLocalRing V] [NormedField F] [ProperSpace F]
     (σ : V →+* F) (hσ : Function.Injective σ) (ho : IsOpen (Set.range σ)) (G : Over (Sp V)) [GrpObj G]
     [LocallyOfFiniteType G.hom] (h : IsProjOver (pullback.snd G.hom (spMap σ))) (a : Over.mk (spMap σ) ⟶ G) :

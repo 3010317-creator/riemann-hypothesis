@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsDPMorphismOfFlatAlgebraStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerFiltrationIdealLeMapOfIsDPMorphism
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsDPMorphismOfFlatAlgebraStatement
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -81,8 +85,8 @@ theorem nonempty_lift : ∀ D : Data, Nonempty (Lift D) := by
         rfl }
   refine ⟨{ L := { obj := fun U ↦ T U.unop
                    map := fun a ↦ m (leOfHom a.unop)
-                   map_id := fun U ↦ Thick.hom_ext fun b ↦ mp_id (OAff D.s) U b
-                   map_comp := fun a b ↦ Thick.hom_ext fun c ↦ mp_comp (OAff D.s) a b c }
+                   map_id := fun U ↦ Thick.Hom.ext' (AlgHom.ext fun b ↦ mp_id (OAff D.s) U b)
+                   map_comp := fun a b ↦ Thick.Hom.ext' (AlgHom.ext fun c ↦ mp_comp (OAff D.s) a b c) }
             e := fun _ ↦ AlgEquiv.refl
             nat := fun _ _ ↦ rfl
             gen := fun _ ↦ rfl

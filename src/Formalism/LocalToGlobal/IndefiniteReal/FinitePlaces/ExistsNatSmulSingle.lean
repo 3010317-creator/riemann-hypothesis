@@ -1,5 +1,9 @@
-import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PairingRankOneMemInverseDifferent
-import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsNatSmulMem
+module
+
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PairingRankOneMemInverseDifferent
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsNatSmulMem
+
+@[expose] public section
 
 noncomputable section
 
@@ -45,12 +49,12 @@ lemma uniform_nat {ι : Type*} [Fintype ι] (P : ι → ℕ → Prop) (hP : ∀ 
   exact hP i _ _ (hPk i)
 
 lemma exists_nat_smul_mem {n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)}
-    (hΛ : Submodule.IsLattice D.host.E Λ) (x : Fin n → D.host.E) :
+    (hΛ : Submodule.IsFullLattice D.host.E Λ) (x : Fin n → D.host.E) :
     ∃ N : ℕ, 0 < N ∧ (N : D.host.E) • x ∈ Λ :=
   _root_.UpperTheory.Reformulated.B.ExistsNatSmulMem.exists_nat_smul_mem hΛ x
 
 lemma exists_nat_smul_single {n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)}
-    (hΛ : Submodule.IsLattice D.host.E Λ) :
+    (hΛ : Submodule.IsFullLattice D.host.E Λ) :
     ∃ m : ℕ, 0 < m ∧ ∀ j, (m : D.host.E) • (Pi.single j 1 : Fin n → D.host.E) ∈ Λ := by
   refine uniform_nat (fun j m => (m : D.host.E) • (Pi.single j 1 : Fin n → D.host.E) ∈ Λ) (fun j k m h => ?_)
     (fun j => exists_nat_smul_mem hΛ _)
@@ -97,13 +101,13 @@ theorem hF_repV (S : HSp D) (w v : Fin S.rank → D.host.E) : hF S (repV S w) v 
     funext a; simp [repV]
   rw [hF_eq_dot, h2, dotProduct_mulVec, vecMul_vecMul, h1, vecMul_one]
 
-set_option maxHeartbeats 1600000 in
 
+set_option maxHeartbeats 1600000 in
 theorem selfDual_basis (S : HSp D) {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} (hS : IsSelfDualC S ΛS) :
     ∃ (N : ℕ) (g s' : Fin N → Fin S.rank → D.host.E), (∀ i, g i ∈ ΛS) ∧ (∀ i, s' i ∈ ΛS) ∧
       ∀ v : Fin S.rank → D.host.E, ∑ i, hF S (s' i) v • g i = v := by
   classical
-  have := lattice_projective hS.1
+  have := lattice_projective hS.1.toIsLattice
   have : Module.Finite (𝓞 D.host.E) ΛS := Module.Finite.iff_fg.2 hS.1.fg
   obtain ⟨N, f, hf⟩ := Module.Finite.exists_fin' (𝓞 D.host.E) ΛS
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property f LinearMap.id hf
@@ -113,7 +117,8 @@ theorem selfDual_basis (S : HSp D) {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank 
     have h1 : f (σ x) = x := LinearMap.congr_fun hσ x
     have h2 : f (σ x) = ∑ i, σ x i • gg i := by
       conv_lhs => rw [pi_eq_sum_univ (σ x)]
-      rw [map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum]
       simp only [map_smul, gg]
     rw [← h2, h1]
   let A := algebraMap (𝓞 D.host.E) D.host.E
@@ -141,7 +146,8 @@ theorem selfDual_basis (S : HSp D) {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank 
       rw [map_natCast, this]
       push_cast; ring
     have h3 := congrArg (fun y => A (σ y i)) hx
-    simp only [map_smul, map_sum, Pi.smul_apply, Finset.sum_apply, smul_eq_mul, map_mul, map_natCast] at h3
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_smul, map_sum, Pi.smul_apply, Finset.sum_apply, smul_eq_mul, map_mul, map_natCast] at h3
     apply mul_left_cancel₀ (mul_ne_zero hc0 hm0)
     rw [dotProduct, Finset.mul_sum]
     have e1 : ((c * m : ℕ) : D.host.E) = (c : D.host.E) * m := by push_cast; ring

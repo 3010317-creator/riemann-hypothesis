@@ -1,12 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothOfAlgClosedUnif
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesExist
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CarriesFlagsIffAdaptedFrameAtImage
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoordinateSectionsOfWeight
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesComp
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesUniqueInvertible
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameStableOfIsLocalRing
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothOfAlgClosedUnif
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesExist
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CarriesFlagsIffAdaptedFrameAtImage
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoordinateSectionsOfWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesComp
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesUniqueInvertible
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameStableOfIsLocalRing
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -66,8 +70,10 @@ theorem carries_at_image {F : Type} [Field F] {e : F ≃+* c.F} (C : FlagCpt Z e
   have hx₀ : spMap (C.Y.X.presheaf.stalkSpecializes hsp).hom ≫ (stalkPt C.Y y ≫ C.π ≫ genι Z) =
       stalkPt C.Y (p (IsLocalRing.closedPoint K)) ≫ C.π ≫ genι Z := by
     rw [← Category.assoc, hρ]
-  obtain ⟨g₀, hg₀⟩ := ValCoord.exists_bc f (C.Y.X.presheaf.stalkSpecializes hsp).hom hx₀
-  exact ⟨_, g₀, t, t', ValCoord.tri_bc hx₀ hg₀ (by rw [← CarriesAt.algebraMap_eq_comp_specializes hsp]; exact h2),
+  refine ⟨(C.Y.X.presheaf.stalkSpecializes hsp).hom.comp φ₁, ?_⟩
+  let g₀ := Classical.choose (ValCoord.exists_bc f (C.Y.X.presheaf.stalkSpecializes hsp).hom hx₀)
+  have hg₀ := Classical.choose_spec (ValCoord.exists_bc f (C.Y.X.presheaf.stalkSpecializes hsp).hom hx₀)
+  exact ⟨g₀, t, t', ValCoord.tri_bc hx₀ hg₀ (by rw [← CarriesAt.algebraMap_eq_comp_specializes hsp]; exact h2),
     ValCoord.tri_bc hx₀ hg₀ (by rw [← hψ]; exact h3)⟩
 
 theorem tri_of_carries {F : Type} [Field F] {e : F ≃+* c.F} (C : FlagCpt Z e) {K : Type} [Field K]

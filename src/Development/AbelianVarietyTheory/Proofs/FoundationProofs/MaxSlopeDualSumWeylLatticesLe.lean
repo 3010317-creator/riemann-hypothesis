@@ -1,27 +1,32 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
-import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
-import Formalism.GradedWeylDivisibility.StatementE
-import Formalism.HarderNarasimhan.ShiftInvariance
-import Formalism.QuotientMetricDivisors.ReductionLemmaZero
-import Formalism.QuotientMetricDivisors.ProdFormula
-import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MaxSlopeLeLogOfIntegralHermitianFormStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualLatticeIsLatticeAndHermitianDualStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PairingNormalisingConstantLogLeBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualFormIntegralOnDualFr
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedWeylLatticeHermitianDualityStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreservedStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtNormMulWeylPairingIntegralSelfDualStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumPairingGramMatrixValuesAndDefiniteStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthogonalSumCoefficientLatticeIsLatticeAndDualStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
+public import Formalism.GradedWeylDivisibility.StatementE
+public import Formalism.HarderNarasimhan.ShiftInvariance
+public import Formalism.QuotientMetricDivisors.ReductionLemmaZero
+public import Formalism.QuotientMetricDivisors.ProdFormula
+public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MaxSlopeLeLogOfIntegralHermitianFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualLatticeIsLatticeAndHermitianDualStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PairingNormalisingConstantLogLeBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualFormIntegralOnDualFr
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedWeylLatticeHermitianDualityStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreservedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtNormMulWeylPairingIntegralSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumPairingGramMatrixValuesAndDefiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthogonalSumCoefficientLatticeIsLatticeAndDualStatement
+
+@[expose] public section
+
 open NumberField IsDedekindDomain MvPolynomial Formalism.BasicNotions Formalism.L2.DIV Formalism.DivisionValues GlobalTheory.TestLat Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
 open scoped Matrix ComplexOrder
 
 namespace GlobalTheory.TestLat
 
-theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (v₀ : InfinitePlace K), IsConjAt v₀ → ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n) (R : ℝ), 1 ≤ R → SpreadLe lam R → ∀ (G : ι → Matrix (Fin n) (Fin n) K), (∀ τ, IsDefGram (G τ)) → ∀ (C : Type) [Nonempty C] (M : C → ι → Submodule (𝓞 K) (Fin n → K)), (∀ c τ, IsSelfDualK (G τ) (M c τ)) → ∀ (N : ℕ) (e : Fin N ≃ C × VVIdx lam) (X : InfinitePlace K → Matrix (Fin N) (Fin N) ℂ), IsMetric ((sumGram lam e G)⁻¹)ᵀ X → TestLatticeCondition N X (dualFr (sumLat lam e fun c => delK lam (M c))) (bound (Fintype.card ι) n R) := by
+theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (v₀ : InfinitePlace K), IsConjAt v₀ → ∀ (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n) (R : ℝ), 1 ≤ R → SpreadLe lam R → ∀ (G : ι → Matrix (Fin n) (Fin n) K), (∀ τ, IsDefGram (G τ)) → ∀ (C : Type) [Nonempty C] (M : C → ι → Submodule (𝓞 K) (Fin n → K)), (∀ c τ, IsSelfDualK (G τ) (M c τ)) → ∀ (N : ℕ) (e : Fin N ≃ C × VVIdx lam) (X : InfinitePlace K → Matrix (Fin N) (Fin N) ℂ), IsMetric ((sumGram lam e G)⁻¹)ᵀ X → TestLatticeCondition N X (dualFr (sumLat lam e fun c => delK lam (M c))) (bound (Fintype.card ι) n R) := by
   intro K _ _ _ _ v₀ hv ι _ n lam R hR hsp G hG C _ M hM N e X hX
   have hGh : ∀ τ, (G τ)ᴴ = G τ := fun τ => (hG τ).1
   have hdel : ∀ c, Submodule.IsLattice K (delK lam (M c)) := fun c =>
@@ -66,11 +71,28 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
   have hint' := dualForm_integral_on_dualFr K N (sumGram lam e G) hH.1 hHu _ s hint
   have hD := (GlobalTheory.T.dualLattice_isLattice_and_hermitianDual.1 K N (sumGram lam e G) _ hHu hlat).1
   have hne : dualFr (sumLat lam e fun c => delK lam (M c)) ≠ ⊥ := by
+    classical
+    let i : Fin N := ⟨0, hN⟩
+    obtain ⟨S, hS⟩ := hlat.fg
+    obtain ⟨⟨d, hd⟩, hden⟩ := IsLocalization.exist_integer_multiples_of_finset
+      (nonZeroDivisors (𝓞 K)) (S.image (fun x => x i))
+    have hd0 : d ≠ 0 := nonZeroDivisors.ne_zero hd
+    have hm : (Pi.single i (algebraMap (𝓞 K) K d) : Fin N → K) ∈
+        dualFr (sumLat lam e fun c => delK lam (M c)) := by
+      intro x hx
+      rw [← hS] at hx
+      induction hx using Submodule.span_induction with
+      | mem x hx =>
+        rw [single_dotProduct]
+        exact Submodule.mem_one.2 (hden _ (Finset.mem_image.mpr ⟨x, hx, rfl⟩))
+      | zero => simp
+      | add x y _ _ hx hy => simpa [dotProduct_add] using add_mem hx hy
+      | smul c x _ hx => simpa [dotProduct_smul] using Submodule.smul_mem (1 : Submodule (𝓞 K) K) c hx
     intro h0
-    have htop := hD.span_eq_top
-    rw [h0] at htop
-    haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
-    simp at htop
+    rw [h0, Submodule.mem_bot] at hm
+    have := congrFun hm i
+    simp only [Pi.single_eq_same, Pi.zero_apply] at this
+    exact hd0 (RingOfIntegers.coe_injective (by simpa using this))
   refine ⟨hD.fg, hne, fun v => (hX v).1, le_trans ?_ hsb⟩
   exact GlobalTheory.T.maxSlope_le_log_of_integral_hermitian_form K v₀ hv N _ X ⟨hHi.2.1, hX⟩ s hs _ hD.fg hne hint'
 

@@ -1,7 +1,11 @@
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+module
+
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+
+@[expose] public section
 
 open IsDedekindDomain NumberField Matrix Topology
 open scoped TensorProduct Pointwise
@@ -243,7 +247,7 @@ theorem exists_compact_mat {Λ : Set (n → S)} (hΛ : IsCompact Λ) {e : S}
   · exact continuous_const.add (Continuous.matrix_transpose continuous_id)
   · conv_rhs => rw [← hM]
     ext i j
-    simp [cut, mulVec_smul, mul_sub, sub_mul]
+    simp [cut, mulVec_smul, mul_sub, sub_mul, Function.swap, Matrix.col]
     ring
 
 theorem stab_compact_open [T2Space S] {φ : G →* GL n S} (hφ : IsClosedEmbedding φ) {e : S}
@@ -392,10 +396,8 @@ theorem span_lattice {n : ℕ} {N : Submodule (𝓞 E) (Fin n → E)} (hN : Subm
       | zero => intro a; simp
       | add y z _ _ hy hz => intro a; rw [smul_add]; exact Submodule.add_mem _ (hy a) (hz a)
       | smul c y _ hy => intro a; rw [smul_smul]; exact hy _
-    rw [eq_top_iff]
-    intro y _
-    simpa using key y (by rw [hN.span_eq_top]; trivial) 1
-
+    intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
 omit [NumberField E] in
 theorem comb_surjective {n m : ℕ} {x : Fin m → Fin n → E} (hx : Submodule.span F (Set.range x) = ⊤) :
     Function.Surjective (Fintype.linearCombination R fun k i => ((1 : R) ⊗ₜ[F] x k i : R ⊗[F] E)) := by
@@ -552,8 +554,8 @@ theorem map_eq_zero_iff_repr {F E R R' ι : Type} [Field F] [Field E] [Algebra F
 
 variable {F : Type} [Field F] [NumberField F]
 
-open Classical in
 
+open Classical in
 def idemF (P : HeightOneSpectrum (𝓞 F) → Prop) : Af F :=
   ⟨fun v => if P v then 1 else 0, Filter.Eventually.of_forall fun v => by
     by_cases h : P v
@@ -596,8 +598,8 @@ theorem idem_orth {P Q : HeightOneSpectrum (𝓞 F) → Prop} (h : ∀ v, P v �
 
 theorem idem_sum {P Q : HeightOneSpectrum (𝓞 F) → Prop} (h : ∀ v, P v → ¬ Q v) :
     idem (fun v => ¬ P v ∧ ¬ Q v) + idem P + idem Q = idem fun _ => True := by
-  refine adele_ext (by simp only [map_add, fst_idem, add_zero]) fun v => ?_
-  simp only [map_add, snd_idem]
+  refine adele_ext (by simp only [map_add (f := _), fst_idem, add_zero]) fun v => ?_
+  simp only [map_add (f := _), snd_idem]
   rw [idemF_pos (P := fun _ => True) trivial]
   by_cases hv : P v
   · rw [idemF_neg (h v hv), idemF_pos hv, idemF_neg (by simp [hv]), add_zero, zero_add]
@@ -608,9 +610,9 @@ theorem idem_sum {P Q : HeightOneSpectrum (𝓞 F) → Prop} (h : ∀ v, P v →
 def intOn (P : HeightOneSpectrum (𝓞 F) → Prop) : AddSubgroup (AF F) where
   carrier := {a | fstA F a = 0 ∧ sndA F a ∈ intAf F ∧ ∀ v, ¬ P v → evalV F v (sndA F a) = 0}
   zero_mem' := ⟨map_zero _, fun v => by rw [map_zero, map_zero]; exact zero_mem _, fun v _ => by rw [map_zero, map_zero]⟩
-  add_mem' := fun {a b} ha hb => ⟨by rw [map_add, ha.1, hb.1, add_zero],
-    fun v => by rw [map_add, map_add]; exact add_mem (ha.2.1 v) (hb.2.1 v),
-    fun v hv => by rw [map_add, map_add, ha.2.2 v hv, hb.2.2 v hv, add_zero]⟩
+  add_mem' := fun {a b} ha hb => ⟨by rw [map_add (f := _), ha.1, hb.1, add_zero],
+    fun v => by rw [map_add (f := _), map_add (f := _)]; exact add_mem (ha.2.1 v) (hb.2.1 v),
+    fun v hv => by rw [map_add (f := _), map_add (f := _), ha.2.2 v hv, hb.2.2 v hv, add_zero]⟩
   neg_mem' := fun {a} ha => ⟨by rw [map_neg, ha.1, neg_zero],
     fun v => by rw [map_neg, map_neg]; exact neg_mem (ha.2.1 v),
     fun v hv => by rw [map_neg, map_neg, ha.2.2 v hv, neg_zero]⟩

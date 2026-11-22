@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalRingCardinality.DataLevelD
-import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+module
+
+public import Mathlib
+public import Formalism.LocalRingCardinality.DataLevelD
+public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,12 +26,12 @@ def stabHat {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [St
 def General : Prop :=
   ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     (hc : CMData F E) (W : HSpace E), W.SigOK → W.IsPosDef →
-    ∀ N : Submodule (𝓞 E) W.V, Submodule.IsLattice E N → Formalism.HermitianLatticesTheory.IsUnimodular W.hT N →
+    ∀ N : Submodule (𝓞 E) W.V, Submodule.IsFullLattice E N → Formalism.HermitianLatticesTheory.IsUnimodular W.hT N →
       CosetMass (UFin hc W) (stabHat hc W N) (Formalism.HermitianLatticesTheory.mass W.hT N)
 
 def DefiniteSpaceClassStatement (D : D7) (_Lv : LevelData D) (_u : D.what₂.Word) : Prop :=
   letI := D.host.cmStar
-  ∀ N : Submodule (𝓞 D.host.E) (D.sp.X 0).V, Submodule.IsLattice D.host.E N →
+  ∀ N : Submodule (𝓞 D.host.E) (D.sp.X 0).V, Submodule.IsFullLattice D.host.E N →
     Formalism.HermitianLatticesTheory.IsUnimodular (D.sp.X 0).hT N →
     CosetMass
       ((ratPts D.sp.cm.sig D.sp.gram0 (FiniteAdeleRing (𝓞 D.host.F) D.host.F)).subgroupOf
@@ -38,20 +42,6 @@ def DefiniteSpaceClassStatement (D : D7) (_Lv : LevelData D) (_u : D.what₂.Wor
 
 def ClassesAsDoubleCosets : Prop :=
   General ∧ ∀ (D : D7) (Lv : LevelData D) (u : D.what₂.Word), DefiniteSpaceClassStatement D Lv u
-
-theorem CosetMass.unique {G : Type} [Group G] {Γ K : Subgroup G} {m m' : ℝ}
-    (h : CosetMass Γ K m) (h' : CosetMass Γ K m') : m = m' := by
-  haveI := h.1
-  letI := Fintype.ofFinite (ClassSet Γ K)
-  have hs : ∀ c : ClassSet Γ K, DoubleCoset.mk Γ K (Quotient.out c) = c := fun c => Quotient.out_eq' c
-  rw [← h.2.2 _ hs, ← h'.2.2 _ hs]
-
-example {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-    (hc : CMData F E) (W : HSpace E) (N : Submodule (𝓞 E) W.V) :
-    stabHat hc W N = (levelAfL hc.sig W.gram (crdLat W N)).subgroupOf (UAf hc W) := by
-  ext x
-  simp only [stabHat, Subgroup.mem_subgroupOf, levelAfL, level, Subgroup.mem_inf]
-  exact ⟨fun h => ⟨x.2, h⟩, fun h => h.2⟩
 
 end GlobalTheory.IndefiniteRowSideFullHecke.ClassesDoubleCosets
 

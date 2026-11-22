@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.WeaklyAdmissibleFiltrations.Statement
+module
+
+public import Mathlib
+public import Formalism.WeaklyAdmissibleFiltrations.Statement
+
+@[expose] public section
 
 open TensorProduct Formalism.WeaklyAdmissibleFiltrations in
 theorem UpperTheory.Reformulated.B.Qf14.phi_mul

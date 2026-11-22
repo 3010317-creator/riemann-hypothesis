@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CubeResApply
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CubeResApply
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -8,6 +12,10 @@ noncomputable section
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.CompanionTheory.Hodge.Nerve
 
 namespace GlobalTheory.CompanionTheory.Hodge.Nerve.Low
+
+abbrev toMod {R : Type} [CommRing R] {C : Type} [Category.{0} C]
+    (F : C ⥤ CommAlgCat.{0} R) : C ⥤ ModuleCat.{0} R :=
+  F ⋙ forget₂ (CommAlgCat.{0} R) (AlgCat.{0} R) ⋙ forget₂ (AlgCat.{0} R) (ModuleCat.{0} R)
 
 variable {R : Type} [CommRing R]
 
@@ -40,7 +48,7 @@ theorem d_zero : (nerveCx.obj (toMod F)).d 0 0 = ModuleCat.ofHom (0 : MainStatem
 theorem comp_eq (n : ℕ) :
     ModuleCat.ofHom (MainStatements.Hodge.dn F n) ≫ ModuleCat.ofHom (MainStatements.Hodge.dn F (n + 1)) = 0 := by
   have h := HomologicalComplex.d_comp_d
-    (GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.toMod F)) n (n + 1) (n + 1 + 1)
+    (GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.toMod F)) n (n + 1) (n + 1 + 1)
   rw [GlobalTheory.CompanionTheory.Hodge.Nerve.Low.d_eq, GlobalTheory.CompanionTheory.Hodge.Nerve.Low.d_eq] at h
   exact h
 
@@ -75,14 +83,14 @@ theorem homology_nerveCx :
         (LinearMap.ker (MainStatements.Hodge.dn F 0)).subtype = ⊥ := by
       simp
     exact ⟨((Submodule.quotEquivOfEqBot _ hbot).symm.trans e).trans
-      (((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.toMod F)).homologyIsoSc'
+      (((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.toMod F)).homologyIsoSc'
         0 0 1 (by simp) (by simp)) ≪≫
         ShortComplex.homologyMapIso (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.scIso0 F)).symm.toLinearEquiv⟩
   · obtain ⟨e⟩ := GlobalTheory.CompanionTheory.Hodge.Nerve.Low.homology_equiv
       (MainStatements.Hodge.dn F n) (MainStatements.Hodge.dn F (n + 1))
       (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.comp_eq F n)
     exact ⟨e.trans
-      (((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.toMod F)).homologyIsoSc'
+      (((GlobalTheory.CompanionTheory.Hodge.Nerve.nerveCx.obj (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.toMod F)).homologyIsoSc'
         n (n + 1) (n + 2) (by simp) (by simp)) ≪≫
         ShortComplex.homologyMapIso (GlobalTheory.CompanionTheory.Hodge.Nerve.Low.scIso F n)).symm.toLinearEquiv⟩
 

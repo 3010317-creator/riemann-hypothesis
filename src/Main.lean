@@ -1,5 +1,9 @@
-import Statements
-import Supplements.Kernels.MainTheorems
+module
+
+public import Statements
+public import Supplements.Kernels.MainTheorems
+
+@[expose] public section
 
 theorem riemannHypothesis : RiemannHypothesis := rhOfAll
 

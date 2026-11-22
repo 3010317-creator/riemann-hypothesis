@@ -1,6 +1,10 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ArchimedeanSchwartz.HodgeTateFromSandwich
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.StrongMultiplicityOne.EigOfSat
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDetEqOne
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ArchimedeanSchwartz.HodgeTateFromSandwich
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.StrongMultiplicityOne.EigOfSat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDetEqOne
+
+@[expose] public section
 
 attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL
 
@@ -93,7 +97,7 @@ theorem UpperTheory.V.Z.Inf.satDict :
     exact h0 (Subtype.ext (Subtype.ext (funext hc)))
   let l : Module.Dual ℂ (D.finite.W v) :=
     { toFun := fun y => (J y).1.1 t
-      map_add' := fun y y' => by rw [map_add]; rfl
+      map_add' := fun y y' => by rw [map_add (f := _)]; rfl
       map_smul' := fun c y => by rw [map_smul]; rfl }
   have hE := Af.StrongMultiplicityOne.eigOfSat K n σ v _ ((CG.hasSat_mk σ v _).1 hB) (J (x v)).1 (J (x v)).2 (fun g k hk => by
     rw [← (Af.Smo.sphDict K n v).1] at hk

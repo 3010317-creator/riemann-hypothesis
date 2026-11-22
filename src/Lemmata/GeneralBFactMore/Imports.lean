@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 universe u_2 u_3
 
@@ -35,9 +39,9 @@ theorem goal1 :
         (Polynomial.natDegree.{u_2} (Finset.prod.{u_3, u_2} s fun (i : ι) ↦ HPow.hPow.{u_2, 0, u_2} (p i) (e i)))
         (Finset.sum.{u_3, 0} s fun (i : ι) ↦ e i))
       (Eq.{u_2 + 1}
-        (Polynomial.coeff.{u_2} (Finset.prod.{u_3, u_2} s fun (i : ι) ↦ HPow.hPow.{u_2, 0, u_2} (p i) (e i))
+        (AddMonoidAlgebra.coeff.{u_2} (Finset.prod.{u_3, u_2} s fun (i : ι) ↦ HPow.hPow.{u_2, 0, u_2} (p i) (e i))
           (Finset.sum.{u_3, 0} s fun (i : ι) ↦ e i))
-        (Finset.prod.{u_3, u_2} s fun (i : ι) ↦ HPow.hPow.{u_2, 0, u_2} (Polynomial.coeff.{u_2} (p i) 1) (e i))) := by
+        (Finset.prod.{u_3, u_2} s fun (i : ι) ↦ HPow.hPow.{u_2, 0, u_2} (AddMonoidAlgebra.coeff.{u_2} (p i) 1) (e i))) := by
   intro R ι _ s p e hp
   have h := aux2 s (fun i => p i ^ e i) e (fun i => (aux (p i) (e i) (hp i)).1)
   refine ⟨h.1, ?_⟩

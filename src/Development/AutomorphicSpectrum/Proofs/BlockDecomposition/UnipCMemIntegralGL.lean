@@ -1,5 +1,9 @@
-import Mathlib
-import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.FormQuasiInvariantMirabolic
+module
+
+public import Mathlib
+public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.FormQuasiInvariantMirabolic
+
+@[expose] public section
 
 set_option maxSynthPendingDepth 1
 
@@ -260,11 +264,13 @@ theorem sum_kappa {z : Fin n → ℂˣ} (hU : Unit' ρ B) (hH : Heig ρ v z) {r 
         (kappa F S : ℂ) * B v (ρ (torusPow F n (lamS S)) v) =
       sqrtQ F ^ (r * (n - r)) * evalAt z (esymmL n r) * B v v := by
   have h := congrArg (B v) (sum_eig hH hr)
-  rw [map_sum, map_smul, smul_eq_mul] at h
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, map_smul, smul_eq_mul] at h
   rw [← h]
   apply Finset.sum_congr rfl
   intro S _
-  rw [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum]
   simp only [coeff_gMat hU hH.1]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   congr 1
@@ -279,8 +285,8 @@ theorem conj_sqrtQ_pow (k : ℕ) : starRingEnd ℂ (sqrtQ F ^ k) = sqrtQ F ^ k :
 
 end GlobalTheory.CompanionTheory.SatakeStable
 
-open GlobalTheory.CompanionTheory.SatakeStable in
 
+open GlobalTheory.CompanionTheory.SatakeStable in
 theorem GlobalTheory.CompanionTheory.SatakeStable.l11 : liftZP_unit := by
   unfold liftZP_unit
   intro F _ _ _ _ n V _ _ ρ B hU v z hv0 hH r hr
@@ -307,7 +313,8 @@ theorem GlobalTheory.CompanionTheory.SatakeStable.l11 : liftZP_unit := by
       (kappa F S : ℂ) * (evalAt z (esymmL n n) * starRingEnd ℂ (B v (ρ (torusPow F n (lamS S)) v))) =
       evalAt z (esymmL n n) * starRingEnd ℂ (∑ S ∈ (Finset.univ : Finset (Fin n)).powersetCard r,
         (kappa F S : ℂ) * B v (ρ (torusPow F n (lamS S)) v)) := by
-    rw [map_sum, Finset.mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro S _
     rw [map_mul, map_natCast]

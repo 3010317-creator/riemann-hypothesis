@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -19,7 +23,7 @@ namespace DeRhamVectorExtension
 
 abbrev Family (p : ℕ) : Type 1 :=
   ∀ ⦃R : Type⦄ [CommRing R], IsNilpotent (p : R) → ∀ ⦃A : Over (Sp R)⦄ [GrpObj A],
-    IsAbelianScheme A → ∀ ⦃G : PDivGroup p R⦄, G.TorsionTower A → (primDR A ≃ₗ[R] G.RigExt)
+    IsAbelianScheme A → ∀ ⦃G : PDivGroup p R⦄, G.TorsionTower A → (primDR A ≃ₗ[R] ((G.cocycles × G.omega) ⧸ _root_.LinearMap.range (G.cob.prod (_root_.LinearMap.codRestrict G.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G.A i))).domRestrict G.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n)))))))
 
 variable {p : ℕ} (e : Family p)
 
@@ -54,23 +58,6 @@ variable {p : ℕ} {e : Family p} {R : Type} [CommRing R] (hR : IsNilpotent (p :
   {A B : Over (Sp R)} [GrpObj A] [GrpObj B] (hA : IsAbelianScheme A) (hB : IsAbelianScheme B)
   {G H : PDivGroup p R} (t : G.TorsionTower A) (u : H.TorsionTower B)
 
-variable (e) in
-
-def Family.lie : HdR A ≃ₗ[R] G.LieUniv := (e hR hA t).symm.dualMap
-
-theorem Family.lie_apply (h : HdR A) (c : primDR A) : e.lie hR hA t h (e hR hA t c) = h c :=
-  congrArg h ((e hR hA t).symm_apply_apply c)
-
-theorem Family.Filtered.mem_Fil_iff (he : e.Filtered) (h : HdR A) :
-    h ∈ Fil A ↔ G.lieUnivToLie (e.lie hR hA t h) = 0 := by
-  have k := he hR hA t
-  rw [Fil, Submodule.mem_dualAnnihilator]
-  refine ⟨fun H ↦ LinearMap.ext fun w ↦ ?_, fun H c hc ↦ ?_⟩
-  · obtain ⟨c, hc, hw⟩ := k.ge ⟨w, rfl⟩
-    exact (congrArg (e.lie hR hA t h) hw.symm).trans ((e.lie_apply hR hA t h c).trans (H c hc))
-  · obtain ⟨w, hw⟩ := k.le ⟨c, hc, rfl⟩
-    exact (e.lie_apply hR hA t h c).symm.trans
-      ((congrArg (e.lie hR hA t h) hw.symm).trans (LinearMap.congr_fun H w))
 
 variable [Fact p.Prime]
 
@@ -79,13 +66,6 @@ theorem Family.Natural.primPull (he : e.Natural) (f : A ⟶ B) [IsMonHom f] (c :
   have k := he hR hR hB hA u t (PDiv.grpMor_of_hom f) c
   rw [← PDivGroup.SemiHom.ofHom_rig]
   exact k
-
-theorem Family.Natural.lie_push (he : e.Natural) (f : A ⟶ B) [IsMonHom f] (h : HdR A) :
-    e.lie hR hB u (push (dp0 R) (𝟙 _) f h) = PDivGroup.lieUnivMap (t.map u f) (e.lie hR hA t h) :=
-  LinearMap.ext fun x ↦ by
-    obtain ⟨c, rfl⟩ := (e hR hB u).surjective x
-    rw [Family.lie_apply, push_apply, ← e.lie_apply hR hA t, he.primPull hR hA hB t u]
-    rfl
 
 end DeRhamVectorExtension
 

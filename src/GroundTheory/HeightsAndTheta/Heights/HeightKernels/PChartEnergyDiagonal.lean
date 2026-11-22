@@ -1,7 +1,12 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyDiagonal
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyInvariant
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyCocycle
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyDiagonal
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyInvariant
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsChartEnergyCocycle
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights
@@ -28,9 +33,7 @@ theorem diag_congr {e : ℕ} (s d : Fin (e + 1) → ℝ) :
   rw [diagonal_conjTranspose, diagonal_mul_diagonal, diagonal_mul_diagonal]
   congr 1
   funext j
-  simp only [Pi.star_apply, Complex.star_def, Complex.conj_ofReal]
-  push_cast
-  ring
+  simp
 
 theorem diagEnergy_mul (hI : ChartEnergyLinearInvariant.Statement) (hC : ChartEnergyCocycle.Statement)
     {e : ℕ} {l l' : Fin (e + 1) → ℝ} (hl : ∀ j, 0 < l j) (hl' : ∀ j, 0 < l' j) :
@@ -170,8 +173,8 @@ theorem diagEnergy_prod (hI : ChartEnergyLinearInvariant.Statement) (hC : ChartE
 
 end ChartEnergyDiagonalAlt
 
-open ChartEnergyDiagonalAlt in
 
+open ChartEnergyDiagonalAlt in
 theorem ChartEnergyDiagonal.proof (hI : ChartEnergyLinearInvariant.Statement) (hC : ChartEnergyCocycle.Statement) :
     ChartEnergyDiagonal.Statement := by
   intro e l hl

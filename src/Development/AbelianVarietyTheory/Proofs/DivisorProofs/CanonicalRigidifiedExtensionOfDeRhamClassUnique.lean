@@ -1,10 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleTensorLiftApplyEqTwoPointValueStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBaseStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleCotangentValueSubOfCoboundaryAStatement
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleTensorLiftApplyEqTwoPointValueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCocycleCotangentValueSubOfCoboundaryAStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
+
+@[expose] public section
+
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct WithConv
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap epsR IsTangent IsGrpPullback)
 open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB RigLB CubicalStr Theta thφ thε thK x3)
@@ -20,8 +25,7 @@ theorem convMul_includeLeft_includeRight {R : Type} [CommRing R] {D : Type} [Com
   rw [AlgHom.convMul_apply]
   simp only [Bialgebra.comulAlgHom_apply]
   induction (Coalgebra.comul (R := R) a) with
-  | zero => simp
-  | add u v hu hv => simp only [map_add, hu, hv]
+  | add u v hu hv => simp only [map_add (f := _), hu, hv]
   | tmul u v => simp
 
 theorem cobOne_algebraMap {R : Type} [CommRing R] {D : Type} [CommRing D] [Bialgebra R D] (r : R) :
@@ -34,7 +38,7 @@ end GlobalTheory.PtExt
 namespace GlobalTheory.PtExt
 
 theorem isCan_unique (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (p : ℕ) (G : PDivGroup p R)
-    (t : G.TorsionTower A) (c : primDR A) (hA : IsAbelianScheme A) (x x' : G.RigExt)
+    (t : G.TorsionTower A) (c : primDR A) (hA : IsAbelianScheme A) (x x' : ((G.cocycles × G.omega) ⧸ _root_.LinearMap.range (G.cob.prod (_root_.LinearMap.codRestrict G.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G.A i))).domRestrict G.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n)))))))
     (hx : IsCan t c x) (hx' : IsCan t c x') : x = x' := by
   obtain ⟨d, z, w, hz, hw, rfl⟩ := hx
   obtain ⟨d', z', w', hz', hw', rfl⟩ := hx'
@@ -75,7 +79,7 @@ theorem isCan_unique (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (p : �
     have h4 : (G.res n : G.A (n + 1) →ₐ[R] G.A n) (algebraMap R _ r) = algebraMap R _ r := AlgHom.commutes _ _
     change (G.res n : G.A (n + 1) →ₐ[R] G.A n) (b (n + 1)) = b n
     have e1 : ∀ a, (G.res n : G.A (n + 1) →ₐ[R] G.A n) a = G.res n a := fun _ ↦ rfl
-    simp only [b, map_sub, map_add, e1] at h3 h4 ⊢
+    simp only [b, map_sub, map_add (f := _), e1] at h3 h4 ⊢
     linear_combination h1 - h2 - h3 + h4
   refine (Submodule.Quotient.eq _).2 ⟨-⟨b, hb⟩, Prod.ext (Subtype.ext (funext fun n ↦ ?_))
     (Subtype.ext (funext fun n ↦ ?_))⟩
@@ -94,20 +98,20 @@ theorem isCan_unique (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (p : �
     have hk2 := cobOne_algebraMap (R := R) (D := G.A n) r
     simp only [Bialgebra.comulAlgHom_apply, Algebra.TensorProduct.includeLeft_apply,
       Algebra.TensorProduct.includeRight_apply] at hc hL hR
-    simp only [Dat.coc, b, map_neg, map_add, map_sub]
+    simp only [Dat.coc, b, map_neg, map_add (f := _), map_sub]
     linear_combination hk1 - hk2 - h0 + hc - hL - hR
-  · change dUnit R (-b n) = w.1 n - w'.1 n
+  · change dUnit (R := R) (-b n) = w.1 n - w'.1 n
     rw [hw, hw']
     have h0 := GlobalTheory.T.cotVal_sub_eq_dUnit_of_d0_eq_sub R A (G.A n) (t.y n) d.f d'.f k hk
-    have h1 : dUnit R (algebraMap R (G.A n) r) = 0 := AugCot.d_algebraMap _ r
+    have h1 : dUnit (R := R) (algebraMap R (G.A n) r) = 0 := AugCot.d_algebraMap _ r
     simp only [Dat.om, b]
     change AugCot.d _ _ = _
-    simp only [map_neg, map_add, map_sub]
-    change -(dUnit R _ - dUnit R _ - dUnit R _ + dUnit R _) = _
+    simp only [map_neg, map_add (f := _), map_sub]
+    change -(dUnit (R := R) _ - dUnit (R := R) _ - dUnit (R := R) _ + dUnit (R := R) _) = _
     rw [h1]
-    change _ = cotVal d.f (t.y n) - dUnit R _ - (cotVal d'.f (t.y n) - dUnit R _)
-    rw [show cotVal d.f (t.y n) - dUnit R (d.h n) - (cotVal d'.f (t.y n) - dUnit R (d'.h n)) =
-      (cotVal d.f (t.y n) - cotVal d'.f (t.y n)) - dUnit R (d.h n) + dUnit R (d'.h n) by abel, h0]
+    change _ = cotVal d.f (t.y n) - dUnit (R := R) _ - (cotVal d'.f (t.y n) - dUnit (R := R) _)
+    rw [show cotVal d.f (t.y n) - dUnit (R := R) (d.h n) - (cotVal d'.f (t.y n) - dUnit (R := R) (d'.h n)) =
+      (cotVal d.f (t.y n) - cotVal d'.f (t.y n)) - dUnit (R := R) (d.h n) + dUnit (R := R) (d'.h n) by abel, h0]
     abel
 
 end GlobalTheory.PtExt

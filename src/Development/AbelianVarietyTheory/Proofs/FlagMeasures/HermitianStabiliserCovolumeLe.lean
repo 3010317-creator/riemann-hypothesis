@@ -1,14 +1,18 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordOfMemXa
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerHaarUnimodularNormal
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexNeZero
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairInnerLatticesUnimodularPrimitive
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FundamentalSetMeasureCommensurableIndexRatioStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeReferenceLatticeStabiliserBoundsStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordOfMemXa
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerHaarUnimodularNormal
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexNeZero
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairInnerLatticesUnimodularPrimitive
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FundamentalSetMeasureCommensurableIndexRatioStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeReferenceLatticeStabiliserBoundsStatement
+
+@[expose] public section
 
 noncomputable section
 open NumberField MeasureTheory Matrix Formalism.HermitianLatticeCounting.S6 GlobalTheory.HermLat GlobalTheory.DegCnt Formalism.QuantumDeterminants Formalism.MainNotions.S GlobalTheory.SgInf GlobalTheory.Amp GlobalTheory.DegVol
@@ -65,7 +69,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
   haveI : SigmaFinite (lebR0 k r N.j β) := (hH v0).1
   have hu : ∀ v, IsUnit (g v).det := fun v => RealMat.isUnit_det (hF v).2.2.2.2.1.choose_spec.1
   have hone : m 1 = fun _ => Matrix.of.symm (1 : Mat k r) :=
-    (hmu 1 _ fun v x => by simp).symm
+    (hmu 1 _ fun v x => by simp only [Equiv.apply_symm_apply, Matrix.one_mulVec]; rfl).symm
   have hmul : ∀ s t, m (s * t) = fun v => Matrix.of.symm (Matrix.of (m s v) * Matrix.of (m t v)) := fun s t =>
     (hmu (s * t) _ fun v x => by
       simp only [Equiv.apply_symm_apply]
@@ -79,7 +83,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
     show (Matrix.of (m s v) * Matrix.of (m t v)) * Matrix.of (x v) = Matrix.of (m s v) * (Matrix.of (m t v) * Matrix.of (x v))
     rw [Matrix.mul_assoc]
   have hmeas : ∀ s, Measurable (mulP (k := k) (r := r) (m s)) := fun s =>
-    measurable_pi_lambda _ fun v => (continuous_lmulM _).measurable.comp (measurable_pi_apply v)
+    Measurable.of_eval fun v => (continuous_lmulM _).measurable.comp (measurable_pi_apply v)
   have hmR : ∀ s ∈ N.R, m s ∈ RP k r g := fun s hs => hsub ⟨s, hs, hm s⟩
   have hnull : Measure.pi (fun _ : ι => lebR0 k r N.j β) (RP k r g)ᶜ = 0 := by
     refine measure_mono_null (t := ⋃ v, Function.eval v ⁻¹' {x : Mt k r | Matrix.of x ∉ Rset k r (g v)}) ?_
@@ -109,7 +113,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
   have hzL : N.F.z ∈ latL N.F N.F' Λ := by
     have := (hz1 1).2 (Submodule.mem_one.2 ⟨1, map_one _⟩)
     simpa using this
-  have hΛ : Submodule.IsLattice K Λ := ((GlobalTheory.HermLat.isUnimod_iff H Λ).1 hT.1.1).1
+  have hΛ : Submodule.IsLattice K Λ := Submodule.IsLattice.of_fg K ((GlobalTheory.HermLat.isUnimod_iff H Λ).1 hT.1.1).1.1
   obtain ⟨Ω, hΩ, -, hΩle⟩ := GlobalTheory.T.covolume_referenceLattice_stabiliser_bounds K V H hK r N k ι σ β Φ z z' g hP hd hF hN hv (latL N.F N.F' Λ) hLU hzL
   have hnil := (GlobalTheory.UnipStab.common_unipotent_stabiliser K V H hK r N).2.2.2.2
   have hc1 := (GlobalTheory.DegCnt.Unimod.invVol_smul K V N.R (2 * r + 1) hnil _ _ hRefLat hΛ).1

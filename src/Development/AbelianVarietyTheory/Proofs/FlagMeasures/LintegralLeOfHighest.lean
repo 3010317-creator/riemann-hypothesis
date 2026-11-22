@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.PeriodIntegrals.IsLowUnitH
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LowerSmoothStability.ExistsFinStableOfMemSSup
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.IsLowUnitH
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LowerSmoothStability.ExistsFinStableOfMemSSup
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
+
+@[expose] public section
 
 open Matrix MeasureTheory
 open scoped InnerProductSpace ENNReal
@@ -236,7 +240,7 @@ theorem lintegral_le_of_highest {X Ω : Type} [NormedAddCommGroup X] [InnerProdu
   · intro x hx y hy
     rw [hNF x hx, hNF y hy, hNF _ (V.add_mem hx hy), hNF _ (V.sub_mem hx hy)]
     have h3 := parallelogram_law_with_norm ℂ (F ⟨x, hx⟩) (F ⟨y, hy⟩)
-    rw [← map_add, ← map_sub] at h3
+    rw [← map_add (f := _), ← map_sub] at h3
     simp only [sq] at h3 ⊢
     exact h3.trans (by ring)
   · intro a x hx

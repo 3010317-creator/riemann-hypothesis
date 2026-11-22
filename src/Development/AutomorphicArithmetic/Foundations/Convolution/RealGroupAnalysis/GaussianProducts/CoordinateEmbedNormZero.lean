@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.ExistsRowSec
+module
+
+public import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.ExistsRowSec
+
+@[expose] public section
 
 open NumberField IsDedekindDomain MeasureTheory Matrix Topology Filter
 open Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Published GroundTheory.Global GroundTheory.Automorphic.GJMatrix
@@ -9,9 +13,6 @@ open scoped GroundTheory.Global.AdeleBaseChange
 namespace UpperTheory.ConvolutionTheory.R2.G.similitudePositivity
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (D : Dat F E)
-
-local notation "ι" => AdeleBaseChange.adeleMap F E
-local notation "BB" => AdeleBaseChange.adeleBasis (K := F) (L := E) (Dat.b D)
 
 private theorem basis0 : BB 0 = 1 := by
   rw [AdeleBaseChange.adeleBasis_apply, D.b0, map_one]
@@ -93,7 +94,7 @@ end UpperTheory.ConvolutionTheory.R2.G.similitudePositivity
 
 open UpperTheory.ConvolutionTheory.R2.G.similitudePositivity in
 theorem UpperTheory.ConvolutionTheory.R2.G.nuPos :
-    ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [IsTotallyComplex E] (D : Dat F E) (h : GL (Fin 2) (A E)), ∃ s : (A F)ˣ, ((nu F h * (s ^ 4)⁻¹ : (A F)ˣ) : A F).1 = 1 := by
+    ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (D : Dat F E) (h : GL (Fin 2) (A E)), ∃ s : (A F)ˣ, ((nu F h * (s ^ 4)⁻¹ : (A F)ˣ) : A F).1 = 1 := by
   intro F E _ _ _ _ _ _ _ D h
   have hpos := nu_pos D h
   let r : TR.Rinf F := TR.pInf F (nu F h : A F)

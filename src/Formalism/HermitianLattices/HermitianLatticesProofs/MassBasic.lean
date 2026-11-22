@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.HermitianLattices.StatementMass
-import Formalism.ThetaLiftIndependence.ThetaOrbitSums.ClassRepsDefinite
-import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.StatementMass
+public import Formalism.ThetaLiftIndependence.ThetaOrbitSums.ClassRepsDefinite
+public import Formalism.ThetaLiftIndependence.ThetaOrbitSums.LatLiftIndep
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
+
+@[expose] public section
 
 open NumberField
 
@@ -25,12 +29,12 @@ theorem massBasic_mass_eq (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (Rin
     (hs : ∃ s, Formalism.ThetaLiftIndependence.IsClassReps h L s) :
     mass h L = ∑ M ∈ hs.choose, ((Nat.card (Formalism.ThetaLiftIndependence.autL h M) : ℕ) : ℝ)⁻¹ := by
   unfold mass
-  rw [dif_pos hs]
+  rw [dite_eq_left hs]
 
 theorem massBasic_self_mem_genus (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (RingOfIntegers K) V)
-    (hL : Submodule.IsLattice K L) : L ∈ genus h L := by
+    (hL : Submodule.IsFullLattice K L) : L ∈ genus h L := by
   rw [genus, Set.mem_setOf_eq]
-  refine ⟨hL, ?_⟩
+  refine ⟨RHCompat.SpanningLattice.ofFull hL, ?_⟩
   intro p _
   refine ⟨1, (isom h).one_mem, ?_⟩
   ext x

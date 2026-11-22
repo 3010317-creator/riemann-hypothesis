@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHGamUnipKuDefs
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHLatOfLattice
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HermitianETransportInvariant
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHGamUnipKuDefs
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHLatOfLattice
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HermitianETransportInvariant
+
+@[expose] public section
 
 noncomputable section
 
@@ -377,8 +381,8 @@ theorem q_fix (δ : V ≃ₗ[E] V) (W : Submodule E V) (hW : W.map (δ : V →�
 
 end QuotGen
 
-set_option maxHeartbeats 800000 in
 
+set_option maxHeartbeats 800000 in
 theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK := by
   intro _hL hC h γ hγ hfo
   obtain ⟨hGF, hH⟩ := Subgroup.mem_inf.1 γ.2
@@ -478,6 +482,22 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
         one_smul]
 
   have hlat := qLat_isLattice Λ W ⊥
+  have hfull : Submodule.IsFullLattice D.host.E (qLat Λ W ⊥) := by
+    letI := hlat
+    refine ⟨?_⟩
+    rw [eq_top_iff]
+    intro q _
+    induction q using Submodule.Quotient.induction_on with | H w => ?_
+    obtain ⟨s, hs, hsw⟩ := exists_smul_mem Λ w.val
+    have hmem : Submodule.Quotient.mk (s • w) ∈ qLat Λ W ⊥ :=
+      mem_qLat.2 ⟨s • w, by simpa using hsw, rfl⟩
+    have hsE : algebraMap (𝓞 D.host.E) D.host.E s ≠ 0 := by simpa using hs
+    have : (Submodule.Quotient.mk w : QW W ⊥) =
+        (algebraMap (𝓞 D.host.E) D.host.E s)⁻¹ • (Submodule.Quotient.mk (s • w) : QW W ⊥) := by
+      rw [Submodule.Quotient.mk_smul, ← algebraMap_smul D.host.E s, smul_smul,
+        inv_mul_cancel₀ hsE, one_smul]
+    rw [this]
+    exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
   have haut := q_aut δ W hWmap hX Λ hδΛ
   have hunip : ∀ PP : Ideal (𝓞 D.host.E), ((X.B.g : ℕ) : 𝓞 D.host.E) ∈ PP →
       Formalism.L2.Col.UnipMod PP (qLat Λ W ⊥) (qEquiv δ W ⊥ hWmap hX) := by
@@ -515,7 +535,7 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
   obtain ⟨P₂, hP₂, hg₂P⟩ := Formalism.L2.SG.LemmaN.exists_prime_over D.host.E (D.host.g_prime 1)
   have hmul : ((X.B.g : ℕ) : 𝓞 D.host.E) = ((D.host.g 0 : ℕ) : 𝓞 D.host.E) * ((D.host.g 1 : ℕ) : 𝓞 D.host.E) := by
     rw [X.g_eq, Nat.cast_mul]
-  have hone := Formalism.L2.SG.LemmaN.lemmaNcGlob_of_exists D.host.E (QW W ⊥) (qLat Λ W ⊥) hlat _ hQfin
+  have hone := Formalism.L2.SG.LemmaN.lemmaNcGlob_of_exists D.host.E (QW W ⊥) (qLat Λ W ⊥) hfull _ hQfin
     (D.host.g_prime 0) (D.host.g_prime 1) D.host.g_ne hP₁.ne_top hP₂.ne_top hg₁P hg₂P
     (hunip P₁ (by rw [hmul]; exact Ideal.mul_mem_right _ _ hg₁P))
     (hunip P₂ (by rw [hmul]; exact Ideal.mul_mem_left _ _ hg₂P))
@@ -524,7 +544,7 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
     intro v
     obtain ⟨s, hs, hws⟩ := Formalism.L2.SG.PoincareInHH.Cut.decomp X u v
     have e : v = (v - s) + s := by abel
-    rw [e, map_add, hWfix _ hws, hUfix s hs]
+    rw [e, map_add (f := _), hWfix _ hws, hUfix s hs]
   have h2 : (γ : X.B.I.GA).2 = 1 := by
     apply fmat_eq_one_of_fix X
     intro y

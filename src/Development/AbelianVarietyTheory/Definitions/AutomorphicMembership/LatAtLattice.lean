@@ -1,13 +1,17 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TrueColumnChoicesHeckeCharReferenceEqOne
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RightTranslationActionApply
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HermitianCodeWordWeilElementMemQuadraticField
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.XiAtPenultimateEqXiCpl1
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.H90USurjective
-import Formalism.LocalToGlobal.Columns.RowFormsSym
-import Formalism.LocalRingCardinality.DataKerP
-import Formalism.LocalToGlobal.HermitianForms.BothSym
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TrueColumnChoicesHeckeCharReferenceEqOne
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RightTranslationActionApply
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HermitianCodeWordWeilElementMemQuadraticField
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.XiAtPenultimateEqXiCpl1
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.H90USurjective
+public import Formalism.LocalToGlobal.Columns.RowFormsSym
+public import Formalism.LocalRingCardinality.DataKerP
+public import Formalism.LocalToGlobal.HermitianForms.BothSym
+
+@[expose] public section
 
 noncomputable section
 
@@ -25,8 +29,8 @@ def GStep.act {E K : Type} [Field E] [NumberField E] [Field K] {n : ℕ} (S : GS
     GStep E K n :=
   { S with rp := fun b => prefRep (pref b), rp_spec := fun b => prefRep_spec (pref b) }
 
-open Classical in
 
+open Classical in
 def cosetIn {X : Fields} {Pr : Primes X} {R : Ranks} {sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)} {S : Set ℕ}
     {mu : Tup X.F X.E X.K S} {cst : LocCst X (rowSG Pr sel mu)} {u : Pr.Word} {j : ℕ} (q : PtAt R sel mu cst u j)
     (P : rowSG Pr sel mu) : Set (Sp X.E (R.N j)) :=
@@ -81,8 +85,8 @@ def th (u : B.Word) (a : I.ι) (i : ℕ) (b : Idx I.sel (I.tup a) (I.idx a) i) (
   Dstar := B.Dstar
   GamP := B.GamP
 
-open Classical in
 
+open Classical in
 def fmIn (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) : FmIn (I.atIn u a) B.places where
   tauOf w := tauAt hPr u w
   seenP w := decide (seenC (B.primes X) u w)
@@ -120,7 +124,7 @@ structure Laws : Prop where
   xi0 : I.xi I.mu0 = 1
   idx0 : ∀ a, Nonempty (Idx I.sel (I.tup a) (I.idx a) 0)
   bij0 : ∀ u a b, Function.Bijective (I.cl0 u a b)
-  lat : ∀ u a i c, Submodule.IsLattice B.fields.E ((I.stp u a i).rep c).1.1.deco.1.L
+  lat : ∀ u a i c, Submodule.IsFullLattice B.fields.E ((I.stp u a i).rep c).1.1.deco.1.L
 
 structure Pins (B : Base) (X : PreX B.toPre) : Prop where
   iX : letI := B.host.cmStar; ∀ (a : Fin B.sp.X'.rank) (b : Fin (B.sp.X B.R.m).rank), (a : ℕ) = b →
@@ -132,8 +136,8 @@ def crd (B : Base) (i : ℕ) (hi : i ≤ B.R.m) :
   letI := B.host.cmStar
   (B.sp.X i).frame.equivFun.trans (LinearEquiv.funCongrLeft B.host.E B.host.E (finCongr (B.sp.X_rank i hi)).symm)
 
-open Classical in
 
+open Classical in
 def latAt (u : B.Word) (a : I.ι) (i : ℕ) (c : (I.stp u a i).Cl) :
     letI := B.host.cmStar; Submodule (𝓞 B.host.E) (B.sp.X i).V :=
   letI := B.host.cmStar
@@ -164,15 +168,16 @@ def eCls0 (u : B.Word) (a : I.ι) : (I.stp u I.mu0 0).Cl ≃ (I.stp u a 0).Cl :=
 
 include l in
 theorem latAt_lattice (u : B.Word) (a : I.ι) (i : ℕ) (c : (I.stp u a i).Cl) :
-    letI := B.host.cmStar; Submodule.IsLattice B.host.E (I.latAt u a i c) := by
+    letI := B.host.cmStar; Submodule.IsFullLattice B.host.E (I.latAt u a i c) := by
   letI := B.host.cmStar
   unfold latAt
   split_ifs with hi
-  · have h := l.lat u a i c
-    refine ⟨h.fg.map _, ?_⟩
-    have h2 := congrArg (Submodule.map ((crd B i hi).symm : (Fin (B.R.N i) → B.host.E) →ₗ[B.host.E] (B.sp.X i).V)) h.span_eq_top
-    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at h2
-    exact h2
+  · refine {
+      toIsLattice := Submodule.IsLattice.of_fg B.host.E ((l.lat u a i c).fg.map _)
+      span_eq_top := ?_ }
+    rw [Submodule.map_coe, LinearMap.coe_restrictScalars, Submodule.span_image,
+      (l.lat u a i c).span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
+    exact (crd B i hi).symm.surjective
   · exact (B.sp.X i).standardTuple_isLattice
 
 def cols : Cols B where

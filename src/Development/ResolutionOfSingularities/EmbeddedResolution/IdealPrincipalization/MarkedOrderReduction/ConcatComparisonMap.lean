@@ -1,18 +1,23 @@
-import Mathlib
-import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupBasic
-import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupExistence
-import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupProperties
-import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.ClopenRestriction
-import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.BlowupSequenceFlatBaseChange
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.StrictPullbackBlowupSeq
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.BlowupSequenceData
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.Append
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
-import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.SequenceIsomorphism
-import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+module
+
+public import Mathlib
+public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupBasic
+public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupExistence
+public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupProperties
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.ClopenRestriction
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionDescent.BlowupSequenceFlatBaseChange
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.StrictPullbackBlowupSeq
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.BlowupSequenceData
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.Append
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
+public import Development.ResolutionOfSingularities.EmbeddedResolution.StrongResolution.SequenceIsomorphism
+public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+
+@[expose] public section
+
 universe u
 
 open CategoryTheory AlgebraicGeometry
@@ -70,14 +75,6 @@ def empty (X : Scheme.{u}) : BlowupSequenceData X := emptyBlowupSequenceData X
 @[simp]
 theorem empty_length (X : Scheme.{u}) : (empty X).length = 0 :=
   emptyBlowupSequenceData_length X
-
-@[simp]
-theorem empty_schemeAt (X : Scheme.{u}) (i : ℕ) : (empty X).obj i = X :=
-  emptyBlowupSequenceData_schemeAt X i
-
-@[simp]
-theorem empty_isoObjZero (X : Scheme.{u}) : (empty X).isoZero = Iso.refl X :=
-  emptyBlowupSequenceData_isoObjZero X
 
 theorem append_schemeAt_eq_last_of_eq_length {X : Scheme.{u}} (s : BlowupSequenceData X)
     (t : BlowupSequenceData (s.obj s.length)) {j : ℕ} (h : j = s.length) :
@@ -183,12 +180,12 @@ def toSeqComparisonMap {X' X : Scheme.{u}} (d' : BlowupSequenceData X') (d : Blo
   eqToHom (toSequenceOfBlowups_schemeAt d' i) ≫ c i (hi.trans_eq (toSequenceOfBlowups_length d')) ≫
     eqToHom (toSequenceOfBlowups_schemeAt d i).symm
 
-private theorem toSequenceOfBlowups_length_eq_of_length_eq {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
+public theorem toSequenceOfBlowups_length_eq_of_length_eq {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
     (hlen : d'.length = d.length) : d'.toSequenceOfBlowups.length = d.toSequenceOfBlowups.length := by
   rw [toSequenceOfBlowups_length, toSequenceOfBlowups_length]
   exact hlen
 
-private theorem toSeqComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} {g : X' ⟶ X} {d' : BlowupSequenceData X'}
+theorem toSeqComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} {g : X' ⟶ X} {d' : BlowupSequenceData X'}
     {d : BlowupSequenceData X} (c : ∀ i : ℕ, i ≤ d'.length → (d'.obj i ⟶ d.obj i))
     (hzero : c 0 (Nat.zero_le _) ≫ d.isoZero.hom = d'.isoZero.hom ≫ g) :
     toSeqComparisonMap d' d c 0 (Nat.zero_le _) ≫ d.toSequenceOfBlowups.isoZero.hom = d'.toSequenceOfBlowups.isoZero.hom ≫ g := by
@@ -201,7 +198,7 @@ private theorem toSeqComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} {g :
   rw [hp, hz, hz']
   exact hzero
 
-private theorem isPullback_toSeqComparisonMap {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
+theorem isPullback_toSeqComparisonMap {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
     (c : ∀ i : ℕ, i ≤ d'.length → (d'.obj i ⟶ d.obj i))
     (hpb : ∀ (i : ℕ) (hi : i < d'.length),
       IsPullback (c (i + 1) hi) (d'.map i) (d.map i) (c i hi.le))
@@ -230,7 +227,7 @@ private theorem eq_comap_eqToHom_conj_of_heq {A A' B B' : Scheme.{u}} (e1 : A = 
   rw [hI2, hJ2, h]
   simp
 
-private theorem toSequenceOfBlowups_center_eq_comap_toSeqComparisonMap {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
+public theorem toSequenceOfBlowups_center_eq_comap_toSeqComparisonMap {X' X : Scheme.{u}} {d' : BlowupSequenceData X'} {d : BlowupSequenceData X}
     (c : ∀ i : ℕ, i ≤ d'.length → (d'.obj i ⟶ d.obj i))
     (hc : ∀ (i : ℕ) (hi : i < d'.length), d'.center i = (d.center i).comap (c i hi.le))
     (i : ℕ) (hi : i < d'.toSequenceOfBlowups.length) :
@@ -324,7 +321,7 @@ private theorem eqToHom_conj_comp_eq_comp_of_heq {P Q Q' R R' S X' X : Scheme.{u
   simp only [eqToHom_refl, Category.id_comp, Category.comp_id]
   exact key
 
-private theorem concatComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
+public theorem concatComparisonMap_zero_comp_isoObjZero {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
     (t : BlowupSequenceData (s.obj s.length)) (s' : BlowupSequenceData X')
     (t' : BlowupSequenceData (s'.obj s'.length))
     (D : StrictPullbackBlowupSeq g s'.toSequenceOfBlowups s.toSequenceOfBlowups)
@@ -515,7 +512,7 @@ private theorem concatComparisonMap_of_not_le {X' X : Scheme.{u}} (g : X' ⟶ X)
   unfold concatComparisonMap
   exact dif_neg h
 
-private theorem isPullback_concatComparisonMap {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
+public theorem isPullback_concatComparisonMap {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
     (t : BlowupSequenceData (s.obj s.length)) (s' : BlowupSequenceData X')
     (t' : BlowupSequenceData (s'.obj s'.length))
     (D : StrictPullbackBlowupSeq g s'.toSequenceOfBlowups s.toSequenceOfBlowups)
@@ -710,7 +707,7 @@ private theorem concatComparisonMap_eq_dite {X' X : Scheme.{u}} (g : X' ⟶ X) (
                 (s.concatObjIsoRight t (i - s'.length) i (by omega)).inv) :=
   rfl
 
-private theorem append_center_eq_comap_concatComparisonMap {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
+public theorem append_center_eq_comap_concatComparisonMap {X' X : Scheme.{u}} (g : X' ⟶ X) (s : BlowupSequenceData X)
     (t : BlowupSequenceData (s.obj s.length)) (s' : BlowupSequenceData X')
     (t' : BlowupSequenceData (s'.obj s'.length))
     (D : StrictPullbackBlowupSeq g s'.toSequenceOfBlowups s.toSequenceOfBlowups)

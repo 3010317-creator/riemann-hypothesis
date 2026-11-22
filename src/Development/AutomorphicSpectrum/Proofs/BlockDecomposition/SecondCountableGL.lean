@@ -1,5 +1,9 @@
-import Mathlib
-import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.GlobalCharacterOfInputs
+module
+
+public import Mathlib
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.GlobalCharacterOfInputs
+
+@[expose] public section
 
 noncomputable section
 
@@ -10,8 +14,6 @@ open GlobalTheory.BCT Formalism.BasicNotions
 namespace GlobalTheory.CompanionTheory.LefPair
 
 variable {n : ℕ}
-
-local notation "θ" => thetaR (starRingEnd ℂ)
 
 theorem tw_eq (x d : GL (Fin n) ℂ) : PositivityTheory.RgTw.tw x d = twConj (θ n) x d := by
   have h : PositivityTheory.RgTw.th x = θ n x := by
@@ -95,8 +97,8 @@ theorem lefOne_eval (hD : EllDiag) (hW : WeylAt) [MeasurableSpace (GL (Fin n) �
 
 end GlobalTheory.CompanionTheory.LefPair
 
-open GlobalTheory.CompanionTheory.LefPair in
 
+open GlobalTheory.CompanionTheory.LefPair in
 theorem GlobalTheory.CompanionTheory.LefPair.lefPairOf : LefPairOf := by
   intro hD hW _ a b _ _ _ _ ν₁ _ ν₂ _ l₁ l₂ v₁ v₂ f₁ f₂ h₁ h₂
   have := sigmaFinite_haar ν₁

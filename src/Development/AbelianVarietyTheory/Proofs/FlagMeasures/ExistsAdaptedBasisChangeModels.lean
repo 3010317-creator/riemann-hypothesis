@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointRationalEquivariance
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointRationalEquivariance
+
+@[expose] public section
 
 open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheory.Count GlobalTheory.FlagMeas GlobalTheory.FlagBase
 
@@ -53,12 +57,7 @@ theorem isLattice_move {E : Type} [Field E] [NumberField E] {m : ℕ} (Λ Λ' : 
     · rintro ⟨y, hy, rfl⟩
       exact (h y).2 hy
   subst hmap
-  refine ⟨hΛ.fg.map _, ?_⟩
-  rw [Submodule.map_coe, LinearMap.coe_restrictScalars, Submodule.span_image, hΛ.span_eq_top,
-    Submodule.map_top, LinearMap.range_eq_top]
-  intro v
-  refine ⟨((γ⁻¹ : GL (Fin m) E) : Matrix (Fin m) (Fin m) E) *ᵥ v, ?_⟩
-  simp [Matrix.mulVec_mulVec]
+  exact Submodule.IsLattice.of_fg E (hΛ.fg.map _)
 
 theorem gram_mul {E : Type} [CommRing E] [StarRing E] {n p q : ℕ} (J : Matrix (Fin n) (Fin n) E)
     (A : Matrix (Fin n) (Fin p) E) (B : Matrix (Fin n) (Fin q) E) (P : Matrix (Fin p) (Fin p) E)
@@ -74,7 +73,8 @@ private theorem map_mulVec_eq_mulVec_map {K₀ K : Type} [Field K₀] [Field K] 
     (g : Matrix (Fin m) (Fin m) K₀) (y : Fin m → K₀) :
     (fun l => e ((g *ᵥ y) l)) = g.map e *ᵥ fun l => e (y l) := by
   ext l
-  simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
 
 theorem adapted_move : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf) (a : ℕ) (j : Fin a → ℕ) (S : Fin (a + 1) → Submodule (𝓞 I.E) (Fin I.n → I.E)) (Λ : ∀ i, Submodule (𝓞 I.E) (Fin (j i) → I.E)) (x₀ : I₀.Gf) (T T' : ∀ i, Matrix (Fin I.n) (Fin (j i)) I.E) (T₀ : Matrix (Fin I.n) (Fin I₀.n) I.E), (∀ i, 1 ≤ j i) → IsAdapted I I₀ e xf j S Λ x₀ T T' T₀ → ∀ (Λ' : ∀ i, Submodule (𝓞 I.E) (Fin (j i) → I.E)) (x₀' : I₀.Gf), (∀ i, ∃ γ : GL (Fin (j i)) I.E, ∀ y, (γ : Matrix (Fin (j i)) (Fin (j i)) I.E) *ᵥ y ∈ Λ' i ↔ y ∈ Λ i) → (∃ γ ∈ I₀.GFset, ∃ k ∈ I₀.Kset, γ.2 * x₀ = x₀' * k) → ∃ U U' U₀, IsAdapted I I₀ e xf j S Λ' x₀' U U' U₀ := by
   intro I I₀ e xf a j S Λ x₀ T T' T₀ _ hA Λ' x₀' hΛ hx
@@ -98,7 +98,8 @@ theorem adapted_move : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf)
       exact Matrix.map_one _ (map_zero e) (map_one e)
     rw [← h1]
     ext r s
-    simp only [Matrix.map_apply, Matrix.mul_apply, map_sum, map_mul]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [Matrix.map_apply, Matrix.mul_apply, map_sum, map_mul]
   refine ⟨fun i => T i * ((γ i)⁻¹).val, fun i => T' i * ((γ i).val)ᴴ,
     T₀ * ((g₀⁻¹ : GL (Fin I₀.n) I₀.E).val).map e, he, hn,
     fun i => isLattice_move (Λ i) (Λ' i) (γ i) (hγ i) (hlat i), ?_, ?_, ?_, ?_, ?_⟩
@@ -120,7 +121,8 @@ theorem adapted_move : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf)
         ((g₀⁻¹ : GL (Fin I₀.n) I₀.E).val).map e =
         (((g₀⁻¹ : GL (Fin I₀.n) I₀.E).val)ᴴ * I₀.J * (g₀⁻¹ : GL (Fin I₀.n) I₀.E).val).map e := by
       ext r s
-      simp only [Matrix.map_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, map_sum, map_mul, he]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [Matrix.map_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, map_sum, map_mul, he]
     rw [key, hinv]
   · intro z
     rw [hlam z]

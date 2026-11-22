@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.Statement
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.Statement
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 open scoped Matrix ComplexOrder
@@ -9,7 +13,7 @@ noncomputable section
 namespace Formalism.DivisionValues
 
 def ProdFormula : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (a : K), a ≠ 0 →
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (a : K), a ≠ 0 →
     (Function.support fun w : HeightOneSpectrum (𝓞 K) => lw w * (vw w a : ℝ)).Finite ∧
     (2 / (finrank ℚ K : ℝ)) * ∑ v : InfinitePlace K, Real.log ‖v.embedding a‖ =
       ∑ᶠ w : HeightOneSpectrum (𝓞 K), lw w * (vw w a : ℝ)
@@ -20,9 +24,9 @@ def DetCS : Prop :=
       ‖(A * Hc * Bᴴ).det‖ ^ 2 ≤ (A * Hc * Aᴴ).det.re * (B * Hc * Bᴴ).det.re
 
 def LcvBasis : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (d : ℕ)
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (d : ℕ)
     (X : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ), (∀ v, IsUnit (X v).det) →
-    ∀ L : Submodule (𝓞 K) (Fin d → K), Submodule.IsLattice K L →
+    ∀ L : Submodule (𝓞 K) (Fin d → K), Submodule.IsFullLattice K L →
     ∀ e : Fin d → Fin d → K, LinearIndependent K e →
       (Function.support fun w : HeightOneSpectrum (𝓞 K) =>
         lw w * (idx w (Submodule.span (𝓞 K) (Set.range e)) L : ℝ)).Finite ∧
@@ -31,7 +35,7 @@ def LcvBasis : Prop :=
 
 def IdxChange : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (d : ℕ)
-    (L : Submodule (𝓞 K) (Fin d → K)), Submodule.IsLattice K L →
+    (L : Submodule (𝓞 K) (Fin d → K)), Submodule.IsFullLattice K L →
     ∀ e : Fin d → Fin d → K, LinearIndependent K e →
     ∀ (w : HeightOneSpectrum (𝓞 K)) (γ : Matrix (Fin d) (Fin d) K),
       IsLocBasis L w (fun i => ∑ k, γ k i • e k) →
@@ -52,33 +56,33 @@ def GramChange : Prop :=
       gramR Γ (fun i => ∑ k, γ k i • e k) = star γ.det * γ.det * gramR Γ e
 
 def ImageLcv : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (d : ℕ)
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (d : ℕ)
     (XS XT : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ), (∀ v, IsUnit (XS v).det) →
     (∀ v, IsUnit (XT v).det) →
     ∀ φ : Matrix (Fin d) (Fin d) K, IsUnit φ.det →
-    ∀ L : Submodule (𝓞 K) (Fin d → K), Submodule.IsLattice K L →
+    ∀ L : Submodule (𝓞 K) (Fin d → K), Submodule.IsFullLattice K L →
       lcv XT (matLat φ L) = lcv XS L + (2 / (finrank ℚ K : ℝ)) * ∑ v, Real.log (detRatio XS XT φ v)
 
 def IdxLcv : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (d : ℕ)
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (d : ℕ)
     (X : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ), (∀ v, IsUnit (X v).det) →
-    ∀ A B : Submodule (𝓞 K) (Fin d → K), Submodule.IsLattice K A → Submodule.IsLattice K B →
+    ∀ A B : Submodule (𝓞 K) (Fin d → K), Submodule.IsFullLattice K A → Submodule.IsFullLattice K B →
       (Function.support fun w : HeightOneSpectrum (𝓞 K) => lw w * (idx w A B : ℝ)).Finite ∧
       lcv X B = lcv X A + 2 * ∑ᶠ w : HeightOneSpectrum (𝓞 K), lw w * (idx w A B : ℝ)
 
 def RatHermLcv : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (K0 : Subfield K),
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (K0 : Subfield K),
     IsCMSub K0 → ∀ (d : ℕ) (H : Matrix (Fin d) (Fin d) K) (X : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ),
     IsRatHerm K0 H X →
-    ∀ T : Submodule (𝓞 K) (Fin d → K), Submodule.IsLattice K T →
+    ∀ T : Submodule (𝓞 K) (Fin d → K), Submodule.IsFullLattice K T →
       (Function.support fun w : HeightOneSpectrum (𝓞 K) => lw w * (jw H w T : ℝ)).Finite ∧
       lcv X T = - ∑ᶠ w : HeightOneSpectrum (𝓞 K), lw w * (jw H w T : ℝ)
 
 def JwGram : Prop :=
-  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [IsTotallyComplex K] (K0 : Subfield K),
+  ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K] (K0 : Subfield K),
     IsCMSub K0 → ∀ (d : ℕ) (H : Matrix (Fin d) (Fin d) K) (X : InfinitePlace K → Matrix (Fin d) (Fin d) ℂ),
     IsRatHerm K0 H X →
-    ∀ T : Submodule (𝓞 K) (Fin d → K), Submodule.IsLattice K T →
+    ∀ T : Submodule (𝓞 K) (Fin d → K), Submodule.IsFullLattice K T →
     ∀ (w : HeightOneSpectrum (𝓞 K)) (f : Fin d → Fin d → K), IsLocBasis T w f →
       jw H w T = - vw w (gramR H f)
 
@@ -86,8 +90,9 @@ def FinsumConj : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (f : HeightOneSpectrum (𝓞 K) → ℝ),
     ∑ᶠ w, f (conjPl w) = ∑ᶠ w, f w
 
+-- The local basis has full ambient rank, so retain the pre-4.36 full-lattice hypothesis.
 def LocBasisEx : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (d : ℕ) (L : Submodule (𝓞 K) (Fin d → K)),
-    Submodule.IsLattice K L → ∀ w : HeightOneSpectrum (𝓞 K), ∃ f : Fin d → Fin d → K, IsLocBasis L w f
+    Submodule.IsFullLattice K L → ∀ w : HeightOneSpectrum (𝓞 K), ∃ f : Fin d → Fin d → K, IsLocBasis L w f
 
 end Formalism.DivisionValues

@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IoInjective
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOfCommute
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IoInjective
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOfCommute
+
+@[expose] public section
 
 noncomputable section
 
@@ -51,8 +55,8 @@ theorem hasDerivAt_of_oneParam {E : Type*} [NormedRing E] [NormedAlgebra ℝ E] 
   convert hd using 1
   rw [hadd, ← mul_assoc, mul_smul_comm, mul_sub, mul_one]
 
-attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 
+attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem exists_generator {K W : Type} [Group K] [TopologicalSpace K] [AddCommGroup W] [Module ℂ W]
     [FiniteDimensional ℂ W] (ρ : Representation ℂ K W) (hρ : GlobalTheory.Published.AutFin.IsContRep ρ) (s : ℝ → K)
     (hs : Continuous s) (h0 : s 0 = 1) (hadd : ∀ a b, s (a + b) = s a * s b) :
@@ -134,7 +138,8 @@ theorem coeff_ode : ∀ (K W : Type) [Group K] [TopologicalSpace K] [AddCommGrou
   rw [Polynomial.aeval_eq_sum_range] at hc
   calc ∑ j ∈ Finset.range ((LinearMap.charpoly D).natDegree + 1), (LinearMap.charpoly D).coeff j * L (D ^ j)
       = L (∑ j ∈ Finset.range ((LinearMap.charpoly D).natDegree + 1), (LinearMap.charpoly D).coeff j • D ^ j) := by
-        simp [map_sum, smul_eq_mul]
+        set_option synthInstance.maxHeartbeats 100000 in
+          simp [map_sum, smul_eq_mul]
     _ = 0 := by rw [hc, map_zero]
 
 end GlobalTheory.CompanionTheory.HcFinite.OneParam

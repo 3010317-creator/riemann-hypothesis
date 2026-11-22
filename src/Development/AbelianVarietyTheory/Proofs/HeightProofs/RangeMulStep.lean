@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
-import Formalism.LocalToGlobal.ProjectiveLattices.LocRingPf
-import Formalism.LocalToGlobal.ProjectiveLattices.RealPtPf
-import Formalism.LocalToGlobal.ProjectiveLattices.PtOfSPf
-import Formalism.LocalToGlobal.ProjectiveLattices.SecPtRed
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
+public import Formalism.LocalToGlobal.ProjectiveLattices.LocRingPf
+public import Formalism.LocalToGlobal.ProjectiveLattices.RealPtPf
+public import Formalism.LocalToGlobal.ProjectiveLattices.PtOfSPf
+public import Formalism.LocalToGlobal.ProjectiveLattices.SecPtRed
+
+@[expose] public section
 
 set_option synthInstance.maxHeartbeats 400000
 set_option maxHeartbeats 4000000
@@ -54,7 +58,8 @@ theorem range_aeval {k : ℕ} (Pw : MvPolynomial (Fin N) B.KO) (hPw : Pw.IsHomog
     (hy : y ∈ LinearMap.range (X.inc (addL (wt0 D j) wL m))) :
     y * MvPolynomial.aeval (fun i => X.inc wL (w i)) Pw ∈ LinearMap.range (X.inc (addL (wt0 D j) wL (m + k))) := by
   classical
-  rw [Pw.as_sum, map_sum, Finset.mul_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [Pw.as_sum, map_sum, Finset.mul_sum]
   refine Submodule.sum_mem _ fun d hd => ?_
   rw [MvPolynomial.aeval_monomial, mul_left_comm, ← Algebra.smul_def]
   refine Submodule.smul_mem _ _ ?_
@@ -155,7 +160,7 @@ theorem exists_point [Finite ι]
     have hmem : frac X la w 1 (CurveLoc.secOf X la N g) ∈ Frac0 X la w :=
       Algebra.subset_adjoin (frac_mem_Hfr X la w (by rw [add_zero_weight_one_eq]; exact CurveLoc.secOf_mem X la N g))
     have h1 : (⟨_, hmem⟩ : ↥(Frac0 X la w)) - 1 ∈ RingHom.ker (phiZ X la N (Ω Z) (gF Z) w) := by
-      rw [RingHom.mem_ker, map_sub, map_one, CurveLoc.phiZ_of_eq X la N w (gF Z) _ 1 _ rfl,
+      rw [RingHom.mem_ker, RingHom.map_sub, map_one, CurveLoc.phiZ_of_eq X la N w (gF Z) _ 1 _ rfl,
         CurveLoc.rzMap_secOf X la N (gF Z) g w (fun k => (hg k).1), CurveLoc.secOf_self, pow_one,
         CurveLoc.weight_zero_section_mul_inv, sub_self]
     have h2 := hZ h1
@@ -186,10 +191,11 @@ variable {Ω : Type} [Field Ω] [Algebra B.KO Ω] (gF : X.Forms →ₐ[B.KO] Ω)
 theorem ev_sec {F : Type} [Field F] (ev : Rp X la N →+* F) (τ : Ω →+* F) (σ : F)
     (hc : ∀ (k : ℕ) (G : X.Forms), emb X la N G ∈ Vw X la N (addL (wt0 D j) wL k) →
       ev (emb X la N G) = τ (gF G) * σ ^ k) (i : Fin (WeightFamilies.dimY D j + 1)) :
-    ev (sec X la w i) = (∑ k, evK X la N ev (algebraMap (Op X la N) (Kp X la N) (Tv X la N (i, k))) *
+    ev (sec X la w i) = (∑ k, evK X la N ev (@algebraMap (Op X la N) (Kp X la N) _ (inferInstanceAs (Semiring (_root_.FractionRing _))) (inferInstanceAs (Algebra _ (_root_.FractionRing _))) (Tv X la N (i, k))) *
       τ (gF (X.inc wL (w k)))) * σ := by
   unfold Formalism.MainNotions.Gaps.EtaleWeightGaps.sec
-  rw [map_sum, Finset.sum_mul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [ev_smul, hc 1 _ (by rw [add_zero_weight_one_eq]; exact emb_mem_Vw X la N wL (w k)), pow_one, mul_assoc]
 

@@ -1,14 +1,18 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddNsmulResidueAssoc
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNatMulSplitHalfLatticeCoordinatesIntegral
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNsmulMemHomLatticeOfIntegralFrameCoords
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatMatrixUniformlyLocallyConstantBoun
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddNsmulResidueAssoc
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNatMulSplitHalfLatticeCoordinatesIntegral
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNsmulMemHomLatticeOfIntegralFrameCoords
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatMatrixUniformlyLocallyConstantBoun
+
+@[expose] public section
 
 noncomputable section
 
@@ -167,7 +171,12 @@ theorem extFun_comb : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   have tf : ∀ k : ℕ, 0 < k → Function.Injective fun t : WO S T => k • t := fun k hk a b hab => by
     rw [← inv_smul_nsmul S T hk a, ← inv_smul_nsmul S T hk b]
     exact congrArg _ hab
-  have hb := isBichar_symplO S T ψ
+  have hb : IsBichar (fun x y : WO S T => ψ (symplO S T x y)) := by
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · intro a b y; rw [symplO_add_left, AddChar.map_add_eq_mul]
+    · intro a b y; rw [symplO_add_right, AddChar.map_add_eq_mul]
+    · intro y; rw [symplO_zero_left, AddChar.map_zero_eq_one]
+    · intro y; rw [symplO_zero_right, AddChar.map_zero_eq_one]
   have hm : extFun α β Ψ ∈
       waveSpan (fun x y : WO S T => ψ (symplO S T x y)) (half S T p.e) (half S T (cA D p.e)) (Λ ⊓ half S T p.e) := by
     obtain ⟨h1, k, hk, h2, h3⟩ := hΦ
@@ -221,7 +230,7 @@ theorem extFun_comb : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
     obtain ⟨c₁, hc₁, h₁⟩ := hf
     obtain ⟨c₂, hc₂, h₂⟩ := hg
     exact ⟨c₁ + c₂, combAt_add hc₁ hc₂, fun f₀ Tm h => by
-      rw [LinearMap.map_add, h₁ f₀ Tm h, h₂ f₀ Tm h, comb_add_left]⟩
+      rw [LinearMap.map_add (f := _), h₁ f₀ Tm h, h₂ f₀ Tm h, comb_add_left]⟩
   | smul a f _ hf =>
     obtain ⟨c, hc, h₁⟩ := hf
     exact ⟨a • c, combAt_smul a hc, fun f₀ Tm h => by rw [LinearMap.map_smul, h₁ f₀ Tm h, comb_smul_left]⟩

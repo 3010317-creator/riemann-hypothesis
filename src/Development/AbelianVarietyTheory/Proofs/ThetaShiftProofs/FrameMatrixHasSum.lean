@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
-import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfForallExistsLsumETwoPi
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DerivativeAlongTangentCombinationModuli
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfForallExistsLsumETwoPi
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DerivativeAlongTangentCombinationModuli
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
+
+@[expose] public section
 
 noncomputable section
 
@@ -104,7 +108,8 @@ theorem cv_coeff {F : Type} {m : ℕ} {A : F → Fin m → ℂ⸨X⸩} {B : F �
   have hδ : ∀ j, ∑ f ∈ cf.support, (cf f : ℂ⸨X⸩) * A f j = algebraMap ℂ ℂ⸨X⸩ (if j = k then 1 else 0) := by
     intro j
     have h2 := congrArg (fun x : Fin m → convLaurent => convLaurent.val (x j)) hcf
-    simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul] at h2
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul] at h2
     refine h2.trans ?_
     by_cases hj : j = k <;> simp [hj]
   have hG : G k = ∑ f ∈ cf.support, (cf f : ℂ⸨X⸩) * B f := by
@@ -177,10 +182,6 @@ theorem exists_frac (W : Sp A ⟶ X) (V : X.Opens) (f : Γ(X, V)) {K : Type} [Fi
     map_mul, map_pow]
   ring
 
-theorem fst_comp_dualMap {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) :
-    (TrivSqZeroExt.fstHom S S S).toRingHom.comp (dualMap φ) = φ.comp (TrivSqZeroExt.fstHom R R R).toRingHom :=
-  RingHom.ext fun x => by simp [dualMap]
-
 theorem dualMap_comp_algebraMap {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) :
     (dualMap φ).comp (algebraMap R (DualNumber R)) = (algebraMap S (DualNumber S)).comp φ :=
   RingHom.ext fun x => by ext <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
@@ -194,8 +195,8 @@ theorem le_iff_fst {S : Type} [CommRing S] (v : Sp (DualNumber S) ⟶ X) (U : X.
     have h1 : x.fst = 0 := hx
     ext <;> simp [h1]
 
-open scoped LaurentSeries in
 
+open scoped LaurentSeries in
 theorem cv_chart {Ω : Type} {p : Ω → ℂ} {R : Type} [CommRing R] (W : Sp (DualNumber R) ⟶ X) (V : X.Opens)
     (f : Γ(X, V)) (φ : R →+* ℂ⸨X⸩) (ψ : Ω → (R →+* ℂ)) (hc : ∀ r, Cv p (φ r) (fun ω => ψ ω r))
     (h : ⊤ ≤ (spMap (dualMap φ) ≫ W) ⁻¹ᵁ V) :

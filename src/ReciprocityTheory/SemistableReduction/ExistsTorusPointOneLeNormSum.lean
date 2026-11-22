@@ -1,5 +1,9 @@
-import Mathlib
-import ReciprocityTheory.SemistableReduction.ComapInclusionIsLocalHom
+module
+
+public import Mathlib
+public import ReciprocityTheory.SemistableReduction.ComapInclusionIsLocalHom
+
+@[expose] public section
 
 namespace ReciprocityTheory.MultiplicativeHeights
 
@@ -99,7 +103,7 @@ theorem exists_torus_point_one_le_norm_sum {K : Type*} [NormedField K] [IsUltram
     omega
   let aO : (Fin n → ℤ) → unitBallRing K := fun χ => ⟨a χ, (mem_unitBallRing _).2 (ha χ)⟩
   let P : MvPolynomial (Fin n) (unitBallRing K) := ∑ χ ∈ F, monomial (e χ) (aO χ)
-  have hcoeff : coeff (e χ₀) P = aO χ₀ := by
+  have hcoeff : AddMonoidAlgebra.coeff P (e χ₀) = aO χ₀ := by
     simp only [P, coeff_sum, coeff_monomial]
     rw [Finset.sum_eq_single_of_mem χ₀ hχ₀]
     · simp
@@ -108,8 +112,8 @@ theorem exists_torus_point_one_le_norm_sum {K : Type*} [NormedField K] [IsUltram
       exact fun h => hne (he χ hχ χ₀ hχ₀ h)
   have hQ : MvPolynomial.map (IsLocalRing.residue (unitBallRing K)) P ≠ 0 := by
     intro h0
-    have h4 := congrArg (coeff (e χ₀)) h0
-    rw [coeff_map, hcoeff, coeff_zero, residue_eq_zero_iff_norm_lt_one] at h4
+    have h4 := congrArg (AddMonoidAlgebra.coeff · (e χ₀)) h0
+    rw [coeff_map, hcoeff, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, residue_eq_zero_iff_norm_lt_one] at h4
     exact absurd ha₀ (ne_of_lt h4)
   obtain ⟨y, hy, hyne⟩ : ∃ y ∈ Set.pi Set.univ (fun _ : Fin n =>
       {y : IsLocalRing.ResidueField (unitBallRing K) | ∃ x : unitBallRing K,
@@ -137,7 +141,8 @@ theorem exists_torus_point_one_le_norm_sum {K : Type*} [NormedField K] [IsUltram
     exact zero_ne_one h6
   have hval : ((eval σ P : unitBallRing K) : K) =
       ∑ χ ∈ F, a χ * ∏ i, (σ i : K) ^ (χ i + N).toNat := by
-    simp only [P, map_sum, eval_monomial]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [P, map_sum, eval_monomial]
     rw [AddSubmonoidClass.coe_finsetSum]
     refine Finset.sum_congr rfl fun χ _ => ?_
     rw [Finsupp.prod_fintype _ _ (fun i => pow_zero _)]

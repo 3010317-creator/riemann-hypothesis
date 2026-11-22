@@ -1,8 +1,13 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearFormsBoundedRepresentatives
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNeZeroSmulMem
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearFormsBoundedRepresentatives
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNeZeroSmulMem
+
+@[expose] public section
+
 open scoped Classical ENNReal
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full Formalism.L2.SG.RowsConc Formalism.L2.SG.NGData Formalism.L2.SG.TermLoc GlobalTheory.Unfold
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -46,7 +51,7 @@ theorem X_le_orth (F : LFlag S r T) : Xsp F ≤ orth S (Xsp F) := fun y hy =>
 theorem half_not_int : ¬ ∃ o : 𝓞 E, (o : E) = algebraMap ℚ E (1 / 2) := by
   rintro ⟨o, ho⟩
   have h1 : IsIntegral ℤ (algebraMap ℚ E (1 / 2)) := by rw [← ho]; exact o.2
-  rw [isIntegral_algebraMap_iff (algebraMap ℚ E).injective] at h1
+  rw [isIntegral_algebraMap_iff ] at h1
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp h1
   have h2 : ((2 * n : ℤ) : ℚ) = 1 := by push_cast; rw [show (algebraMap ℤ ℚ n) = (n : ℚ) from rfl] at hn; rw [hn]; norm_num
   have h3 : 2 * n = 1 := by exact_mod_cast h2
@@ -107,7 +112,7 @@ theorem exists_partner_rep (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T)
         have := Submodule.add_mem_sup h1 h2
         simpa using this, (orth S (Xsp F)).smul_mem a (z_mem_orth F)⟩
     refine ⟨o, ?_⟩
-    simp [map_add, hφ0 y hy, hφz, ho]
+    simp [map_add (f := _), hφ0 y hy, hφz, ho]
   choose ψ hψ using hint
   let ψ' : M0 →ₗ[𝓞 E] 𝓞 E :=
     { toFun := ψ

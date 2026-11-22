@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.HTAaLbMem
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NOfibLatCut
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GenusMassPosOfMassLowerBound
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.HTAaLbMem
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.NOfibLatCut
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GenusMassPosOfMassLowerBound
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+
+@[expose] public section
 
 noncomputable section
 
@@ -20,7 +24,7 @@ open Alg LatA
 variable {D : D7} {X : HidaSetting D} {u : D.what₂.Word} {n : (VS D).V ≃ₗ[D.host.E] (VS D).V}
 
 theorem inW_add {v w : (VS D).V} (hv : InW X v) (hw : InW X w) : InW X (v + w) := fun c =>
-  ⟨by rw [map_add, (hv c).1, (hw c).1, add_zero], by rw [map_add, (hv c).2, (hw c).2, add_zero]⟩
+  ⟨by rw [map_add (f := _), (hv c).1, (hw c).1, add_zero], by rw [map_add (f := _), (hv c).2, (hw c).2, add_zero]⟩
 
 theorem inW_sum (s : Finset (Fin D.R.rS)) (c : Fin D.R.rS → D.host.E) (v : Fin D.R.rS → (VS D).V)
     (hv : ∀ d, InW X (v d)) : InW X (∑ d ∈ s, c d • v d) := fun e =>
@@ -33,11 +37,11 @@ theorem pW_nf (hn : NFl X u n) (a : Fin D.R.rS) :
   have hvW : InW X v := inW_add (pW_inW X _) (inW_sum _ _ _ fun d => xq_inW (X := X) d)
   have horth : ∀ w, InW X w → (VS D).hT v w = 0 := by
     intro w hw
-    rw [hv, map_add, LinearMap.add_apply, hT_sumL, omega_rel hn a hw]
+    rw [hv, map_add (f := _), LinearMap.add_apply, hT_sumL, omega_rel hn a hw]
     simp only [neg_add_cancel]
   have hall : ∀ y, (VS D).hT v y = 0 := by
     intro y
-    rw [decomp X y, map_add, map_add, hT_sumR, hT_sumR, horth _ (pW_inW X y)]
+    rw [decomp X y, map_add (f := _), map_add (f := _), hT_sumR, hT_sumR, horth _ (pW_inW X y)]
     have h1 : ∀ c, (VS D).hT v (X.eX c) = 0 := fun c => by rw [hsw, (hvW c).1, star_zero]
     have h2 : ∀ c, (VS D).hT v (X.fY c) = 0 := fun c => by rw [hsw, (hvW c).2, star_zero]
     simp only [h1, h2, mul_zero, Finset.sum_const_zero, add_zero]
@@ -78,8 +82,8 @@ theorem inv_up (X0 : Matrix (Fin D.R.rS) (Fin D.R.rS) D.host.E) (hup : ∀ b a, 
 
 end LatB
 
-open LatB LatA Alg in
 
+open LatB LatA Alg in
 theorem dictLatB_holds : DictLatB := by
   intro D X u n hn hLQ
   obtain ⟨hXs, hxs, hMs⟩ := hLQ
@@ -113,10 +117,11 @@ theorem dictLatB_holds : DictLatB := by
     have hnx : n x = ∑ c, (VS D).hT (X.fY c) x • n (X.eX c) + ∑ c, (VS D).hT (X.eX c) x • n (X.fY c) +
         n (pW X x) := by
       conv_lhs => rw [decomp X x]
-      simp only [map_add, map_sum, map_smul]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [map_add (f := _), map_sum, map_smul]
     rw [mem_hermitianStandardLattice_iff_pairing_integral X]
     refine ⟨fun b => ?_, fun b => ?_, ?_⟩
-    · rw [hnx, map_add, map_add, hT_sumR, hT_sumR, row hn b hwW]
+    · rw [hnx, map_add (f := _), map_add (f := _), hT_sumR, hT_sumR, row hn b hwW]
       refine Submodule.add_mem _ (Submodule.add_mem _ (Submodule.sum_mem _ fun c _ => ?_)
         (Submodule.sum_mem _ fun c _ => ?_)) (hT_aaLb_mem X (hxs b) hw)
       · show (VS D).hT (X.fY c) x * Xq X n b c ∈ aaD D b
@@ -130,11 +135,11 @@ theorem dictLatB_holds : DictLatB := by
         have e : (aaD D c)⁻¹ * (aaD D b * aaD D c) = aaD D b := by
           rw [mul_comm, mul_assoc, mul_inv_cancel₀ (aa_ne c), mul_one]
         rw [← e]; exact FractionalIdeal.mul_mem_mul (he c) (hA b c)
-    · rw [hnx, map_add, map_add, hT_sumR, hT_sumR]
+    · rw [hnx, map_add (f := _), map_add (f := _), hT_sumR, hT_sumR]
       have h1 : ∀ c, (VS D).hT (X.eX b) (n (X.eX c)) = 0 := fun c => by
         rw [Xq_expand hn c, hT_sumR]; simp only [X.ee, mul_zero, Finset.sum_const_zero]
       have h2 : (VS D).hT (X.eX b) (n (pW X x)) = 0 := by
-        rw [nw hn hwW, map_add, hT_sumR, (hwW b).1, zero_add]
+        rw [nw hn hwW, map_add (f := _), hT_sumR, (hwW b).1, zero_add]
         simp only [X.ee, mul_zero, Finset.sum_const_zero]
       simp only [h1, h2, mul_zero, Finset.sum_const_zero, zero_add, add_zero]
       refine Submodule.sum_mem _ fun c _ => ?_

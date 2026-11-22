@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Skeleton
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Skeleton
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas
+
+@[expose] public section
 
 noncomputable section
 
@@ -125,13 +129,13 @@ theorem self_sum {T : E} (F : FlagG S r T) (c : Fin (r + 1) → E) (a : Fin (r +
 theorem Dl_succ {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') :
     Dl F F' (r + 1) = det (Zhat F F') := by
   unfold Dl leadMinorE
-  rw [dif_pos le_rfl]
+  rw [dite_eq_left le_rfl]
   rfl
 
 theorem Dl_r {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') :
     Dl F F' r = det ((Zhat F F').submatrix Fin.castSucc Fin.castSucc) := by
   unfold Dl leadMinorE
-  rw [dif_pos (Nat.le_succ r)]
+  rw [dite_eq_left (Nat.le_succ r)]
   rfl
 
 theorem coeffs_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') (c c' : Fin (r + 1) → E)
@@ -141,7 +145,8 @@ theorem coeffs_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') (c c' : Fin
   have hl1 : ∀ a, S.hT (F.fvec a) w = (Pi.single (Fin.last r) (-T * c (Fin.last r)) : Fin (r + 1) → E) a +
       (Zhat F F' *ᵥ c') a := by
     intro a
-    rw [hw, map_add, map_sum, map_sum, ← self_sum F c a]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [hw, map_add (f := _), map_sum, map_sum, ← self_sum F c a]
     simp only [map_smul, smul_eq_mul]
     congr 1
     simp only [mulVec, dotProduct, Zhat, brS]
@@ -149,7 +154,8 @@ theorem coeffs_zero {T T' : E} (F : FlagG S r T) (F' : FlagG S r T') (c c' : Fin
   have hl2 : ∀ b, S.hT (F'.fvec b) w = ((Zhat F F')ᴴ *ᵥ c) b +
       (Pi.single (Fin.last r) (-T' * c' (Fin.last r)) : Fin (r + 1) → E) b := by
     intro b
-    rw [hw, map_add, map_sum, map_sum, ← self_sum F' c' b]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [hw, map_add (f := _), map_sum, map_sum, ← self_sum F' c' b]
     simp only [map_smul, smul_eq_mul]
     congr 1
     simp only [mulVec, dotProduct, conjTranspose_apply, Zhat, brS]

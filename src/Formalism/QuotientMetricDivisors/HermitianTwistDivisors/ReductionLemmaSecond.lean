@@ -1,12 +1,16 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.ProdFormula
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ConjTransposeEqOfPosDef
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SpecDet
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ProdFormula
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.DeterminantCauchySchwarz
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.LcvBasis
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.IdxChange
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.ProdFormula
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ConjTransposeEqOfPosDef
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SpecDet
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ProdFormula
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.DeterminantCauchySchwarz
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.LcvBasis
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.IdxChange
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 open scoped Matrix ComplexOrder
@@ -158,21 +162,19 @@ theorem place_ineq (hCS : DetCS) (K0 : Subfield K) (hK0 : IsCMSub K0) {n D : ℕ
 
 end Rb
 
-open Rb in
 
+open Rb in
 theorem lemmaRb_of (hPF : ProdFormula) (hCS : DetCS) (hLB : LcvBasis) (hIC : IdxChange)
     (hVB : ValBasic) (hGC : GramChange) (hFC : FinsumConj) : LemmaRb := by
   intro K _ _ _ _ K0 hK0 v0 hv0 n D H hH hHpos P hP XQ hXQ M hM e he
   classical
 
-  have hΛ : Submodule.IsLattice K (matLat P M) := by
-    refine ⟨(Submodule.IsLattice.fg (self := hM)).map _, ?_⟩
-    have : ((matLat P M : Submodule (𝓞 K) (Fin D → K)) : Set (Fin D → K)) =
-        (Matrix.mulVecLin P) '' (M : Set (Fin n → K)) := by
-      rw [matLat, Submodule.map_coe]
-      rfl
-    rw [this, Submodule.span_image, Submodule.IsLattice.span_eq_top (self := hM), Submodule.map_top,
-      LinearMap.range_eq_top]
+  have hΛ : Submodule.IsFullLattice K (matLat P M) := by
+    refine {
+      toIsLattice := Submodule.IsLattice.of_fg K (hM.fg.map _)
+      span_eq_top := ?_ }
+    rw [matLat, Submodule.map_coe, LinearMap.coe_restrictScalars, Submodule.span_image,
+      hM.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
     exact hP
 
   have hli : LinearIndependent K (fun i => (Pi.single i 1 : Fin D → K)) := by

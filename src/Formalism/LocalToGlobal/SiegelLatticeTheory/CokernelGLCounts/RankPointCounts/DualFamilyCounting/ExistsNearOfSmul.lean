@@ -1,9 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.SplitAtOf
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DivMemLocRingOfVFEq
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsNearRepresentation
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InLZeroIff
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsFracOfFixed
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.SplitAtOf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DivMemLocRingOfVFEq
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsNearRepresentation
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InLZeroIff
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsFracOfFixed
+
+@[expose] public section
 
 open NumberField Module
 
@@ -14,9 +18,6 @@ namespace Formalism.L2.SG.Pf.TemperedBoundGL3
 open Formalism.HermitianLattices.Ext.L3 Formalism.HermitianLattices.Ext.L3.U0 Formalism.HermitianLattices.Ext.L3.WA Formalism.HermitianLattices.Ext.L3.WCA Formalism.HermitianLattices.Ext.L3.Cell
 
 variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
-
-local notation "ι" => algebraMap (𝓞 F) (𝓞 K)
-local notation "κ" => algebraMap (𝓞 K) K
 
 theorem exists_F_mul_int (hF : IsFixF K F) (z : K) :
     ∃ s : 𝓞 F, s ≠ 0 ∧ ∃ r : 𝓞 K, κ (ι s) * z = κ r := by
@@ -80,7 +81,7 @@ theorem isIntegral_span {J : Type} {h : V →ₗ⋆[K] V →ₗ[K] K} (c : J →
       obtain ⟨j, rfl⟩ := hy
       exact hc i j
     | zero => rw [map_zero]; exact Submodule.zero_mem _
-    | add y z _ _ hy hz => rw [map_add]; exact Submodule.add_mem _ hy hz
+    | add y z _ _ hy hz => rw [map_add (f := _)]; exact Submodule.add_mem _ hy hz
     | smul r y _ hy =>
       rw [hsm, LinearMap.map_smul, smul_eq_mul, ← Algebra.smul_def]
       exact Submodule.smul_mem _ r hy
@@ -90,7 +91,7 @@ theorem isIntegral_span {J : Type} {h : V →ₗ⋆[K] V →ₗ[K] K} (c : J →
     obtain ⟨i, rfl⟩ := hx
     exact key i y hy
   | zero => rw [map_zero, LinearMap.zero_apply]; exact Submodule.zero_mem _
-  | add x z _ _ hx hz => rw [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ hx hz
+  | add x z _ _ hx hz => rw [map_add (f := _), LinearMap.add_apply]; exact Submodule.add_mem _ hx hz
   | smul r x _ hx =>
     rw [hsm, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply,
       ← WA.algebraMap_conjO, ← Algebra.smul_def]

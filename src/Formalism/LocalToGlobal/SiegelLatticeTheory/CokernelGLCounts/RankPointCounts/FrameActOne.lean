@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.MemOfBcPMem
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DensFrame
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocFacts
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.MemOfBcPMem
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DensFrame
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocFacts
+
+@[expose] public section
 
 noncomputable section
 
@@ -25,8 +29,8 @@ theorem sgnP_mem (p : PlF D) (b : Fin (D.R.rS + 1)) : TermLoc.sgnP D p b ∈ (D.
   simp only [Polynomial.eval₂_sub, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_one]
   rw [pow_two, TermLoc.localSign_sq, sub_self]
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem btAdm : BtAdm Zd u u' F0 what₂ := by
   intro hC γ Z F'₂ φ φ' Λ₂ hs
   obtain ⟨_, _, ⟨hlat, hloc⟩, _⟩ := hs
@@ -108,6 +112,7 @@ theorem btAdm : BtAdm Zd u u' F0 what₂ := by
     congr 1
     push_cast
     field_simp
+  change algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t • x ∈ Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ₂
   rw [e]
   exact Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) htx
 

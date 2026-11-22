@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarIdentPf
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarCohPfE
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarIdentPf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarCohPfE
+
+@[expose] public section
 
 noncomputable section
 
@@ -30,7 +34,7 @@ theorem localLattice_preserves_cofinite (g : (VS D).V ≃ₗ[D.host.E] (VS D).V)
     induction hv using Submodule.span_induction with
     | mem v hv => exact (Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd p hΛ _).1 (hall v hv)
     | zero => rw [map_zero]; exact Submodule.zero_mem _
-    | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
+    | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
     | smul o x _ hx =>
       rw [show g (o • x) = o • g x from (g : (VS D).V →ₗ[D.host.E] (VS D).V).map_smul_of_tower o x]
       exact Submodule.smul_mem _ _ hx
@@ -41,7 +45,7 @@ theorem localLattice_preserves_cofinite (g : (VS D).V ≃ₗ[D.host.E] (VS D).V)
     rw [betaP_bc]
     exact (Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd p hΛ _).2 (hloc v hv)
   | zero => rw [map_zero]; exact Submodule.zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
+  | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   | smul o x _ hx =>
     rw [Subring.smul_def, map_smul, ← Subring.smul_def]
     exact Submodule.smul_mem _ _ hx
@@ -62,7 +66,7 @@ theorem localLattice_preserves_cofinite_symm (g : (VS D).V ≃ₗ[D.host.E] (VS 
     induction hv using Submodule.span_induction with
     | mem v hv => exact (Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd p hΛ _).1 (hall v hv)
     | zero => rw [map_zero]; exact Submodule.zero_mem _
-    | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
+    | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
     | smul o x _ hx =>
       rw [show g.symm (o • x) = o • g.symm x from
         (g.symm : (VS D).V →ₗ[D.host.E] (VS D).V).map_smul_of_tower o x]
@@ -74,7 +78,7 @@ theorem localLattice_preserves_cofinite_symm (g : (VS D).V ≃ₗ[D.host.E] (VS 
     rw [betaP_symm_bc]
     exact (Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd p hΛ _).2 (hloc v hv)
   | zero => rw [map_zero]; exact Submodule.zero_mem _
-  | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
+  | add x y _ _ hx hy => rw [map_add (f := _)]; exact Submodule.add_mem _ hx hy
   | smul o x _ hx =>
     rw [Subring.smul_def, map_smul, ← Subring.smul_def]
     exact Submodule.smul_mem _ _ hx
@@ -155,10 +159,10 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {D : Formalism.BasicNotions.D7} (Zd : LocDat D) {u u' : D.what₂.Word} {F0 : FlagG (VS D) D.R.rS (CntLocal.Tn u)}
   {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem starIdentG (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (hC : Ctx γ Z)
-    (hgen : ∀ p, (locH Zd p).IsGeneric (tLoc Zd p γ)) (F'₂ : LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E))
+    (hgen : ∀ p, (locH Zd p).IsGeneric (tLoc Zd p γ)) (F'₂ : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E))
     (hZ : ZhatL (lf D F0) F'₂ = Z) (hc : starCompat γ F'₂) (hU : starInU γ F'₂)
     (g : (VS D).V ≃ₗ[D.host.E] (VS D).V) (y : Fin (D.R.rS + 1) ⊕ Fin (D.R.rS + 1) → (VS D).V)
     (hiso : ∀ x x', (VS D).hT (g x) (g x') = (VS D).hT x x') (hg1 : ∀ b, g (starFrame γ b) = frame F'₂ b)
@@ -279,8 +283,8 @@ theorem starIdentG (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D) (h
 
 variable (u u' F0 what₂)
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem starExists2_of_parts (hP : CtxP u u' F0 what₂) (hGen : CohGen Zd u u' F0 what₂)
     (hIo : CohIota Zd u u' F0 what₂) (hGood : CohGood Zd u u' F0 what₂) : StarExists2 Zd u u' F0 what₂ := by
   intro γ Z hC

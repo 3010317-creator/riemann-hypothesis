@@ -1,4 +1,8 @@
-import Formalism.LocalToGlobal.GenusGluing.GenusApproximation.GlueExists
+module
+
+public import Formalism.LocalToGlobal.GenusGluing.GenusApproximation.GlueExists
+
+@[expose] public section
 
 noncomputable section
 
@@ -102,11 +106,71 @@ end SlopeTestRemainingChoices
 
 theorem locToAd_of (hG : GenusToPoint) : LocToAd := by
   intro F E _ _ _ _ _ _ hc n hL N hN hU
-  exact hG F E hc n N hN (hL hc.cmUnram N hN hU)
+  exact hG F E hc n N hN (hL hc.cmUnram N hN.toIsLattice hU)
+
+private theorem asm_full_of_unimodular {E : Type} [Field E] [NumberField E] [StarRing E]
+    {n : ℕ} {N : Submodule (𝓞 E) (Fin n → E)}
+    (hN : Submodule.IsLattice E N)
+    (hUni : Formalism.HermitianLatticesTheory.IsUnimodular (hStd E n) N) :
+    Submodule.IsFullLattice E N := by
+  refine { toIsLattice := hN, span_eq_top := ?_ }
+  obtain ⟨s, hs⟩ := hN.fg
+  apply eq_top_iff.mpr
+  intro y _
+  let f : (Fin n → E) → E := fun x => ∑ i, star (x i) * y i
+  obtain ⟨a, ha⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E)) s f
+  have ha0 : (algebraMap (𝓞 E) E a) ≠ 0 :=
+    (FaithfulSMul.algebraMap_injective _ _).ne (mem_nonZeroDivisors_iff_ne_zero.mp a.2)
+  let P : Submodule (𝓞 E) (Fin n → E) := {
+    carrier := {x | ∃ b : 𝓞 E, (b : E) = (algebraMap (𝓞 E) E a) * f x}
+    zero_mem' := by refine ⟨0, ?_⟩; simp [f]
+    add_mem' := by
+      rintro x z ⟨b, hb⟩ ⟨c, hc⟩
+      refine ⟨b + c, ?_⟩
+      change (b : E) + c = _
+      rw [hb, hc]
+      simp [f, add_mul, Finset.sum_add_distrib, mul_add]
+    smul_mem' := by
+      rintro c x ⟨b, hb⟩
+      refine ⟨RingOfIntegers.mapRingHom (starRingEnd E) c * b, ?_⟩
+      simp only [map_mul, hb, f, Pi.smul_apply, Algebra.smul_def, map_mul,
+        RingOfIntegers.mapRingHom_apply, star_mul]
+      simp only [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro i _
+      change star (c : E) * _ = _
+      ring }
+  have hsP : (s : Set (Fin n → E)) ⊆ P := by
+    intro x hx
+    obtain ⟨b, hb⟩ := ha x hx
+    exact ⟨b, by simpa [Algebra.smul_def] using hb⟩
+  have hy : (algebraMap (𝓞 E) E a) • y ∈ N := by
+    change Formalism.HermitianLatticesTheory.dual (hStd E n) N = N at hUni
+    rw [← hUni]
+    simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual,
+      Submodule.mem_iInf, Submodule.mem_comap, LinearMap.restrictScalars_apply]
+    intro x hx
+    have hxP : x ∈ P := (hs ▸ Submodule.span_le.mpr hsP) hx
+    obtain ⟨b, hb⟩ := hxP
+    refine Submodule.mem_one.2 ⟨b, ?_⟩
+    change (b : E) = _
+    rw [hb]
+    simp only [hStd, LinearMap.mk₂'ₛₗ_apply, f, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+  have hy' : (algebraMap (𝓞 E) E a) • y ∈ Submodule.span E (N : Set (Fin n → E)) :=
+    Submodule.subset_span hy
+  have h := (Submodule.span E (N : Set (Fin n → E))).smul_mem
+    (algebraMap (𝓞 E) E a)⁻¹ hy'
+  change (algebraMap (𝓞 E) E a)⁻¹ • ((algebraMap (𝓞 E) E a) • y) ∈ _ at h
+  rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at h
+  exact h
+
 
 theorem adToLoc_of (hP : PointToGenus) : AdToLoc := by
   intro F E _ _ _ _ _ _ hc n hW hU _ N hN hUni
-  obtain ⟨x, hx, rfl⟩ := hU N hN hUni
+  obtain ⟨x, hx, rfl⟩ := hU N (asm_full_of_unimodular hN hUni) hUni
   exact hP F E hc n hW x hx
 
 theorem bridge_of (h1 : LocToAd) (h2 : AdToLoc) : Bridge := by
@@ -278,7 +342,7 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
         add_mem' := by
           intro a b ha hb
           show algebraMap (𝓞 F) (𝓞 E) (a + b) • y ∈ N
-          rw [map_add, add_smul]
+          rw [map_add (f := _), add_smul]
           exact N.add_mem ha hb
         zero_mem' := by
           show algebraMap (𝓞 F) (𝓞 E) 0 • y ∈ N

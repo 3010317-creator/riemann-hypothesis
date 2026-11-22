@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
-import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
-import Formalism.PolynomialDimension.WeylDim
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
+public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
+public import Formalism.PolynomialDimension.WeylDim
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Module Formalism.BasicNotions Formalism.L2.Pj GlobalTheory.DualWeyl GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.DefPt MvPolynomial
 open scoped Matrix
@@ -10,8 +14,8 @@ namespace GlobalTheory.LocMatLat
 
 variable {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι] [DecidableEq ι]
 
-omit [DecidableEq ι] in
 
+omit [DecidableEq ι] in
 theorem exists_denom (B : HeightOneSpectrum (𝓞 K) → Matrix ι ι K) (h : {w | ¬ IntAt w (B w)}.Finite) :
     ∃ d : 𝓞 K, d ≠ 0 ∧ ∀ w, IntAt w ((d : K) • B w) := by
   haveI : Finite {w | ¬ IntAt w (B w)} := h
@@ -27,8 +31,8 @@ theorem exists_denom (B : HeightOneSpectrum (𝓞 K) → Matrix ι ι K) (h : {w
     rw [Matrix.smul_apply, this]
     exact w.valuation_le_one r
 
-omit [DecidableEq ι] in
 
+omit [DecidableEq ι] in
 theorem mulVec_le (w : HeightOneSpectrum (𝓞 K)) {M : Matrix ι ι K} (hM : IntAt w M) {x : ι → K}
     (hx : ∀ j, w.valuation K (x j) ≤ 1) (i : ι) : w.valuation K ((M *ᵥ x) i) ≤ 1 := by
   simp only [Matrix.mulVec, dotProduct]
@@ -59,13 +63,6 @@ theorem isLattice_locLat (K : Type) [Field K] [NumberField K] (ι : Type) [Finty
     refine ⟨y, funext fun i => ?_⟩
     change (e : K)⁻¹ * algebraMap (𝓞 K) K (y i) = x i
     rw [hy, inv_mul_cancel_left₀ heK]
-  · rw [eq_top_iff, ← (Pi.basisFun K ι).span_eq, Submodule.span_le]
-    rintro _ ⟨j, rfl⟩
-    have hm : (d : K) • (Pi.basisFun K ι j) ∈ locLat A := fun w i => by
-      rw [Matrix.mulVec_smul, ← Matrix.smul_mulVec]
-      refine mulVec_le w (hd w) (fun k => ?_) i
-      by_cases hk : k = j <;> simp [Pi.single_apply, hk]
-    have := Submodule.smul_mem (Submodule.span K (locLat A : Set (ι → K))) (d : K)⁻¹ (Submodule.subset_span hm)
-    rwa [inv_smul_smul₀ hdK] at this
-
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
 end GlobalTheory.LocMatLat

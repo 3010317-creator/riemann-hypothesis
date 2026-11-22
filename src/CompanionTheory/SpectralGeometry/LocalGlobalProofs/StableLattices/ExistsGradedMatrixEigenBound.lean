@@ -1,5 +1,10 @@
-import Mathlib
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HsConjTranspose
+module
+
+public import Mathlib
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HsConjTranspose
+
+@[expose] public section
+
 open Matrix
 open CompanionTheory.RgExh.Dec CompanionTheory.RgExh.Dec.L ReciprocityTheory.ChartRestriction.DS GlobalTheory.CompanionTheory.PSubFlag GlobalTheory.CompanionTheory.UGeo
 
@@ -12,7 +17,7 @@ variable {n : ℕ}
 theorem aeval_intertwine {R : Type*} [Ring R] [Algebra ℝ R] {X A B : R} (h : X * A = B * X)
     (p : Polynomial ℝ) : X * Polynomial.aeval A p = Polynomial.aeval B p * X := by
   induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add, mul_add, add_mul, hp, hq]
+  | add p q hp hq => simp only [map_add (f := _), mul_add, add_mul, hp, hq]
   | monomial k a =>
     have hk : X * A ^ k = B ^ k * X := by
       induction k with
@@ -68,7 +73,7 @@ theorem algebraMap_eq (a : ℝ) : algebraMap ℝ (Matrix (Fin n) (Fin n) ℂ) a 
 theorem cj_aeval (h1 : Uᴴ * U = 1) (h2 : U * Uᴴ = 1) (d : Fin n → ℝ) (p : Polynomial ℝ) :
     Polynomial.aeval (cj U d) p = cj U (fun i => p.eval (d i)) := by
   induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add, Polynomial.eval_add, hp, hq, cj_add]
+  | add p q hp hq => simp only [map_add (f := _), Polynomial.eval_add, hp, hq, cj_add]
   | monomial k a =>
     have hk : cj U d ^ k = cj U (fun i => d i ^ k) := by
       induction k with
@@ -214,8 +219,8 @@ theorem core {J G H : Matrix (Fin n) (Fin n) ℂ} (hJ : J * J = 1) (hHG : H * G 
 
 end GlobalTheory.CompanionTheory.UGeo.SpecGrad
 
-open GlobalTheory.CompanionTheory.UGeo.SpecGrad in
 
+open GlobalTheory.CompanionTheory.UGeo.SpecGrad in
 theorem GlobalTheory.CompanionTheory.UGeo.SpecGrad.grading_of_spectral :
     ∀ (n : ℕ) (ε : Fin n → Bool) (g : S7.UJ ε) (hT : ((S7.toM g⁻¹)ᴴ * S7.toM g⁻¹).IsHermitian) (f : ℝ → ℝ) (α β : ℝ), (∀ l : ℝ, 0 < l → (f l = -1 ∨ f l = 0 ∨ f l = 1) ∧ f l⁻¹ = - f l) → (∀ i, f (hT.eigenvalues i) = -1 → α ≤ hT.eigenvalues i) → (∀ i, f (hT.eigenvalues i) = 0 → β⁻¹ ≤ hT.eigenvalues i) → (∃ i, f (hT.eigenvalues i) ≠ 0) → ∃ A' : Matrix (Fin n) (Fin n) ℂ, IsGrad ε A' ∧ ∀ y : Fin n → ℂ, α * nsq (Pm A' *ᵥ y) + β⁻¹ * nsq (Pz A' *ᵥ y) ≤ nsq (S7.toM g⁻¹ *ᵥ y) := by
   intro n ε g hT f α β hf hα hβ hne

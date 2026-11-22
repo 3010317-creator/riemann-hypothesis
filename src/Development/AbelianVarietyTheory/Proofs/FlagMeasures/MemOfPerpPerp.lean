@@ -1,12 +1,16 @@
-import Mathlib
-import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
-import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
-import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+module
+
+public import Mathlib
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+
+@[expose] public section
 
 open NumberField Matrix GlobalTheory.Mass Formalism.HermitianLatticesTheory Formalism.BasicNotions Formalism.MainNotions.S
 open scoped ENNReal Classical
@@ -18,8 +22,8 @@ section General
 variable {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
   [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
 
-omit [StarRing K] in
 
+omit [StarRing K] in
 theorem exists_smul_mem {Λ : Submodule (𝓞 K) V} (hΛ : Submodule.IsLattice K Λ) (v : V) :
     ∃ d : 𝓞 K, d ≠ 0 ∧ d • v ∈ Λ := by
   obtain ⟨s, _, b, hbv, hsL⟩ := dualLattice_basis (R := 𝓞 K) Λ hΛ.span_eq_top
@@ -39,8 +43,8 @@ omit [FiniteDimensional K V] [NumberField K] [Module (𝓞 K) V] [IsScalarTower 
 theorem swap_zero {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) {x y : V} (H : h x y = 0) : h y x = 0 := by
   rw [← hs.eq x y, H, map_zero]
 
-omit [NumberField K] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 
+omit [NumberField K] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem mem_of_perp_perp {h : V →ₗ⋆[K] V →ₗ[K] K} (hn : h.Nondegenerate) (U : Submodule K V) (v : V)
     (H : ∀ y, (∀ u ∈ U, h u y = 0) → h v y = 0) : v ∈ U := by
   have : h v ∈ (U.map h).dualCoannihilator.dualAnnihilator := by
@@ -135,9 +139,9 @@ theorem perp_lattice {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hn : h.
   have hπz : π z = 0 := hπU z (Submodule.mem_sup_right (Submodule.mem_span_singleton_self z))
   have hF : ∀ v, (∀ x ∈ X, h x v = 0) → v + (h z v / T) • z - ι (π v) ∈ X := fun v hv => by
     obtain ⟨w, hw⟩ := hsp (v + (h z v / T) • z) (fun x hx => by simp [hv x hx, hXz x hx])
-      (by rw [map_add, map_smul, hz, smul_eq_mul]; field_simp; ring)
+      (by rw [map_add (f := _), map_smul, hz, smul_eq_mul]; field_simp; ring)
     have := hπX _ hw
-    rw [map_sub, map_add, map_smul, hπz, smul_zero, add_zero, hπι, sub_eq_zero] at this
+    rw [map_sub, map_add (f := _), map_smul, hπz, smul_zero, add_zero, hπι, sub_eq_zero] at this
     rwa [this]
   have hperp : ∀ {w l}, ι w - l ∈ U → ∀ x ∈ X, h x l = 0 := fun {w l} H x hx => by
     have := swap_zero hs ((hU x).2 ⟨fun y hy => hXX y hy x hx, swap_zero hs (hXz x hx)⟩ _ H)
@@ -148,7 +152,7 @@ theorem perp_lattice {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hn : h.
     obtain ⟨l', hl', e⟩ := (hL y).1 hy
     have e1 := swap_zero hs (hXι _ (hF l hlX) y)
     have e2 := hlX _ e
-    rw [map_sub, map_add, map_smul, swap_zero hs (hzι y), smul_zero, add_zero, hι, sub_eq_zero] at e1
+    rw [map_sub, map_add (f := _), map_smul, swap_zero hs (hzι y), smul_zero, add_zero, hι, sub_eq_zero] at e1
     rw [map_sub, LinearMap.sub_apply, sub_eq_zero] at e2
     rw [← e1, e2]
     exact hint _ hl' _ hl
@@ -160,13 +164,8 @@ theorem perp_lattice {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hn : h.
   · refine (hΛ.fg.map (π.restrictScalars (𝓞 K))).of_le fun w hw => ?_
     obtain ⟨l, hl, e⟩ := (hL w).1 hw
     exact ⟨l, hl, hπl (Submodule.mem_sup_left e)⟩
-  · rw [eq_top_iff]
-    intro w _
-    obtain ⟨d, hd0, hd⟩ := exists_smul_mem hΛ (ι w)
-    have h1 : d • w ∈ L := (hL _).2 ⟨_, hd, by
-      rw [← algebraMap_smul K d w, map_smul, algebraMap_smul, sub_self]; exact X.zero_mem⟩
-    have h2 := Submodule.smul_mem _ (algebraMap (𝓞 K) K d)⁻¹ (Submodule.subset_span (R := K) h1)
-    rwa [← algebraMap_smul K d w, inv_smul_smul₀ ((map_ne_zero_iff _ inj).mpr hd0)] at h2
+  · intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
   · obtain ⟨l, hl, e⟩ := (hL y).1 hy
     rw [← hπl (Submodule.mem_sup_left e)]
     exact hpair x hx l hl (hperp (Submodule.mem_sup_left e))
@@ -255,7 +254,8 @@ theorem main : ∀ (D : D7) (u : D.what₂.Word), letI := D.host.cmStar; ∀ F0 
       refine Finsupp.ext fun k => ?_
       simpa using congrFun e k)
     rw [hT_expand]
-    simp only [map_sum, map_mul, D.sp.cm.cmUnram.2.1 τ]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_mul, D.sp.cm.cmUnram.2.1 τ]
     exact h2
   · rw [(D.sp.X 0).rank_eq, D.sp.X_rank 0 (Nat.zero_le _)]
     simp [Ranks.N]

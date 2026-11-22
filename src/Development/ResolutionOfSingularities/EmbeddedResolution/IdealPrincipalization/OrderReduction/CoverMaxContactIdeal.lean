@@ -1,38 +1,43 @@
-import Mathlib
-import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupProperties
-import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.ClopenRestriction
-import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
-import Development.ResolutionOfSingularities.EmbeddedResolution.StrictTransformCharts.CoordinateBlowupChart
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleChartExistence
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.IdealSheafOrder
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.OrderPullback
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheafSmoothPullback
-import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.DisjointUnionOfOpens
-import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.MaxContactHypersurface
-import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.MaxContactIdeal
-import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.TunedSheaf
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReductionProperties
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.CoverMapSurjective
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactReduction
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.DerivedAndCoverTriples
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactCover
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
-import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
-import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
-import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.ChartRing
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.PolynomialCoordinateExtension
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheaf
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealEtaleBaseChange
-import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothRegular
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.LocalParameters
-import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothCenterChart
-import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheafOrderDecrease
+module
+
+public import Mathlib
+public import Development.ResolutionOfSingularities.Foundations.Blowup.BlowupProperties
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.ClopenRestriction
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IteratedBlowups.BlowupSequenceRelations
+public import Development.ResolutionOfSingularities.EmbeddedResolution.StrictTransformCharts.CoordinateBlowupChart
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleChartExistence
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.StrictNormalCrossings
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.IdealSheafOrder
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.OrderPullback
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheafSmoothPullback
+public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.DisjointUnionOfOpens
+public import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.MaxContactHypersurface
+public import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.MaxContactIdeal
+public import Development.ResolutionOfSingularities.EmbeddedResolution.MaximalContactHypersurfaces.TunedSheaf
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReductionProperties
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.CoverMapSurjective
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactReduction
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.DerivedAndCoverTriples
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.OrderReduction.MaxContactCover
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.IdealBlowupSequence
+public import Development.ResolutionOfSingularities.EmbeddedResolution.IdealPrincipalization.MarkedBlowupSequence.MarkedSequenceOfBlowups
+public import Development.ResolutionOfSingularities.Foundations.BlowupUniversalProperty
+public import Development.ResolutionOfSingularities.EmbeddedResolution.ResolutionOfSingularities
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.ChartRing
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.PolynomialCoordinateExtension
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheaf
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealEtaleBaseChange
+public import Development.ResolutionOfSingularities.Foundations.Schemes.IdealSheafData
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothRegular
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.JacobianCriterion
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.LocalParameters
+public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.SmoothCenterChart
+public import Development.ResolutionOfSingularities.EmbeddedResolution.DerivativeIdeal.DerivativeIdealSheafOrderDecrease
+
+@[expose] public section
+
 universe u
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
@@ -40,33 +45,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 noncomputable section
 
 namespace FunctorialResolution.EmbeddedResolution
-
-private theorem comapEtale_map_comp_affineSpaceFinToSpec {k : Type u} [Field k] {X Y : Scheme.{u}}
-    {q : Y ⟶ Spec (CommRingCat.of k)} (g : X ⟶ Y) {U : Y.Opens} {n : ℕ}
-    (c : EtaleChart q U n) :
-    (morphismRestrict g U ≫ c.map) ≫ affineSpaceFinToSpec k n =
-      AlgebraicGeometry.Scheme.Opens.ι ((TopologicalSpace.Opens.map g.base).obj U) ≫ (g ≫ q) := by
-  rw [Category.assoc, c.comp_struct, ← Category.assoc, morphismRestrict_ι, Category.assoc]
-
-private theorem etale_comapEtale_map {k : Type u} [Field k] {X Y : Scheme.{u}}
-    {q : Y ⟶ Spec (CommRingCat.of k)} (g : X ⟶ Y) [AlgebraicGeometry.Etale g]
-    {U : Y.Opens} {n : ℕ} (c : EtaleChart q U n) :
-    AlgebraicGeometry.Etale (morphismRestrict g U ≫ c.map) := by
-  have := c.isEtale
-  infer_instance
-
-def EtaleChart.comapEtale {k : Type u} [Field k] {X Y : Scheme.{u}}
-    {q : Y ⟶ Spec (CommRingCat.of k)} (g : X ⟶ Y) [AlgebraicGeometry.Etale g]
-    {U : Y.Opens} {n : ℕ} (c : EtaleChart q U n) :
-    EtaleChart (g ≫ q) ((TopologicalSpace.Opens.map g.base).obj U) n where
-  map := morphismRestrict g U ≫ c.map
-  comp_struct := comapEtale_map_comp_affineSpaceFinToSpec g c
-  isEtale := etale_comapEtale_map g c
-
-@[simp] theorem EtaleChart.comapEtale_map {k : Type u} [Field k] {X Y : Scheme.{u}}
-    {q : Y ⟶ Spec (CommRingCat.of k)} (g : X ⟶ Y) [AlgebraicGeometry.Etale g]
-    {U : Y.Opens} {n : ℕ} (c : EtaleChart q U n) :
-    (EtaleChart.comapEtale g c).map = morphismRestrict g U ≫ c.map := rfl
 
 private theorem range_ι_base_subset {X : Scheme.{u}} (U : X.Opens) :
     Set.range U.ι.base ⊆ (U : Set ↥X) :=
@@ -217,7 +195,7 @@ theorem inStrictNormalCrossingPositionAt_coverMaxContactIdeal (T : MarkedIdealWi
     · intro r _hr s _hs t hrt _hst
       simp at hrt
     · intro r hr _hnone
-      have hr1 : r < 1 := by simpa using hr
+      have hr1 : r < 1 := hr
       have hr0 : r = 0 := by omega
       subst hr0
       exact keyU
@@ -231,13 +209,13 @@ theorem inStrictNormalCrossingPositionAt_coverMaxContactIdeal (T : MarkedIdealWi
       ⟨MaxContactOpenCover.coverTripleOpen T hv i, hxi, n, MaxContactOpenCover.coverEtaleChart T hv i c, fun _ => some j,
         ?_, ?_, ?_⟩
     · intro r hr s hs t _hrt _hst
-      have hr1 : r < 1 := by simpa using hr
-      have hs1 : s < 1 := by simpa using hs
+      have hr1 : r < 1 := hr
+      have hs1 : s < 1 := hs
       omega
     · intro r _hr hnone
       simp at hnone
     · intro r hr t hrt
-      have hr1 : r < 1 := by simpa using hr
+      have hr1 : r < 1 := hr
       have hr0 : r = 0 := by omega
       subst hr0
       obtain rfl : j = t := Option.some.inj hrt

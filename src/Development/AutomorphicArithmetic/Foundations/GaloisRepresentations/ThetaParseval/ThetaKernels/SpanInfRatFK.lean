@@ -1,9 +1,13 @@
-import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SpanInfRatF
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.RedWpAutDef
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ArchimedeanChartThetaEquivariant
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ActOFIotaVFEqIotaVFMulVec
+module
+
+public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SpanInfRatF
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.RedWpAutDef
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ArchimedeanChartThetaEquivariant
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ActOFIotaVFEqIotaVFMulVec
+
+@[expose] public section
 
 set_option synthInstance.maxHeartbeats 200000
 
@@ -162,7 +166,7 @@ theorem span_tau_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) :
       show (B.emb w).1 e = cw B w ((wE B w).embedding e)
       rw [cw_emb]
     | zero => rw [map_zero]; exact zero_mem _
-    | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
+    | add x y _ _ hx hy => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hy
     | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
   have htop : Submodule.span ℝ (Set.range (mixedEmbedding E)) = ⊤ := by
     refine eq_top_iff.2 (le_trans (le_of_eq (mixedEmbedding.latticeBasis E).span_eq.symm) (Submodule.span_mono ?_))

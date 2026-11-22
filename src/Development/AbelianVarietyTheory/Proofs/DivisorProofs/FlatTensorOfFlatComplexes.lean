@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
-import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocForallFinset
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocForallFinset
+
+@[expose] public section
 
 noncomputable section
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
@@ -149,7 +153,7 @@ theorem exists_fg_tens {S A B : Type*} [CommRing S] [AddCommGroup A] [Module S A
     obtain ⟨A2, B2, y2, hA2, hB2, rfl⟩ := hy
     refine ⟨A1 ⊔ A2, B1 ⊔ B2, TensorProduct.map (Submodule.inclusion le_sup_left) (Submodule.inclusion le_sup_left) x1 +
       TensorProduct.map (Submodule.inclusion le_sup_right) (Submodule.inclusion le_sup_right) y2, hA1.sup hA2, hB1.sup hB2, ?_⟩
-    rw [map_add, ← LinearMap.comp_apply, ← LinearMap.comp_apply (TensorProduct.map _ _), ← TensorProduct.map_comp,
+    rw [map_add (f := _), ← LinearMap.comp_apply, ← LinearMap.comp_apply (TensorProduct.map _ _), ← TensorProduct.map_comp,
       ← TensorProduct.map_comp]
     rfl
 
@@ -159,7 +163,7 @@ theorem comm_lTensor {S M N N' : Type*} [CommRing S] [AddCommGroup M] [Module S 
   induction z using TensorProduct.induction_on with
   | zero => simp
   | tmul a b => rfl
-  | add a b ha hb => simp only [map_add, ha, hb]
+  | add a b ha hb => simp only [map_add (f := _), ha, hb]
 
 theorem key_alg {S A B I J : Type*} [CommRing S] [AddCommGroup A] [Module S A] [AddCommGroup B] [Module S B]
     [AddCommGroup I] [Module S I] [AddCommGroup J] [Module S J] (f : A →ₗ[S] I) (g : B →ₗ[S] J) (y : A ⊗[S] B)

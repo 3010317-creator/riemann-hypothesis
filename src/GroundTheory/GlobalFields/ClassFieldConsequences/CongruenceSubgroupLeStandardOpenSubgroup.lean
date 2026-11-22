@@ -1,5 +1,9 @@
-import Mathlib
-import GroundTheory.GlobalFields.TateThesis.HeckeCharRayClass
+module
+
+public import Mathlib
+public import GroundTheory.GlobalFields.TateThesis.HeckeCharRayClass
+
+@[expose] public section
 
 open Topology Filter NumberField IsDedekindDomain WithZero Function
 open scoped NumberField.AdeleRing
@@ -60,18 +64,16 @@ variable (𝔪 : Modulus K)
 def exponent (v : HeightOneSpectrum (𝓞 K)) : ℕ :=
   multiplicity v.asIdeal 𝔪.ideal
 
-omit [NumberField K] in
 theorem exponent_eq_zero_iff (v : HeightOneSpectrum (𝓞 K)) :
     𝔪.exponent v = 0 ↔ ¬ v.asIdeal ∣ 𝔪.ideal :=
-  multiplicity_eq_zero
+  multiplicity_eq_zero (FiniteMultiplicity.of_prime_left v.prime 𝔪.ideal_ne_bot)
 
-omit [NumberField K] in
 theorem one_le_exponent_iff (v : HeightOneSpectrum (𝓞 K)) :
     1 ≤ 𝔪.exponent v ↔ v.asIdeal ∣ 𝔪.ideal := by
   rw [Nat.one_le_iff_ne_zero, Ne, exponent_eq_zero_iff, not_not]
 
-omit [NumberField K] in
 
+omit [NumberField K] in
 theorem asIdeal_pow_exponent_dvd (v : HeightOneSpectrum (𝓞 K)) :
     v.asIdeal ^ 𝔪.exponent v ∣ 𝔪.ideal :=
   pow_multiplicity_dvd _ _
@@ -96,26 +98,6 @@ theorem mem_congruenceSubgroup {x : IdeleGroup K} :
     mem_positiveAt]
   simp only [finiteComponent_toFinite]
   rfl
-
-theorem mem_congruenceSubgroup_iff {x : IdeleGroup K} :
-    x ∈ 𝔪.congruenceSubgroup ↔
-      (∀ v, v.asIdeal ∣ 𝔪.ideal →
-          Valued.v ((x : 𝔸[K]).2 v - 1) ≤ exp (-(𝔪.exponent v : ℤ))) ∧
-        (∀ v, ¬ v.asIdeal ∣ 𝔪.ideal → Valued.v ((x : 𝔸[K]).2 v) = 1) ∧
-        ∀ w ∈ 𝔪.real, 0 < InfinitePlace.Completion.extensionEmbeddingOfIsReal w.2
-          ((x : 𝔸[K]).1 w.1) := by
-  rw [mem_congruenceSubgroup]
-  constructor
-  · rintro ⟨hf, hi⟩
-    refine ⟨fun v hv ↦ (hf v).2, fun v hv ↦ (hf v).1, hi⟩
-  · rintro ⟨hd, hn, hi⟩
-    refine ⟨fun v ↦ ?_, hi⟩
-    by_cases hv : v.asIdeal ∣ 𝔪.ideal
-    · exact (mem_unitsLevel_of_one_le ((𝔪.one_le_exponent_iff v).2 hv)).2 (hd v hv)
-    · rw [(𝔪.exponent_eq_zero_iff v).2 hv, mem_unitsLevel]
-      refine ⟨hn v hv, ?_⟩
-      rw [Nat.cast_zero, neg_zero, exp_zero]
-      exact Valuation.map_sub_le _ (hn v hv).le (by simp)
 
 theorem isOpen_congruenceSubgroup : IsOpen (𝔪.congruenceSubgroup : Set (IdeleGroup K)) := by
   rw [congruenceSubgroup, Subgroup.coe_inf, Subgroup.coe_comap]
@@ -171,7 +153,7 @@ theorem mem_rayUnits {a : Kˣ} :
   · have hc : ∀ k : K, (k : v.adicCompletion K) = algebraMap K (v.adicCompletion K) k := fun k ↦ by
       rw [HeightOneSpectrum.algebraMap_adicCompletion]
       rfl
-    rw [mem_unitsLevel_of_one_le ((𝔪.one_le_exponent_iff v).2 hv), coe_finiteProj_diagonal,
+    rw [GroundTheory.Global.mem_unitsLevel_of_one_le ((𝔪.one_le_exponent_iff v).2 hv), coe_finiteProj_diagonal,
       ← HeightOneSpectrum.valuedAdicCompletion_eq_valuation', hc, hc,
       (algebraMap K (v.adicCompletion K)).map_sub, (algebraMap K (v.adicCompletion K)).map_one]
   · rw [coe_infiniteProj_diagonal]

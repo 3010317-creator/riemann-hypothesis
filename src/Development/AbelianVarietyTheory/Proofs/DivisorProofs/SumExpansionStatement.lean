@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.SumExpSt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumExactExponentsSmulMemLocalizedCoeffLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
-import Formalism.PieriBlockIdeals.PieriColumnMinors.HighestWeightShiftEqDetMul
-import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SumExpSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumExactExponentsSmulMemLocalizedCoeffLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+public import Formalism.PieriBlockIdeals.PieriColumnMinors.HighestWeightShiftEqDetMul
+public import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Pj GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpTie Formalism.CohomologicalDescent.LogSmallConstantBounds Formalism.CohomologicalDescent.ShortWeightBounds
 
@@ -59,8 +63,8 @@ end GlobalTheory.SumExpAt
 
 namespace GlobalTheory.SumExpAt
 
-open Formalism.CohomologicalDescent.LD in
 
+open Formalism.CohomologicalDescent.LD in
 theorem exZ_res_eq_natW (n : ℕ) (lam : Formalism.BasicNotions.DomWeight n) (f : ℕ → ℕ) (c : ℤ)
     (hc : ∀ a : Fin n, (f a : ℤ) = lam.w a + c) (l : ℕ) (hl : l.Prime) :
     Formalism.CohomologicalDescent.LA.exZ n n le_rfl (res n f) l = Formalism.CohomologicalDescent.LA.exZ n n le_rfl lam.natW l := by
@@ -124,8 +128,6 @@ theorem lIncl_sumExp (p : PtAt ex Csz) (j : Fin D.R.m) (P : Par) (W : Wts D.what
 
 end Point
 
-theorem sumExpSt : SumExpSt :=
-  ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun _ _ _ _ => EvPt.of_forall fun _ _ _ p _ _ j P W hD _ t w => lIncl_sumExp p j P W hD t w⟩⟩
 end GlobalTheory.ExpTie
 
 end

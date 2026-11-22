@@ -1,14 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsCharZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFaithfullyFlatPowEq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleCohomologousOfDeRhamSurjective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsAddChiEq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDatOfIsAdd
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPushoutTorsorNTorsionCharacterStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsCharZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFaithfullyFlatPowEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocycleCohomologousOfDeRhamSurjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsAddChiEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDatOfIsAdd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPushoutTorsorNTorsionCharacterStatement
+
+@[expose] public section
+
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct WithConv
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap epsR IsTangent IsGrpPullback)
 open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB RigLB CubicalStr Theta thφ thε thK x3)
@@ -21,7 +26,7 @@ theorem GlobalTheory.PtExt.exists_dat_chi_eq : ∀ (p : ℕ) [Fact p.Prime]  (R 
   intro p _ R _ N hN A _ hA hP hs G t b hb
   have : IsCommMonObj A := hA.comm
   have hn : ((p ^ N : ℕ) : R) = 0 := by push_cast; exact hN
-  have hR : HasRoots A (p ^ N) := fun D _ _ x ↦
+  have hR : GlobalTheory.PtExt.HasRoots A (p ^ N) := fun D _ _ x ↦
     GlobalTheory.PtCover.exists_faithfullyFlat_pow_eq R A hA (p ^ N) (pow_pos (Fact.out : p.Prime).pos N) D x
   obtain ⟨u, g, hu, hg, hchi⟩ := GlobalTheory.T.exists_pushout_torsor_nTorsion_character R A (p ^ N) hn hR b hb
   obtain ⟨f, hf⟩ := GlobalTheory.PtExt.cohom_fv_of_toH1O_surjective R A hs u hu

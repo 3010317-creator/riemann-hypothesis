@@ -1,11 +1,15 @@
-import Mathlib
-import Formalism.HermitianLattices.DefsCS
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusScale
-import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovolBound
-import Formalism.FockGram.FockGramProofs.CovolGram
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.DefsCS
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusScale
+public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovolBound
+public import Formalism.FockGram.FockGramProofs.CovolGram
+
+@[expose] public section
 
 open Module NumberField
 
@@ -223,7 +227,7 @@ def genusCovol_tdual (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) 
     intro a b ha hb x hx
     obtain ⟨z1, h1⟩ := ha x hx
     obtain ⟨z2, h2⟩ := hb x hx
-    exact ⟨z1 + z2, by rw [map_add, map_add, h1, h2]; push_cast; ring⟩
+    exact ⟨z1 + z2, by rw [map_add (f := _), map_add (f := _), h1, h2]; push_cast; ring⟩
   zero_mem' := fun x _ => ⟨0, by simp⟩
   smul_mem' := by
     intro r y hy x hx
@@ -357,7 +361,8 @@ theorem genusCovol_dualBasis (h : V →ₗ⋆[K] V →ₗ[K] K) (N : ℕ)
   have hlin : ∀ x i, b x (y i) = ∑ j, Gi i j * b x (m j) := by
     intro x i
     simp only [hbdef, hy]
-    rw [map_sum, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [LinearMap.map_smul, smul_eq_mul, ← Algebra.smul_def, LinearMap.map_smul, smul_eq_mul]
   have hdelta : ∀ k i, b (m k) (y i) = (1 : Matrix _ _ ℚ) k i := by
@@ -470,7 +475,7 @@ theorem genusCovol_sq (h : V →ₗ⋆[K] V →ₗ[K] K)
   classical
   obtain ⟨bv, hE2, hprod⟩ := genusCovol_dualBasis h N ι hι A
   have hinj : Function.Injective ι := by
-    rw [injective_iff_map_eq_zero]
+    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     by_contra hne
     have h1 := hpos x hne
@@ -562,9 +567,9 @@ end PartF
 theorem genusCovol : GenusCovol := by
   intro K V _ _ _ _ _ _ _ _ h hs hpos N ι hι L M hL hM _ _ _ _
   classical
-  have hMl : Submodule.IsLattice K M := hM.1
+  have hMl : Submodule.IsFullLattice K M := hM.1.toIsFullLattice
   obtain ⟨d, hd0, hd⟩ := genusScale K V h hs L hL
-  have hLgen : L ∈ genus h L := ⟨hL, fun p _ => ⟨1, (isom h).one_mem, genusBasic_gmap_one _⟩⟩
+  have hLgen : L ∈ genus h L := ⟨RHCompat.SpanningLattice.ofFull hL, fun p _ => ⟨1, (isom h).one_mem, genusBasic_gmap_one _⟩⟩
   have hDmem : ∀ A ∈ genus h L, ∀ x ∈ A, d • x ∈ genusCovol_tdual h A := by
     intro A hA x hx y hy
     obtain ⟨r, hr⟩ := Submodule.mem_one.mp (hd A hA y hy x hx)

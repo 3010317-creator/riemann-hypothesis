@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
-import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeasurePreservingMulLeft
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeasurePreservingMulLeft
+
+@[expose] public section
 
 open Matrix Complex NumberField MeasureTheory GlobalTheory GlobalTheory.ThFr GlobalTheory.Ker ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD
 open GlobalTheory.SW hiding Level
@@ -43,7 +47,7 @@ theorem kZero_onFr_const_entire : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     exact hsub (hon x hx)
   ·
 
-    rw [GlobalTheory.SW.KernSym.kZero_ortho idx hx]
+    rw [GlobalTheory.SW.KernSym.kZero_ortho (X := X) idx hx]
     simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero, Complex.exp_zero, mul_one]
     congr 1
     exact Finset.prod_congr rfl fun τ _ => by rw [normSq_det_of_isONFr hx τ]

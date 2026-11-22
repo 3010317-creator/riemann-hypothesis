@@ -1,4 +1,8 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceEstimates.EvalPB
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceEstimates.EvalPB
+
+@[expose] public section
 
 noncomputable section
 
@@ -80,7 +84,7 @@ theorem evalP : EvalPStatement := by
       ContinuousOn (tMap ε σ x1 x₀ ((w : D) : H) (fun c' => ((f c' : D) : H))) (UJset ε) := by
     intro x1 f hf
     unfold tMap
-    apply continuousOn_finset_sum
+    apply continuousOn_finsetSum
     intro c' _
     apply ContinuousOn.mul
     · rw [← tmD_cJL_coe]
@@ -150,7 +154,8 @@ theorem evalP : EvalPStatement := by
     simp only [h1]
     calc ∑ d, (c₀ * Q (Fin.last (2 * r + k)) d) • l ⟨Capelli.nnPlus E y om (v : D) d, hnnS d⟩
         = l (∑ d, (c₀ * Q (Fin.last (2 * r + k)) d) • (⟨Capelli.nnPlus E y om (v : D) d, hnnS d⟩ : S)) := by
-          rw [map_sum]; simp only [map_smul]
+          set_option synthInstance.maxHeartbeats 100000 in
+            rw [map_sum]; simp only [map_smul]
       _ = _ := by rw [hsumS, map_smul]; rfl
 
   have hfac : ∀ j, (om - 1 - (r : ℂ) + ((u j : ℝ) : ℂ) - ((k : ℂ) - 1) / 2) ≠ 0 := by

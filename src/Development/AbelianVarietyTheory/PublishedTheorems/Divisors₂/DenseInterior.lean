@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalToGlobal.ProjectiveLattices.IsChartIff
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
-import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsChartIff
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+
+@[expose] public section
 
 noncomputable section
 
@@ -55,19 +59,19 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X : Sc
 def IsTranslate {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) (g : Sp S ⟶ t.G.left)
     (v : Sp (DualNumber R) ⟶ t.G.left) (w : Sp (DualNumber S) ⟶ t.G.left) : Prop :=
   ∃ g' v' : tEpsG (g ≫ t.G.hom) ⟶ t.G, g'.left = spMap (algebraMap S (DualNumber S)) ≫ g ∧
-    v'.left = spMap (dualMap φ) ≫ v ∧ (g' * v').left = w
+    v'.left = spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ v ∧ (g' * v').left = w
 
 theorem existsUnique_isTranslate {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {x : Sp R ⟶ X}
     {g : Sp S ⟶ t.G.left} (hg : g ≫ t.G.hom = spMap φ ≫ x) {v : Sp (DualNumber R) ⟶ t.G.left}
     (hv : IsTanAtG t x v) : ∃! w, IsTranslate t φ g v w := by
-  have e : (dualMap φ).comp (algebraMap R (DualNumber R)) = (algebraMap S (DualNumber S)).comp φ := by
-    ext a <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-  have h2 : (spMap (dualMap φ) ≫ v) ≫ t.G.hom = (tEpsG (g ≫ t.G.hom)).hom := by
+  have e : (_root_.Formalism.L2.Pj.dualMap φ).comp (algebraMap R (DualNumber R)) = (algebraMap S (DualNumber S)).comp φ := by
+    ext a <;> simp [_root_.Formalism.L2.Pj.dualMap, TrivSqZeroExt.algebraMap_eq_inl]
+  have h2 : (spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ v) ≫ t.G.hom = (tEpsG (g ≫ t.G.hom)).hom := by
     show _ = spMap (algebraMap S (DualNumber S)) ≫ g ≫ t.G.hom
     rw [Category.assoc, hv.1, hg, ← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp,
       ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp, e]
   refine ⟨_, ⟨Over.homMk (spMap (algebraMap S (DualNumber S)) ≫ g) (Category.assoc _ _ _),
-    Over.homMk (spMap (dualMap φ) ≫ v) h2, rfl, rfl, rfl⟩, ?_⟩
+    Over.homMk (spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ v) h2, rfl, rfl, rfl⟩, ?_⟩
   rintro w ⟨g', v', h₁, h₂, rfl⟩
   congr 2
   · exact Over.OverMorphism.ext h₁
@@ -88,13 +92,6 @@ def IsKS (V : X.Opens) (U : X.affineOpens) {n : ℕ} (v : Fin n → (Sp (DualNum
         ∑ a, ∑ b, φ (Θ a b) *
           ((valR (w b) _ (t.PP.L.g (j i) (j i')).val).snd * valR g₀ _ (t.PP.L.g (j i) (j i'))⁻¹.val) *
           (valR (w a) O f).snd
-
-theorem isKS_zero (V : X.Opens) (U : X.affineOpens) {n : ℕ}
-    (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)) : IsKS t V U v (fun _ => 0) 0 := by
-  refine ⟨t.PP.L.ι, fun i => t.G.hom ⁻¹ᵁ (U.1 ⊓ V) ⊓ t.PP.L.U i, id, fun _ _ _ => 0, ?_, fun _ => inf_le_right,
-    fun _ => isField_zero _, fun _ _ _ => (map_zero _).symm, fun i i' O _ f S _ φ g₀ w _ h _ => ?_⟩
-  · rw [← inf_iSup_eq, t.PP.isLB.cover, inf_top_eq]
-  · simp [valR, h]
 
 def HasLogKS {K : Type} [CommRing K] (s : X ⟶ Sp K) (V : X.Opens) : Prop :=
   ∀ (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left))

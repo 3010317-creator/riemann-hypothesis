@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAuxiliaryVectorWittDec
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAuxiliaryVectorWittDec
+
+@[expose] public section
 
 noncomputable section
 
@@ -56,11 +60,19 @@ theorem isSelfDualC_comap {Λ : Submodule (𝓞 D.host.E) (Fin S.rank → D.host
       exact hP x hx
   refine ⟨?_, fun y => ?_⟩
   · rw [heq]
-    refine ⟨hlat.fg.map _, ?_⟩
-    rw [Submodule.map_coe]
-    change Submodule.span D.host.E ((Matrix.mulVecLin d.q0) '' (Λ : Set (Fin S.rank → D.host.E))) = ⊤
-    rw [Submodule.span_image, hlat.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
-    exact fun y => ⟨d.i₀ *ᵥ y, hq y⟩
+    refine { toIsLattice := Submodule.IsLattice.of_fg _ (hlat.fg.map _), span_eq_top := ?_ }
+    let P := Submodule.span D.host.E (Λ.map ((Matrix.mulVecLin d.q0).restrictScalars (𝓞 D.host.E)) : Set (Fin S₀.rank → D.host.E))
+    have hle : Submodule.span D.host.E (Λ : Set (Fin S.rank → D.host.E)) ≤
+        P.comap (Matrix.mulVecLin d.q0) :=
+      Submodule.span_le.mpr fun x hx => Submodule.subset_span ⟨x, hx, rfl⟩
+    apply top_unique
+    intro y _
+    have hx : d.i₀ *ᵥ y ∈ Submodule.span D.host.E (Λ : Set (Fin S.rank → D.host.E)) := by
+      rw [hlat.span_eq_top]
+      trivial
+    have hy := hle hx
+    change d.q0 *ᵥ (d.i₀ *ᵥ y) ∈ P at hy
+    simpa only [hq] using hy
   · rw [hmem]
     constructor
     · intro hy x hx

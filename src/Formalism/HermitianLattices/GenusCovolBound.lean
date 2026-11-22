@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.HermitianLattices.DefsCS
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.DefsCS
+
+@[expose] public section
 
 open Module
 
@@ -22,7 +26,7 @@ def GenusCovolBound : Prop :=
     (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
     ∀ (N : ℕ) (ι : V →+ EuclideanSpace ℝ (Fin N)),
       (∀ x y : V, inner ℝ (ι x) (ι y) = ((Algebra.trace ℚ K (h x y) : ℚ) : ℝ)) →
-    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K L →
+    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K L →
     ∃ C : ℝ, ∀ M ∈ genus h L, ∀ [DiscreteTopology (zmap ι M)] [IsZLattice ℝ (zmap ι M)],
       ZLattice.covolume (zmap ι M) ≤ C
 
@@ -32,7 +36,7 @@ def AutFinite : Prop :=
     [IsScalarTower (NumberField.RingOfIntegers K) K V]
     (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm →
     (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
-    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K L →
+    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K L →
       Set.Finite {g : V ≃ₗ[K] V | g ∈ isom h ∧ gmap g L = L}
 
 end Formalism.HermitianLatticesTheory

@@ -1,8 +1,12 @@
-import Formalism.LocalToGlobal.UnitaryNorms.UnramT
-import Formalism.LocalToGlobal.GlobalTheory.GL6.PDnDil
-import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLcInt
-import Formalism.LocalToGlobal.GlobalTheory.GL6.PRLocW
-import Formalism.LocalToGlobal.GlobalTheory.GL4.PFrames
+module
+
+public import Formalism.LocalToGlobal.UnitaryNorms.UnramT
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.PDnDil
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLcInt
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.PRLocW
+public import Formalism.LocalToGlobal.GlobalTheory.GL4.PFrames
+
+@[expose] public section
 
 noncomputable section
 
@@ -67,51 +71,14 @@ theorem exists_smul_eq_smul_of_mem_ideal_smul {W : Type} [AddCommGroup W] [Modul
   obtain ⟨y, hy, e⟩ := h M x hx
   exact ⟨s, hs, y, hy, e⟩
 
-theorem unr_sup_le {n : ℕ} (A : AtTTied u) (v : (D.mem u).A.vT) (L : Submodule (𝓞 D.host.E) (Fin n → D.host.E))
-    (z z' : Fin n → D.host.E) (hzz : ∃ t : 𝓞 D.host.E, t ∉ A.Pv v ∧ t • (z - z') ∈ A.Pv v • L) :
-    Formalism.HermitianLatticesTheory.localization₂ (A.Pv v) (L ⊔ Submodule.span (𝓞 D.host.E) {(((D.mem u).A.T : ℕ) : D.host.E)⁻¹ • z}) ≤
-      Formalism.HermitianLatticesTheory.localization₂ (A.Pv v) (L ⊔ Submodule.span (𝓞 D.host.E) {(((D.mem u).A.T : ℕ) : D.host.E)⁻¹ • z'}) := by
-  obtain ⟨t, ht, htz⟩ := hzz
-  obtain ⟨s, hs, y, hy, e⟩ := exists_smul_eq_smul_of_mem_ideal_smul A v L _ htz
-  have hT0 : (((D.mem u).A.T : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.2 (D.mem u).A.T_prime.ne_zero
-
-  have key : (s * t) • ((((D.mem u).A.T : ℕ) : D.host.E)⁻¹ • z) =
-      (s * t) • ((((D.mem u).A.T : ℕ) : D.host.E)⁻¹ • z') + y := by
-    have e' : (s * t) • (z - z') = (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • y := by rw [mul_smul, e]
-    have e2 : (s * t) • z = (s * t) • z' + (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • y := by
-      rw [← e', smul_sub]; abel
-    have e3 : (((D.mem u).A.T : ℕ) : D.host.E)⁻¹ • ((((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • y) = y := by
-      rw [show ((((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • y) = (((D.mem u).A.T : ℕ) : D.host.E) • y from
-        (Nat.cast_smul_eq_nsmul (𝓞 D.host.E) _ y).trans (Nat.cast_smul_eq_nsmul D.host.E _ y).symm]
-      rw [smul_smul, inv_mul_cancel₀ hT0, one_smul]
-    rw [smul_comm (s * t) ((((D.mem u).A.T : ℕ) : D.host.E)⁻¹) z, e2, smul_add, e3,
-      smul_comm ((((D.mem u).A.T : ℕ) : D.host.E)⁻¹) (s * t) z']
-  intro x hx
-  obtain ⟨r, hr, hrx⟩ := (rlv_mem_locP _ _ _).1 hx
-  obtain ⟨l, hl, w, hw, ex⟩ := Submodule.mem_sup.1 hrx
-  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hw
-  refine (rlv_mem_locP _ _ _).2 ⟨s * t * r, ?_, ?_⟩
-  · exact fun h => (Ideal.IsPrime.mem_or_mem inferInstance h).elim
-      (fun h' => (Ideal.IsPrime.mem_or_mem inferInstance h').elim hs ht) hr
-  · rw [mul_smul, ← ex, smul_add, smul_comm (s * t) a, key, smul_add]
-    refine Submodule.add_mem _ (Submodule.mem_sup_left (L.smul_mem _ hl)) ?_
-    refine Submodule.add_mem _ ?_ (Submodule.mem_sup_left (L.smul_mem _ hy))
-    refine Submodule.mem_sup_right ?_
-    rw [smul_comm a (s * t)]
-    exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _))
-
-def TLdInt (D : D7) (u : D.what₂.Word) : Prop :=
-  ∀ i (hi : i ≤ D.R.m) (c : (D.mem u).C.cls i), ∀ y ∈ Ld D u i hi c,
-    (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) • y ∈ clsCrd D u i hi c
-
 end Unr
 
 section TLd
 
 variable {D : D7} {u : D.what₂.Word}
 
-set_option maxHeartbeats 2000000 in
 
+set_option maxHeartbeats 2000000 in
 theorem tld_isLat (i : ℕ) (hi : i ≤ D.R.m) (c : (D.mem u).C.cls i) :
     Formalism.L2.GlobalTheoryTheory.Comp.IsLat (clsCrd D u i hi c) := by
   letI := D.host.cmStar
@@ -122,7 +89,8 @@ theorem tld_isLat (i : ℕ) (hi : i ≤ D.R.m) (c : (D.mem u).C.cls i) :
     have hx : (D.sp.X i).hT x y = ∑ a, ∑ b, star ((D.sp.X i).frame.repr x a) * (D.sp.X i).gram a b *
         (D.sp.X i).frame.repr y b := by
       conv_lhs => rw [← (D.sp.X i).frame.sum_repr x, ← (D.sp.X i).frame.sum_repr y]
-      simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul,
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul,
         starRingEnd_apply, HSpace.gram, Finset.mul_sum]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
@@ -163,8 +131,8 @@ theorem sf_mulVec_smul {n : ℕ} (v : HeightOneSpectrum (𝓞 F))
   show _ * ((s : E ⊗[F] v.adicCompletion F) * w j) = (s : E ⊗[F] v.adicCompletion F) * (_ * w j)
   ring
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem sf_of_gen {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (L2 Lb : Submodule (𝓞 E) (Fin n → E))
     {Mm : Type} [AddCommGroup Mm] [Module (intV E v) Mm]
     (f : latS (F := F) (v.adicCompletion F) (intV E v) Lb →ₗ[intV E v] Mm)
@@ -206,7 +174,7 @@ theorem sf_of_gen {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (L2 Lb : Submodule 
           ⟨((y2⁻¹ : GL (Fin n) _) : Matrix (Fin n) (Fin n) _) *ᵥ a, (hy2 a).1 ha⟩ +
           ⟨((y2⁻¹ : GL (Fin n) _) : Matrix (Fin n) (Fin n) _) *ᵥ b, (hy2 b).1 hb⟩ :=
         Subtype.ext (by simp only [Submodule.coe_add, Matrix.mulVec_add])
-      rw [e1, e2, map_add, map_add, iha, ihb]
+      rw [e1, e2, map_add (f := _), map_add (f := _), iha, ihb]
     | smul s a ha iha =>
       have e1 : (⟨(g : Matrix (Fin n) (Fin n) _) *ᵥ (((y2⁻¹ : GL (Fin n) _) : Matrix (Fin n) (Fin n) _) *ᵥ (s • a)),
           (hg _).1 ((hy2 _).1 (Submodule.smul_mem _ s ha))⟩ : latS (F := F) (v.adicCompletion F) (intV E v) Lb) =
@@ -247,8 +215,8 @@ theorem sf_bc_eq {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (y1 y2 : GL (Fin n) 
   rw [map_mul, map_mul, map_inv, Units.val_mul, Units.val_mul]
   rfl
 
-set_option maxHeartbeats 2000000 in
 
+set_option maxHeartbeats 2000000 in
 theorem sf_two {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (L1 L2 Lb : Submodule (𝓞 E) (Fin n → E))
     {Mm : Type} [AddCommGroup Mm] [Module (intV E v) Mm]
     (f : latS (F := F) (v.adicCompletion F) (intV E v) Lb →ₗ[intV E v] Mm)

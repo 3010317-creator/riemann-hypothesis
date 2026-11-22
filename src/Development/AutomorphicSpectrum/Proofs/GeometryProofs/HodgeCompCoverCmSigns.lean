@@ -1,23 +1,28 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
-import GroundTheory.HeightsAndTheta.Heights.Regularisation.BoundedStatements
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExists
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeLatticeFlagStatement
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.TrivFlagHodgeStatement
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NumberField
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenOfUnit
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DetLatticeFlagTensor
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefDegreeScaleInvariant
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsReindexDegreeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCoverPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefOnFibresBlockXdegSumsOfRootLinesStatement
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
+public import GroundTheory.HeightsAndTheta.Heights.Regularisation.BoundedStatements
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NumberField
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenOfUnit
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DetLatticeFlagTensor
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefDegreeScaleInvariant
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsReindexDegreeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCoverPrimesStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefOnFibresBlockXdegSumsOfRootLinesStatement
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField Matrix Filter Topology
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi
 open GroundTheory.Heights₂.Heights.LowerBoundFree GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp
@@ -58,7 +63,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_cm_signs : To
     rcases hsm with rfl | rfl
     · have h1 : ∀ τ (k : Fin D.p), HodgeCpt.rootIdx D (τ, Fin.castAdd D.q k) = ⟨.inl τ, k⟩ := fun τ k => by
         unfold HodgeCpt.rootIdx
-        rw [dif_pos (show ((Fin.castAdd D.q k : Fin _) : ℕ) < D.p from k.2)]
+        rw [dite_eq_left (show ((Fin.castAdd D.q k : Fin _) : ℕ) < D.p from k.2)]
         rfl
       refine ⟨_, _, Lat.tens_isDegOn _ _ _ _ _ _ _ _ _ _ _ (fun τ => Lat.tens_isDegOn _ _ _ _ _ _ _ _ _ _ _
         (fun k => hgr _ _ (h1 τ k)) _) _, ?_⟩
@@ -69,7 +74,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_cm_signs : To
       simp [HodgeCpt.rootSgn]
     · have h1 : ∀ τ (k : Fin D.q), HodgeCpt.rootIdx D (τ, Fin.natAdd D.p k.rev) = ⟨.inr τ, k⟩ := fun τ k => by
         unfold HodgeCpt.rootIdx
-        rw [dif_neg (by simp)]
+        rw [dite_eq_right (by simp)]
         congr 1
         apply Fin.ext
         have := k.2

@@ -1,11 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DegreeLieLatticesCmTripleBaseChange
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.InjectiveOfSumEq
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DegreeLieLatticesCmTripleBaseChange
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.InjectiveOfSumEq
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+
+@[expose] public section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory GlobalTheory GlobalTheory.CM
@@ -107,7 +111,7 @@ theorem eigLat_image_le_span_diff : ∀ (E : Type) [Field E] [NumberField E] [Is
       funext k
       simp
     | add x y _ _ hx hy =>
-      rw [hjadd, map_add, hx, hy, map_add, hjadd]
+      rw [hjadd, map_add (f := _), hx, hy, map_add (f := _), hjadd]
     | smul r x _ hx =>
       rw [hjsmul, ← algebraMap_smul K' (RingOfIntegers.mapRingHom j r), map_smul, hx, algebraMap_smul,
         ← algebraMap_smul K r x, map_smul, algebraMap_smul, hjsmul]
@@ -123,7 +127,7 @@ theorem eigLat_image_le_span_diff : ∀ (E : Type) [Field E] [NumberField E] [Is
       rw [map_zero]
       exact S.zero_mem
     | add x y _ _ hx hy =>
-      rw [map_add]
+      rw [map_add (f := _)]
       exact S.add_mem hx hy
     | smul s x _ hx =>
       rw [← algebraMap_smul K' s x, map_smul, algebraMap_smul]

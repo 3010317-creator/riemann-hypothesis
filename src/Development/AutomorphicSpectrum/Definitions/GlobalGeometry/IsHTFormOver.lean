@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HasValues
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HasValues
+
+@[expose] public section
 
 noncomputable section
 
@@ -16,7 +20,7 @@ def LieModel.IsHTFormOver (M : LieModel G ξ E) (N : ℕ) {R : Type} [CommRing R
   ∃ (_ : IsDomain R) (T : Type) (_ : CommGroup T) (Γ : BT.QFGroup R T)
     (i : Γ.G.left ⟶ G.left) (L : Type) (_ : AddCommGroup L) (_ : Module R L)
     (M₀ : LieModel G x L) (j : L → E) (χ : T →* Rˣ) (w₀ : Module.Dual R L),
-    Γ.IsTorsionAlong G x N i ∧ (∀ e, (M.pt (j e)).left = Spec.map (CommRingCat.ofHom (dualMap k)) ≫ (M₀.pt e).left) ∧
+    Γ.IsTorsionAlong G x N i ∧ (∀ e, (M.pt (j e)).left = Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap k)) ≫ (M₀.pt e).left) ∧
       Γ.IsHT i M₀ N χ w₀ ∧ ∀ e, w (j e) = k (w₀ e)
 
 def LieModel.IsHTFormAt (M : LieModel G ξ E) (N : ℕ) (p : Cpt ξ) (w : Module.Dual Ω E) : Prop :=

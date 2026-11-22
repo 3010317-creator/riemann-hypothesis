@@ -1,5 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.Columns.HeckeInertComm
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.Columns.HeckeInertComm
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.L2.Col Formalism.HermitianLatticesTheory
 open Classical
 
@@ -7,10 +12,10 @@ namespace GlobalTheory
 
 theorem inertPath_card_eq_natCard {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
     (P : HeightOneSpectrum (𝓞 E)) {ST SG : Finset (HeightOneSpectrum (𝓞 E))}
-    (hST : ∀ R : ST, R.1 ≠ P) (hSG : ∀ w : SG, w.1 ≠ P) (s t : List ℕ) (d f : DecoSet E n ST SG)
+    (hST : ∀ R : ST, R.1 ≠ P) (hSG : ∀ w : SG, w.1 ≠ P) (s t : List ℕ) (d f : DecoSet (E := E) (n := n) (ST := ST) (SG := SG))
     (hf : f.1.f = d.1.f) (hbe : f.1.be = d.1.be) :
     ((d.inertNb P.asIdeal s).filter fun e => f ∈ e.inertNb P.asIdeal t).card =
-      Nat.card {Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
+      Nat.card {Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsFullLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
         IsInertNbr P.asIdeal s d.1.N Y ∧ IsInertNbr P.asIdeal t Y f.1.N} := by
   rw [← Nat.card_eq_finsetCard]
   refine Nat.card_congr
@@ -40,7 +45,7 @@ theorem inertPath_card_eq_natCard {E : Type} [Field E] [NumberField E] [StarRing
 
 theorem inertPath_card_eq_zero {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
     (P : HeightOneSpectrum (𝓞 E)) {ST SG : Finset (HeightOneSpectrum (𝓞 E))} (s t : List ℕ)
-    (d f : DecoSet E n ST SG) (h : ¬ (f.1.f = d.1.f ∧ f.1.be = d.1.be)) :
+    (d f : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (h : ¬ (f.1.f = d.1.f ∧ f.1.be = d.1.be)) :
     ((d.inertNb P.asIdeal s).filter fun e => f ∈ e.inertNb P.asIdeal t).card = 0 := by
   rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
   intro e he hfe
@@ -49,10 +54,10 @@ theorem inertPath_card_eq_zero {E : Type} [Field E] [NumberField E] [StarRing E]
 
 theorem inertPath_card_comm : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} (P : HeightOneSpectrum (𝓞 E))
   {ST SG : Finset (HeightOneSpectrum (𝓞 E))}, (∀ R : ST, R.1 ≠ P) → (∀ w : SG, w.1 ≠ P) →
-  ∀ (s t : List ℕ) (d f : DecoSet E n ST SG),
-    Nonempty ({Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
+  ∀ (s t : List ℕ) (d f : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)),
+    Nonempty ({Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsFullLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
         IsInertNbr P.asIdeal s d.1.N Y ∧ IsInertNbr P.asIdeal t Y f.1.N} ≃
-      {Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
+      {Y : Submodule (𝓞 E) (Sp E n) // Submodule.IsFullLattice E Y ∧ IsUnimodular (hStd E n) Y ∧
         IsInertNbr P.asIdeal t d.1.N Y ∧ IsInertNbr P.asIdeal s Y f.1.N}) →
     ((d.inertNb P.asIdeal s).filter fun e => f ∈ e.inertNb P.asIdeal t).card =
       ((d.inertNb P.asIdeal t).filter fun e => f ∈ e.inertNb P.asIdeal s).card := by

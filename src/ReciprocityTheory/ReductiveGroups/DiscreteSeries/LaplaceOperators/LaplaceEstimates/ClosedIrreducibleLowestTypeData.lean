@@ -1,14 +1,18 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceEstimates.PsiDatumStatement
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.PropsEquiv
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.FormulaF
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.IsDSSigLam
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.RigidityTheorems.RigidUniversal
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.RigidityTheorems.ClosGenStable
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.PsiFor
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Exists
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.HcParamGapGeIndex
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Weight
-import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeCSchur
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.LaplaceOperators.LaplaceEstimates.PsiDatumStatement
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.PropsEquiv
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.FormulaF
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.IsDSSigLam
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.RigidityTheorems.RigidUniversal
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.RigidityTheorems.ClosGenStable
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.PsiFor
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Exists
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.HcParamGapGeIndex
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.Weight
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeCSchur
+
+@[expose] public section
 
 noncomputable section
 
@@ -59,7 +63,10 @@ theorem closed_irreducible_lowest_type_data (ε : Fin n → Bool) (lam' : Fin n 
   obtain ⟨T'⟩ := HW.kType_exists_of_dom ε (lowK ε lam') (HW.lowK_int_dom ε lam' hlam).1
     (HW.lowK_int_dom ε lam' hlam).2
   obtain ⟨μ', hμ⟩ := exists_integral_parameter lam' hlam
-  have hP := (S7.isPsiFor_psiM ε lam' h T' μ' hlam hμ hgl hq0 h8).1
+  have hP : IsPsiFor ε lam' T' (S7.PsiM T' μ') := by
+    refine ⟨fun k₁ k₂ g hg => S7.psiM_equiv T' μ' k₁ k₂ hg, S7.psiM_one T' μ', S7.psiM_smooth T' μ' hμ,
+      fun g hg => S7.psiM_casimir T' μ' hμ hg, fun ν hν => ?_⟩
+    exact (S7.psiM_integrable T' μ' hμ hlam hgl hq0 ν).2.1 h8
   have hv₀ := HW.KType.w_ne_zero T'
   have hσ := rreg_isURepOn ε
   have hD := isDerivedOn_smE hσ

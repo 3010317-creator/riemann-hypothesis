@@ -1,8 +1,12 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.WFLUnit
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.TensInt
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BesselLevi
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.ConcreteSettingExists
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.WFLUnit
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.TensInt
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BesselLevi
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.ConcreteSettingExists
+
+@[expose] public section
 
 noncomputable section
 
@@ -148,7 +152,7 @@ theorem wblk_core (hQK : QuotProdK) (hHN : LocHNProps) (hNU : NUnimodLoc) (hTens
       ‖Pi.tensU u (fun v => Wloc u v (x v))‖ₑ = ∏ v, ‖Wloc u v (x v)‖ₑ := by
     intro u x
     simp only [enorm_eq_nnnorm]
-    rw [← ENNReal.coe_finset_prod]
+    rw [← ENNReal.ofNNReal_finsetProd]
     congr 1
     exact NNReal.eq (by push_cast; exact Formalism.L2.SG.Pf.WuDec.norm_tens (Pi.tensU_inner u) _)
   refine ⟨⟨fun u x => Pi.tensU u (fun v => Wloc u v (x v)), fun u => ?_, Wloc, hWlc, fun u x => rfl⟩⟩
@@ -253,7 +257,7 @@ theorem wblk_core (hQK : QuotProdK) (hHN : LocHNProps) (hNU : NUnimodLoc) (hTens
     simp only [hloc2]
     rw [Finset.prod_pow]
     have hcU : ∏ v, ‖cv u v‖ₑ = ‖cU u‖ₑ := by
-      rw [← hcv u]; simp only [enorm_eq_nnnorm]; rw [← ENNReal.coe_finset_prod]; congr 1; rw [nnnorm_prod]
+      rw [← hcv u]; simp only [enorm_eq_nnnorm]; rw [← ENNReal.ofNNReal_finsetProd]; congr 1; rw [nnnorm_prod]
     rw [hcU]
     have ht : 0 < (C u).toReal := ENNReal.toReal_pos (hC0 u) (hCt u)
     have he : ‖cU u‖ₑ ^ 2 = (C u)⁻¹ := by

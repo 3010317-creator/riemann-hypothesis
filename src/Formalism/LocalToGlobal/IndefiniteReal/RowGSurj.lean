@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.IndefiniteReal.InBlock
-import Formalism.LocalToGlobal.IndefiniteReal.CxPassSand
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.IndefiniteReal.InBlock
+public import Formalism.LocalToGlobal.IndefiniteReal.CxPassSand
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 open scoped Matrix ComplexOrder InnerProductSpace
@@ -142,7 +146,8 @@ theorem avg_g (hρ : I.PRho) (t : T) (P : Subgroup G) (ψ : P →* Kˣ)
     Matrix.sum_mulVec]
   simp only [Matrix.smul_mulVec]
   erw [Sand.cpt_sum_smul]
-  rw [map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum]
   erw [map_sum, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   erw [map_smul, (hρ s hH).2.2 (k : G) (I.X.rowMat I.cg false t *ᵥ ((lv (faceOf3 I.A3 ⊥ 1 I.P1 I.ψ1 I.Dc I.Sp I.Zsc I.X.zs) false).Pq t *ᵥ f)),
@@ -167,13 +172,49 @@ theorem avg_b (hJt : I.PJt) (hρ : I.PRho) (b : Bool) (t : T) :
 
 end Prin
 
+private theorem glue_fullLattice {D : ℕ} {T : Type} [Finite T] (t0 : T) (μ : HeightOneSpectrum (𝓞 K) → T)
+    (L : T → Submodule (𝓞 K) (Fin D → K)) (hL : ∀ t, Submodule.IsFullLattice K (L t)) :
+    Submodule.IsFullLattice K (glueLat fun w => L (μ w)) := by
+  classical
+  have := Fintype.ofFinite T
+  have hGmem : ∀ x, x ∈ glueLat (fun w => L (μ w)) ↔
+      ∀ w : HeightOneSpectrum (𝓞 K), x ∈ Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (L (μ w)) := by
+    intro x
+    unfold glueLat
+    exact Submodule.mem_iInf _
+  choose a ha0 ha using fun t => GluingInclusion.denom (K := K) (L t0) (L t) ((hL t0).fg)
+    (Submodule.IsFullLattice.span_eq_top (self := hL t))
+  have hc0 : (∏ t, a t) ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun t _ => ha0 t)
+  have hcL : ∀ x ∈ L t0, (∏ t, a t) • x ∈ glueLat (fun w => L (μ w)) := by
+    intro x hx
+    rw [hGmem]
+    intro w
+    obtain ⟨r, hr⟩ := Finset.dvd_prod_of_mem a (Finset.mem_univ (μ w))
+    rw [hr, mul_comm, mul_smul]
+    exact Formalism.HermitianLatticesTheory.locBasic_le_locS _ _ ((L (μ w)).smul_mem r (ha (μ w) x hx))
+  have hle : glueLat (fun w => L (μ w)) ≤ ⨆ t, L t := by
+    intro x hx
+    refine GluingInclusion.lg (RingOfIntegers.not_isField K) _ x fun w => ?_
+    exact Formalism.HermitianLatticesTheory.locBasic_locS_mono _ (le_iSup L (μ w)) ((hGmem x).mp hx w)
+  have hNfg : (⨆ t, L t).FG := Submodule.fg_iSup L fun t => (hL t).fg
+  have hinvsmul : ∀ (r : 𝓞 K), r ≠ 0 → ∀ y : Fin D → K, (algebraMap (𝓞 K) K r)⁻¹ • (r • y) = y := by
+    intro r hr y
+    have : algebraMap (𝓞 K) K r ≠ 0 := by simpa using (IsFractionRing.injective (𝓞 K) K).ne hr
+    rw [← algebraMap_smul K r y, smul_smul, inv_mul_cancel₀ this, one_smul]
+  refine { toIsLattice := Submodule.IsLattice.of_fg _ (Submodule.FG.of_le hNfg hle), span_eq_top := ?_ }
+  rw [eq_top_iff, ← Submodule.IsFullLattice.span_eq_top (self := hL t0), Submodule.span_le]
+  intro x hx
+  rw [← hinvsmul _ hc0 x]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span (hcL x hx))
+
+
 theorem pLat_of (_hJt : I.PJt) : I.PLat := by
   intro s hH
   have : Finite T := hH.ok.ok2.tup_fin
-  exact Sand.glue_lattice I.A3.fam3.base3.μ0 I.X.μ
+  exact glue_fullLattice I.A3.fam3.base3.μ0 I.X.μ
     (fun t => matLat (I.X.rowMat I.cg false t) ((lv (faceOf3 I.A3 ⊥ 1 I.P1 I.ψ1 I.Dc I.Sp I.Zsc I.X.zs) false).abelian₂ t))
     (fun t => GluingInclusion.matLat_lattice' _ (rowG_surj hH t) _
-      (show Submodule.IsLattice K ((I.A.fam.R t).abelian₂ (Lvl.full I.A.fam.X) (I.X.Z t)) from
+      (show Submodule.IsFullLattice K ((I.A.fam.R t).abelian₂ (Lvl.full I.A.fam.X) (I.X.Z t)) from
         BlockDat.Lam_lat hH.ok.ok2.conj (hH.ok.ok2.what₂ t) hH.ok.ok2.irr))
 
 theorem pGLat_of (_hJt : I.PJt) (hρ : I.PRho) : I.PGLat := by

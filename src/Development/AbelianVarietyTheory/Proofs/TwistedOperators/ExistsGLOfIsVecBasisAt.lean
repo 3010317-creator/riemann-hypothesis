@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemHatIffOfSelfDual
+
+@[expose] public section
 
 noncomputable section
 
@@ -132,8 +136,8 @@ theorem sameAt_of_smul_eq {Q : Pl D.host.E} {n : ℕ} {β β' : GL (Fin n) (EAf 
     SameAt Q (lat β) (lat β') := fun y => by
   rw [mem_hat_lat, mem_hat_lat, inv_mulVec_smul h]
 
-theorem eq_of_sameAt {n : ℕ} {Λ Λ' : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} (h : Submodule.IsLattice D.host.E Λ)
-    (h' : Submodule.IsLattice D.host.E Λ') (H : ∀ Q, SameAt Q Λ Λ') : Λ = Λ' := by
+theorem eq_of_sameAt {n : ℕ} {Λ Λ' : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} (h : Submodule.IsFullLattice D.host.E Λ)
+    (h' : Submodule.IsFullLattice D.host.E Λ') (H : ∀ Q, SameAt Q Λ Λ') : Λ = Λ' := by
   ext x
   rw [← inc_mem_hat_iff h, ← inc_mem_hat_iff h']
   exact ⟨fun hx => mem_hat_of_idem h'.fg fun w => (H w _).1 (smul_mem_hat (idem_mem w) hx),
@@ -170,7 +174,7 @@ theorem isBasisAt_lat {V : HSp D} (w : Pl D.host.E) (β : GL (Fin V.rank) (EAf D
   refine ⟨rfl, idem w, isPlIdem_idem w, by rw [smul_smul, idem_mul_self], fun y => ?_⟩
   rw [← basis_gen (OA D) (idem_mul_self w) (idem_mem w) β y, InCmp, mem_hat_lat]
 
-theorem isVecBasisAt_of_isBasisAt {V : HSp D} {w : Pl D.host.E} {Λ : Lat V} (hΛ : Submodule.IsLattice D.host.E Λ)
+theorem isVecBasisAt_of_isBasisAt {V : HSp D} {w : Pl D.host.E} {Λ : Lat V} (hΛ : Submodule.IsFullLattice D.host.E Λ)
     {B : Matrix (Fin V.rank) (Fin V.rank) (EAf D)} (h : IsBasisAt V w Λ B) : IsVecBasisAt V w B := by
   obtain ⟨β, rfl⟩ := exists_eq_lat hΛ
   obtain ⟨-, e, he, h1, h2⟩ := h

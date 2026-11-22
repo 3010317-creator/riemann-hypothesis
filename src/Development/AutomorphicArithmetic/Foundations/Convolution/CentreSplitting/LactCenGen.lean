@@ -1,5 +1,9 @@
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.CentralIntegrated
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.LactSpec
+module
+
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.CentralIntegrated
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.LactSpec
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -10,7 +14,7 @@ open scoped TensorProduct
 
 namespace UpperTheory.ConvolutionTheory.Dp
 
-theorem oinf_toLp {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL K n)) [μ.IsHaarMeasure]
+theorem oinf_toLp {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
     (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] (β : TI K n) (w : CuspL2 μ) :
     Oinf μ ν β (toLp μ w) = toLp μ ((archRepT μ).integrated ν β w) := by
   refine Eq.trans ?_ (toLp_integrated_archRepT μ ν (γ := β) β.continuous β.hasCompactSupport w).symm
@@ -26,7 +30,7 @@ theorem rUC_tmul {K : Type} [Field K] [NumberField K] {n : ℕ} (c : ℂ) (p : U
 
 set_option maxHeartbeats 800000 in
 theorem lactCen_of_gen (K : Type) [Field K] [NumberField K] (n : ℕ)
-    (hG : Subgroup.closure (Set.range (isExpLieAlgebra K n).expG) = ⊤) (μ : Measure (normOneGL K n)) [μ.IsHaarMeasure]
+    (hG : Subgroup.closure (Set.range (isExpLieAlgebra K n).expG) = ⊤) (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
     (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] (β : TI K n) (hβ : SmoothT β) :
     ∀ p ∈ (isExpLieAlgebra K n).centerU, ∀ q ∈ (isExpLieAlgebra K n).centerU, ∀ φ ∈ centralCuspForms K n,
       Oinf μ ν (lact ((1 : ℂ) ⊗ₜ p + Complex.I ⊗ₜ q) β) (clsL μ φ) =
@@ -50,7 +54,7 @@ theorem lactCen_of_gen (K : Type) [Field K] [NumberField K] (n : ℕ)
     funext g
     have h3 := rUC_tmul 1 p f g⁻¹
     rw [one_mul] at h3
-    rw [hl g, map_add, ← h3, ← rUC_tmul Complex.I q f g⁻¹]
+    rw [hl g, map_add (f := _), ← h3, ← rUC_tmul Complex.I q f g⁻¹]
     rfl
   have h1 := (kernel_uAction _ ν (archRepT μ) p f hf).1
   have h2 := (kernel_uAction _ ν (archRepT μ) q f hf).1
@@ -58,7 +62,7 @@ theorem lactCen_of_gen (K : Type) [Field K] [NumberField K] (n : ℕ)
     fun γ ψ => oinf_toLp μ ν γ _
   have h5 : Oinf μ ν β (clsL μ (uActionCusp K n p φ + Complex.I • uActionCusp K n q φ)) =
       Oinf μ ν β (clsL μ (uActionCusp K n p φ)) + Complex.I • Oinf μ ν β (clsL μ (uActionCusp K n q φ)) := by
-    rw [(clsL μ).map_add, (clsL μ).map_smul, (Oinf μ ν β).map_add, (Oinf μ ν β).map_smul]
+    rw [(clsL μ).map_add (f := _), (clsL μ).map_smul, (Oinf μ ν β).map_add (f := _), (Oinf μ ν β).map_smul]
   rw [h5, h4, h4, h4, e2, (isExpLieAlgebra K n).integrated_add_kernel ν _ h1 (h2.const_mul _),
     IsExpLieAlgebra.integrated_const_mul_kernel, key p hp, key q hq, (toLp μ).map_add, (toLp μ).map_smul]
 

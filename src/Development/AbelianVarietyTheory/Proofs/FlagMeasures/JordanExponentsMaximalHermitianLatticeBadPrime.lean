@@ -1,16 +1,21 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SiegelMassRatioOfLI
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.AlphaDiscriminantHolds
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.JordanSplittingExists
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiscEquiv
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeLocalStructureDiscriminan
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.NormRepCountExtP
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLatticeOfFibLocNeZeroGood
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.IsUnimodularAtIffVd
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLocalData
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MemSmulOfMemSmulLocF
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SiegelMassRatioOfLI
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.AlphaDiscriminantHolds
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.JordanSplittingExists
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiscEquiv
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeLocalStructureDiscriminan
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.NormRepCountExtP
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLatticeOfFibLocNeZeroGood
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.IsUnimodularAtIffVd
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsLocalData
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.MemSmulOfMemSmulLocF
+
+@[expose] public section
+
 open NumberField GlobalTheory.Mass Formalism.HermitianLatticesTheory Formalism.HermitianLattices.Ext.L3 Formalism.L2.SG.Pf.Cnt
 open scoped Classical
 
@@ -21,7 +26,7 @@ theorem main : ∀ (K F V : Type) [Field K] [NumberField K] [StarRing K] [Field 
   intro K F V _ _ _ _ _ _ _ _ _ _ _ hK hF h hs hd M hM P hPb b a hJ
   have hP : P.IsMaximal := hPb.1
   have hp : (P.comap (algebraMap (𝓞 F) (𝓞 K))).IsMaximal :=
-    Ideal.isMaximal_comap_of_isIntegral_of_isMaximal P
+    Ideal.isMaximal_under_of_isIntegral_of_isMaximal P
   have hpp := hp.isPrime
   have hl : ∀ L : Submodule (𝓞 K) V, locF (P.comap (algebraMap (𝓞 F) (𝓞 K))) L = loc (K := K) P L :=
     fun L => locF_eq_loc hK hF hP L
@@ -29,7 +34,35 @@ theorem main : ∀ (K F V : Type) [Field K] [NumberField K] [StarRing K] [Field 
   obtain ⟨hconj, -, -, x, hxM, ⟨a0, ha0x, ha0P, ha0P2⟩, hstr⟩ := hloc P hPb
   have hext : extP K (P.comap (algebraMap (𝓞 F) (𝓞 K))) = P := ThirdPropositionSlot.map_comap_eq_of_inert hK hF hP hconj
   obtain ⟨hbX, hspan, horth, hdiag, ha⟩ := hJ
-  have hL : IsLatIn (⊤ : Submodule K V) M := ⟨hM.1.1.fg, hM.1.1.span_eq_top⟩
+  have hli : LinearIndependent K b := by
+    rw [Fintype.linearIndependent_iff]
+    intro g hg k
+    have h1 := congrArg (h (b k)) hg
+    rw [map_sum, map_zero] at h1
+    simp only [map_smul, smul_eq_mul] at h1
+    rw [Finset.sum_eq_single k (fun j _ hj => by rw [horth k j (Ne.symm hj), mul_zero])
+      (by simp)] at h1
+    have hn : h (b k) (b k) ≠ 0 := by
+      rw [hdiag]
+      exact (map_ne_zero (algebraMap F K)).2 (by exact_mod_cast ha k)
+    exact (mul_eq_zero.mp h1).resolve_right hn
+  have hbtop : Submodule.span K (Set.range b) = ⊤ := by
+    apply Submodule.eq_of_le_of_finrank_eq le_top
+    rw [finrank_span_eq_card hli, Fintype.card_fin]
+  have hL : IsLatIn (⊤ : Submodule K V) M := by
+    refine ⟨hM.1.1.fg, ?_⟩
+    apply eq_top_iff.mpr
+    rw [← hbtop, Submodule.span_le]
+    rintro _ ⟨i, rfl⟩
+    have hm : b i ∈ locF (P.comap (algebraMap (𝓞 F) (𝓞 K))) M := by
+      rw [← hspan]
+      exact LocF.le_locF _ _ (Submodule.subset_span ⟨i, rfl⟩)
+    obtain ⟨t, ht, htx⟩ := (LocF.mem_locF_iff hpp M (b i)).1 hm
+    have ht0 : algebraMap F K (t : F) ≠ 0 :=
+      (map_ne_zero (algebraMap F K)).2 (by exact_mod_cast Formalism.L2.SG.Pf.G2.ne_zero_of_notMem ht)
+    apply (Submodule.smul_mem_iff _ ht0).1
+    rw [← IsScalarTower.algebraMap_apply (𝓞 F) F K, IsScalarTower.algebraMap_apply (𝓞 F) (𝓞 K) K, algebraMap_smul]
+    exact Submodule.subset_span htx
   have hdI : dualIn h ⊤ M = dual h M := by
     ext z; simp [dualIn]
   set p := P.comap (algebraMap (𝓞 F) (𝓞 K)) with hpdef

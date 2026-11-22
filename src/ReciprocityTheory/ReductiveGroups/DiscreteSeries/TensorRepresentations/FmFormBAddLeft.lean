@@ -1,5 +1,9 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.TraceFormula
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.UnitarizeC
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.TraceFormula
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.UnitarizeC
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -22,10 +26,6 @@ theorem fm_formB_add_left (f f' g : Fin n → D) : formB ε (f + f') g = formB �
 
 theorem fm_sum_ite_left (w : Fin n → ℂ) (a : Fin n) (x : D) (G : Fin n → D) :
     ∑ c, w c * inner ℂ (((if c = a then x else 0 : D)) : H) ((G c : D) : H) = w a * inner ℂ (x : H) ((G a : D) : H) := by
-  rw [Finset.sum_eq_single a (fun c _ hc => by rw [if_neg hc]; simp) (fun h => absurd (Finset.mem_univ a) h), if_pos rfl]
-
-theorem fm_sum_ite_right (w : Fin n → ℂ) (a : Fin n) (x : D) (G : Fin n → D) :
-    ∑ c, w c * inner ℂ ((G c : D) : H) (((if c = a then x else 0 : D)) : H) = w a * inner ℂ ((G a : D) : H) (x : H) := by
   rw [Finset.sum_eq_single a (fun c _ hc => by rw [if_neg hc]; simp) (fun h => absurd (Finset.mem_univ a) h), if_pos rfl]
 
 theorem fm_formB_tensF (dual : Bool) {E : Fin n → Fin n → Module.End ℂ D} (hU : IsInfUnitary ε E) (a b : Fin n)

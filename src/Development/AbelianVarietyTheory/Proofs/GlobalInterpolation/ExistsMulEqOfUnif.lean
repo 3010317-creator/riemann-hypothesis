@@ -1,16 +1,20 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
-import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocPDelAtrEqLocPNabAtr
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMulOfApprox
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CharacterValueAtT
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUnitaryCarries
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationLeOneOfMemZmu
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceOverPInducedByAlgebraicPadicEmbedding
-import Formalism.LocalToGlobal.Columns.BtExistsSmulLeOfFg
-import Formalism.LocalToGlobal.Columns.AtTLemmas
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
+public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocPDelAtrEqLocPNabAtr
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMulOfApprox
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CharacterValueAtT
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUnitaryCarries
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationLeOneOfMemZmu
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceOverPInducedByAlgebraicPadicEmbedding
+public import Formalism.LocalToGlobal.Columns.BtExistsSmulLeOfFg
+public import Formalism.LocalToGlobal.Columns.AtTLemmas
+
+@[expose] public section
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker GlobalTheory.KerT
 open scoped Matrix
@@ -121,7 +125,7 @@ theorem tauLat_colLat (τ : I) (B : GL (Fin n) E) :
       simp only [Pi.zero_apply, map_zero]
       exact zero_mem _
     | add y z _ _ hy hz =>
-      simp only [Pi.add_apply, map_add]
+      simp only [Pi.add_apply, map_add (f := _)]
       exact add_mem hy hz
     | smul r y _ hy =>
       have e : (fun a => emb τ ((r • y) a)) = RingOfIntegers.mapRingHom (emb τ) r • fun a => emb τ (y a) := by
@@ -220,7 +224,8 @@ theorem exists_basis_ker {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hs : d.at P.
     LinearMap.codRestrict (stdLat E n) ((Algebra.linearMap (𝓞 E) E).compLeft (Fin n)) hvec
   have hg : ∀ r, g r = d.f P fun a => algebraMap (𝓞 E) E (r a) := fun _ => rfl
   have hgs : ∀ r, g r = ∑ j, Ideal.Quotient.mk P.1.asIdeal (r j) * g (Pi.single j 1) := fun r => by
-    conv_lhs => rw [← Finset.univ_sum_single r, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      conv_lhs => rw [← Finset.univ_sum_single r, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [← quot_smul_def, ← map_smul, ← Pi.single_smul, smul_eq_mul, mul_one]
   have hred : ∀ x ∈ d.at P.1, ∃ s ∉ P.1.asIdeal, ∃ r : Fin n → 𝓞 E, s • x = (fun a => algebraMap (𝓞 E) E (r a)) ∧
@@ -272,7 +277,8 @@ theorem exists_basis_ker {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hs : d.at P.
       rw [← Ideal.Quotient.eq_zero_iff_mem]
       refine (mul_eq_zero.1 ?_).resolve_right hi
       rw [hx2, mul_zero, hgs, ← Finset.add_sum_erase _ _ (Finset.mem_univ i)] at e'
-      rw [← e', map_add, map_sum, add_mul, Finset.sum_mul]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [← e', map_add (f := _), map_sum, add_mul, Finset.sum_mul]
       congr 1
       exact Finset.sum_congr rfl fun j _ => by rw [map_mul, mul_assoc, ← hc']
     obtain ⟨s', hs', b, hb⟩ := exists_mul_eq_of_unif hT hT2 h1
@@ -292,7 +298,8 @@ theorem exists_basis_ker {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hs : d.at P.
     have h3 : (s' * s) • x = ∑ j, (Function.update (s' • r) i b) j • fun a => algebraMap (𝓞 E) E (B₀ a j) := by
       funext a
       have h4 := congrArg (fun y => algebraMap (𝓞 E) E (y a)) h2
-      simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul] at h4
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul] at h4
       rw [mul_smul, e]
       simp only [Finset.sum_apply, Pi.smul_apply, Algebra.smul_def]
       exact h4
@@ -324,7 +331,7 @@ theorem unramOver_of_mem {X : Fields} {S : Set ℕ} (mu : Tup X.F X.E X.K S) {p 
   exact h1.2.2 (show ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S from h3 ▸ hS)
 
 theorem stdOver_of_stdAtT {X : Fields} {Pr : Primes X} (hPr : Pr.Ok) (u : Pr.Word) {n : ℕ}
-    {SG : Finset (HeightOneSpectrum (𝓞 X.E))} (d : DecoSet X.E n (Pr.vT u) SG) (h : StdAtT d.1) : StdOver (Pr.T u) d.1.N := by
+    {SG : Finset (HeightOneSpectrum (𝓞 X.E))} (d : DecoSet (E := X.E) (n := n) (ST := Pr.vT u) (SG := SG)) (h : StdAtT d.1) : StdOver (Pr.T u) d.1.N := by
   intro Q hQ
   rw [← hPr.piT_norm u] at hQ
   rcases Q.isPrime.mem_or_mem hQ with h1 | h1
@@ -337,7 +344,7 @@ theorem stdOver_of_stdAtT {X : Fields} {Pr : Primes X} (hPr : Pr.Ok) (u : Pr.Wor
 
 end Data
 
-theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments → GlobalTheory.Published.InducedSimpleLowestAlcove → ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.host.K)) (δ : ℂ) (B : Base H cc δ) (χ : TaylorLogMetric.IdE H → ℂ) (cD : H.what₂.Tau → ℂ) (sel : HeightOneSpectrum (𝓞 Z.X.F) → HeightOneSpectrum (𝓞 Z.X.E)) (S : Set ℕ) (mu : Tup Z.X.F Z.X.E Z.X.K S) (cst : LocCst Z.X (rowSG Z.Pr sel mu)) (u : Z.Pr.Word) (i : ℕ), i < Z.R.m → Hyp Z s cc δ χ cD sel S mu cst u → JetsAll Z.W sel mu cst (ambOf s B χ cD) u i (i + 1) → AlcoveAt Z.W u (i + 1) → ∀ w : HeightOneSpectrum (𝓞 Z.X.K), seenC Z.Pr u w → ∀ {SG SG' : Finset (HeightOneSpectrum (𝓞 Z.X.E))} (d : DecoSet Z.X.E (Z.R.N i) (Z.Pr.vT u) SG) (fr : Frs Z.X.E (Z.R.N i) (rowSG Z.Pr sel mu)) (d' : DecoSet Z.X.E (Z.R.N (i + 1)) (Z.Pr.vT u) SG') (fr' : Frs Z.X.E (Z.R.N (i + 1)) (rowSG Z.Pr sel mu)) (Ξ₀ : HomE Z.X.E (Z.R.N i) (Z.R.N (i + 1)) → Z.X.K), StdOnly u i (i + 1) d d' → Framed d.1.N fr → Framed d'.1.N fr' → InBoxOfRowSelection sel mu cst u d.1.N d'.1.N Ξ₀ → (∀ x, w.valuation Z.X.K (Ξ₀ x) ≤ 1) → ∀ y ∈ valAt w (Z.W.lamTrue u i) d.1.Lsh, ((Z.Pr.T u : Z.X.K) ^ (((Z.X.f * Z.R.N i : ℕ) : ℤ) - ∑ τ, (Z.W.lamTrue u (i + 1) τ).detShift)) • term Z.W Z.Ch sel mu cst (ambOf s B χ cD) u i (i + 1) d fr d' fr' Ξ₀ y ∈ valAt w (Z.W.lamTrue u (i + 1)) d'.1.L := by
+theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments → GlobalTheory.Published.InducedSimpleLowestAlcove → ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.host.K)) (δ : ℂ) (B : Base H cc δ) (χ : TaylorLogMetric.IdE H → ℂ) (cD : H.what₂.Tau → ℂ) (sel : HeightOneSpectrum (𝓞 Z.X.F) → HeightOneSpectrum (𝓞 Z.X.E)) (S : Set ℕ) (mu : Tup Z.X.F Z.X.E Z.X.K S) (cst : LocCst Z.X (rowSG Z.Pr sel mu)) (u : Z.Pr.Word) (i : ℕ), i < Z.R.m → Hyp Z s cc δ χ cD sel S mu cst u → JetsAll Z.W sel mu cst (ambOf s B χ cD) u i (i + 1) → AlcoveAt Z.W u (i + 1) → ∀ w : HeightOneSpectrum (𝓞 Z.X.K), seenC Z.Pr u w → ∀ {SG SG' : Finset (HeightOneSpectrum (𝓞 Z.X.E))} (d : DecoSet (E := Z.X.E) (n := Z.R.N i) (ST := Z.Pr.vT u) (SG := SG)) (fr : Frs Z.X.E (Z.R.N i) (rowSG Z.Pr sel mu)) (d' : DecoSet (E := Z.X.E) (n := Z.R.N (i + 1)) (ST := Z.Pr.vT u) (SG := SG')) (fr' : Frs Z.X.E (Z.R.N (i + 1)) (rowSG Z.Pr sel mu)) (Ξ₀ : HomE Z.X.E (Z.R.N i) (Z.R.N (i + 1)) → Z.X.K), StdOnly u i (i + 1) d d' → Framed d.1.N fr → Framed d'.1.N fr' → InBoxOfRowSelection sel mu cst u d.1.N d'.1.N Ξ₀ → (∀ x, w.valuation Z.X.K (Ξ₀ x) ≤ 1) → ∀ y ∈ valAt w (Z.W.lamTrue u i) d.1.Lsh, ((Z.Pr.T u : Z.X.K) ^ (((Z.X.f * Z.R.N i : ℕ) : ℤ) - ∑ τ, (Z.W.lamTrue u (i + 1) τ).detShift)) • term Z.W Z.Ch sel mu cst (ambOf s B χ cD) u i (i + 1) d fr d' fr' Ξ₀ y ∈ valAt w (Z.W.lamTrue u (i + 1)) d'.1.L := by
   intro hJ hKnown Z H s cc δ B χ cD sel S mu cst u i hi hyp hjets halc w hw SG SG' d fr d' fr' Ξ₀ hstd hfr hfr' hbox hint y hy
   classical
   have hZ := hyp.ok

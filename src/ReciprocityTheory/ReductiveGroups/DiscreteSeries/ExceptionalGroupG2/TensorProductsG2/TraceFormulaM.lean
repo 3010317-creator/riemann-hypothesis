@@ -1,8 +1,12 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.TensorProductsG2.TraceFormulaL
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.StdGap
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.AnyDec
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.DataGenSubIrred
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.HasGelfandCharSigLam
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.TensorProductsG2.TraceFormulaL
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.StdGap
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.AnyDec
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.DataGenSubIrred
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.ExceptionalGroupG2.ExistenceG2.HasGelfandCharSigLam
+
+@[expose] public section
 
 noncomputable section
 
@@ -59,7 +63,8 @@ theorem tf_datum2 (dual : Bool) {lam lam' : Fin n → ℝ} (hσ : IsURepOn (UJse
   · rintro _ ⟨x, hx, rfl⟩
     have hxG := hV'le hx
     have e : casimir (smE ε (tfRdiag ε)) (Ψ x) = Ψ (casimir E x) := by
-      simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply, map_sum]
       refine sum_congr rfl fun a _ => sum_congr rfl fun b _ => ?_
       rw [hΨE a b _ (tset_genSub_E E V' b a hxG), hΨE b a x hxG]
     rw [e, hc' x hx, map_smul]

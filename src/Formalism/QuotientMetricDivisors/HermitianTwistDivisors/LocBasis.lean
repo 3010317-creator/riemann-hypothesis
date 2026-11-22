@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.QuotientMetricDivisors.ProdFormula
+module
+
+public import Mathlib
+public import Formalism.QuotientMetricDivisors.ProdFormula
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 
@@ -105,8 +109,8 @@ lemma mem_loc_iff_span (w : HeightOneSpectrum (𝓞 K)) {d : ℕ} (M : Submodule
 
 end SemilocalBasisHermitianTwistDivisors
 
-open SemilocalBasisHermitianTwistDivisors in
 
+open SemilocalBasisHermitianTwistDivisors in
 theorem semilocal_basis_exists : LocBasisEx := by
   intro K _ _ _ d L hL w
   have : IsDedekindDomain (A w) :=

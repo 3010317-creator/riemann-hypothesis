@@ -1,7 +1,11 @@
-import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.L2Embedding
-import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.Clause1
-import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
-import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.InConeRefl
+module
+
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.L2Embedding
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.Clause1
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.InConeRefl
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,8 +18,6 @@ open Formalism.REAL (GlRel IsUnitary KHighest IsWeight)
 open CompanionTheory.D.LK (IsKMod LocFin IsMin)
 
 variable {n : ℕ}
-
-def arr (s : Equiv.Perm (Fin n)) (mu : Fin n → ℝ) : Fin n → ℝ := mu ∘ s.symm
 
 def ConeDS (ε : Fin n → Bool) (X : GMod n) (s : Equiv.Perm (Fin n)) (mu : Fin n → ℝ) : Prop :=
   ∀ (ν : Fin n → ℝ) (x : X.V), x ≠ 0 → KHighest (ε ∘ s) (fun a b => X.E (s a) (s b)) ν x →

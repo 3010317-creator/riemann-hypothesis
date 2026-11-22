@@ -1,18 +1,23 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivChar
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoFormsOff
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SubsetTwistExceptionalPlaces
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameEquivApply
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleTwistOfTwistingCharacter
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TensorMapDescent
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisConjDefiniteFormsSemilinearEquiv
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffPolynomialEqZeroOfVanishingOnGLFamily
-import Formalism.LocalToGlobal.Columns.CoefModAt
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameKeepsMatricesMatchesRationalPointsStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivChar
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoFormsOff
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SubsetTwistExceptionalPlaces
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameEquivApply
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleTwistOfTwistingCharacter
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TensorMapDescent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisConjDefiniteFormsSemilinearEquiv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockHarmonicValueSpaceMapEqDualWeylModuleFunctioStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffPolynomialEqZeroOfVanishingOnGLFamily
+public import Formalism.LocalToGlobal.Columns.CoefModAt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameKeepsMatricesMatchesRationalPointsStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.N Formalism.MainNotions.StandardLattice Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2 Formalism.L2.Host Formalism.L2.DIV Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.NX GlobalTheory.HeightCounting GlobalTheory.TwInputs GlobalTheory.SeriesTie GlobalTheory.ExportSeries NumberField IsDedekindDomain
 open Formalism.MainNotions.IntegralHeckeForms (TwOK)
 open Formalism.AUTREP (GAf)
@@ -48,7 +53,7 @@ def cfn {n : ℕ} (lam : D.what₂.Tau → DomWeight n) : VV ℂ lam →ₗ[ℂ]
   toFun F := coefFn (RingHom.id ℂ) lam (F : Pol ℂ D.what₂.Tau n)
   map_add' F G := by
     funext x
-    simp only [coefFn, Submodule.coe_add, map_add, Pi.add_apply, mul_add]
+    simp only [coefFn, Submodule.coe_add, map_add (f := _), Pi.add_apply, mul_add]
   map_smul' c F := by
     funext x
     simp only [coefFn, Submodule.coe_smul, MvPolynomial.smul_eq_C_mul, map_mul, MvPolynomial.eval₂Hom_C, RingHom.id_apply,
@@ -128,7 +133,8 @@ theorem linInd_mapVV {ι' : Type} [Fintype ι'] {n : ℕ} {K : Type} [Field K] (
   · rw [← GlobalTheory.CoefModel.span_mapVV φ lam, Submodule.span_le]
     rintro _ ⟨i, rfl⟩
     dsimp only
-    rw [← c.sum_repr (bVV K lam i), map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [← c.sum_repr (bVV K lam i), map_sum]
     refine Submodule.sum_mem _ fun x _ => ?_
     rw [LinearMap.map_smulₛₗ]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨x, rfl⟩)
@@ -170,7 +176,8 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
     intro w y h
     rw [show Ω w = sumMap e b₁ v w from rfl, sumMap_apply]
     conv_rhs => rw [← c₀.sum_repr y]
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     refine Finset.sum_congr rfl fun x _ => ?_
     rw [LinearMap.map_smulₛₗ, h x]
     rfl
@@ -234,7 +241,7 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
     | add φ₁ φ₂ _ _ h₁ h₂ =>
       obtain ⟨w₁, rfl⟩ := h₁
       obtain ⟨w₂, rfl⟩ := h₂
-      exact ⟨w₁ + w₂, by rw [map_add, map_add]⟩
+      exact ⟨w₁ + w₂, by rw [map_add (f := _), map_add (f := _)]⟩
     | smul o φ _ h₁ =>
       obtain ⟨w₁, rfl⟩ := h₁
       obtain ⟨_, r, rfl⟩ := o
@@ -256,7 +263,7 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
       obtain ⟨c₁, hc₁, h₁⟩ := h₁ r
       obtain ⟨c₂, hc₂, h₂⟩ := h₂ r
       refine ⟨c₂ * c₁, mul_ne_zero hc₂ hc₁, ?_⟩
-      rw [map_add, smul_add, map_mul (algebraMap R (FractionRing R)) c₂ c₁, mul_assoc, map_mul e, ← smul_smul]
+      rw [map_add (f := _), smul_add, map_mul (algebraMap R (FractionRing R)) c₂ c₁, mul_assoc, map_mul e, ← smul_smul]
       refine add_mem (hsmul c₂ h₁) ?_
       rw [← map_mul e, ← mul_assoc, ← map_mul (algebraMap R (FractionRing R)), mul_comm c₂ c₁,
         map_mul (algebraMap R (FractionRing R)), mul_assoc, map_mul e, ← smul_smul]
@@ -280,7 +287,7 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
       induction hG using Submodule.span_induction with
       | mem F hF => exact hQbase F hF
       | zero => rw [map_zero]; exact hQ0
-      | add _ _ _ _ h₁ h₂ => rw [map_add]; exact hQadd _ _ h₁ h₂
+      | add _ _ _ _ h₁ h₂ => rw [map_add (f := _)]; exact hQadd _ _ h₁ h₂
       | smul k _ _ h₁ => rw [LinearMap.map_smulₛₗ]; exact hQsmul _ _ h₁
     have hlat := Formalism.L2.DIV.nabAtr_isLattice (labLL0 D) B.w.lam (B.latAt h) hL
     have hg : ∀ i, Q (mapK s B.w.lam (bVV (↥D.LL0) B.w.lam i)) := fun i =>
@@ -288,7 +295,8 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
     have hgind : LinearIndependent K₀ fun i => mapK s B.w.lam (bVV (↥D.LL0) B.w.lam i) := by
       refine Fintype.linearIndependent_iff.2 fun k hk i => ?_
       have h1 := congrArg (GlobalTheory.CoefModel.mapVV (e.comp f) B.w.lam) hk
-      rw [map_sum, map_zero] at h1
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [map_sum, map_zero] at h1
       simp only [LinearMap.map_smulₛₗ, mapVV_mapK] at h1
       rw [hsO] at h1
       have := Fintype.linearIndependent_iff.1 (GlobalTheory.CoefModel.linearIndependent_mapVV (embLL0 D) B.w.lam)

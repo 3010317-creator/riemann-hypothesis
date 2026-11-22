@@ -1,21 +1,26 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockFirstActionMatrixUnitEq
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Sl2NonnegWeightOfHighestWeightVector
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZRYRCover
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LengthPosOfPosDef
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdjFormula
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
-import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActOfMemGfC
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
-import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKHwMap
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockFirstActionMatrixUnitEq
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Sl2NonnegWeightOfHighestWeightVector
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZRYRCover
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LengthPosOfPosDef
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdjFormula
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActOfMemGfC
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKHwMap
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef
 open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.IndefR.Links
@@ -54,7 +59,7 @@ theorem slice_C (a : ℂ) : slice ι (C a) = C (C a) := by
 variable (ι)
 
 noncomputable def coefAt (t : Outer ι →₀ ℕ) : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ₀ ℂ where
-  toFun Q := coeff t (slice ι Q)
+  toFun Q := AddMonoidAlgebra.coeff (slice ι Q) t
   map_add' _ _ := by simp
   map_smul' c Q := by simp [coeff_smul]
 
@@ -85,7 +90,7 @@ theorem coefAt_pderiv (hι : Function.Injective ι) (u : σ₀) (Q : MvPolynomia
         simp [Derivation.leibniz, map_mul, slice_X_inner hι, hp, pderiv_X,
           Pi.single_apply, h1, h2, coeff_C_mul, mul_comm (slice ι p) (C (X w))]
     · have h1 : ι u ≠ v := fun h => hv ⟨u, h⟩
-      simp only [Derivation.leibniz, map_add, map_mul, smul_eq_mul, pderiv_X, Pi.single_apply,
+      simp only [Derivation.leibniz, map_add (f := _), map_mul, smul_eq_mul, pderiv_X, Pi.single_apply,
         if_neg h1.symm, mul_zero, zero_add, slice_X_outer hv]
       rw [coeff_X_mul', coeff_mul_X']
       split_ifs
@@ -99,11 +104,13 @@ theorem coefAt_jointTop (hι : Function.Injective ι) (t : Outer ι →₀ ℕ) 
     GlobalTheory.CompactHarm.JointTop z y κ α β (coefAt ι t P) := by
   have hm : ∀ i j, coefAt ι t (mixedOp ℂ (ι ∘ z) (ι ∘ y) i j P) =
       mixedOp ℂ z y i j (coefAt ι t P) := fun i j => by
-    simp only [mixedOp_apply, map_sub, map_sum, Function.comp_apply, coefAt_X_mul hι,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [mixedOp_apply, map_sub, map_sum, Function.comp_apply, coefAt_X_mul hι,
       coefAt_pderiv hι]
   have hr : ∀ {K : ℕ} (w : Fin K × Fin N → σ₀) (a b : Fin K),
       coefAt ι t (rowOp ℂ (ι ∘ w) a b P) = rowOp ℂ w a b (coefAt ι t P) := fun w a b => by
-    simp only [rowOp_apply, map_sum, Function.comp_apply, coefAt_X_mul hι, coefAt_pderiv hι]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [rowOp_apply, map_sum, Function.comp_apply, coefAt_X_mul hι, coefAt_pderiv hι]
   obtain ⟨h1, h2, h3, h4, h5, h6, h7⟩ := h
   refine ⟨fun i j hij => ?_, fun i => ?_, fun c c' hc => ?_, fun c => ?_, fun d d' hd => ?_,
     fun d => ?_, fun c d => ?_⟩
@@ -114,7 +121,8 @@ theorem coefAt_jointTop (hι : Function.Injective ι) (t : Outer ι →₀ ℕ) 
   · rw [← hr, h5 d d' hd, map_zero]
   · rw [← hr, h6 d, map_smul]
   · have := congrArg (coefAt ι t) (h7 c d)
-    simpa only [map_sum, Function.comp_apply, coefAt_pderiv hι, map_zero] using this
+    set_option synthInstance.maxHeartbeats 100000 in
+      simpa only [map_sum, Function.comp_apply, coefAt_pderiv hι, map_zero] using this
 
 variable (ι)
 
@@ -137,14 +145,15 @@ theorem unslice_slice (hι : Function.Injective ι) (Q : MvPolynomial σ ℂ) :
   | C a =>
     rw [slice_C]
     simp only [unslice, coe_eval₂Hom, eval₂_C, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, rename_C]
-  | add p q hp hq => rw [map_add, map_add, hp, hq]
+  | add p q hp hq => rw [map_add (f := _), map_add (f := _), hp, hq]
   | mul_X p v hp =>
     rw [map_mul, map_mul, hp, unslice_slice_X hι]
 
 theorem slice_decomp (hι : Function.Injective ι) (P : MvPolynomial σ ℂ) :
     P = ∑ t ∈ (slice ι P).support,
       rename ι (coefAt ι t P) * t.prod (fun r e => (X r.1 : MvPolynomial σ ℂ) ^ e) := by
-  conv_lhs => rw [← unslice_slice hι P, (slice ι P).as_sum, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    conv_lhs => rw [← unslice_slice hι P, (slice ι P).as_sum, map_sum]
   refine Finset.sum_congr rfl fun t _ => ?_
   simp [unslice, eval₂_monomial, coefAt]
 

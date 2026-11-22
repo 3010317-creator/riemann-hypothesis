@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.HermitianLattices.StatementMass
-import Formalism.HermitianLattices.HermitianLatticesProofs.MassBasic
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.StatementMass
+public import Formalism.HermitianLattices.HermitianLatticesProofs.MassBasic
+
+@[expose] public section
 
 noncomputable section
 
@@ -87,12 +91,13 @@ theorem cj_mem_isom {φ : V ≃ₗ[K] V'} (hφ : ∀ x y, h' (φ x) (φ y) = h x
   intro x y
   rw [cj_apply, cj_apply, hφ, hg, isom_symm hφ]
 
-theorem isLattice_tr (φ : V ≃ₗ[K] V') {M : Submodule (𝓞 K) V} (hM : Submodule.IsLattice K M) :
-    Submodule.IsLattice K (latMap φ M) where
+theorem isLattice_tr (φ : V ≃ₗ[K] V') {M : Submodule (𝓞 K) V} (hM : RHCompat.SpanningLattice K M) :
+    RHCompat.SpanningLattice K (latMap φ M) where
   fg := hM.fg.map _
   span_eq_top := by
-    have h1 : ((latMap φ M : Submodule (𝓞 K) V') : Set V') = (φ : V →ₗ[K] V') '' (M : Set V) := rfl
-    rw [h1, Submodule.span_image, hM.span_eq_top, Submodule.map_top, LinearEquiv.range]
+    change Submodule.span K (φ '' (M : Set V)) = ⊤
+    rw [Submodule.span_image_linearEquiv, hM.span_eq_top, Submodule.map_top]
+    exact LinearMap.range_eq_top.2 φ.surjective
 
 theorem genus_tr {φ : V ≃ₗ[K] V'} (hφ : ∀ x y, h' (φ x) (φ y) = h x y) {L M : Submodule (𝓞 K) V}
     (hM : M ∈ genus h L) : latMap φ M ∈ genus h' (latMap φ L) := by
@@ -159,7 +164,7 @@ theorem mass_tr {φ : V ≃ₗ[K] V'} (hφ : ∀ x y, h' (φ x) (φ y) = h x y) 
       rw [tr_symm_tr] at this
       exact ⟨_, this⟩
     unfold mass
-    rw [dif_neg hs, dif_neg hs']
+    rw [dite_eq_right hs, dite_eq_right hs']
 
 theorem mass_ortho_eq {n : ℕ} {L : Submodule (𝓞 K) V} {L' : Submodule (𝓞 K) V'}
     (hL : IsOrthoLattice h L n) (hL' : IsOrthoLattice h' L' n) : mass h L = mass h' L' := by
@@ -176,7 +181,8 @@ theorem mass_ortho_eq {n : ℕ} {L : Submodule (𝓞 K) V} {L' : Submodule (𝓞
     have hx := b.sum_repr x
     have hy := b.sum_repr y
     rw [← hx, ← hy]
-    simp only [map_sum, map_smul, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, b,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, b,
       Module.Basis.mk_apply, hφe, he, he']
   rw [← mass_tr hφ]
   congr 1

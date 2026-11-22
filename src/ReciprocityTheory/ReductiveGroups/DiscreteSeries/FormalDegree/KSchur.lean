@@ -1,5 +1,9 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PmatIsHermitian
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KinstSecondCountable
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PmatIsHermitian
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KinstSecondCountable
+
+@[expose] public section
 
 noncomputable section
 
@@ -21,7 +25,9 @@ lemma muK_univ_ne_zero (ε : Fin n → Bool) : muK ε Set.univ ≠ 0 := ((ENNRea
 lemma muK_univ_ne_top (ε : Fin n → Bool) : muK ε Set.univ ≠ ⊤ := ((ENNReal.toReal_pos_iff.mp (muK_univ_pos ε)).2).ne
 
 instance dk_isProb (ε : Fin n → Bool) : IsProbabilityMeasure (dk ε) :=
-  ⟨by simp [dk]⟩
+  ⟨by
+    simp only [dk, smul_apply, smul_eq_mul]
+    exact ENNReal.inv_mul_cancel (muK_univ_ne_zero ε) (muK_univ_ne_top ε)⟩
 
 instance dk_left (ε : Fin n → Bool) : (dk ε).IsMulLeftInvariant := by
   unfold dk; infer_instance
@@ -51,12 +57,12 @@ lemma muK_inv (ε : Fin n → Bool) : Measure.map (fun x : KG ε => x⁻¹) (muK
 
 lemma dk_inv (ε : Fin n → Bool) : Measure.map (fun x : KG ε => x⁻¹) (dk ε) = dk ε := by
   unfold dk
-  rw [Measure.map_smul, muK_inv]
+  rw [Measure.map_smul _ measurable_inv.aemeasurable, muK_inv]
 
 end CompactHaarProbability
 
-open CompactHaarProbability in
 
+open CompactHaarProbability in
 theorem dk_props (ε : Fin n → Bool) :
     IsProbabilityMeasure (dk ε) ∧ (∀ k : KG ε, Measure.map (fun x => k * x) (dk ε) = dk ε) ∧
       (∀ k : KG ε, Measure.map (fun x => x * k) (dk ε) = dk ε) ∧
@@ -150,8 +156,8 @@ lemma int_conj (T : KType ε Λ) (P : T.V →L[ℂ] T.V) (k : KG ε) :
 
 end CompactHaarProbability
 
-open CompactHaarProbability in
 
+open CompactHaarProbability in
 theorem kschur_op {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (v : T.V) :
     ((Module.finrank ℂ T.V : ℝ) : ℂ) •
         ∫ k, T.op k * (innerSL ℂ v).smulRight v * T.op k⁻¹ ∂(dk ε) =
@@ -195,8 +201,8 @@ theorem kschur_op {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (
     ring
   rw [hc, smul_smul, key]
 
-open CompactHaarProbability in
 
+open CompactHaarProbability in
 theorem kschur_coef {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (u v : T.V) :
     (Module.finrank ℂ T.V : ℝ) * ∫ k, ‖⟪u, T.op k v⟫_ℂ‖ ^ 2 ∂(dk ε) = ‖v‖ ^ 2 * ‖u‖ ^ 2 := by
   set P : T.V →L[ℂ] T.V := (innerSL ℂ v).smulRight v with hP

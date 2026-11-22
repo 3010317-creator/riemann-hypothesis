@@ -1,6 +1,10 @@
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormOneFiniteAdeleDetClassOfIsDetLift
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.AfsplitB
+module
+
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormOneFiniteAdeleDetClassOfIsDetLift
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.AfsplitB
+
+@[expose] public section
 
 noncomputable section
 
@@ -35,7 +39,7 @@ theorem detPt_eq_u1Dt_of_level : ∀ (R : Ranks) (H : Formalism.BasicNotions.Hos
     rw [map_mul, map_mul, ha, hb, hx, map_mul]
   have hK : b ∈ KDq H SQ := by
     refine mem_KDq_of_conj hl b (fun w => ?_) fun P hP => ?_
-    · rw [DetSpec.val_compAt_eq hb ⟨stdLat_lattice, stdLat_unimodular⟩ hc (fr := fun _ => LinearEquiv.refl _ _)
+    · rw [DetSpec.val_compAt_eq hb ⟨stdLat_fullLattice, stdLat_unimodular⟩ hc (fr := fun _ => LinearEquiv.refl _ _)
         (fun _ _ => Iff.rfl) w]
       simp
     · have hdet : adAt H.F P (k : Matrix (Fin n) (Fin n) (AfE H.F H.E)).det = 1 := by

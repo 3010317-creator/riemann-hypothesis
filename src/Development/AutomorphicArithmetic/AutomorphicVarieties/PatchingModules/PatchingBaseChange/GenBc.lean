@@ -1,4 +1,9 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.PatchingBaseChange.AlgebraMapEq
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.PatchingBaseChange.AlgebraMapEq
+
+@[expose] public section
+
 open IsLocalRing UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa
 open scoped TensorProduct
 
@@ -42,7 +47,7 @@ theorem UpperTheory.V.Pa.BC.gen_bc :
     intro t
     induction t using TensorProduct.induction_on with
     | zero => rw [map_zero]; exact Pmem _ (zero_mem _)
-    | add x y hx hy => rw [map_add]; exact Padd _ _ hx hy
+    | add x y hx hy => rw [map_add (f := _)]; exact Padd _ _ hx hy
     | tmul o b =>
       have h : algebraMap O' (Til O O' B) o = Til.C O O' B (algebraMap O' (O' ⊗[O] B) o) :=
         PowerSeries.algebraMap_apply

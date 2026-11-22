@@ -1,4 +1,8 @@
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassMass.EquivFunLinOf
+module
+
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassMass.EquivFunLinOf
+
+@[expose] public section
 
 open NumberField PI.UJClassFin PI.UJClassMass Formalism.HermitianLatticesTheory Formalism.ThetaLiftIndependence
 open scoped TensorProduct
@@ -12,7 +16,7 @@ def CrdBounds : Prop :=
     (V : Type) [AddCommGroup V] [Module E V] [Module (𝓞 E) V]
     [IsScalarTower (𝓞 E) E V] [FiniteDimensional E V]
     (M : ℕ) (b : Module.Basis (Fin M) E V) (L0 : Submodule (𝓞 E) V),
-    Submodule.IsLattice E L0 →
+    Submodule.IsFullLattice E L0 →
     (∃ c : 𝓞 F, c ≠ 0 ∧ ∀ x ∈ crdOf b L0, ∀ i, IsIntegral ℤ ((c : F) • x i)) ∧
     (∃ c : 𝓞 F, c ≠ 0 ∧ ∀ i, ∀ e : E, IsIntegral ℤ e → Pi.single i ((c : F) • e) ∈ crdOf b L0)
 
@@ -86,7 +90,8 @@ theorem gram_linOf {F : Type} [Field F] [Algebra F E] (σ : E →ₐ[F] E) (hσ 
     h (linOf b U (b i)) (linOf b U (b j)) =
       (cT (σ : E →+* E) (U : Matrix (Fin M) (Fin M) E) * gramOf h b * (U : Matrix (Fin M) (Fin M) E)) i j := by
   rw [linOf_basis, linOf_basis]
-  simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
     Matrix.mul_apply, cT, Matrix.map_apply, Matrix.transpose_apply, gramOf, Finset.mul_sum,
     Finset.sum_mul, AlgHom.coe_toRingHom, hσ, starRingEnd_apply]
   refine Finset.sum_congr rfl (fun k _ => Finset.sum_congr rfl (fun l _ => ?_))
@@ -139,7 +144,7 @@ end Sets
 
 theorem injStep_of (hR : PI.UnitaryGroupMassFormula.UJClassFin.RatDense) (hC : CrdBounds) : InjStep := by
   intro F E _ _ _ _ _ _ σ V _ _ _ _ _ h M b L0 hσ _ _ _ _ hL _ g g' u hu e
-  obtain ⟨hb1, hb2⟩ := hC F E V M b L0 hL
+  obtain ⟨hb1, hb2⟩ := hC F E V M b L0 hL.toIsFullLattice
   have hR' := hR F E σ M (gramOf h b) (crdOf b L0) hb1 hb2
   set U : UJ (σ : E →+* E) (gramOf h b) := ⟨matGL b u, matGL_mem σ hσ h b hu⟩ with hUdef
   have e1 : (linOf b (matGL b u) : V → V) '' latSet σ (gramOf h b) b L0 g' = latSet σ (gramOf h b) b L0 g := by
@@ -155,7 +160,7 @@ theorem injStep_of (hR : PI.UnitaryGroupMassFormula.UJClassFin.RatDense) (hC : C
 
 theorem cardStep_of (hR : PI.UnitaryGroupMassFormula.UJClassFin.RatDense) (hC : CrdBounds) : CardStep := by
   intro F E _ _ _ _ _ _ σ V _ _ _ _ _ h M b L0 hσ hθ hτ hs hn hL hsig g
-  obtain ⟨hb1, hb2⟩ := hC F E V M b L0 hL
+  obtain ⟨hb1, hb2⟩ := hC F E V M b L0 hL.toIsFullLattice
   have hR' := hR F E σ M (gramOf h b) (crdOf b L0) hb1 hb2
 
   have wd : ∀ γ : stab (GamG σ (gramOf h b)) (SFin σ (gramOf h b) (crdOf b L0)) g,

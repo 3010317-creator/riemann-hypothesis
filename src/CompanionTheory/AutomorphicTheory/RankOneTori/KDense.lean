@@ -1,5 +1,9 @@
-import CompanionTheory.HarishChandraModules.BesselParameterIntegrals.ParametricIntegralSmoothness.IntCommute
-import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AdmissibleSmoothVectors.AdmissibleOfIwasawa
+module
+
+public import CompanionTheory.HarishChandraModules.BesselParameterIntegrals.ParametricIntegralSmoothness.IntCommute
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AdmissibleSmoothVectors.AdmissibleOfIwasawa
+
+@[expose] public section
 
 open Matrix Filter Topology Set MeasureTheory MeasureTheory.Measure
 open scoped ContDiff
@@ -30,7 +34,7 @@ def finAlg (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] 
     rintro p q ⟨V, hV, hp⟩ ⟨W, hW, hq⟩
     refine ⟨V ⊔ W, ⟨hV.1.sup hW.1, fun a x hx => ?_⟩, Submodule.add_mem_sup hp hq⟩
     obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 hx
-    rw [map_add]; exact Submodule.add_mem_sup (hV.2 a y hy) (hW.2 a z hz)
+    rw [map_add (f := _)]; exact Submodule.add_mem_sup (hV.2 a y hy) (hW.2 a z hz)
   algebraMap_mem' c := by
     refine ⟨Submodule.span ℝ {1}, ⟨Submodule.fg_span (finite_singleton _), fun a x hx => ?_⟩, ?_⟩
     · obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.1 hx

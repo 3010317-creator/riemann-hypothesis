@@ -1,12 +1,17 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RedMFrMapAdjZero
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompact
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeLatticeVacuumTransport
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HformZeroRight
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RedMFrMapAdjZero
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeStrongApproxOpenCompact
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CompletedTensorLatticeLatticeVacuumTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HformZeroRight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompat
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.FWT Formalism.L2.Pj
 open MeasureTheory IsDedekindDomain NumberField Matrix Complex
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD GlobalTheory GlobalTheory.ThFr GlobalTheory.Ker GlobalTheory.AdSpan
@@ -150,7 +155,7 @@ theorem sigR_invol (x : Lev.EAf D) :
       AlgHom.id_apply]
     congr 1
     exact star_star a
-  | add x y hx hy => simp only [map_add, hx, hy]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 def cO (D : D7) : 𝓞 D.host.E →+* 𝓞 D.host.E :=
   NumberField.RingOfIntegers.mapRingHom (D.sp.cm.sig : D.host.E →+* D.host.E)
@@ -255,7 +260,7 @@ theorem frameGram_inv_int {T : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin T.ran
     {β : GL (Fin T.rank) (Lev.EAf D)} (hfr : Formalism.L2.DIV.IsFrame β Λ) (i j : Fin T.rank) :
     (frameGram T β)⁻¹ i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E :=
   GlobalTheory.GramFrame.inv_int D.sp.cm.sig (fun _ hs => GlobalTheory.LevSplit.sigR_int hs) T.gram (GlobalTheory.LatVac.gram_det_isUnit T)
-    β Λ hsd.1 hfr (selfDual_dualL_le hsd) _ (Matrix.mul_nonsing_inv _ (frameGram_det T β)) i j
+    β Λ hsd.1.toIsLattice hfr (selfDual_dualL_le hsd) _ (Matrix.mul_nonsing_inv _ (frameGram_det T β)) i j
 
 theorem hform_col (T : HSp D) (β : GL (Fin T.rank) (Lev.EAf D)) (v : Fin T.rank → Lev.EAf D) (j : Fin T.rank) :
     Formalism.UG.hform σA (T.gram.map ιA) v (fun c => β.1 c j) =

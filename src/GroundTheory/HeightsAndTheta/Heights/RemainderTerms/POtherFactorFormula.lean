@@ -1,7 +1,12 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PSameFactorFormula
-import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PowerSums
-import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.JacobiTrudi
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PSameFactorFormula
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PowerSums
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.JacobiTrudi
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights
@@ -155,7 +160,8 @@ theorem OtherFactorFormula.proof (hA : LemmaA.Statement) (hB : LemmaB.Statement)
   rw [hTeq, hprod] at hres
   have hTsym : T.IsSymmetric := by
     intro e
-    rw [hT, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [hT, map_sum]
     refine Finset.sum_congr rfl fun nu _ => ?_
     rw [map_mul, rename_C, isSymmetric_aeval_smul_X _ (Schur.schur_isSymmetric _) e]
   set K : ℚ := (Nat.multinomial Finset.univ (mstar f r a q (f * (r * a) + 1) τ) : ℚ) *
@@ -173,7 +179,7 @@ theorem OtherFactorFormula.proof (hA : LemmaA.Statement) (hB : LemmaB.Statement)
       rw [hPS, hK, hχ, map_zero]
       simp
     refine ⟨S, hS, ?_⟩
-    rw [restTerm, hI, hS'0, coeff_zero, hχ]
+    rw [restTerm, hI, hS'0, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, hχ]
     ring
   · have hK0 : K ≠ 0 := by
       rw [hK]

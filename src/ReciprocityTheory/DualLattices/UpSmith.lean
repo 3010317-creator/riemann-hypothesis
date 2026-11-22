@@ -1,4 +1,8 @@
-import ReciprocityTheory.DualLattices.CotangentSurjective
+module
+
+public import ReciprocityTheory.DualLattices.CotangentSurjective
+
+@[expose] public section
 
 noncomputable section
 
@@ -153,8 +157,9 @@ theorem smith_gen (hv : v.Integers R) : ∀ (b : ℕ) {ι : Type} [Fintype ι] (
     ∃ c : Fin b → R, Nonempty (((Fin b → R) ⧸ Submodule.span R (Set.range g)) ≃ₗ[R]
       ((i : Fin b) → R ⧸ Ideal.span {c i}))
   | 0, _, _, g => ⟨Fin.elim0, ⟨LinearEquiv.ofSubsingleton _ _⟩⟩
-  | b + 1, _, _, g => by
-    obtain ⟨i0, a, u, s, hu, hau, hs, -, -⟩ := exists_pivot hv g
+  | b + 1, ι, _, g => by
+    have hp := exists_pivot (v := v) (b := b) (ι := ι) hv g
+    obtain ⟨i0, a, u, s, hu, hau, hs, -, -⟩ := hp
     obtain ⟨e1⟩ := pivot_equiv g i0 a u s hu hau hs
     obtain ⟨c', ⟨e2⟩⟩ := smith_gen hv b (fun j => Fin.removeNth i0 (g j - s j • a • u))
     exact ⟨Fin.cons a c', ⟨(e1.trans ((LinearEquiv.refl R _).prodCongr e2)).trans (consEquiv a c')⟩⟩
@@ -175,14 +180,14 @@ theorem det_colop {b : ℕ} (X : Matrix (Fin (b + 1)) (Fin (b + 1)) R) (j0 : Fin
     simp only [Matrix.of_apply, Matrix.mul_apply, hV]
     by_cases hl : l = j0
     · simp [hl]
-    · simp only [hl, if_false, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    · simp only [hl, ite_false, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_one, mul_zero,
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
   have hV1 : V.det = 1 := by
     rw [Matrix.det_succ_column V j0, Finset.sum_eq_single j0]
     · have hsub : V.submatrix j0.succAbove j0.succAbove = 1 := by
         ext k l
-        simp only [Matrix.submatrix_apply, hV, Matrix.of_apply, Fin.succAbove_ne, if_false,
+        simp only [Matrix.submatrix_apply, hV, Matrix.of_apply, Fin.succAbove_ne, ite_false,
           sub_zero, Matrix.one_apply, (Fin.succAbove_right_injective).eq_iff]
       rw [hsub, Matrix.det_one]
       simp [hV, ← two_mul, pow_mul]
@@ -201,7 +206,8 @@ theorem smith_sq (hv : v.Integers R) : ∀ (b : ℕ) (X : Matrix (Fin b) (Fin b)
     set g : Fin (b + 1) → Fin (b + 1) → R := fun j i => X i j with hg
     have hrange : LinearMap.range X.mulVecLin = Submodule.span R (Set.range g) := by
       rw [Matrix.range_mulVecLin]; rfl
-    obtain ⟨i0, a, u, s, hu, hau, hs, hz, hnz⟩ := exists_pivot hv g
+    have hp := exists_pivot (v := v) (b := b) (ι := Fin (b + 1)) hv g
+    obtain ⟨i0, a, u, s, hu, hau, hs, hz, hnz⟩ := hp
     obtain ⟨e1⟩ := pivot_equiv g i0 a u s hu hau hs
     set h : Fin (b + 1) → Fin (b + 1) → R := fun j => g j - s j • a • u with hh
     have e0 := Submodule.quotEquivOfEq _ _ hrange
@@ -249,7 +255,7 @@ theorem smith_sq (hv : v.Integers R) : ∀ (b : ℕ) (X : Matrix (Fin b) (Fin b)
       · have hsub : (Matrix.of fun i j => if j = j0 then X i j0 else X i j - s j * X i j0).submatrix
             i0.succAbove j0.succAbove = X'' := by
           ext k l
-          simp only [Matrix.submatrix_apply, Matrix.of_apply, Fin.succAbove_ne, if_false, hX'', hh,
+          simp only [Matrix.submatrix_apply, Matrix.of_apply, Fin.succAbove_ne, ite_false, hX'', hh,
             hg, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
           have : X (i0.succAbove k) j0 = a * u (i0.succAbove k) := by
             have := congrFun hj0 (i0.succAbove k)
@@ -258,7 +264,7 @@ theorem smith_sq (hv : v.Integers R) : ∀ (b : ℕ) (X : Matrix (Fin b) (Fin b)
         have hX0 : X i0 j0 = a := by
           have := congrFun hj0 i0
           simpa [hg, hu] using this
-        simp only [Matrix.of_apply, if_true, hsub, hX0, map_mul, map_pow, map_neg, map_one]
+        simp only [Matrix.of_apply, ite_true, hsub, hX0, map_mul, map_pow, map_neg, map_one]
         simp
       · intro j _ hj
         have hX0 : X i0 j0 = a := by

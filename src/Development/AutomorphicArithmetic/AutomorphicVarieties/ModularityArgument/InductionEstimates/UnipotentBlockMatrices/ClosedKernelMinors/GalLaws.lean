@@ -1,9 +1,13 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.UnipotentBlockPairs
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.HpSpec
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.BlkInvVal
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.PkLaws
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.UnipBlocks
-import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.AdBasic
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.UnipotentBlockPairs
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.HpSpec
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.BlkInvVal
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.PkLaws
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.UnipotentBlockMatrices.ClosedKernelMinors.UnipBlocks
+public import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.AdBasic
+
+@[expose] public section
 
 open MeasureTheory NumberField Set Filter Topology
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -49,8 +53,8 @@ private theorem act_blk (σ : K ≃+* K) {a b : ℕ} (x : AdelicGLn.AdelicGL K a
   · exact map_zero _
   · rfl
 
-open Classical in
 
+open Classical in
 private noncomputable def rl (w : InfinitePlace K) : ℝ →+* w.Completion :=
   if hw : w.IsReal then ((ringEquivRealOfIsReal hw).symm : ℝ ≃+* w.Completion).toRingHom
   else ((ringEquivComplexOfIsComplex (not_isReal_iff_isComplex.1 hw)).symm : ℂ ≃+* w.Completion).toRingHom.comp
@@ -98,13 +102,13 @@ private theorem act_central (σ : K ≃+* K) (s : {r : ℝ // 0 < r}) :
 private theorem norm_inf (σ : K ≃+* K) (u : InfinitePlace K) (y : (u.comap σ.toRingHom).Completion) :
     ‖CT.infEquiv σ u y‖ = ‖y‖ := by
   have hd : DenseRange (algebraMap K (u.comap σ.toRingHom).Completion) := by
-    refine (((InfinitePlace.Completion.equiv (u.comap σ.toRingHom)).symm.surjective.denseRange).comp
-      (UniformSpace.Completion.denseRange_coe (α := WithAbs (u.comap σ.toRingHom).1))
-      (InfinitePlace.Completion.continuous_ofCompletion _)).mono ?_
+    apply (AbsoluteValue.Completion.denseRange_coe (u.comap σ.toRingHom).1).mono
     rintro _ ⟨x, rfl⟩
-    exact ⟨x.ofAbs, rfl⟩
-  have hn : ∀ (w : InfinitePlace K) (x : K), ‖algebraMap K w.Completion x‖ = w x := fun w x =>
-    InfinitePlace.Completion.norm_coe w (WithAbs.toAbs w.1 x)
+    refine ⟨x.ofAbs, ?_⟩
+    rw [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply, Algebra.algebraMap_self_apply]
+  have hn : ∀ (w : InfinitePlace K) (x : K), ‖algebraMap K w.Completion x‖ = w x := fun w x => by
+    rw [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply, Algebra.algebraMap_self_apply]
+    exact AbsoluteValue.Completion.norm_coe _
   refine congrFun (hd.equalizer (continuous_norm.comp (CT.continuous_infEquiv σ u)) continuous_norm
     (funext fun x => ?_)) y
   simp only [Function.comp_apply]
@@ -129,7 +133,8 @@ private theorem act_compact (σ : K ≃+* K) {k : AdelicGLn.AdelicGL K n} (hk : 
         fun j => (CT.infEquiv σ u).toRingHom
           (Matrix.vecMul x (infAt (u.comap σ.toRingHom) k : Matrix (Fin n) (Fin n) (u.comap σ.toRingHom).Completion) j) := by
       funext j
-      simp only [Matrix.vecMul, dotProduct, map_sum, map_mul]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [Matrix.vecMul, dotProduct, map_sum, map_mul]
       rfl
     rw [hv, hN, hN, hk.1 (u.comap σ.toRingHom) x]
   · have h : ∀ y : (CT.plMap σ.symm v).adicCompletion K, y ∈ (ValuativeRel.valuation _).integer →
@@ -155,7 +160,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.galLaws :
   intro K _ _ μ _ μ₂ _ σ θ θ₂ h h₂
   have e : ∀ g, ((θ.e g : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)) = act σ g := h
   have e₂ : ∀ g, ((θ₂.e g : G1 K 2) : AdelicGLn.AdelicGL K 2) = act σ g := h₂
-  have hl : ∀ m₁ m₂ t, θ.e (lv m₁ m₂ t) = lv (θ₂.e m₁) (θ₂.e m₂) t := fun m₁ m₂ t => Subtype.ext (by
+  have hl : ∀ (m₁ m₂ : G1 K 2) (t : ℝ), θ.e (lv m₁ m₂ t) = lv (θ₂.e m₁) (θ₂.e m₂) t := fun m₁ m₂ t => Subtype.ext (by
     rw [e, blkLaws.1, blkLaws.1, act_blk, act_mul, act_mul, e₂, e₂, zt, zt, act_central, act_central])
   have hn : ∀ X, θ.e (nn X) = nn fun p => Formalism.L2.Host.CT.adMap σ (X p) := fun X => Subtype.ext (by
     rw [e, coe_unipOne, coe_unipOne, act_unip])

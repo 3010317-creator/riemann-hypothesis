@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.Foundations.Convolution.BlockEvaluation.TruncSpec
+module
+
+public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockEvaluation.TruncSpec
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain MvPolynomial Filter Topology UpperTheory.ConvolutionTheory UpperTheory.ConvolutionTheory.C UpperTheory.ConvolutionTheory.Ci
 
@@ -31,7 +35,7 @@ private theorem trOn_eq (E : Submodule ℂ H) [FiniteDimensional ℂ E] (T : H �
   refine HasSum.tsum_eq ?_
   have h := hasSum_sum (s := Finset.univ) fun k _ =>
     (GroundTheory.Automorphic.stdHilbertBasis ℂ H).hasSum_inner_mul_inner (ContinuousLinearMap.adjoint S (b k : H)) (b k : H)
-  convert h using 1
+  convert (preTransparency := .reducible) h using 1
   · rfl
   · funext i
     rw [ContinuousLinearMap.comp_apply, b.starProjection_eq_sum_rankOne]

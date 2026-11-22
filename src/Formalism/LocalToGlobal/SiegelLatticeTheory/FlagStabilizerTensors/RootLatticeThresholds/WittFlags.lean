@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf
-import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+
+@[expose] public section
 
 noncomputable section
 
@@ -39,7 +43,7 @@ end Gen
 theorem LatIso_holds (D : D7) : Formalism.L2.SG.TermTieOf.LatIso D := by
   intro β hβ Λ
   obtain ⟨-, hloc, -, hU, hLat⟩ := Formalism.HermitianLatticesTheory.isomAct _ _ _ (VS D).hT β hβ Λ
-  refine ⟨fun hΛ => ?_, hLat.2, hU.2⟩
+  refine ⟨fun hΛ => ?_, Formalism.HermitianLatticesTheory.isomAct_lattice β Λ, hU.2⟩
   simp only [Formalism.HermitianLatticesTheory.genus, Set.mem_setOf_eq] at hΛ ⊢
   obtain ⟨hΛL, hΛG⟩ := hΛ
   refine ⟨hLat.2 hΛL, fun p hp => ?_⟩

@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivarianceStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SourceLiftAtGluedPlaceProof
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBilinearEquivariantOrthogonalSummandLift
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.LengthCommensurableSpanSpanOfDetNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivarianceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SourceLiftAtGluedPlaceProof
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBilinearEquivariantOrthogonalSummandLift
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.LengthCommensurableSpanSpanOfDetNeZero
+
+@[expose] public section
 
 noncomputable section
 
@@ -34,8 +38,8 @@ theorem fn_surjective (P : Pair k n') : Function.Surjective P.fn := by
   refine ⟨s • x, ?_⟩
   rw [map_smul, Algebra.smul_def, ResidueField.algebraMap_eq, hs, mul_assoc, inv_mul_cancel₀ hx, mul_one]
 
-set_option synthInstance.maxHeartbeats 200000 in
 
+set_option synthInstance.maxHeartbeats 200000 in
 theorem valuation_det_mul_unif (q : Unif k) (P : Pair k n') (g : GL n' k) (hg : g • P.ker = P.lat) :
     valuation k (((Matrix.GeneralLinearGroup.det g : kˣ) : k) * (q.unit : k)) = 1 := by
   classical
@@ -56,6 +60,9 @@ theorem valuation_det_mul_unif (q : Unif k) (P : Pair k n') (g : GL n' k) (hg : 
       refine ⟨⟨_, h2⟩, Subtype.ext ?_⟩
       change F (g • (x : n' → k)) = x
       rw [hF, inv_smul_smul]
+  letI : P.lat.IsLattice k := P.isLat.toIsLattice
+  letI : Module.Free 𝒪[k] P.lat := Submodule.IsLattice.free k P.lat
+  letI : Module.Finite 𝒪[k] P.lat := Submodule.IsLattice.finite k P.lat
   have hlen : IsDiscreteValuationRing.addVal 𝒪[k] (LinearMap.det f) = 1 := by
     rw [← GlobalTheory.length_quotient_range_eq_addVal_det, hr, (P.fn.quotKerEquivOfSurjective (fn_surjective P)).length_eq,
       length_residue]
@@ -156,7 +163,7 @@ theorem exists_theta_exact {D : D7} (hLin : LinExact D) (k : Type) [Field k] [Va
     LinearMap.mk₂ ℂ (fun v Φ => liftA o om vA v (G Φ))
       (fun v v' Φ => liftA_add_left o hA vA hW v.2 v'.2 (hGt Φ))
       (fun c v Φ => liftA_smul_left o vA c v (G Φ))
-      (fun v Φ Φ' => by rw [map_add]; exact liftA_add_right o hA vA hW v.2 (hGt Φ) (hGt Φ'))
+      (fun v Φ Φ' => by rw [map_add (f := _)]; exact liftA_add_right o hA vA hW v.2 (hGt Φ) (hGt Φ'))
       (fun c v Φ => by rw [map_smul]; exact liftA_smul_right o vA c v (G Φ))
   have hθ : ∀ (v : CA A) Φ, θ v Φ = liftA o om vA v (G Φ) := fun _ _ => rfl
   refine ⟨θ, fun v Φ f h => by rw [hθ, hGf Φ f h], fun g v Φ hΦ => ?_⟩
@@ -180,8 +187,8 @@ theorem exists_theta_exact {D : D7} (hLin : LinExact D) (k : Type) [Field k] [Va
 
 end GlobalTheory.FinPl.SrcExact
 
-open GlobalTheory.FinPl GlobalTheory.FinPl.SrcGl GlobalTheory.FinPl.SrcExact in
 
+open GlobalTheory.FinPl GlobalTheory.FinPl.SrcGl GlobalTheory.FinPl.SrcExact in
 theorem GlobalTheory.FinPl.sourceExact : ∀ D : D7, GlobalTheory.FinPl.SourceExact D := by
   intro D k _ _ _ _ p n n' _ _ _ _ q χ₀ hχ
   have hQ : (0 : ℝ) < resCard k := by
@@ -265,6 +272,7 @@ theorem GlobalTheory.FinPl.sourceExact : ∀ D : D7, GlobalTheory.FinPl.SourceEx
       funext x₀
       rw [← hg, phiOne_smul_left, Matrix.mul_assoc, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.mul_one]
     rw [b1, b2, hθv _ _ _ (hΞ' Q hQ), coe_FFStar] at a2
-    rw [tensCol_add, map_add, a0, zero_add, a1, a2, map_inv, map_inv, Units.val_inv_eq_inv_val, inv_inv]
+    rw [tensCol_add, map_add (f := _), a0, zero_add, a1, a2, map_inv, map_inv, Units.val_inv_eq_inv_val, inv_inv]
     rfl
-  rw [map_smul, map_add, map_sum, e0, zero_add, Finset.sum_congr rfl e1, ← Finset.smul_sum, smul_smul]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_smul, map_add (f := _), map_sum, e0, zero_add, Finset.sum_congr rfl e1, ← Finset.smul_sum, smul_smul]

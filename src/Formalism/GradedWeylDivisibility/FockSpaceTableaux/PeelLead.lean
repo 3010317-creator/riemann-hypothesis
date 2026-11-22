@@ -1,4 +1,8 @@
-import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpleadLemmas
+module
+
+public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LCpleadLemmas
+
+@[expose] public section
 
 open MvPolynomial
 open scoped MonomialOrder
@@ -73,14 +77,14 @@ theorem sliceLeading : PeelLead := by
       have hm_eq := lcplead_recon hlj' a0 hg hm
       rw [heq] at hm_eq
       rw [hm_eq, hm0_eq]
-      simp only [map_add]
+      simp only [map_add (f := _)]
       first
       | exact add_le_add le_rfl hle
       | exact add_le_add_left hle _
       | gcongr
     · exfalso
       have hc := lcplead_coeff_peel hlj' a0 hg hm
-      rw [htop _ hgt, coeff_zero] at hc
+      rw [htop _ hgt, AddMonoidAlgebra.coeff_zero] at hc
       exact mem_support_iff.1 hm hc.symm
   exact (colLex r n).toSyn.injective
     (le_antisymm (hup _ ((colLex r n).degree_mem_support hg0))

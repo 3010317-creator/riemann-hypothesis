@@ -1,7 +1,11 @@
-import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.OpGenC
-import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.OpGenA
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MixedModelHeisenbergPhaseEqCexpRealPoints
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMultiplierTemperate
+module
+
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.OpGenC
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.OpGenA
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MixedModelHeisenbergPhaseEqCexpRealPoints
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMultiplierTemperate
+
+@[expose] public section
 
 noncomputable section
 
@@ -78,7 +82,8 @@ theorem theta_half (θ : InfFam D) (hθ : IsInfFam θ) (ρ : D.what₂.Tau) :
 theorem gramX_eq {m n : ℕ} (ε : Fin m → Bool) (u : Matrix (Fin m) (Fin n) ℂ) :
     gramX ε u = uᴴ * Matrix.diagonal (sgn ε) * u := by
   ext i j
-  simp only [gramX, evX, Qp, Qb, map_sub, map_sum, map_mul, MvPolynomial.eval_X, Matrix.mul_apply,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [gramX, evX, Qp, Qb, map_sub, map_sum, map_mul, MvPolynomial.eval_X, Matrix.mul_apply,
     Matrix.diagonal_apply, Matrix.conjTranspose_apply, if_true, Bool.false_eq_true, if_false]
   rw [Finset.sum_filter, Finset.sum_filter, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_

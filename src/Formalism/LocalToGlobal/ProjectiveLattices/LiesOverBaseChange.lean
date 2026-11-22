@@ -1,6 +1,10 @@
-import Formalism.LocalToGlobal.ProjectiveLattices.LatPAddRight
-import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
-import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+module
+
+public import Formalism.LocalToGlobal.ProjectiveLattices.LatPAddRight
+public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
+public import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+
+@[expose] public section
 
 noncomputable section
 
@@ -30,6 +34,6 @@ def LiesOverBaseChange (la : HeightOneSpectrum (𝓞 c.F)) (Tw : PointsOfFlagMod
     η.2.2.1.y ≫ pullback.fst _ _ = spMap eF ≫ y.1.x ∧
     ∀ τ i, ∃ u' : Sp (DualNumber ↥η.2.1.S) ⟶ (Tw.Y η.1).oF.t.G.left,
       u' ≫ (Tw.Y η.1).m.φ = (η.2.2.2.u τ i).left ∧
-      u' ≫ (Tw.Y η.1).m0.toSABMap.φ = spMap (dualMap eF) ≫ y.1.u τ i
+      u' ≫ (Tw.Y η.1).m0.toSABMap.φ = spMap (_root_.Formalism.L2.Pj.dualMap eF) ≫ y.1.u τ i
 
 end Formalism.L2.Pj

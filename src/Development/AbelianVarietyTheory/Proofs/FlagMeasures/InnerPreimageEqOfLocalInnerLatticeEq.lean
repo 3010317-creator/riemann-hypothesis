@@ -1,8 +1,13 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
+
+@[expose] public section
+
 open scoped Classical ENNReal
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full Formalism.L2.SG.RowsConc Formalism.L2.SG.NGData Formalism.L2.SG.TermLoc GlobalTheory.Unfold
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -29,7 +34,8 @@ theorem bcP_endP (p : PlF D) (Q : (VS D).V →ₗ[D.host.E] (VS D).V) (x : (VS D
     endP p Q (baseChange₂ D p x) = baseChange₂ D p (Q x) := by
   rw [endP, Fintype.linearCombination_apply]
   conv_rhs => rw [← (VS D).frame.sum_repr x]
-  rw [map_sum, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, baseChange_smul₂]
   rfl
@@ -43,7 +49,7 @@ theorem endP_latP (Z : LocDat D) (p : PlF D) (Q : (VS D).V →ₗ[D.host.E] (VS 
     exact Submodule.subset_span ⟨Q x, Submodule.mem_map_of_mem hx, rfl⟩
   · rw [map_zero]; exact Submodule.zero_mem _
   · intro a b _ _ ha hb
-    rw [map_add]; exact Submodule.add_mem _ ha hb
+    rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
   · intro c a _ ha
     have e : endP p Q (c • a) = c • endP p Q a := by
       rw [Subring.smul_def, Subring.smul_def, map_smul]
@@ -73,11 +79,11 @@ theorem herm_span_right {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpac
   refine Submodule.span_induction (p := fun w _ => H.h u w = 0) hS ?_ ?_ ?_ hw
   · rw [H.h_herm 0 u, H.h_zero_left, map_zero]
   · intro a b _ _ ha hb
-    rw [H.h_herm (a + b) u, H.h_add_left, map_add, ← H.h_herm a u, ← H.h_herm b u, ha, hb, add_zero]
+    rw [H.h_herm (a + b) u, H.h_add_left, map_add (f := _), ← H.h_herm a u, ← H.h_herm b u, ha, hb, add_zero]
   · intro c a _ ha
     rw [herm_smul_right, ha, mul_zero]
 
-theorem X_iso {T : D.host.E} (G : LFlag (VS D) D.R.rS T) {x : (VS D).V} (hx : x ∈ Xsp G) :
+theorem X_iso {T : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T) {x : (VS D).V} (hx : x ∈ Xsp G) :
     x ∈ orth (VS D) (Xsp G) := by
   simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
   intro y hy
@@ -94,11 +100,8 @@ theorem X_iso {T : D.host.E} (G : LFlag (VS D) D.R.rS T) {x : (VS D).V} (hx : x 
   · intro a c _ _ ha hc; simp [ha, hc]
   · intro c a _ ha; simp [ha]
 
-example (Λ : LV D) (h : Submodule.IsLattice D.host.E Λ) : Λ.FG ∧ Submodule.span D.host.E (Λ : Set (VS D).V) = ⊤ :=
-  ⟨h.fg, h.span_eq_top⟩
-
 set_option maxHeartbeats 1000000 in
-theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T)
+theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T)
     (f : ∀ p : PlF D, Fin (D.R.rS + 1) → Vp D p)
     (hf : ∀ p, f p = fun a => frFac Z.δ p a • baseChange₂ D p (frame G a)) (Λ₁ Λ₂ : LV D)
     (h₂ : Submodule.IsLattice D.host.E Λ₂)
@@ -107,7 +110,7 @@ theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T)
   obtain ⟨Q, hQX, hQv, hQQ⟩ := exists_proj (Xsp G)
   set Γ : LV D := Λ₂ ⊔ Λ₂.map (Q.restrictScalars (𝓞 D.host.E)) with hΓdef
   have hΓ : Submodule.IsLattice D.host.E Γ :=
-    ⟨h₂.fg.sup (h₂.fg.map _), eq_top_iff.2 (h₂.span_eq_top.symm.le.trans (Submodule.span_mono (show (Λ₂ : Set (VS D).V) ⊆ Γ from fun z hz => Submodule.mem_sup_left hz)))⟩
+    Submodule.IsLattice.of_fg D.host.E (h₂.fg.sup (h₂.fg.map _))
   intro v hv
   have hvo : v ∈ orth (VS D) (Xsp G) := hv.2
   obtain ⟨l, hl, x, hx, rfl⟩ := Submodule.mem_sup.1 hv.1
@@ -122,7 +125,7 @@ theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T)
         simp only
         rw [map_smul, bcP_endP, hQX _ (Submodule.subset_span ⟨a, by simp [frame, FlagG.fvec]⟩), map_zero, smul_zero]
       · exact map_zero _
-      · intro a b _ _ ha hb; rw [map_add, ha, hb, add_zero]
+      · intro a b _ _ ha hb; rw [map_add (f := _), ha, hb, add_zero]
       · intro c a _ ha; rw [map_smul, ha, smul_zero]
     have hperp : baseChange₂ D p l ∈ (locH Z p).perp ((locH Z p).X (f p)) := by
       intro w hw
@@ -147,14 +150,14 @@ theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T)
       have := hXQ _ hdiff
       rw [map_sub, sub_eq_zero] at this
       exact this.symm
-    rw [← bcP_endP, map_add, map_add, e, bcP_endP p Q x, hQX x hx, map_zero, add_zero]
+    rw [← bcP_endP, map_add (f := _), map_add (f := _), e, bcP_endP p Q x, hQX x hx, map_zero, add_zero]
     exact localLattice_mono' Z p (le_sup_right : Λ₂.map (Q.restrictScalars (𝓞 D.host.E)) ≤ Γ) (endP_latP Z p Q Λ₂ hy)
   have hmem : Q (l + x) ∈ Γ := mem_of_local Z Γ hΓ _ hloc
   obtain ⟨a, ha, b', hb', hab⟩ := Submodule.mem_sup.1 hmem
   obtain ⟨b, hb, rfl⟩ := Submodule.mem_map.1 hb'
   have hQab : Q a + Q b = Q (l + x) := by
     have := congrArg Q hab
-    simp only [LinearMap.restrictScalars_apply, map_add, hQQ] at this
+    simp only [LinearMap.restrictScalars_apply, map_add (f := _), hQQ] at this
     rw [map_add Q l x]
     exact this
   have h2 : Q (l + x - (a + b)) = 0 := by
@@ -169,7 +172,7 @@ theorem lsub_le (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T)
     exact Submodule.sub_mem _ hvo (X_iso G hc)
   refine ⟨Submodule.mem_sup.2 ⟨a + b, ⟨Submodule.add_mem _ ha hb, hco⟩, l + x - (a + b), hc, by abel⟩, hvo⟩
 
-theorem lsub_eq_of_local : ∀ (D : D7) (Z : LocDat D) {T : D.host.E} (G : LFlag (VS D) D.R.rS T) (Fr : ∀ p : PlF D, LocNG.FrameD (locH Z p) D.R.rS), (∀ p, (Fr p).f = (fun a => frFac Z.δ p a • baseChange₂ D p (frame G a))) → ∀ Λ₁ Λ₂ : LV D, Submodule.IsLattice D.host.E Λ₁ → Submodule.IsLattice D.host.E Λ₂ → (∀ p, (locH Z p).Lset (lattice₂ D Z.M p Λ₁) (Fr p).f = (locH Z p).Lset (lattice₂ D Z.M p Λ₂) (Fr p).f) → Lsub Λ₁ G = Lsub Λ₂ G := by
+theorem lsub_eq_of_local : ∀ (D : D7) (Z : LocDat D) {T : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T) (Fr : ∀ p : PlF D, LocNG.FrameD (locH Z p) D.R.rS), (∀ p, (Fr p).f = (fun a => frFac Z.δ p a • baseChange₂ D p (frame G a))) → ∀ Λ₁ Λ₂ : LV D, Submodule.IsLattice D.host.E Λ₁ → Submodule.IsLattice D.host.E Λ₂ → (∀ p, (locH Z p).Lset (lattice₂ D Z.M p Λ₁) (Fr p).f = (locH Z p).Lset (lattice₂ D Z.M p Λ₂) (Fr p).f) → Lsub Λ₁ G = Lsub Λ₂ G := by
   intro D Z T G Fr hFr Λ₁ Λ₂ h₁ h₂ hL
   exact le_antisymm
     (lsub_le Z G (fun p => (Fr p).f) hFr Λ₁ Λ₂ h₂ fun p => (hL p).le)

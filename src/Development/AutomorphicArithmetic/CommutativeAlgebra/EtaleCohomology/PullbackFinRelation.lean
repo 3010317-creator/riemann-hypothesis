@@ -1,7 +1,11 @@
-import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.GalAwayCongr
-import GroundTheory.PAdicHodge.FontaineLemmaInvariants
-import GroundTheory.PAdicHodge.UnramifiedFrob
-import GroundTheory.PAdicHodge.BCrisEigenWitt
+module
+
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.GalAwayCongr
+public import GroundTheory.PAdicHodge.FontaineLemmaInvariants
+public import GroundTheory.PAdicHodge.UnramifiedFrob
+public import GroundTheory.PAdicHodge.BCrisEigenWitt
+
+@[expose] public section
 
 set_option maxSynthPendingDepth 1
 set_option maxHeartbeats 1600000
@@ -132,7 +136,7 @@ private theorem wexp {k : Type} [Field k] [CharP k l] [PerfectRing k l] (τ : Wi
       have h1 := hAN x
       have h2 : τ (E x) = τ (WittVector.teichmuller l (A x)) + (l : OC l) * τ (E (N x)) := by
         conv_lhs => rw [hE x]
-        rw [map_add, map_mul, map_natCast]
+        rw [map_add (f := _), map_mul, map_natCast]
       rw [h2, h1, pow_succ']
       linear_combination (l : OC l) * hy
   intro x hx
@@ -151,9 +155,6 @@ private theorem wexp {k : Type} [Field k] [CharP k l] [PerfectRing k l] (τ : Wi
   exact absurd h1 (not_le.2 hn)
 
 end
-
-local notation "hE" => (untilt_epsilon (p := l))
-local notation "hZ" => (untilt_frobeniusEquiv_symm_epsilon_ne_one (p := l))
 
 variable (l) in
 private def fB : Acris l →+* ACris.BCris (untilt_epsilon (p := l)) :=
@@ -297,7 +298,7 @@ private theorem hK [FiniteDimensional ℚ_[l] K] (r : Res l K) {k : PadicAlgCl l
     rw [tau_teich]
     change (x : ℂ_[l]) = ((PreTilt.untilt (r.s (r.ρ xo)) : OC l) : ℂ_[l]) +
       (l : ℂ_[l]) * clToC l ((k - k₀) / (l : PadicAlgCl l))
-    rw [hx, ← hk₀τ, ← map_natCast (clToC l) l, ← map_mul, ← map_add]
+    rw [hx, ← hk₀τ, ← map_natCast (clToC l) l, ← map_mul, ← map_add (f := _)]
     congr 1
     field_simp
     ring

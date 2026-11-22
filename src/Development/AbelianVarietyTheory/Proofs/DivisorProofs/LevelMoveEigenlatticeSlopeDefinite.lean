@@ -1,15 +1,19 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe
-import Formalism.LocalToGlobal.ProjectiveLattices.LiftLaSpec
-import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeOrbitProjectorEigen
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ISupIndepRangeInc
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelActionPreservesIntegralCuspForms
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenImmersionOfSection
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionMemCuspForms
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe
+public import Formalism.LocalToGlobal.ProjectiveLattices.LiftLaSpec
+public import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeOrbitProjectorEigen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ISupIndepRangeInc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelActionPreservesIntegralCuspForms
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenImmersionOfSection
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionMemCuspForms
+
+@[expose] public section
 
 noncomputable section
 
@@ -73,7 +77,7 @@ theorem x_of_levR (hL : ActLev (Xo := Xo) c lev) (g : G) {S T : Type} [CommRing 
   rw [spMap_algHom_id, Category.id_comp] at h
   exact ⟨ρ, hi, hm.1, h.trans hw.1⟩
 
-theorem exists_comp (hL : ActLev (Xo := Xo) c lev) (hq : Dw.q = 0) (hF : FnAlgClosed Xo c) (g : G) (Z : Comp Xo c) :
+theorem exists_comp (hL : ActLev (Xo := Xo) c lev) (hq : Dw.q = 0) (hF : FnAlgClosed (Xo := Xo) (c := c)) (g : G) (Z : Comp Xo c) :
     ∃ Z' : Comp Xo c, ∀ (S : Type) [CommRing S] [Algebra c.F S] (y y' : FrPt Xo c S), levR (lev g) y y' →
       (LiesOn Z y' ↔ LiesOn Z' y) := by
   obtain ⟨y₀, h₀, h₁⟩ := GlobalTheory.FlatLine.DefinitePoint.main _ H Dw l Xo c hq hF Z
@@ -99,7 +103,7 @@ theorem exists_comp (hL : ActLev (Xo := Xo) c lev) (hq : Dw.q = 0) (hF : FnAlgCl
     rw [e₁, h₄ S y h, ← e₃, Category.assoc, ← e₂, h3]
     rfl
 
-theorem exists_mulAction (hL : ActLev (Xo := Xo) c lev) (hq : Dw.q = 0) (hF : FnAlgClosed Xo c) :
+theorem exists_mulAction (hL : ActLev (Xo := Xo) c lev) (hq : Dw.q = 0) (hF : FnAlgClosed (Xo := Xo) (c := c)) :
     ∃ _ : MulAction G (Comp Xo c), ∀ (g : G) (Z : Comp Xo c) (S : Type) [CommRing S] [Algebra c.F S]
       (y y' : FrPt Xo c S), levR (lev g) y y' → (LiesOn Z y' ↔ LiesOn (g • Z) y) := by
   choose m hm using exists_comp hL hq hF
@@ -226,7 +230,7 @@ theorem exists_int {K G : Type} [Field K] [NumberField K] [Group G] [Finite G] (
   have h2 : ‖σ (χ g : K)‖ ^ Nat.card G = 1 := by rw [← norm_pow, ← map_pow, h, map_one, norm_one]
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 h2
 
-theorem slope_eig {K V G C : Type} [Field K] [NumberField K] [IsTotallyComplex K] [AddCommGroup V] [Module K V]
+theorem slope_eig {K V G C : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [AddCommGroup V] [Module K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [Group G] [Fintype G] [Fintype C] [Nonempty C] [MulAction G C]
     (e : C → V →ₗ[K] V) (ρ : Representation K G V) (χ : G →* Kˣ) (Nv : (K →+* ℂ) → V → ℝ)
     (M₀ M : Submodule (𝓞 K) V) (ι : C → Type) [∀ o, Fintype (ι o)] [∀ o, DecidableEq (ι o)] [∀ o, Nonempty (ι o)]
@@ -373,15 +377,15 @@ theorem petAt_le {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (V : HSp D) (dict : GA
     petAt U ξ V dict (muQ1 V) W f ≤ B := by
   have hB : 0 ≤ B := (homN_nonneg U ξ W f _).trans (h 1)
   rw [petAt_eq]
-  refine ENNReal.toReal_le_of_le_ofReal hB ((MeasureTheory.eLpNorm_le_of_ae_bound (C := B)
-    (Filter.Eventually.of_forall fun q => ?_)).trans (by simp))
+  refine ENNReal.toReal_le_of_le_ofReal hB ((MeasureTheory.eLpNorm'_le_eLpNormEssSup (by norm_num)).trans
+    (MeasureTheory.eLpNormEssSup_le_of_ae_bound (C := B) (Filter.Eventually.of_forall fun q => ?_)))
   rw [Real.norm_of_nonneg (homN_nonneg U ξ W f _)]
   exact h _
 
 end Main
 
-set_option synthInstance.maxHeartbeats 400000 in
 
+set_option synthInstance.maxHeartbeats 400000 in
 theorem eigLat_slope : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (ξ : ℝ) (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r) (G : Type) [Group G] [Finite G] (lev : G → (Dw.La →ₗ[𝓞 D.host.E] Dw.La) × (Dw.La →ₗ[𝓞 D.host.E] Dw.La)) (χ : G →* (c.F)ˣ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ) (s : ℝ), DefCase U ξ → Finite (Comp Xo c) → Nonempty (Comp Xo c) → (∀ σ, GoodEmb c σ → ∀ g, (dict σ g).2 ∈ ((U σ).X (dict σ g).1).dom) → ActLev (Xo := Xo) c lev → FreePt Xo c lev → Dom a n → GoodW U ξ V dict (wtZ a n) → (∀ Z : Comp Xo c, FibreAt U ξ Z (wtZ a n) s) → eigLat U lev χ (wtZ a n) ≠ ⊥ ∧ s ≤ slope_sq (normW U ξ V dict (wtZ a n)) (eigLat U lev χ (wtZ a n)) / 2 := by
   intro D H Dw l Xo c r U ξ V dict G _ _ lev χ a n s hC _ _ hd hL hfr hD hW hF
   haveI := Fintype.ofFinite G

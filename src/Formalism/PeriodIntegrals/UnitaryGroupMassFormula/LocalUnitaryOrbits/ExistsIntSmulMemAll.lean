@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ExistsIntBasis
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ExistsIntBasis
+
+@[expose] public section
 
 noncomputable section
 
@@ -52,7 +56,7 @@ theorem ratV_mem_latLoc {Λ : Set (Fin n → E)} {x : Fin n → E} (hx : x ∈ �
   Submodule.subset_span ⟨x, hx, rfl⟩
 
 theorem sdc_isOpen_latLoc (Λ : Set (Fin n → E))
-    (hL : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) :
+    (hL : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ) :
     IsOpen (latLoc (E := E) v Λ : Set (Fin n → Fv F v ⊗[F] E)) := by
   classical
   have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
@@ -164,13 +168,21 @@ theorem sdc_isCompact_latLoc (Λ : Set (Fin n → E))
 
 theorem topW_holds (Λ : Set (Fin n → E)) (a : ℕ) : TopW v Λ a := by
   intro hL
+  have hLweak : ∃ L : Submodule (𝓞 E) (Fin n → E),
+      Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, hEq⟩ := hL
+    exact ⟨L, Submodule.IsLattice.of_fg E hL.fg, hEq⟩
+  have hLfull : ∃ L : Submodule (𝓞 E) (Fin n → E),
+      Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    obtain ⟨L, hL, hEq⟩ := hL
+    exact ⟨L, hL.toIsFullLattice, hEq⟩
   have e : LamT (E := E) v Λ a =
       Set.pi Set.univ (fun _ : Fin a => (latLoc (E := E) v Λ : Set (Fin n → Fv F v ⊗[F] E))) := by
     ext X
     simp [LamT, Set.mem_pi]
   rw [e]
-  exact ⟨isCompact_univ_pi fun _ => sdc_isCompact_latLoc v Λ hL,
-    isOpen_set_pi Set.finite_univ fun _ _ => sdc_isOpen_latLoc v Λ hL⟩
+  exact ⟨isCompact_univ_pi fun _ => sdc_isCompact_latLoc v Λ hLweak,
+    isOpen_set_pi Set.finite_univ fun _ _ => sdc_isOpen_latLoc v Λ hLfull⟩
 
 end TopWs
 

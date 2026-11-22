@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOnDualAndBidual
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOnDualAndBidual
+
+@[expose] public section
 
 noncomputable section
 
@@ -30,7 +34,8 @@ theorem exists_isCoord (c : Module.Basis (Fin g) B Ω[B⁄A]) :
   refine ⟨fun k => (c.coord k).compDer (KaehlerDifferential.D A B), w, ?_, ?_⟩
   · intro i k
     have := congrArg (c.coord k) (hw i)
-    rw [Finsupp.sum, map_sum] at this
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [Finsupp.sum, map_sum] at this
     rw [Finsupp.sum]
     simp only [map_smul, smul_eq_mul] at this
     refine Eq.trans (Finset.sum_congr rfl fun x _ => rfl) (this.trans ?_)
@@ -53,13 +58,15 @@ theorem exists_isCoord (c : Module.Basis (Fin g) B Ω[B⁄A]) :
       simp [L, δ', δl]
     have hc : ∀ k, L (c k) = (w k).sum (fun b' a => ε a • δ b') := by
       intro k
-      rw [← hw k, Finsupp.sum, map_sum, Finsupp.sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [← hw k, Finsupp.sum, map_sum, Finsupp.sum]
       refine Finset.sum_congr rfl fun b' _ => ?_
       rw [map_smul, hLD]
       rfl
     rw [← hLD b]
     conv_lhs => rw [← c.sum_repr (KaehlerDifferential.D A B b)]
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, hc]
     rfl
@@ -104,16 +111,16 @@ theorem surj_fst :
   · intro h; simpa using p.asIdeal.sub_mem h hm
   · intro h; simpa using p.asIdeal.add_mem hm h
 
-variable (J J₀) in
 
+variable (J J₀) in
 def IsChart : Prop := J ≫ G.hom = Spec.map (CommRingCat.ofHom (algebraMap A B)) ≫ J₀
 
-variable (J x ε) in
 
+variable (J x ε) in
 def IsUnitIn : Prop := Spec.map (CommRingCat.ofHom ε) ≫ J = (1 : Over.mk x ⟶ G).left
 
-variable (A ε) in
 
+variable (A ε) in
 def Lifts (f : B →+* TrivSqZeroExt T M) : Prop :=
   (∀ b, (f b).fst = ε b) ∧ ∀ a, (f (algebraMap A B a)).snd = 0
 
@@ -180,12 +187,12 @@ theorem mk_rep (hc : IsChart J J₀) (hε : IsUnitIn J x ε) (f : B →+* TrivSq
 
 variable {g : ℕ} {d : Fin g → Derivation A B B} {w : Fin g → B →₀ B}
 
-variable (ε w) in
 
+variable (ε w) in
 def yco (δ : B → M) (i : Fin g) : M := (w i).sum fun b a => ε a • δ b
 
-variable (A J ε w) in
 
+variable (A J ε w) in
 def Co (v : LieEx.ob x M ⟶ G) (y : Fin g → M) : Prop :=
   ∃ f : B →+* TrivSqZeroExt T M, v.left = Spec.map (CommRingCat.ofHom f) ≫ J ∧ Lifts A ε f ∧
     ∀ i, y i = yco ε w (fun b => (f b).snd) i
@@ -243,7 +250,8 @@ theorem co_onto (hc : IsChart J J₀) (hε : IsUnitIn J x ε) (hd : IsCoord d w)
     rw [hd.1 i k]; split_ifs <;> simp
   have e : yco ε w (fun b => (defo d ε y b).snd) i =
       ∑ k, ε ((w i).sum fun b a => a * d k b) • y k := by
-    simp only [yco, defo, Finsupp.sum, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [yco, defo, Finsupp.sum, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
       TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_inl, TrivSqZeroExt.snd_inr, zero_add, Finset.smul_sum, map_sum,
       Finset.sum_smul, map_mul, mul_smul]
     exact Finset.sum_comm
@@ -259,7 +267,8 @@ theorem co_hom (l : M →ₗ[T] N) {v : LieEx.ob x M ⟶ G} {y : Fin g → M} (h
   · simpa using hf.1 b
   · simp [hf.2 a]
   · change l (y i) = _
-    rw [hy, yco, yco, Finsupp.sum, Finsupp.sum, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [hy, yco, yco, Finsupp.sum, Finsupp.sum, map_sum]
     simp
 
 theorem co_mul (hc : IsChart J J₀) (hε : IsUnitIn J x ε) {v v' : LieEx.ob x T ⟶ G} {y y' : Fin g → T}
@@ -302,21 +311,22 @@ theorem co_smul (c : T) {v : LieEx.ob x T ⟶ G} {y : Fin g → T} (h : Co A J �
 
 theorem co_base (φ : T →+* T') {x' : Spec (CommRingCat.of T') ⟶ X} {v : LieEx.ob x T ⟶ G}
     {v' : LieEx.ob x' T' ⟶ G} {y : Fin g → T}
-    (e' : v'.left = Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ v.left) (h : Co A J ε w v y) :
+    (e' : v'.left = Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ v.left) (h : Co A J ε w v y) :
     Co A J (φ.comp ε) w v' (fun i => φ (y i)) := by
   obtain ⟨f, e, hf, hy⟩ := h
-  refine ⟨(dualMap φ).comp f, ?_, ⟨fun b => ?_, fun a => ?_⟩, fun i => ?_⟩
+  refine ⟨(GlobalTheory.CompanionTheory.Ar.dualMap φ).comp f, ?_, ⟨fun b => ?_, fun a => ?_⟩, fun i => ?_⟩
   · rw [e', e, ← Category.assoc, spec_comp']
-  · simpa [dualMap] using congrArg φ (hf.1 b)
-  · simp [dualMap, hf.2 a]
+  · simpa [GlobalTheory.CompanionTheory.Ar.dualMap] using congrArg φ (hf.1 b)
+  · simp [GlobalTheory.CompanionTheory.Ar.dualMap, hf.2 a]
   · change φ (y i) = _
-    rw [hy, yco, yco, Finsupp.sum, Finsupp.sum, map_sum]
-    simp [dualMap]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [hy, yco, yco, Finsupp.sum, Finsupp.sum, map_sum]
+    simp [GlobalTheory.CompanionTheory.Ar.dualMap]
 
 theorem tan_iff (φ : T →+* T') {x' : Spec (CommRingCat.of T') ⟶ X}
     (hφ : Spec.map (CommRingCat.ofHom φ) ≫ x = x') (hc : IsChart J J₀) (hd : IsCoord d w)
     (hε : IsUnitIn J x ε) (y : Fin g → T') (v₀ : LieEx.ob x' T' ⟶ G) (hv₀ : Co A J (φ.comp ε) w v₀ y) :
-    (∃ v : epsAt x ⟶ G, IsTanAt G x v ∧ v₀.left = Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ v.left) ↔
+    (∃ v : epsAt x ⟶ G, IsTanAt G x v ∧ v₀.left = Spec.map (CommRingCat.ofHom (GlobalTheory.CompanionTheory.Ar.dualMap φ)) ≫ v.left) ↔
       ∀ i, y i ∈ φ.range := by
   constructor
   · rintro ⟨v, hv, he⟩ i

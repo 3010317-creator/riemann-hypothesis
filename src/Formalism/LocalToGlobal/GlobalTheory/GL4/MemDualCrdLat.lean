@@ -1,10 +1,16 @@
-import Mathlib
-import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.GaloisCuspidalOfInput
-import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.ExistsFrameOfSig
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ReductionSecondStep
-import Formalism.SizeWindowBrackets.ChainSlopeWindows.TruncatedLatticeHolds
-import Formalism.SharpRestriction.GlobalSchurBounds.FlipTwoThree
-import Formalism.LocalToGlobal.GlobalTheory.GL4.PMuFrames
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.ClsSum
+public import Formalism.SharpRestriction.Divisibility.PlaceRankTwoOne
+public import Formalism.QuotientMetricDivisors.Statement
+public import Formalism.LocalToGlobal.LatticeGeometry.GeometryDefinitions.ExistsFrameOfSig
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ReductionSecondStep
+public import Formalism.SizeWindowBrackets.ChainSlopeWindows.TruncatedLatticeHolds
+public import Formalism.SharpRestriction.GlobalSchurBounds.FlipTwoThree
+public import Formalism.LocalToGlobal.GlobalTheory.GL4.PMuFrames
+
+@[expose] public section
 
 open Module NumberField IsDedekindDomain
 open scoped Matrix
@@ -29,7 +35,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 private lemma hform_crd_lemma (S : HSpace E) (a b : S.V) :
     Formalism.DivisionValues.hform S.gram (crd S a) (crd S b) = S.hT a b := by
   conv_rhs => rw [← S.frame.sum_equivFun a, ← S.frame.sum_equivFun b]
-  simp only [Formalism.DivisionValues.hform, Matrix.toLinearMapₛₗ₂'_apply, map_sum, LinearMap.sum_apply,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Formalism.DivisionValues.hform, Matrix.toLinearMapₛₗ₂'_apply, map_sum, LinearMap.sum_apply,
     LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, crd, HSpace.gram, RingHom.id_apply,
     Finset.mul_sum]
   conv_rhs => rw [Finset.sum_comm]
@@ -66,13 +73,19 @@ theorem relIndex_crdLat (hc : CMData F E) (S : HSpace E) (L : Submodule (𝓞 E)
       exact hf hyx ▸ hy
   rw [hD, hL, ← AddSubgroup.relIndex_comap, AddSubgroup.comap_map_eq_self_of_injective hf]
 
-variable [IsTotallyComplex E]
+variable [_root_.NumberField.IsTotallyComplex E]
 
 theorem eLat_mu (hc : CMData F E) (S : HSpace E) (hsig : S.SigOK) (hpos : S.IsPosDef) (hn : 0 < S.rank)
-    (L : Submodule (𝓞 E) S.V) (hL : Submodule.IsLattice E L) (q : ℕ) (hq : q ≠ 0) (hLT : LatT S q L) :
+    (L : Submodule (𝓞 E) S.V) (hL : Submodule.IsFullLattice E L) (q : ℕ) (hq : q ≠ 0) (hLT : LatT S q L) :
     muDef (Pi.basisFun E (Fin S.rank)) (fun v => frameOf (S.gram.map v.embedding)) (crdLat S L) =
       -Real.log q / ((finrank ℚ E : ℝ) * S.rank) := by
-  have hM := crdLat_lattice S L hL
+  have hMweak := crdLat_lattice S L hL
+  have hspan : Submodule.span E (crdLat S L : Set (Fin S.rank → E)) = ⊤ := by
+    change Submodule.span E (Set.image (crd S).toLinearMap (L : Set S.V)) = ⊤
+    rw [← Submodule.map_span (crd S).toLinearMap, hL.span_eq_top, Submodule.map_top,
+      LinearMap.range_eq_top.mpr (crd S).surjective]
+  letI hM : Submodule.IsFullLattice E (crdLat S L) :=
+    {toIsLattice := hMweak, span_eq_top := hspan}
   have hY : ∀ v : InfinitePlace E, IsUnit (frameOf (S.gram.map v.embedding)).det ∧
       ((frameOf (S.gram.map v.embedding))⁻¹).conjTranspose * (frameOf (S.gram.map v.embedding))⁻¹ = S.gram.map v.embedding := by
     intro v

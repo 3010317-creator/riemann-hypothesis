@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicLinearIndependent
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCuspFormsFullLattice
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CnormMapConjMulVec
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCuspFormsFullLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CnormMapConjMulVec
+
+@[expose] public section
+
 set_option synthInstance.maxHeartbeats 400000
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop
@@ -19,8 +24,8 @@ theorem fullLat_congr {K Rg : Type} [Field K] [NumberField K] [CommRing Rg] [Alg
   subst h
   exact hl
 
-set_option maxHeartbeats 8000000 in
 
+set_option maxHeartbeats 8000000 in
 theorem goodW_core {D : D7} (T : CoreJ D) (hT : LawsJ T) (j : ℕ) (hj : InR D j) (w : WeightFamilies.Wt D j)
     (hl : FullLat (T.cuspA j (wtA w) w.n) (valSet (T.Q.Xo j) T.Q.c (algCls (T.Q.Xo j) T.Q.c))
       fun la => isVal_valSet la) :
@@ -43,7 +48,7 @@ theorem goodW_core {D : D7} (T : CoreJ D) (hT : LawsJ T) (j : ℕ) (hj : InR D j
   let J := uniformisationL2 (T.V j σ) σ (rdC (T.U j) σ (wtA w) w.n) (T.dict j σ) (T.mu j σ)
     (hT.cuspidalL2Subspace j hj σ hσ (wtA w) w.n hD)
   let Φ : cuspW (T.Q.Xo j) T.Q.c (T.U j) (wtZ (wtA w) w.n) →+ MeasureTheory.Lp ℂ 2 (muQ1 (T.V j σ)) :=
-    AddMonoidHom.mk' (fun f => (cf : ℂ) • J (ι f)) (fun f g => by rw [map_add, map_add, smul_add])
+    AddMonoidHom.mk' (fun f => (cf : ℂ) • J (ι f)) (fun f g => by rw [map_add (f := _), map_add (f := _), smul_add])
   have hΦ : ∀ f, Φ f = (cf : ℂ) • J (ι f) := fun _ => rfl
   have hs : ∀ (a : T.Q.c.F) f, Φ (a • f) = σ a • Φ f := fun a f => by
     rw [hΦ, hΦ, map_smul, map_smulₛₗ]
@@ -65,7 +70,7 @@ theorem goodW_core {D : D7} (T : CoreJ D) (hT : LawsJ T) (j : ℕ) (hj : InR D j
     have e1 : normW (T.U j) (xiR D) (T.V j) (T.dict j) (wtZ (wtA w) w.n) v.embedding f =
         petAt (T.U j σ) (xiR D) (T.V j σ) (T.dict j σ) (muQ1 (T.V j σ)) (wtZ (wtA w) w.n) f := rfl
     rw [e1, petAt_wtZ (T.U j) (xiR D) (T.V j σ) (T.dict j σ) (T.mu j σ) (hT.muUnit j hj σ hσ) _ _
-      (hT.cuspidalL2Subspace j hj σ hσ (wtA w) w.n hD) hf, l2C, dif_pos hf, hΦ, norm_smul, Complex.norm_real,
+      (hT.cuspidalL2Subspace j hj σ hσ (wtA w) w.n hD) hf, l2C, dite_eq_left hf, hΦ, norm_smul, Complex.norm_real,
       Real.norm_of_nonneg hcf.le]
     rfl
   · intro m e he
@@ -84,12 +89,5 @@ theorem goodW_core {D : D7} (T : CoreJ D) (hT : LawsJ T) (j : ℕ) (hj : InR D j
 end GlobalTheory.CovTop.GoodWCore
 
 namespace GlobalTheory.CovTop
-
-theorem goodW_at : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D}
-    {Kc : Formalism.MainNotions.G.Consts} {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ} (p : PtAt ex Csz),
-    p.Rows → RecTied D L → ∀ i : Fin D.R.m,
-      GoodW (p.T.U ((i : ℕ) + 1)) (xiR D) (p.T.V ((i : ℕ) + 1)) (p.T.dict ((i : ℕ) + 1)) (Gk p i) :=
-  fun p _ _ i => GoodWCore.goodW_core p.T p.fw.laws _ ⟨Nat.le_add_left _ _, i.2⟩ (p.κ i)
-    (GlobalTheory.GoodLat.Obj.latFull p.T p.fw.laws p.fw.kap i)
 
 end GlobalTheory.CovTop

@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
-import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.MinkowskiNumberDvdFactorial
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
+public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.MinkowskiNumberDvdFactorial
+
+@[expose] public section
 
 open NumberField Formalism.HermitianLatticeCounting.S6 GlobalTheory.HermLat GlobalTheory.DegCnt
 open scoped Pointwise ENNReal Classical
@@ -21,17 +25,10 @@ variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
 theorem lattice_of_idx {A B : Submodule (𝓞 K) V} (hA : Submodule.IsLattice K A) (hle : B ≤ A)
     (h : idxN A B ≠ 0) : Submodule.IsLattice K B := by
   refine ⟨hA.fg.of_le hle, ?_⟩
-  rw [eq_top_iff, ← hA.span_eq_top, Submodule.span_le]
-  intro x hx
-  have h1 : idxN A B • x ∈ B := AddSubgroup.nsmul_relIndex_mem B.toAddSubgroup (K := A.toAddSubgroup) hx
-  have h2 : ((idxN A B : ℕ) : K) ≠ 0 := by exact_mod_cast h
-  have h3 : x = ((idxN A B : ℕ) : K)⁻¹ • (idxN A B • x) := by
-    rw [← Nat.cast_smul_eq_nsmul K, smul_smul, inv_mul_cancel₀ h2, one_smul]
-  rw [h3]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span h1)
+  intro s hs hli
+  exact (LinearIndependent.iff_fractionRing _ _).mp hli
 
 omit [NumberField K] in
-
 theorem lattice_map {W : Type} [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     {A : Submodule (𝓞 K) V} (hA : Submodule.IsLattice K A) (f : V →ₗ[K] W) (hf : Function.Surjective f) :
     Submodule.IsLattice K (A.map (f.restrictScalars (𝓞 K))) := by
@@ -46,17 +43,8 @@ theorem exists_rat_basis [Module ℚ V] [Module.Finite ℚ V] {A : Submodule (�
   have hfinZ : Module.Finite ℤ A := Module.Finite.trans (𝓞 K) _
   have hL : Submodule.IsLattice ℚ (A.restrictScalars ℤ) := by
     refine ⟨Module.Finite.iff_fg.mp hfinZ, ?_⟩
-    rw [eq_top_iff]
-    intro x _
-    have h := idxN_ne_zero hA (Submodule.fg_span_singleton (R := 𝓞 K) x)
-    set n := idxN (Submodule.span (𝓞 K) {x}) A with hn
-    have h1 : n • x ∈ A := AddSubgroup.nsmul_relIndex_mem A.toAddSubgroup
-      (K := (Submodule.span (𝓞 K) {x}).toAddSubgroup) (Submodule.mem_span_singleton_self x)
-    have h2 : (n : ℚ) ≠ 0 := by exact_mod_cast h
-    have h3 : x = (n : ℚ)⁻¹ • (n • x) := by
-      rw [← Nat.cast_smul_eq_nsmul ℚ, smul_smul, inv_mul_cancel₀ h2, one_smul]
-    rw [h3]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span h1)
+    intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
   have hr : Module.finrank ℤ (A.restrictScalars ℤ) = Module.finrank ℚ V := by
     unfold Module.finrank
     rw [Submodule.IsLattice.rank' ℚ]
@@ -66,8 +54,6 @@ theorem exists_rat_basis [Module ℚ V] [Module.Finite ℚ V] {A : Submodule (�
   have e : Set.range (b₀.extendOfIsLattice ℚ) = (A.restrictScalars ℤ).subtype '' Set.range b₀ := by
     rw [← Set.range_comp]
     congr 1
-    funext i
-    simp
   rw [e, ← Submodule.map_span, b₀.span_eq, Submodule.map_top, Submodule.range_subtype]
   rfl
 
@@ -112,7 +98,7 @@ theorem norm_le {K : Type} [Field K] [NumberField K] (a : K) (c : ℝ) (h : ∀ 
   have e := congrArg norm (Algebra.norm_eq_prod_embeddings ℚ ℂ a)
   rw [norm_prod, eq_ratCast, Complex.norm_ratCast] at e
   rw [Rat.cast_abs, e, ← AlgHom.card ℚ K ℂ, ← Finset.card_univ, ← Finset.prod_const]
-  exact Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun σ _ => h σ.toRingHom)
+  exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun σ _ => h σ.toRingHom)
 
 theorem det_one_sub_le {K U : Type} [Field K] [StarRing K] [AddCommGroup U] [Module K U]
     [FiniteDimensional K U] (σ : K →+* ℂ) (h : U →ₗ[K] U →ₗ⋆[K] K) (η : U →ₗ[K] U)
@@ -129,7 +115,8 @@ theorem det_one_sub_le {K U : Type} [Field K] [StarRing K] [AddCommGroup U] [Mod
     have h1 : u b - η (u b) = ∑ c, A c b • u c := by
       simp only [hA, LinearMap.toMatrix_apply]
       exact (u.sum_repr _).symm
-    simp only [bEta, Matrix.of_apply, h1, map_sum, map_smulₛₗ, Matrix.mul_apply, Matrix.transpose_apply,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [bEta, Matrix.of_apply, h1, map_sum, map_smulₛₗ, Matrix.mul_apply, Matrix.transpose_apply,
       Matrix.conjTranspose_apply, hG, smul_eq_mul]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [mul_comm]; rfl
@@ -139,7 +126,8 @@ theorem det_one_sub_le {K U : Type} [Field K] [StarRing K] [AddCommGroup U] [Mod
     have h1 : ∀ b, h (∑ a, v a • u a) (u b) = 0 := by
       intro b
       have := congrFun hvG b
-      simpa [Matrix.vecMul, dotProduct, hG, map_sum] using this
+      set_option synthInstance.maxHeartbeats 100000 in
+        simpa [Matrix.vecMul, dotProduct, hG, map_sum] using this
     have h2 : h (∑ a, v a • u a) = 0 := u.ext fun b => h1 b
     have h3 : (∑ a, v a • u a) = 0 := by
       by_contra hne
@@ -167,8 +155,8 @@ omit [NumberField K] [StarRing K] [FiniteDimensional K V] [Module (𝓞 K) V] [I
 theorem mem_fixSp (η : V ≃ₗ[K] V) (x : V) : x ∈ fixSp η ↔ η x = x := by
   simp [fixSp, sub_eq_zero]
 
-omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 
+omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem exists_proj_aut {H : HermSpace K V} (hK : IsCMUnram K) (hP : PD H.B.flip) {η : V ≃ₗ[K] V}
     (hη : ∀ x y, H.B (η x) (η y) = H.B x y) {g : ℕ} (hg : 0 < g) :
     ∃ (p : V →ₗ[K] fixSp η) (F : V ≃ₗ[K] V), (∀ t : fixSp η, p t = t) ∧
@@ -198,10 +186,10 @@ theorem exists_proj_aut {H : HermSpace K V} (hK : IsCMUnram K) (hP : PD H.B.flip
   set F₀ : V →ₗ[K] V := (fixSp η).subtype ∘ₗ p + (g : K)⁻¹ • (LinearMap.id - (η : V →ₗ[K] V)) with hF₀
   have f1 : ∀ x, F₀ x = p x + (g : K)⁻¹ • (x - η x) := fun x => rfl
   have hinj : Function.Injective F₀ := by
-    rw [injective_iff_map_eq_zero]
+    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     have a1 := congrArg p hx
-    rw [f1, map_add, map_smul, (p2 _).2 (p4 x), p1, smul_zero, add_zero, map_zero] at a1
+    rw [f1, map_add (f := _), map_smul, (p2 _).2 (p4 x), p1, smul_zero, add_zero, map_zero] at a1
     rw [f1, a1, Submodule.coe_zero, zero_add, smul_eq_zero, sub_eq_zero] at hx
     have a2 : x ∈ fixSp η := (mem_fixSp η x).2 (hx.resolve_left (inv_ne_zero hg0)).symm
     have a3 := p1 ⟨x, a2⟩
@@ -278,8 +266,8 @@ theorem disc_latIn {H : HermSpace K V} (hP : PD H.B.flip) {U : Submodule K V} (p
   exact (AddSubgroup.relIndex_comap (latIn U A).toAddSubgroup (p.restrictScalars (𝓞 K)).toAddMonoidHom
     (Formalism.HermitianLatticesTheory.dual H.B.flip A).toAddSubgroup).symm
 
-omit [StarRing K] [FiniteDimensional K V] in
 
+omit [StarRing K] [FiniteDimensional K V] in
 theorem exists_same_index {U : Submodule K V} (p : V →ₗ[K] U) (p1 : ∀ t : U, p t = t)
     {D : Submodule (𝓞 K) V} (hD : Submodule.IsLattice K D) :
     ∃ B C : Submodule (𝓞 K) V, Submodule.IsLattice K B ∧ Submodule.IsLattice K C ∧ B ≤ C ∧ D ≤ C ∧
@@ -307,7 +295,7 @@ theorem exists_same_index {U : Submodule K V} (p : V →ₗ[K] U) (p1 : ∀ t : 
       refine ⟨?_, z, hz, rfl⟩
       obtain ⟨m, hm, y, hy, e⟩ := hBm _ hb
       have := congrArg p e
-      rw [hPx, map_add, map_sub, p1, p1, p1, sub_self, add_zero] at this
+      rw [hPx, map_add (f := _), map_sub, p1, p1, p1, sub_self, add_zero] at this
       rw [SetLike.mem_coe, hPx, this]
       exact hm
     · rintro b ⟨hb, z, hz, rfl⟩
@@ -338,7 +326,7 @@ theorem core {H : HermSpace K V} (hK : IsCMUnram K) (hP : PD H.B.flip) {η : V �
     obtain ⟨m, hm, y, hy, rfl⟩ := hBm b hb
     refine ⟨m, hm, y, hy, ?_⟩
     change F _ = _
-    rw [hF, map_add, map_sub, p1, p1, sub_self, add_zero, map_add, map_sub, (mem_fixSp η m).1 m.2,
+    rw [hF, map_add (f := _), map_sub, p1, p1, sub_self, add_zero, map_add (f := _), map_sub, (mem_fixSp η m).1 m.2,
       (mem_fixSp η (p y)).1 (p y).2]
     congr 2
     abel
@@ -350,7 +338,7 @@ theorem core {H : HermSpace K V} (hK : IsCMUnram K) (hP : PD H.B.flip) {η : V �
     intro b hb
     obtain ⟨m, hm, y, hy, rfl⟩ := key b hb
     change ((p _ : fixSp η) : V) ∈ A
-    rw [map_add, map_smul, p3, smul_zero, add_zero, p1]
+    rw [map_add (f := _), map_smul, p3, smul_zero, add_zero, p1]
     exact hfix m m.2 hm
   have hFB : Submodule.IsLattice K (gmap F B) := lattice_map hB (F : V →ₗ[K] V) F.surjective
   have h3 : idxN (Formalism.HermitianLatticesTheory.dual H.B.flip A) ((latIn (fixSp η) A).comap (p.restrictScalars (𝓞 K))) ≤

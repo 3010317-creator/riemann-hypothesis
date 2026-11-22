@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+
+@[expose] public section
 
 open NumberField IsDedekindDomain
 
@@ -93,9 +97,11 @@ theorem finsum_map_of_injective {ι M N : Type} [AddCommMonoid M] [AddCommMonoid
     rw [finsum_of_infinite_support h, finsum_of_infinite_support (by rw [hs]; exact h), map_zero]
 
 theorem isSdLat_gmap {n : ℕ} {N : Submodule (𝓞 E) (Sp E n)} (hN : IsSdLat N) (γ : UF E n) : IsSdLat (gmap γ.1 N) := by
-  refine ⟨gmap_lattice γ.1 N hN.1, ?_⟩
-  change dual (hStd E n) (gmap γ.1 N) = gmap γ.1 N
-  rw [dual_gmap γ.1 γ.2, hN.2]
+  refine ⟨{ toIsLattice := gmap_lattice γ.1 N hN.1.toIsLattice, span_eq_top := ?_ }, ?_⟩
+  · change Submodule.span E ((γ.1 : Sp E n →ₗ[E] Sp E n) '' (N : Set (Sp E n))) = ⊤
+    rw [← Submodule.map_span, hN.1.span_eq_top, Submodule.map_top, LinearEquiv.range]
+  · change dual (hStd E n) (gmap γ.1 N) = gmap γ.1 N
+    rw [dual_gmap γ.1 γ.2, hN.2]
 
 variable {K : Type} [Field K] {a b : ℕ} {SB : Finset (HeightOneSpectrum (𝓞 E))}
   {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V']
@@ -155,7 +161,7 @@ theorem kerOf_move_one {th : ThDist E K a b SB V V'} {Sall : Finset (HeightOneSp
       simp only [LinearMap.smul_comp, LinearMap.comp_smul, smul_smul]
   · intro x z hz
     have hz' : (conjE γ.1 γ'.1).symm z ∈ mulLat cB (homAt Sall N N') := (Submodule.mem_map_equiv _).1 hz
-    rw [map_add, hinv _ _ hz', hth.cong _ _ _ _ cB (x + z) x hsd hsd' (by rw [hH, mulLat_map, add_sub_cancel_left]; exact hz)]
+    rw [map_add (f := _), hinv _ _ hz', hth.cong _ _ _ _ cB (x + z) x hsd hsd' (by rw [hH, mulLat_map, add_sub_cancel_left]; exact hz)]
 
 theorem kerOf_move {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {a b : ℕ}
     {SB : Finset (HeightOneSpectrum (𝓞 E))} {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V']

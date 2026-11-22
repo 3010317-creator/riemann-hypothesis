@@ -1,9 +1,13 @@
-import Mathlib
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+module
+
+public import Mathlib
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+
+@[expose] public section
 
 noncomputable section
 
@@ -107,7 +111,7 @@ structure Flag where
   M₀ : LieModel Y.t.G 𝔐.ξ₀ Li₀
 
   j : Li₀ →+ 𝔐.Li
-  j_pt : ∀ e, (𝔐.M.pt (j e)).left ≫ 𝔐.m.φ = spMap (dualMap 𝔐.fn) ≫ (M₀.pt e).left
+  j_pt : ∀ e, (𝔐.M.pt (j e)).left ≫ 𝔐.m.φ = spMap (GlobalTheory.CompanionTheory.Ar.dualMap 𝔐.fn) ≫ (M₀.pt e).left
 
   V₀ : CMType H ⊕ CMType H → Submodule 𝔐.Ω₀ Li₀
   V₀_mem : ∀ s e, e ∈ V₀ s ↔ j e ∈ 𝔐.Vgen s

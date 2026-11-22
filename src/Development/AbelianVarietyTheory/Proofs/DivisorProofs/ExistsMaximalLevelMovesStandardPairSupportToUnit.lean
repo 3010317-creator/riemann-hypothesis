@@ -1,7 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodIdemEmpty
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardLatticeDoubleCosetClassesStabilisers
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodIdemEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardLatticeDoubleCosetClassesStabilisers
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecond
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset MeasureTheory
 open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3 Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
 open Formalism.DivisionValues (vw)
@@ -132,9 +137,6 @@ set_option synthInstance.maxHeartbeats 400000
 
 variable {D : D7}
 
-local notation "OO" => Formalism.L2.Herm.intAf D.host.F D.host.E
-local notation "σσ" => GlobalTheory.AdelicLatMove.cF D
-
 private def toE (D : D7) : Formalism.MainNotions.StandardLatticesGL3.AE D ≃+* EAf D :=
   (GlobalTheory.BotFormula.toAfE D).trans (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E).toRingEquiv
 
@@ -145,7 +147,7 @@ private theorem comm_sigR (z : Af D.host.F ⊗[D.host.F] D.host.E) :
       σσ (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E z) := by
   induction z using TensorProduct.induction_on with
   | zero => simp only [map_zero]
-  | add a b ha hb => simp only [map_add, ha, hb]
+  | add a b ha hb => simp only [map_add (f := _), ha, hb]
   | tmul x a => rfl
 
 private theorem toE_sgA (y : Formalism.MainNotions.StandardLatticesGL3.AE D) : toE D (Formalism.MainNotions.StandardLatticesGL3.sgA D y) = σσ (toE D y) := by
@@ -162,7 +164,7 @@ private theorem toE_finStd (V : HSp D) (hG : V.gram = 1) (g : Formalism.L2.Theta
 private theorem cF_cF (z : EAf D) : σσ (σσ z) = z := by
   induction z using TensorProduct.induction_on with
   | zero => simp only [map_zero]
-  | add a b ha hb => simp only [map_add, ha, hb]
+  | add a b ha hb => simp only [map_add (f := _), ha, hb]
   | tmul x a => rw [GlobalTheory.AdelicLatMove.cF_tmul, GlobalTheory.AdelicLatMove.cF_tmul, star_star]
 
 private theorem cF_oToS (b : 𝓞 D.host.E) :
@@ -184,7 +186,7 @@ private theorem cF_mem (z : EAf D) (hz : z ∈ OO) : σσ z ∈ OO := by
       exact h2
   | zero => rw [map_zero]; exact zero_mem _
   | one => rw [map_one]; exact one_mem _
-  | add a b _ _ ha hb => rw [map_add]; exact add_mem ha hb
+  | add a b _ _ ha hb => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem ha hb
   | neg a _ ha => rw [map_neg]; exact neg_mem ha
   | mul a b _ _ ha hb => rw [map_mul]; exact mul_mem ha hb
 

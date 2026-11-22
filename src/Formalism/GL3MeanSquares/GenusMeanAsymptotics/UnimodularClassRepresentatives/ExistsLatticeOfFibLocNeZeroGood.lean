@@ -1,12 +1,16 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InvMemLocROfUnimod
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AlgebraMapIntCastSmul
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LamGEqOneOfOrtho
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.NkCountLocF
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
-import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InvMemLocROfUnimod
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AlgebraMapIntCastSmul
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LamGEqOneOfOrtho
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.NkCountLocF
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
+
+@[expose] public section
 
 open NumberField Module Formalism.HermitianLattices.Ext.L3.SplitA
 
@@ -111,7 +115,7 @@ theorem inv_mem_locF_one {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {n : �
 
 theorem vd_cut_eq_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (hs : h.IsSymm)
     (hd : IsTotPosDef h) (S : VecSplit h h') {B : Submodule (𝓞 K) V}
-    (hB : Submodule.IsLattice K B) (hBi : Formalism.HermitianLatticesTheory.IsIntegralLat h B) {𝔭 : Ideal (𝓞 F)}
+    (hB : Submodule.IsFullLattice K B) (hBi : Formalism.HermitianLatticesTheory.IsIntegralLat h B) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : h S.x₀ S.x₀ = algebraMap F K (n : F))
     (hvB : vd h B 𝔭 = 0) (hvn : vF 𝔭 n = 0) (hx : S.x₀ ∈ locF 𝔭 B) :
     vd h' (S.cut B) 𝔭 = 0 := by
@@ -120,7 +124,7 @@ theorem vd_cut_eq_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
     rintro rfl
     exact S.hx₀ (by rw [hn]; simp)
   rw [← isUnimodularAt_iff_vd hK hF hs hd hB hBi hP] at hvB
-  rw [← isUnimodularAt_iff_vd hK hF (S.isSymm hs) (S.isTotPosDef hd) (StabilizerLattices.isLattice_cut S hB)
+  rw [← isUnimodularAt_iff_vd hK hF (S.isSymm hs) (S.isTotPosDef hd) (StabilizerLattices.isFullLattice_cut S hB)
     (isIntegralLat_cut S hBi) hP]
   apply unimod_of_unimod_adjoin hs S
   rw [locF_eq_loc hK hF hP] at hx
@@ -130,11 +134,12 @@ theorem vd_cut_eq_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
   rwa [← isUnimodularAt_of_loc_eq P (loc_eq_loc_adjoin_cut S hP.isPrime hBi hx hn')]
 
 theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {P : Ideal (𝓞 K)}
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {P : Ideal (𝓞 K)}
     (hP : P.IsPrime) (hU : Formalism.HermitianLatticesTheory.IsUnimodularAt h P L) {x₀ : V}
     (hx : h x₀ x₀ ∈ (1 : Submodule (𝓞 K) K)) :
-    ∃ B : Submodule (𝓞 K) V, Submodule.IsLattice K B ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h B ∧
+    ∃ B : Submodule (𝓞 K) V, Submodule.IsFullLattice K B ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h B ∧
       Formalism.HermitianLatticesTheory.IsUnimodularAt h P B ∧ x₀ ∈ B := by
+  have hfull := hL
   obtain ⟨hanti, hbi, hsup, hint, -⟩ := Formalism.HermitianLatticesTheory.dualBasic (𝓞 K) K V h hs Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range
   have DL := Formalism.HermitianLatticesTheory.dualLattice (𝓞 K) K V h hs (nondegenerate hd) Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range
   obtain ⟨hloc, -⟩ := Formalism.HermitianLatticesTheory.locBasic (𝓞 K) K V Formalism.HermitianLatticesTheory.genusCovol_hinj
@@ -151,34 +156,18 @@ theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodul
   have hLd : L ≤ Formalism.HermitianLatticesTheory.dual h L := (hint L).mp hLi
   set B : Submodule (𝓞 K) V := (L ⊓ Formalism.HermitianLatticesTheory.dual h X) ⊔ X with hB
   have hBfg : B.FG := (hL.fg.of_le inf_le_left).sup (Submodule.fg_span_singleton x₀)
-  have hBl : Submodule.IsLattice K B := by
-    refine ⟨hBfg, ?_⟩
-    rw [eq_top_iff, ← hL.span_eq_top, Submodule.span_le]
-    intro v hv
-    obtain ⟨a, b, hb, e⟩ := IsFractionRing.div_surjective (A := 𝓞 K) (h x₀ v)
-    have hb0 : algebraMap (𝓞 K) K b ≠ 0 := by
-      rw [map_ne_zero_iff _ Formalism.HermitianLatticesTheory.genusCovol_hinj]
-      exact nonZeroDivisors.ne_zero hb
-    have h1 : b • v ∈ B := by
-      apply Submodule.mem_sup_left
-      refine ⟨L.smul_mem b hv, ?_⟩
-      change b • v ∈ Formalism.HermitianLatticesTheory.dual h X
-      rw [Formalism.HermitianLatticesTheory.isomAct_mem_dual]
-      intro z hz
-      obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.mp hz
-      rw [LocalizedFibreSets.form_smul_smul, mul_smul]
-      apply Submodule.smul_mem
-      rw [← e, Algebra.smul_def, mul_div_cancel₀ _ hb0]
-      exact Submodule.mem_one.mpr ⟨a, rfl⟩
-    have h2 : (algebraMap (𝓞 K) K b)⁻¹ • (b • v) ∈ Submodule.span K (B : Set V) :=
-      Submodule.smul_mem _ _ (Submodule.subset_span h1)
-    rwa [← algebraMap_smul K b v, smul_smul, inv_mul_cancel₀ hb0, one_smul] at h2
-  have lat2 : Submodule.IsLattice K (Formalism.HermitianLatticesTheory.dual h L ⊔ X) := by
-    refine ⟨(DL L hL).1.fg.sup (Submodule.fg_span_singleton x₀), ?_⟩
-    rw [eq_top_iff, ← (DL L hL).1.span_eq_top]
-    exact Submodule.span_mono (show Formalism.HermitianLatticesTheory.dual h L ≤ Formalism.HermitianLatticesTheory.dual h L ⊔ X from le_sup_left)
+  have lat2 : Submodule.IsFullLattice K (Formalism.HermitianLatticesTheory.dual h L ⊔ X) := by
+    letI := (DL L hfull).1
+    exact Submodule.IsFullLattice.of_le_of_fg K le_sup_left
+      ((DL L hfull).1.fg.sup (Submodule.fg_span_singleton x₀))
   have e1 : L ⊓ Formalism.HermitianLatticesTheory.dual h X = Formalism.HermitianLatticesTheory.dual h (Formalism.HermitianLatticesTheory.dual h L ⊔ X) := by
-    rw [hsup, (DL L hL).2.1]
+    rw [hsup, (DL L hfull).2.1]
+  have hBl : Submodule.IsFullLattice K B := by
+    let : Submodule.IsFullLattice K (L ⊓ Formalism.HermitianLatticesTheory.dual h X) := by
+      rw [e1]
+      exact (DL _ lat2).1
+    exact Submodule.IsFullLattice.of_le_of_fg K
+      (show L ⊓ Formalism.HermitianLatticesTheory.dual h X ≤ B from le_sup_left) hBfg
   have e2 : Formalism.HermitianLatticesTheory.dual h (L ⊓ Formalism.HermitianLatticesTheory.dual h X) = Formalism.HermitianLatticesTheory.dual h L ⊔ X := by
     rw [e1, (DL _ lat2).2.1]
   have e3 : Formalism.HermitianLatticesTheory.dual h B = (Formalism.HermitianLatticesTheory.dual h L ⊔ X) ⊓ Formalism.HermitianLatticesTheory.dual h X := by
@@ -248,7 +237,7 @@ theorem fibLoc_congr (S : VecSplit h h') (L : Submodule (𝓞 K) V) {𝔭 : Idea
   rw [← fibLoc_locF S L 𝔭 T, e, fibLoc_locF]
 
 theorem localFactor_localField (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (hs : h.IsSymm)
-    (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V} (hL : Submodule.IsLattice K L)
+    (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V} (hL : Submodule.IsFullLattice K L)
     (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
     lamP h (locF 𝔭 L) 𝔭 = lamP h L 𝔭 := by
   have e : alphaL h (locF 𝔭 L) 𝔭 = alphaL h L 𝔭 := by
@@ -265,29 +254,36 @@ theorem exists_lattice_of_fibLoc_ne_zero (S : VecSplit h h') {L : Submodule (�
     ∃ C : Submodule (𝓞 K) V', Submodule.IsLattice K C ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h' C ∧
       locF 𝔭 C = locF 𝔭 T := by
   obtain ⟨g, hg, -, e⟩ := exists_of_fibLoc_ne_zero S hT
-  exact ⟨_, StabilizerLattices.isLattice_cut S (LocalizedFibreSets.isLattice_gmap g hL),
+  exact ⟨_, StabilizerLattices.isLattice_cut S (Formalism.HermitianLatticesTheory.isomAct_lattice g L hL),
     isIntegralLat_cut S (isIntegralLat_gmap hg hLi), e⟩
 
 theorem exists_lattice_of_fibLoc_ne_zero_good (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     (hs : h.IsSymm) (hd : IsTotPosDef h) (S : VecSplit h h') {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : h S.x₀ S.x₀ = algebraMap F K (n : F))
     (hvL : vd h L 𝔭 = 0) (hvn : vF 𝔭 n = 0)
     {T : Submodule (𝓞 K) V'} (hT : fibLoc S L 𝔭 T ≠ 0) :
-    ∃ C : Submodule (𝓞 K) V', Submodule.IsLattice K C ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h' C ∧
+    ∃ C : Submodule (𝓞 K) V', Submodule.IsFullLattice K C ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h' C ∧
       vd h' C 𝔭 = 0 ∧ locF 𝔭 C = locF 𝔭 T := by
   obtain ⟨g, hg, hx, e⟩ := exists_of_fibLoc_ne_zero S hT
-  exact ⟨_, StabilizerLattices.isLattice_cut S (LocalizedFibreSets.isLattice_gmap g hL),
+  have hLg : Submodule.IsFullLattice K (Formalism.HermitianLatticesTheory.gmap g L) := by
+    refine
+      { toIsLattice := Formalism.HermitianLatticesTheory.isomAct_lattice g L hL.toIsLattice
+        span_eq_top := ?_ }
+    change Submodule.span K ((g : V →ₗ[K] V) '' (L : Set V)) = ⊤
+    rw [Submodule.span_image, hL.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
+    exact g.surjective
+  exact ⟨_, StabilizerLattices.isFullLattice_cut S hLg,
     isIntegralLat_cut S (isIntegralLat_gmap hg hLi),
-    vd_cut_eq_zero hK hF hs hd S (LocalizedFibreSets.isLattice_gmap g hL) (isIntegralLat_gmap hg hLi) h𝔭 hn
+    vd_cut_eq_zero hK hF hs hd S hLg (isIntegralLat_gmap hg hLi) h𝔭 hn
       (by rw [vd_gmap hg, hvL]) hvn hx, e⟩
 
 theorem exists_unimod_lattice_good (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     (hs : h.IsSymm) (hd : IsTotPosDef h) (S : VecSplit h h') {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : h S.x₀ S.x₀ = algebraMap F K (n : F))
     (hvL : vd h L 𝔭 = 0) (hvn : vF 𝔭 n = 0) :
-    ∃ C : Submodule (𝓞 K) V', Submodule.IsLattice K C ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h' C ∧
+    ∃ C : Submodule (𝓞 K) V', Submodule.IsFullLattice K C ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h' C ∧
       vd h' C 𝔭 = 0 := by
   obtain ⟨P, hP, rfl⟩ := LocalizedFibreSets.exists_max_over (K := K) h𝔭
   have hU := (isUnimodularAt_iff_vd hK hF hs hd hL hLi hP).mpr hvL
@@ -295,7 +291,7 @@ theorem exists_unimod_lattice_good (hK : Formalism.HermitianLatticesTheory.IsCMU
     rw [hn]
     exact Submodule.mem_one.mpr ⟨algebraMap (𝓞 F) (𝓞 K) n, rfl⟩
   obtain ⟨B, hB, hBi, hBU, hxB⟩ := exists_unimod_through hs hd hL hLi hP.isPrime hU hx
-  exact ⟨_, StabilizerLattices.isLattice_cut S hB, isIntegralLat_cut S hBi,
+  exact ⟨_, StabilizerLattices.isFullLattice_cut S hB, isIntegralLat_cut S hBi,
     vd_cut_eq_zero hK hF hs hd S hB hBi h𝔭 hn
       ((isUnimodularAt_iff_vd hK hF hs hd hB hBi hP).mp hBU) hvn (LocF.le_locF _ _ hxB)⟩
 

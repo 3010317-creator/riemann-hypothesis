@@ -1,8 +1,12 @@
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.IsClosedKset
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.KFacts
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.IntMuCD
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.JacBound
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PolarHaar
+module
+
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.IsClosedKset
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.KFacts
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.IntMuCD
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.JacBound
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PolarHaar
+
+@[expose] public section
 
 noncomputable section
 
@@ -26,8 +30,8 @@ def pOfB (ε : Fin n → Bool) (B : Pt ε → Qt ε → ℂ) : Matrix (Fin n) (F
     if ha : ε a = true then (if hb : ε b = false then B ⟨a, ha⟩ ⟨b, hb⟩ else 0)
     else (if hb : ε b = true then star (B ⟨b, hb⟩ ⟨a, by simpa using ha⟩) else 0)
 
-open Classical in
 
+open Classical in
 def toUJ (ε : Fin n → Bool) (m : Matrix (Fin n) (Fin n) ℂ) : UJ ε :=
   if h : inUJ ε m then
     ⟨⟨m, Jm ε * mᴴ * Jm ε, mul_eq_one_comm.mp (left_inv_of_inUJ ε m h), left_inv_of_inUJ ε m h⟩, h⟩

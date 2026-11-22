@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalUnitaryOrbits.ProdEta
+
+@[expose] public section
 
 noncomputable section
 
@@ -43,7 +47,7 @@ theorem absV_dV_pos : 0 < absV v (dV v) := by
     · exact h.choose_spec.1
     · exact one_ne_zero
   unfold absV
-  rw [dif_neg (by simpa using hd)]
+  rw [dite_eq_right (by simpa using hd)]
   exact zpow_pos (qv_pos v) _
 
 theorem omLocU_of (a : ℕ) (Y : TupV (E := E) v n a)
@@ -53,6 +57,9 @@ theorem omLocU_of (a : ℕ) (Y : TupV (E := E) v n a)
     (h4 : SdVolW σ J ψ v Λ a) (h5 : SdVolH σ J ψ v a) :
     Formalism.L2.SG.Pf.NcLoc.OmLocU σ J ψ v Λ a Y := by
   intro hS hL hSD hUn ha hP hdet
+  have hLw : ∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ := by
+    rcases hL with ⟨L, hL, rfl⟩
+    exact ⟨L, hL.toIsLattice, rfl⟩
   have hG : GoodY σ J ψ v Λ a Y := ⟨hS, hL, hSD, hUn, ha, hP, hdet⟩
   obtain ⟨ϖ, hϖ⟩ := hU
   obtain ⟨hW, hH⟩ := hSd hS

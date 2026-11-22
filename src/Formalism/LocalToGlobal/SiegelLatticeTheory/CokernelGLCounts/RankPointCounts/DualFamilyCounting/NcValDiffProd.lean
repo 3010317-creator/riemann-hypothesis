@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiffProd
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiffProd
+
+@[expose] public section
 
 noncomputable section
 
@@ -80,7 +84,7 @@ lemma valued_dV (v : HeightOneSpectrum (𝓞 F)) : Valued.v (dV v) = exp (-(mDif
       exact intValuation_le_of_mem_different v hy
   have hd : IsDiffVal v (dV v) := by
     unfold dV
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hex.choose_spec
   obtain ⟨-, hle, y, hyD, hyv⟩ := hd
   apply le_antisymm
@@ -95,7 +99,7 @@ lemma absV_of_valued_eq (v : HeightOneSpectrum (𝓞 F)) (x : Fv F v) (n : ℤ) 
     rw [h]
     exact WithZero.exp_ne_zero
   unfold absV
-  rw [dif_neg hx]
+  rw [dite_eq_right hx]
   congr 1
   have hu : WithZero.unzero hx = Multiplicative.ofAdd n := by
     apply WithZero.coe_injective
@@ -108,8 +112,8 @@ lemma absV_dV (v : HeightOneSpectrum (𝓞 F)) :
   rw [absV_of_valued_eq v _ _ (valued_dV v), IsDedekindDomain.HeightOneSpectrum.maxPowDividing, map_pow,
     zpow_neg, zpow_natCast, Nat.cast_pow]
 
-variable (F) in
 
+variable (F) in
 theorem hasProd_absV_dV :
     HasProd (fun v : HeightOneSpectrum (𝓞 F) => absV v (dV v)) (|(discr F : ℝ)|⁻¹) := by
   have hD := differentIdeal_ne_zero' F

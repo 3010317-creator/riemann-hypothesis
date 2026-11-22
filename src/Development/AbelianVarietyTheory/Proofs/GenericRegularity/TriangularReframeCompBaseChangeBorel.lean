@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
-import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsCombAtGMulVec
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
+public import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsCombAtGMulVec
+
+@[expose] public section
 
 noncomputable section
 
@@ -68,18 +72,18 @@ theorem Reframe.baseChange {T : Type} [CommRing T] [Algebra c.F T] (φ : S →�
   obtain ⟨hzx', hzu', -⟩ := hz'
   refine ⟨by rw [hzx', hzx, hx], fun τ i => ?_⟩
   obtain ⟨u, hu, hp⟩ := hc τ i
-  have r1 : (dualMap φ.toRingHom).comp (algebraMap S (DualNumber S)) =
+  have r1 : (_root_.Formalism.L2.Pj.dualMap φ.toRingHom).comp (algebraMap S (DualNumber S)) =
       (algebraMap T (DualNumber T)).comp φ.toRingHom := by
-    refine RingHom.ext fun s => TrivSqZeroExt.ext ?_ ?_ <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-  have r2 : ∀ a : S, (dualMap φ.toRingHom).comp (epsMul a) =
-      (epsMul (φ.toRingHom a)).comp (dualMap φ.toRingHom) := by
+    refine RingHom.ext fun s => TrivSqZeroExt.ext ?_ ?_ <;> simp [_root_.Formalism.L2.Pj.dualMap, TrivSqZeroExt.algebraMap_eq_inl]
+  have r2 : ∀ a : S, (_root_.Formalism.L2.Pj.dualMap φ.toRingHom).comp (epsMul a) =
+      (epsMul (φ.toRingHom a)).comp (_root_.Formalism.L2.Pj.dualMap φ.toRingHom) := by
     intro a
-    refine RingHom.ext fun s => TrivSqZeroExt.ext ?_ ?_ <;> simp [dualMap, epsMul, mul_comm]
-  have hw : spMap (dualMap φ.toRingHom) ≫ (tEps y.x).hom = (tEps z.x).hom := by
-    show spMap (dualMap φ.toRingHom) ≫ (spMap (algebraMap S (DualNumber S)) ≫ y.x) =
+    refine RingHom.ext fun s => TrivSqZeroExt.ext ?_ ?_ <;> simp [_root_.Formalism.L2.Pj.dualMap, epsMul, mul_comm]
+  have hw : spMap (_root_.Formalism.L2.Pj.dualMap φ.toRingHom) ≫ (tEps y.x).hom = (tEps z.x).hom := by
+    show spMap (_root_.Formalism.L2.Pj.dualMap φ.toRingHom) ≫ (spMap (algebraMap S (DualNumber S)) ≫ y.x) =
       spMap (algebraMap T (DualNumber T)) ≫ z.x
     rw [hzx, ← Category.assoc, ← Category.assoc, spMap_comp_moduli_spaces, spMap_comp_moduli_spaces, r1]
-  obtain ⟨F, hF⟩ : ∃ F : tEps z.x ⟶ tEps y.x, F.left = spMap (dualMap φ.toRingHom) :=
+  obtain ⟨F, hF⟩ : ∃ F : tEps z.x ⟶ tEps y.x, F.left = spMap (_root_.Formalism.L2.Pj.dualMap φ.toRingHom) :=
     ⟨Over.homMk _ hw, rfl⟩
   refine ⟨fun j => F ≫ u j, fun j => ?_, ?_⟩
   · have hu' : (u j).left = spMap (epsMul (g τ j i)) ≫ y.u τ j := hu j

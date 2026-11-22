@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ReflectionBoostMatrixConjTransposeMulSelf
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchrodingerIntertwinerSchwartzBruhatIsTheta
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittDecompSymplInclIsotropicInclAnisotropic
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ReflectionBoostMatrixConjTransposeMulSelf
+
+@[expose] public section
 
 noncomputable section
 
@@ -65,10 +69,6 @@ variable {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)}
 
 end Periodic
 
-def red (ψ : AddChar (AF D.host.F) ℂ) (jA : Mx D m n →+ WO S T) (j0 : WO S0 T0 →+ WO S T) (μ : Measure (Mx D m n))
-    (𝓕 : Set (Mx D m n)) (f : WO S T → ℂ) : WO S0 T0 → ℂ :=
-  fun z => ∫ a in 𝓕, heisO ψ S T (j0 z) f (jA a) ∂μ
-
 section Red
 
 variable {jA jB : Mx D m n →+ WO S T} {j0 : WO S0 T0 →+ WO S T} {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)}
@@ -116,8 +116,8 @@ section Lattice
 variable {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)}
   {e : AE D}
 
-open GlobalTheory.PlaceDatum in
 
+open GlobalTheory.PlaceDatum in
 theorem lattice_facts (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) (he : e * e = e)
     (hinf : infPart D e = 0) :
     (∀ u ∈ latO S T ΛS ΛT fun _ => True, IsHalf e u → ∀ y ∈ latO S T ΛS ΛT fun _ => True, IsHalf (cA D e) y →

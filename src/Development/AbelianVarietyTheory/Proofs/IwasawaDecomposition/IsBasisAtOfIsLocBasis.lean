@@ -1,10 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemClosureIff
-import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLocGen
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemClosureIff
+public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+public import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLocGen
+
+@[expose] public section
 
 noncomputable section
 
@@ -57,7 +61,7 @@ theorem isBasisAt_of_isLocBasis {T : ℕ} (hT : T.Prime) (Q : HeightOneSpectrum 
 variable {K ι : Type} [Field K] [NumberField K] [Fintype ι]
 
 theorem mem_localization_delAtr_fn (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : ι → DomWeight n) (w : HeightOneSpectrum (𝓞 K))
-    {L : Submodule (𝓞 E) (Fin n → E)} (hL : Submodule.IsLattice E L) (B : ι → GL (Fin n) E)
+    {L : Submodule (𝓞 E) (Fin n → E)} (hL : Submodule.IsFullLattice E L) (B : ι → GL (Fin n) E)
     (hB : ∀ τ, IsBasisAt (bcBelow (emb τ) w) L (B τ)) (F : Formalism.L2.DIV.VV K lam) :
     F ∈ localization₂ w.asIdeal (delAtr emb lam L) ↔ ∃ z ∈ localization₂ w.asIdeal (delStd K lam),
       evV emb 1 lam σ F = fnOf _ (shiftOf lam)
@@ -89,12 +93,16 @@ theorem localization_LshKer_eq_localization_sup {d : Deco E n ST SG} (hd : d.Ok)
     refine Submodule.smul_le.2 fun p hp x hx => (hd.mem_LshKer ha P _).2 ⟨Submodule.smul_mem _ p hx, ?_⟩
     rw [hd.f_smul P p x (hd.Lsh_le_at ha P hx), Ideal.Quotient.eq_zero_iff_mem.2 hp, zero_mul]
 
+private theorem lattice_sup_smul_full {d : Deco E n ST SG} (hd : d.Ok) (I : Ideal (𝓞 E)) :
+    Submodule.IsFullLattice E (d.L ⊔ I • d.Lsh : Submodule (𝓞 E) (Sp E n)) :=
+  lattice_between hd.L_lattice hd.Lsh_lattice.toIsLattice le_sup_left (sup_le hd.L_le_Lsh Submodule.smul_le_right)
+
 theorem lattice_sup_smul {d : Deco E n ST SG} (hd : d.Ok) (I : Ideal (𝓞 E)) :
     Submodule.IsLattice E (d.L ⊔ I • d.Lsh : Submodule (𝓞 E) (Sp E n)) :=
-  lattice_between hd.L_lattice hd.Lsh_lattice le_sup_left (sup_le hd.L_le_Lsh Submodule.smul_le_right)
+  (lattice_sup_smul_full hd I).toIsLattice
+
 
 open Classical in
-
 theorem mem_localization_ker (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : ι → DomWeight n) (w : HeightOneSpectrum (𝓞 K))
     {T : ℕ} (hT : T.Prime) (hST : ∀ P : ST, (T : 𝓞 E) ∈ P.1.asIdeal) (e : ST ≃ ι) (he : ∀ P, bcBelow (emb (e P)) w = P.1)
     {d : Deco E n ST SG} (hd : d.Ok) {a : 𝓞 E} (ha : SepElt ST a) (P : ST) {B B' : GL (Fin n) E}
@@ -175,8 +183,8 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 
 open GlobalTheory.Mem.Col2.BwLat GlobalTheory.LvT.Built.ValLat Formalism.HermitianLatticesTheory
 
-set_option maxHeartbeats 1000000 in
 
+set_option maxHeartbeats 1000000 in
 theorem bw_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (i : ℕ) (hi : i ≤ B.R.m) (eY : (I.chain l u a).Y i ≃ Formalism.L2.Forms.Fr (I.rec7 l Z) i hi), I.IdY l Z u a i hi eY → BwTieG (D := (I.rec7 l Z)) (I.fm l u a) (B.T u) (I.resT l u a) eY (fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c)) := by
   intro B X I hI hP l Z u a i hi eY hY w hw hs v x
   revert hw hs
@@ -260,7 +268,7 @@ theorem bw_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
     exact (key Bm Bm' hB hB').1 h
   · intro h
     have l1 := ((I.stp u a i).rep c).1.1.deco.2.Lsh_lattice
-    have l2 := lattice_sup_smul ((I.stp u a i).rep c).1.1.deco.2 v.1.asIdeal
+    have l2 := lattice_sup_smul_full ((I.stp u a i).rep c).1.1.deco.2 v.1.asIdeal
     obtain ⟨Bm, hB⟩ := Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.LocB.exists_isLocBasis (B.T u) B.host.E _ l1.fg l1.span_eq_top
     obtain ⟨Bm', hB'⟩ := Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.LocB.exists_isLocBasis (B.T u) B.host.E _ l2.fg l2.span_eq_top
     exact (key Bm Bm' hB hB').2 (h Bm Bm' (by rw [hd c]; exact hB) (by rw [hk c]; exact hB'))

@@ -1,13 +1,15 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ScatteringLimits.Carries
-import GroundTheory.AutomorphicForms.TraceNormComp
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ScatteringLimits.Carries
+public import GroundTheory.AutomorphicForms.TraceNormComp
+
+@[expose] public section
 
 open MeasureTheory GroundTheory.Automorphic PositivityTheory.Rg.Tf.IntegralApplyAeEq Set Filter Topology UpperTheory.V.Z.IntegralApplyAeEq
 open scoped InnerProductSpace FourierTransform ComplexConjugate
 
 section
 variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] [CompleteSpace V]
-
-local notation "adj" => ContinuousLinearMap.adjoint
 
 private theorem cnt [TopologicalSpace.SeparableSpace H] {ι : Type} {v : ι → H} (hv : Orthonormal ℂ v) : Countable ι := by
   refine Pairwise.countable_of_isOpen_disjoint (s := fun i => Metric.ball (v i) (1 / 2)) (fun i j hij => ?_)
@@ -89,7 +91,7 @@ private theorem summ (J : L V ≃ₗᵢ[ℂ] H) (a b : ℝ) {k : ℝ → V →L[
   have ci : ∀ {f : ℝ → ℝ}, Continuous f → IntegrableOn f (Ioc a b) := fun hf => hf.integrableOn_Icc.mono_set Ioc_subset_Icc_self
   refine summable_of_sum_le (c := ∫ y in Ioc a b, ∑ i, ‖k y (stdOrthonormalBasis ℂ V i)‖ ^ 2) (fun _ => sq_nonneg _) fun s => ?_
   simp only [normEq J a b hk hY]
-  rw [← integral_finset_sum _ fun m _ => ci (cSq hk _)]
+  rw [← integral_finsetSum _ fun m _ => ci (cSq hk _)]
   refine integral_mono (integrable_finset_sum _ fun m _ => ci (cSq hk _))
     (ci (continuous_finset_sum _ fun i _ => (hk.clm_apply continuous_const).norm.pow 2)) fun y => ?_
   exact sum_le_hasSum s (fun _ _ => sq_nonneg _) (ptSumR c (k y))

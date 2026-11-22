@@ -1,12 +1,16 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.HeckeInj
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.IdempotentTraces.SwapAt
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamSat
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamParts
-import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.NormCharPowHolds
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.AtInj
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
-import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
-import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.JacquetShalikaRigidity
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.HeckeInj
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriHeckeInjectivity.IdempotentTraces.SwapAt
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamSat
+public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamParts
+public import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.NormCharPowHolds
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.AtInj
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
+public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.SSatIff
+public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.JacquetShalikaRigidity
+
+@[expose] public section
 
 open MeasureTheory NumberField IsDedekindDomain Filter Topology
 open GroundTheory.Automorphic GroundTheory.Automorphic.Reduction GroundTheory.Automorphic.RightCosetSpace
@@ -29,7 +33,11 @@ private theorem normV_split {K M : Type} [Field K] [NumberField K] [Field M] [Nu
   have h1 : w.asIdeal.ramificationIdx (𝓞 K) * w.asIdeal.inertiaDeg (𝓞 K) = 1 := by
     rw [← finrank_eq_ramificationIdx_mul_inertiaDeg M (w.under (𝓞 K)) w,
       ← (LinearEquiv.ofBijective _ hb).finrank_eq, Module.finrank_self]
-  show Ideal.absNorm w.asIdeal = Ideal.absNorm (w.under (𝓞 K)).asIdeal
+  have norm_eq {L : Type} [Field L] [NumberField L] (v : HeightOneSpectrum (𝓞 L)) :
+      Formalism.ConjugateSelfDual.normV v = Ideal.absNorm v.asIdeal := by
+    rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
+    rfl
+  rw [norm_eq, norm_eq]
   rw [← Ideal.absNorm_relNorm (𝓞 K) (𝓞 M) w.asIdeal,
     Ideal.relNorm_eq_pow_of_isMaximal w.asIdeal (w.under (𝓞 K)).asIdeal, Nat.eq_one_of_mul_eq_one_left h1, pow_one]
 
@@ -37,7 +45,7 @@ private theorem summand_of_irr {K : Type} [Field K] [NumberField K] {n : ℕ} {�
     {τ : Submodule ℂ (L2 μ)} (h : CuspIrr μ τ) : IsSummand μ τ :=
   ⟨h.le, h.closed, h.inv, h.ne, h.irr⟩
 
-private theorem sat_single {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {ι : Type} {κ : ι → Type}
+private theorem sat_single {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {ι : Type} {κ : ι → Type}
     [∀ i, Fintype (κ i)] {m : (Σ i, κ i) → ℕ} (Q : ∀ a, CG E (m a))
     (hinj : Function.Injective (Sigma.fst : (Σ i, κ i) → ι)) (a : Σ i, κ i) {w : HeightOneSpectrum (𝓞 E)}
     {C : Multiset ℂˣ} (h : R.sumSat (m := fun k : κ a.1 => m ⟨a.1, k⟩) (fun k => Q ⟨a.1, k⟩) w C) : (Q a).HasSat w C := by
@@ -49,7 +57,7 @@ private theorem sat_single {E : Type} [Field E] [NumberField E] [IsTotallyComple
   rw [Fintype.sum_eq_single k₀ fun k hk => absurd (hu k) hk]
   exact hD k₀
 
-private theorem sat_of_sigma {E : Type} [Field E] [NumberField E] [IsTotallyComplex E] {n n' : ℕ} {p : CG E n} {q : CG E n'}
+private theorem sat_of_sigma {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {n n' : ℕ} {p : CG E n} {q : CG E n'}
     (h : (⟨n, p⟩ : Σ a, CG E a) = ⟨n', q⟩) {w : HeightOneSpectrum (𝓞 E)} {B : Multiset ℂˣ} (hq : q.HasSat w B) :
     p.HasSat w B := by
   cases h

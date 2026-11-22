@@ -1,12 +1,16 @@
-import Mathlib
-import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
-import Formalism.LocalRingCardinality.PosOfIsomEmb
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffSetIntegralNat
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DimKKapAtWcPos
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfOpenCompact
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
-import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
+public import Formalism.LocalRingCardinality.PosOfIsomEmb
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffSetIntegralNat
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DimKKapAtWcPos
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCharFamIsVacVec
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfOpenCompact
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx
 open scoped TensorProduct InnerProductSpace
@@ -39,7 +43,7 @@ theorem selfDualOK (D : D7) : SelfDualOK D := by
   have hM0 : (N : D.host.E) ≠ 0 := Nat.cast_ne_zero.2 hN.ne'
   have hL := (GlobalTheory.PlaceModel.isSelfDualC_latFrame V).1
   rw [← GlobalTheory.PlaceModel.coe_latFrame] at h1 h2
-  refine ⟨⟨?_, ?_⟩, fun y => ?_⟩
+  refine ⟨{ toIsLattice := Submodule.IsLattice.of_fg D.host.E ?_, span_eq_top := ?_ }, fun y => ?_⟩
   · let f : (Fin V.rank → D.host.E) →ₗ[𝓞 D.host.E] (Fin V.rank → D.host.E) :=
       (LinearMap.lsmul D.host.E (Fin V.rank → D.host.E) (N : D.host.E)⁻¹).restrictScalars (𝓞 D.host.E)
     refine (hL.fg.map f).of_le fun x hx => ⟨_, h2 x hx, ?_⟩
@@ -52,8 +56,8 @@ theorem selfDualOK (D : D7) : SelfDualOK D := by
     rwa [smul_smul, inv_mul_cancel₀ hM0, one_smul] at this
   · rw [← GlobalTheory.SDFrameLattice.mem_dualL_iff, hd]
 
-open scoped Pointwise in
 
+open scoped Pointwise in
 theorem petAll (D : D7) : PetAll D := by
   intro V μ 𝓕 hμ h𝓕 F hc hl h0 hi
   haveI : BorelSpace (GA D V) := ⟨rfl⟩

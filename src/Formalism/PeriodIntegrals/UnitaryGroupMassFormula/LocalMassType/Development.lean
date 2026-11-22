@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.LocVol
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassOrder.Development
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.LocVol
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassOrder.Development
+
+@[expose] public section
 
 noncomputable section
 
@@ -91,16 +95,6 @@ def StepPos : Prop :=
     (sdE (E := E) ψ v (UIdx r) (UO v r)).toReal ≠ 0 →
       (sdE (E := E) ψ v (UIdx r) (UOg (E := E) v g r)).toReal ≠ 0
 
-def NonDegT : Prop :=
-  ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (ψ : AddChar (AF F) ℂ)
-    (v : HeightOneSpectrum (𝓞 F)) {r : ℕ} (P : Frame E n r) (Λ : Set (Fin n → E))
-    (μG : Measure (HA (Fv F v) σ J)) (μS : Measure (Ssub (Fv F v) σ J P))
-    (μS0 : Measure (S0 (Fv F v) σ J P)),
-    LocMassOrdW.FrameHyp σ J ψ v P Λ μG μS μS0 1 →
-    (LocMassOrdW.IsLatLoc v Λ ∧ (μS0 (stabilizerCompact σ J v Λ P)).toReal ≠ 0) ∨
-      ((μS0 (stabilizerCompact σ J v Λ P)).toReal = 0 ∧ omAt σ J ψ v (TFl σ J v P) (LocMassOrdW.primSet v Λ r) = 0)
-
 theorem arith (M a a' k k1 kn s s' u ug : ℝ) (hM : M * (a * a') = k * k1) (hs : s = a * u)
     (hs' : s' = a' * u) (hidx : kn * ug = k1 * u) (ha : a ≠ 0) (ha' : a' ≠ 0) (hug : u ≠ 0 → ug ≠ 0) :
     M / (u * ug) = k * kn / (s * s') := by
@@ -115,7 +109,7 @@ theorem arith (M a a' k k1 kn s s' u ug : ℝ) (hM : M * (a * a') = k * k1) (hs 
 def LatOfGlob : Prop :=
   ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (Λ : Set (Fin n → E)),
-    (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
+    (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
     LocMassOrdW.IsLatLoc v Λ
 
 end PI.LocMassTypW

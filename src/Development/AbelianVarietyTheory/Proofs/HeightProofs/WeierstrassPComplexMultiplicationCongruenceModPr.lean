@@ -1,10 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LFunctionPositiveConductorFourEight
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsWeierstrassPMulOde
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.QuotientEqLinearPowCharOfDerivativeEqZero
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPTorsionIntegralAndDistinctMod
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.ThreeDistinctRoots
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LFunctionPositiveConductorFourEight
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsWeierstrassPMulOde
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.QuotientEqLinearPowCharOfDerivativeEqZero
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPTorsionIntegralAndDistinctMod
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ThreeDistinctRoots
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Polynomial GlobalTheory.FieldSize
 open scoped IntermediateField
 
@@ -48,7 +53,7 @@ lemma coeff_of_dvd {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (g�
     intro e he
     obtain ⟨q, hq⟩ := hdvd
     have e1 := congrArg (Polynomial.eval₂RingHom ι e) hq
-    simp only [map_mul, map_sub, map_add, map_pow, map_ofNat, coe_eval₂RingHom, eval₂_C,
+    simp only [map_mul, map_sub, map_add (f := _), map_pow, map_ofNat, coe_eval₂RingHom, eval₂_C,
       eval₂_X] at e1
     rw [he, zero_mul] at e1
     have e2 := congrArg (frobenius K p) he
@@ -173,8 +178,8 @@ lemma exists_scaling (W : ValuationSubring ℂ) (A D : ℂ[X]) (hD : D ≠ 0) :
     obtain ⟨B₀, hB₀⟩ := (mem_lifts _).mp this
     refine ⟨B₀, hB₀, fun hsB h0 => ?_⟩
     obtain ⟨n, -, hn⟩ := mem_coeffs_iff.mp hsB
-    have e1 := congrArg (fun q => coeff q n) hB₀
-    have e2 := congrArg (fun q => coeff q n) h0
+    have e1 := congrArg (fun q : Polynomial _ => q.coeff n) hB₀
+    have e2 := congrArg (fun q : Polynomial _ => q.coeff n) h0
     simp only [coeff_map, coeff_C_mul, ← hn, inv_mul_cancel₀ hs0, coeff_zero] at e1 e2
     have : B₀.coeff n = 1 := Subtype.ext e1
     rw [this, map_one] at e2

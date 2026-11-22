@@ -1,8 +1,12 @@
-import Mathlib
-import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.HaarExists
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.InfChar
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.RightDerivativeToL2
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentRightRule
+module
+
+public import Mathlib
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.HaarExists
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.InfChar
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.RightDerivativeToL2
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentRightRule
+
+@[expose] public section
 
 noncomputable section
 
@@ -22,7 +26,7 @@ theorem tens_cont {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ 
     ContOK ε (tens X) (tensCoef X c j) := by
   intro u
   show ContinuousOn (fun g : Matrix (Fin n) (Fin n) ℂ => ∑ i, g j i * c (u i) g) _
-  refine continuousOn_finset_sum _ fun i _ => ContinuousOn.mul ?_ (h (u i))
+  refine continuousOn_finsetSum _ fun i _ => ContinuousOn.mul ?_ (h (u i))
   exact (continuous_id.matrix_elem j i).continuousOn
 
 theorem step_cont {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → ℂ)} (h : ContOK ε X c) (z : ℂ) (j : Fin n) :
@@ -45,11 +49,15 @@ theorem base_cont {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 theorem path_sep : ∀ (ss : List (Fin n)) (X : GMod n) (χ : Fin n → ℂ)
     (C : Set (X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → ℂ))), (∀ x : X.V, x ≠ 0 → ∃ c ∈ C, c x 1 ≠ 0) →
-    ∀ u : (path X χ ss).V, u ≠ 0 → ∃ c ∈ C, ∃ js, pathCoef X c χ ss js u 1 ≠ 0
-  | [], X, χ, C, h, u, hu => by
+    ∀ u : (path X χ ss).V, u ≠ 0 → ∃ c ∈ C, ∃ js, pathCoef X c χ ss js u 1 ≠ 0 := by
+  intro ss
+  induction ss with
+  | nil =>
+      intro X χ C h u hu
       obtain ⟨c, hc, h1⟩ := h u hu
       exact ⟨c, hc, [], h1⟩
-  | s :: ss, X, χ, C, h, u, hu => by
+  | cons s ss ih =>
+      intro X χ C h u hu
       have hC : ∀ x : (step X (χ s)).V, x ≠ 0 → ∃ c' ∈ {c' | ∃ c ∈ C, ∃ j, c' = stepCoef X (χ s) c j}, c' x 1 ≠ 0 := by
         intro x hx
         let S : (step X (χ s)).V →ₗ[ℂ] (Fin n → X.V) := (stepSub X (χ s)).subtype
@@ -63,7 +71,7 @@ theorem path_sep : ∀ (ss : List (Fin n)) (X : GMod n) (χ : Fin n → ℂ)
         refine ⟨stepCoef X (χ s) c j, ⟨c, hc, j, rfl⟩, ?_⟩
         show ∑ i, (1 : Matrix (Fin n) (Fin n) ℂ) j i * c (S x i) 1 ≠ 0
         simpa [Matrix.one_apply] using h1
-      obtain ⟨c', ⟨c, hc, j, rfl⟩, js, h1⟩ := path_sep ss (step X (χ s)) (χ + Pi.single s 1) _ hC u hu
+      obtain ⟨c', ⟨c, hc, j, rfl⟩, js, h1⟩ := ih (step X (χ s)) (χ + Pi.single s 1) _ hC u hu
       exact ⟨c, hc, j :: js, h1⟩
 
 theorem eab_of_rightOK {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → ℂ)} (hR : RightOK ε X c)
@@ -86,7 +94,7 @@ theorem eab_of_rightOK {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n)
     rw [Finset.smul_sum, ← Finset.sum_add_distrib]
     refine sum_congr rfl fun q _ => ?_
     rw [e5, add_smul, mul_smul]
-  rw [e3, e1, e2, e4, map_add, map_smul]
+  rw [e3, e1, e2, e4, map_add (f := _), map_smul]
   rfl
 
 section Log
@@ -228,7 +236,8 @@ theorem frechet (n : ℕ) (ε : Fin n → Bool) (X : GMod n) (c : X.V →ₗ[ℂ
     have hq := hUs ⟨hxU, hxJ⟩
     set x := g * NormedSpace.exp ((s : ℂ) • Y) with hx
     have e : c (∑ a, ∑ b, Y a b • X.E a b u) x - T = ∑ a, ∑ b, Y a b * (c (X.E a b u) x - c (X.E a b u) g) := by
-      simp only [hT, map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, mul_sub, Finset.sum_sub_distrib]
+      set_option synthInstance.maxHeartbeats 100000 in
+        simp only [hT, map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, mul_sub, Finset.sum_sub_distrib]
     rw [e, Finset.mul_sum]
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun a _ => ?_)
     rw [Finset.mul_sum]
@@ -263,7 +272,8 @@ theorem chain {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → 
   set A : Fin n → Fin n → ℂ := fun a b => c (X.E a b u) g with hA
   have hT : ∀ Z : Matrix (Fin n) (Fin n) ℂ, c (∑ a, ∑ b, Z a b • X.E a b u) g = ∑ a, ∑ b, Z a b * A a b := by
     intro Z
-    simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hA]
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hA]
   have hTd : HasDerivAt (fun s => ∑ a, ∑ b, Y s a b * A a b) (∑ a, ∑ b, (slmJi ε g * cv') a b * A a b) s0 :=
     HasDerivAt.fun_sum fun a _ => HasDerivAt.fun_sum fun b _ => (hY a b).mul_const (A a b)
   set R : ℝ → ℂ := fun s => c u (g * NormedSpace.exp (Y s)) - c u g - ∑ a, ∑ b, Y s a b * A a b with hRdef
@@ -384,10 +394,13 @@ theorem smooth_of_rightOK {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin
 end Smooth
 
 theorem word_of_rightOK {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → ℂ)} (hR : RightOK ε X c) :
-    ∀ (w : List (Fin n × Fin n)) (u : X.V), ∃ v : X.V, ∀ g, Formalism.REAL.inUJ ε g → Formalism.REAL.Eword ε w (c u) g = c v g
-  | [], u => ⟨u, fun _ _ => rfl⟩
-  | p :: w, u => by
-      obtain ⟨v, hv⟩ := word_of_rightOK hR w u
+    ∀ (w : List (Fin n × Fin n)) (u : X.V), ∃ v : X.V, ∀ g, Formalism.REAL.inUJ ε g → Formalism.REAL.Eword ε w (c u) g = c v g := by
+  intro w
+  induction w with
+  | nil => exact fun u => ⟨u, fun _ _ => rfl⟩
+  | cons p w ih =>
+      intro u
+      obtain ⟨v, hv⟩ := ih u
       refine ⟨X.E p.1 p.2 v, fun g hg => ?_⟩
       simp only [Formalism.REAL.Eword]
       rw [icx_eab_eq, icx_eabV_congr hv p.1 p.2 hg, ← icx_eab_eq]
@@ -397,8 +410,8 @@ theorem memLp_of_level {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hc : Continuous
     (hL : LevelF ε F 0) : MemLp (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := by
   have hcont : Continuous (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) :=
     hc.comp_continuous (Units.continuous_val.comp continuous_subtype_val) (fun g => g.2)
-  refine ⟨hcont.aestronglyMeasurable, ?_⟩
-  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)]
+  rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top
+    (by norm_num) (by norm_num) hcont.aestronglyMeasurable]
   unfold LevelF at hL
   simp only [Real.rpow_zero, ENNReal.ofReal_one, mul_one] at hL
   have h' : (∫⁻ a : Formalism.REAL.UJ ε, ‖F (Formalism.MainNotions.S.umat a)‖ₑ ^ 2 ∂(Formalism.REAL.muG ε)) < ⊤ := hL
@@ -421,7 +434,7 @@ theorem toL2_congr_on_unitary_bis {F G : Matrix (Fin n) (Fin n) ℂ → ℂ} (h 
   · rw [toL2_eq_toLp_of_memLp hm, toL2_eq_toLp_of_memLp (e ▸ hm)]
     exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun g => congrFun e g)
   · unfold toL2
-    rw [dif_neg hm, dif_neg (e ▸ hm)]
+    rw [dite_eq_right hm, dite_eq_right (e ▸ hm)]
 
 theorem emb_of {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ → ℂ)} (hR : RightOK ε X c)
     (hC : ContOK ε X c) (hL : ∀ u, LevelF ε (c u) 0) (u : X.V) (h1 : c u 1 ≠ 0) :

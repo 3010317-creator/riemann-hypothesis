@@ -1,24 +1,28 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianLatticeLocalBases
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridSquareSkewSumSpaceIsSkewHermitianSelfDual
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaled
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjTauEOverRealPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRankStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridSquareRankInequalitiesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdmissibleCMBaseDataOfSquareTupleStandingStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinsetStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareCharactersIsGoodGridPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNegConjMemberHermitianLatticeSpaceDataStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodSchrodingerModelConjugateDoubledStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareModelNegSpaceGoodSchroedingerStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepDualPairCharactersBetaQuotientStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepSquarePairCharactersAlphaQuotientStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingSplitPrimeGridLocalTensorPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeConjDirectSumTraceSelfDualStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesUnderLocalDataMemGoodCharacterRamificationStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrModelOfIsLin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianLatticeLocalBases
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridSquareSkewSumSpaceIsSkewHermitianSelfDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeBlockDirectSumScaled
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjTauEOverRealPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRankStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridSquareRankInequalitiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdmissibleCMBaseDataOfSquareTupleStandingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCompletelyAuxiliaryPlaceOutsideFinsetStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareCharactersIsGoodGridPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNegConjMemberHermitianLatticeSpaceDataStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodSchrodingerModelConjugateDoubledStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareModelNegSpaceGoodSchroedingerStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepDualPairCharactersBetaQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepSquarePairCharactersAlphaQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingSplitPrimeGridLocalTensorPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeConjDirectSumTraceSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesUnderLocalDataMemGoodCharacterRamificationStatement
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
 open IsDedekindDomain NumberField MeasureTheory Matrix
@@ -32,6 +36,76 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 noncomputable section
 
 namespace GlobalTheory.BigNZ.Tied
+
+private theorem full_conjSub {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.IsFullLattice E) :
+    (GlobalTheory.TripleSpaceW.conjSub Λ).IsFullLattice E := by
+  haveI : (GlobalTheory.TripleSpaceW.conjSub Λ).IsLattice E := GlobalTheory.TripleSpaceW.conjSub_isLattice h.toIsLattice
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro y _
+  have hy : star y ∈ Submodule.span E (Λ : Set (Fin n → E)) := by rw [h.span_eq_top]; trivial
+  have hy' := GlobalTheory.TripleSpaceW.star_mem_span star GlobalTheory.TripleSpaceW.star_smulE hy
+  have heq : star '' (Λ : Set (Fin n → E)) = (GlobalTheory.TripleSpaceW.conjSub Λ : Set (Fin n → E)) := by
+    ext z
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      change star (star x) ∈ Λ
+      simpa only [star_star, SetLike.mem_coe] using hx
+    · intro hz
+      exact ⟨star z, GlobalTheory.TripleSpaceW.mem_conjSub.mp hz, star_star z⟩
+  simpa only [star_star, heq] using hy'
+
+private theorem full_scLat {E : Type} [Field E] [NumberField E] {n : ℕ}
+    {𝔞 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E} (h𝔞 : 𝔞 ≠ 0)
+    {M : Submodule (𝓞 E) (Fin n → E)} (hM : Submodule.IsFullLattice E M) :
+    Submodule.IsFullLattice E (GlobalTheory.SkewLat.scLat 𝔞 M) := by
+  haveI := GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice h𝔞 hM.toIsLattice
+  obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
+    (FractionalIdeal.coeToSubmodule_ne_bot.mpr h𝔞)
+  have ha' : a ∈ 𝔞 := ha
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro x _
+  have hle : Submodule.span E (M : Set (Fin n → E)) ≤ Submodule.span E (GlobalTheory.SkewLat.scLat 𝔞 M : Set (Fin n → E)) := by
+    apply Submodule.span_le.mpr
+    intro y hy
+    have hay : a • y ∈ GlobalTheory.SkewLat.scLat 𝔞 M := by
+      intro c hc
+      have hca : c * a ∈ (1 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) := by
+        rw [← inv_mul_cancel₀ h𝔞]
+        exact FractionalIdeal.mul_mem_mul hc ha'
+      obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).mp hca
+      rw [smul_smul, ← hr, algebraMap_smul]
+      exact M.smul_mem r hy
+    have := (Submodule.span E (GlobalTheory.SkewLat.scLat 𝔞 M : Set (Fin n → E))).smul_mem a⁻¹ (Submodule.subset_span hay)
+    simpa [smul_smul, inv_mul_cancel₀ ha0] using this
+  apply hle
+  rw [Submodule.IsFullLattice.span_eq_top (self := hM)]
+  trivial
+
+private theorem full_pairLat {E : Type} [Field E] [NumberField E] {a b d : ℕ}
+    {M : Submodule (𝓞 E) (Fin a → E)} {N : Submodule (𝓞 E) (Fin b → E)}
+    (hM : Submodule.IsFullLattice E M) (hN : Submodule.IsFullLattice E N)
+    (e : Fin a ⊕ Fin b ≃ Fin d) : Submodule.IsFullLattice E (GlobalTheory.SkewLat.pairLat M N e) := by
+  haveI := GlobalTheory.SkewLat.PairLatLattice.pairLat_isLattice hM.toIsLattice hN.toIsLattice e
+  let φ : (Fin d → E) ≃ₗ[E] (Fin a → E) × (Fin b → E) :=
+    (LinearEquiv.funCongrLeft E E e).trans (LinearEquiv.sumArrowLequivProdArrow _ _ E E)
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro x _
+  have hle : Submodule.span E ((M.prod N : Submodule (𝓞 E) ((Fin a → E) × (Fin b → E))) : Set _) ≤
+      (Submodule.span E (GlobalTheory.SkewLat.pairLat M N e : Set (Fin d → E))).comap φ.symm.toLinearMap := by
+    apply Submodule.span_le.mpr
+    intro y hy
+    apply Submodule.subset_span
+    change φ.symm y ∈ GlobalTheory.SkewLat.pairLat M N e
+    rw [GlobalTheory.SkewLat.mem_pairLat]
+    simpa [φ, LinearEquiv.sumArrowLequivProdArrow, Equiv.sumArrowEquivProdArrow] using hy
+  have hx : φ x ∈ Submodule.span E ((M.prod N : Submodule (𝓞 E) ((Fin a → E) × (Fin b → E))) : Set _) := by
+    rw [GlobalTheory.SkewLat.PairLatLattice.prod_span_eq_top hM hN]
+    trivial
+  simpa using hle hx
+
 
 open GlobalTheory.TripleSpaceW (conjSub)
 open GlobalTheory.SkewLat (scLat pairLat)
@@ -48,12 +122,12 @@ theorem dual_conjLat : ∀ {D : D7} (A B : HSp D)
       ∀ o : 𝓞 D.host.E, IsIntegral ℤ (Algebra.trace ℚ D.host.E (o * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form D.sp.cm.sig (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.skewGram A B e) y x)) := @GlobalTheory.T.scaledLattice_conj_directSum_trace_selfDual
 
 theorem under_gridLocalTensorPlace_mem_goodThetaCharacterPlaces : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (_hL : L.Is μ₀) (t : T)
-    (i j : Fin D.R.m) (B : Base D.host.F D.host.E) (X : Chars D.host.F D.host.E) (a a' : ℕ),
+    (i j : Fin D.R.m) (B : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E) (a a' : ℕ),
     X.α = alpha G t i j → X.β = beta G i j → X.IsGood B a a' →
     ∀ w ∈ locPl G t, w.under (𝓞 D.host.F) ∈ X.T := @GlobalTheory.T.placesUnder_localData_mem_goodCharacter_ramification
 
 theorem isHerm_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (_hL : L.Is μ₀) (W : G.Weil)
-    (i j : Fin D.R.m) (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau),
+    (i j : Fin D.R.m) (B : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau),
     (∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) →
     ∃ bas : ∀ v : HeightOneSpectrum (𝓞 D.host.F), GL (Fin (spW G i j).rank) (Fv D.host.F v),
       Spc.IsHerm D.sp.cm.sig B
@@ -64,8 +138,8 @@ theorem isHerm_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
   intro D T L sc G μ₀ hL W i j B τf hemb
   have hX : (Node.grid ((i : ℕ) + 1) ((j : ℕ) + 1)).InRange D.R.m := ⟨i.2, j.2⟩
   have hV := node_isV G hL hX
-  haveI hlat : (conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsLattice D.host.E :=
-    GlobalTheory.TripleSpaceW.conjSub_isLattice hV.sd.1
+  haveI hlat : (conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsFullLattice D.host.E :=
+    full_conjSub hV.sd.1
   choose bas0 hbas0 using fun v : B.P =>
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) (conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1))))
       (GlobalTheory.AdelicU.isCMExt_host D)
@@ -111,11 +185,11 @@ theorem isHerm_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
     rw [e]
     exact GlobalTheory.TripleSpaceW.isCartan_map_conj (W.cart_is _ hX (τf w))
   · show GlobalTheory.AdelicU.IsSplitBasis (B.τ v) _ (if h : v.1 ∈ B.P then bas0 ⟨v.1, h⟩ else 1)
-    rw [dif_pos v.2]
+    rw [dite_eq_left v.2]
     exact hbas0 v
 
 theorem isSkew_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (_hL : L.Is μ₀) (W : G.Weil)
-    (i j : Fin D.R.m) (e : Num G i j) (B : Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau),
+    (i j : Fin D.R.m) (e : Num G i j) (B : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (τf : InfinitePlace D.host.F → D.what₂.Tau),
     (∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x)) →
     ∃ bas : ∀ v : HeightOneSpectrum (𝓞 D.host.F), GL (Fin ((spW G i j).rank + (spW₁ G i j).rank)) (Fv D.host.F v),
       Spc.IsSkew D.sp.cm.sig B
@@ -139,10 +213,11 @@ theorem isSkew_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
     exact zero_ne_one this
   set Λ := pairLat (scLat D.host.AA (G.Λ (.grid (i : ℕ) ((j : ℕ) + 1))))
     (conjSub (scLat D.host.AA (conjSub (G.Λ (.grid ((i : ℕ) + 1) (j : ℕ)))))) e with hΛ
-  have hlat : Submodule.IsLattice D.host.E Λ :=
-    GlobalTheory.SkewLat.PairLatLattice.pairLat_isLattice (GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice hAA hV.sd.1)
-      (GlobalTheory.TripleSpaceW.conjSub_isLattice (GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice hAA
-        (GlobalTheory.TripleSpaceW.conjSub_isLattice hV₁.sd.1))) e
+  haveI hlat : Submodule.IsFullLattice D.host.E Λ :=
+    full_pairLat (full_scLat hAA
+      hV.sd.1)
+      (full_conjSub (full_scLat hAA
+        (full_conjSub hV₁.sd.1))) e
   have hex : ∀ v : B.P, ∃ β, GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ β := fun v => GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) Λ hcm
   classical
   refine ⟨fun v => if h : v ∈ B.P then (hex ⟨v, h⟩).choose else 1, ?skew, ?sig, hlat, ?dual, ?cartan, ?bas⟩
@@ -187,12 +262,12 @@ theorem isSkew_conjLat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
   case bas =>
     intro v
     show GlobalTheory.AdelicU.IsSplitBasis (B.τ v) Λ (if h : (v : HeightOneSpectrum (𝓞 D.host.F)) ∈ B.P then (hex ⟨v, h⟩).choose else 1)
-    rw [dif_pos v.2]
+    rw [dite_eq_left v.2]
     exact (hex v).choose_spec
 
 theorem squareTriple_tied : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (t : T) (i j : Fin D.R.m), SquareStanding G t → ∀ M : Vol G, M.Is t →
-    ∃ (e : Num G i j) (Bs : Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : Chars D.host.F D.host.E)
-      (om : Rep D.sp.cm.sig Γ.V Γ.W) (om' : Rep D.sp.cm.sig Γ.V' Γ.W),
+    ∃ (e : Num G i j) (Bs : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j) (X : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E)
+      (om : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W) (om' : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W),
       IsTripleOf W M t i j e Bs Γ X ∧ IsTriple Bs Γ X om om' ∧ IsTied t i j e Bs Γ X := by
   classical
   intro D T L sc G μ₀ hL W t i j hst M hM
@@ -201,7 +276,7 @@ theorem squareTriple_tied : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   obtain ⟨mα, mβ, hα, hβ, hκ⟩ := GlobalTheory.T.thetaGridCharacters_archExponents_gap_gt_rank hL t i j hst τf hτf
   obtain ⟨v₁, hv₁P, hv₁s, hv₁l, ⟨τ₁⟩⟩ := GlobalTheory.T.exists_splitCompletely_auxiliary_place_outside_finset (G := G) hL t (S₀ ∪ Q)
   choose τP hτP using fun v : (S₀ ∪ Q : Finset (HeightOneSpectrum (𝓞 D.host.F))) => tau_choice hL t v.1 (hSQ v v.2).1
-  let B : Base D.host.F D.host.E :=
+  let B : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E :=
     ⟨W.ψ, fun w => ⟨_, hτf w⟩, mα, mβ, S₀ ∪ Q, τP, v₁, τ₁⟩
   have hB : B.IsGood D.sp.cm.sig := GlobalTheory.T.isAdmissibleCMBaseData_of_squareTupleStanding hL W t hst B rfl fun v hv => (hSQ v hv).1
   have hemb : ∀ w x, (B.emb w).1 x = conj (tauE D (τf w) x) := fun _ _ => rfl

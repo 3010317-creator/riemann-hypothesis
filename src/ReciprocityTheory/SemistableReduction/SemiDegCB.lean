@@ -1,4 +1,8 @@
-import ReciprocityTheory.SemistableReduction.SemiDegCA
+module
+
+public import ReciprocityTheory.SemistableReduction.SemiDegCA
+
+@[expose] public section
 
 noncomputable section
 
@@ -16,23 +20,17 @@ def consZero (K : Type) [Field K] (k : ℕ) : (Fin k → K) →ₗ[K] (Fin (k + 
     ext i
     refine Fin.cases ?_ (fun j => ?_) i <;> simp
 
-@[simp] theorem consZero_zero (K : Type) [Field K] {k : ℕ} (y : Fin k → K) :
-    consZero K k y 0 = 0 := rfl
-
-@[simp] theorem consZero_succ (K : Type) [Field K] {k : ℕ} (y : Fin k → K) (i : Fin k) :
-    consZero K k y i.succ = y i := rfl
-
 theorem consZero_injective (K : Type) [Field K] (k : ℕ) : Function.Injective (consZero K k) := by
   intro x y h
   funext i
-  simpa using congrFun h i.succ
+  simpa [consZero] using congrFun h i.succ
 
 theorem consZero_tail (K : Type) [Field K] {k : ℕ} (x : Fin (k + 1) → K) (hx : x 0 = 0) :
     consZero K k (Fin.tail x) = x := by
   funext i
   refine Fin.cases ?_ (fun j => ?_) i
-  · simp [hx]
-  · simp [Fin.tail]
+  · simp [consZero, hx]
+  · simp [consZero, Fin.tail]
 
 theorem single_mem_intVec (K : Type) [Field K] [NumberField K] {k : ℕ} (i : Fin k) {a : K}
     (ha : a ∈ (1 : Submodule (𝓞 K) K)) : Pi.single i a ∈ intVec K k := by
@@ -42,18 +40,18 @@ theorem single_mem_intVec (K : Type) [Field K] [NumberField K] {k : ℕ} (i : Fi
   by_cases h : j = i
   · subst h
     simpa using ha
-  · simp [Pi.single_apply, h, Submodule.zero_mem]
+  · simp [h]
 
 theorem consZero_mem_intVec (K : Type) [Field K] [NumberField K] {k : ℕ} {y : Fin k → K} :
     consZero K k y ∈ intVec K (k + 1) ↔ y ∈ intVec K k := by
-  simp only [intVec, Submodule.mem_pi, Set.mem_univ, forall_const]
+  simp only [mem_intVec]
   constructor
   · intro h i
-    simpa using h i.succ
+    simpa [consZero] using h i.succ
   · intro h i
     refine Fin.cases ?_ (fun j => ?_) i
-    · simp [Submodule.zero_mem]
-    · simpa using h j
+    · simp [consZero]
+    · simpa [consZero] using h j
 
 theorem lattice_split (K : Type) [Field K] [NumberField K] : ∀ (k : ℕ)
     (X : Submodule (𝓞 K) (Fin k → K)), X.FG → intVec K k ≤ X →
@@ -77,19 +75,20 @@ theorem lattice_split (K : Type) [Field K] [NumberField K] : ∀ (k : ℕ)
       intro i
       exact i.elim0
   | k + 1, X, hfg, hstd => by
-    let p0 : (Fin (k + 1) → K) →ₗ[K] K := LinearMap.proj 0
+    let p0 : (Fin (k + 1) → K) →ₗ[K] K := LinearMap.proj (φ := fun _ : Fin (k + 1) => K) 0
     set C0 := X.map (p0.restrictScalars (𝓞 K)) with hC0
     have hC0fg : C0.FG := hfg.map _
     have hC01 : 1 ≤ C0 := by
       intro a ha
       exact Submodule.mem_map.2 ⟨Pi.single 0 a, hstd (single_mem_intVec K 0 ha), by simp [p0]⟩
-    obtain ⟨v, hv1, hv⟩ := exists_section_of_image X p0 hC0fg hC01
-    let cz := (consZero K k).restrictScalars (𝓞 K)
+    obtain ⟨v, hv1, hv⟩ : ∃ v : Fin (k + 1) → K, p0 v = 1 ∧ ∀ t ∈ C0, t • v ∈ X :=
+      exists_section_of_image X p0 hC0fg hC01
+    let cz : (Fin k → K) →ₗ[𝓞 K] (Fin (k + 1) → K) :=
+      (consZero K k).restrictScalars (𝓞 K)
     let X' : Submodule (𝓞 K) (Fin k → K) := X.comap cz
     have hX'fg : X'.FG := by
       apply Submodule.fg_of_fg_map_injective cz (consZero_injective K k)
-      have : IsNoetherian (𝓞 K) X := isNoetherian_of_fg_of_noetherian X hfg
-      exact Submodule.FG.of_le_of_isNoetherian (Submodule.map_comap_le _ _)
+      exact hfg.of_le (Submodule.map_comap_le _ _)
     have hstd' : intVec K k ≤ X' := fun y hy =>
       hstd ((consZero_mem_intVec K).2 hy)
     obtain ⟨C', z', hfg', h1', htri', hdiag', hin', hdec', hidx'⟩ :=
@@ -99,7 +98,8 @@ theorem lattice_split (K : Type) [Field K] [NumberField K] : ∀ (k : ℕ)
     have hsum : ∀ t : Fin (k + 1) → K,
         ∑ i, t i • z i = t 0 • v + consZero K k (∑ j, t j.succ • z' j) := by
       intro t
-      rw [Fin.sum_univ_succ, map_sum]
+      set_option synthInstance.maxHeartbeats 100000 in
+        rw [Fin.sum_univ_succ, map_sum]
       simp [z, map_smul]
     refine ⟨C, z, fun i => Fin.cases hC0fg hfg' i, fun i => Fin.cases hC01 h1' i, ?_, ?_, ?_, ?_, ?_⟩
     · intro j i hij

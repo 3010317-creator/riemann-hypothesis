@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.OmLocU
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.OmLocU
+
+@[expose] public section
 
 noncomputable section
 
@@ -45,7 +49,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   (v : HeightOneSpectrum (𝓞 F)) (Λ : Set (Fin n → E))
 
 def GoodY (a : ℕ) (Y : TupV (E := E) v n a) : Prop :=
-  StdHyp σ J ψ ∧ (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) ∧
+  StdHyp σ J ψ ∧ (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ) ∧
   IsSDLoc σ J v Λ ∧ UnramAt (E := E) v ∧ a ≤ n ∧ IsPrim v Λ Y ∧
   (∃ w ∈ OEv (E := E) v, (gramR (Fv F v) σ J Y).det ∈ OEv (E := E) v ∧ (gramR (Fv F v) σ J Y).det * w = 1)
 
@@ -64,7 +68,7 @@ def CountU (a : ℕ) (Y : TupV (E := E) v n a) : Prop :=
       ENNReal.ofReal (qv v ^ (-((a : ℤ) ^ 2)) * prodEta (E := E) v n a) * dX σ J ψ v a (LamT v Λ a)
 
 def SdVolW (a : ℕ) : Prop :=
-  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
+  StdHyp σ J ψ → (∃ L : Submodule (𝓞 E) (Fin n → E), Submodule.IsFullLattice E L ∧ (L : Set (Fin n → E)) = Λ) →
     IsSDLoc σ J v Λ → UnramAt (E := E) v → (∃ μ, SdW F E σ n J (Fv F v) (psiV F ψ v) a μ) →
     dX σ J ψ v a (LamT v Λ a) = ENNReal.ofReal (absV v (dV v) ^ ((n : ℝ) * a))
 

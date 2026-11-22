@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
-import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
-import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StableEig
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
+public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
+public import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StableEig
+
+@[expose] public section
 
 open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Fl GlobalTheory.CompanionTheory.Ar.Flat GlobalTheory.CompanionTheory.Ar.LocFn
 
@@ -57,11 +61,6 @@ theorem tanMap_mul (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') (a b : epsAt 
   apply Over.OverMorphism.ext
   exact (h.2 _ a b (pushAt h a) (pushAt h b) rfl rfl).symm
 
-theorem tanMap_one (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') :
-    tanMap h y (1 : epsAt y ⟶ G') = 1 := by
-  rw [tanMap_eq, pushAt_one, Hom.one_def, Hom.one_def, ← Category.assoc,
-    toUnit_unique (rebase₂ y f ≫ toUnit _) (toUnit _)]
-
 theorem left_eq_of_comp (h : IsGrpPullback G' G f φ) {Z : Scheme.{0}} {a b : Z ⟶ G'.left}
     (h₁ : a ≫ φ = b ≫ φ) (h₂ : a ≫ G'.hom = b ≫ G'.hom) : a = b :=
   h.1.hom_ext h₁ h₂
@@ -83,9 +82,6 @@ theorem tanMap_surjective (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') : Func
 def tanEquiv (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') : (epsAt y ⟶ G') ≃* (epsAt (y ≫ f) ⟶ G) :=
   { Equiv.ofBijective (tanMap h y) ⟨tanMap_injective h y, tanMap_surjective h y⟩ with
     map_mul' := tanMap_mul h y }
-
-@[simp] theorem tanEquiv_apply (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') (v : epsAt y ⟶ G') :
-    tanEquiv h y v = tanMap h y v := rfl
 
 theorem one_left_comp (h : IsGrpPullback G' G f φ) (y : Sp R ⟶ S') :
     (1 : Over.mk y ⟶ G').left ≫ φ = (1 : Over.mk (y ≫ f) ⟶ G).left :=
@@ -187,12 +183,12 @@ namespace GlobalTheory.CompanionTheory.Ar.LocFn
 open Transfer
 
 theorem dualMap_eq_pj {A T : Type} [CommRing A] [CommRing T] (θ : A →+* T) :
-    Formalism.L2.Pj.dualMap θ = GlobalTheory.CompanionTheory.Ar.dualMap θ := by
+    GlobalTheory.CompanionTheory.Ar.dualMap θ = GlobalTheory.CompanionTheory.Ar.dualMap θ := by
   apply RingHom.ext
   intro a
   rfl
 
-theorem exists_eigFrame_univ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : Type) [CommRing T] (y : Sp T ⟶ Xo.XF c) (A : Type) [CommRing A] (x₀ : Sp A ⟶ Y.X) (κ : c.F →+* A) (θ : A →+* T) (σ : E →+* ℂ) (r : ℕ) (e : Fin r → (epsAt x₀ ⟶ Y.t.G)), spMap θ ≫ x₀ = y ≫ Y.j → StableEig Y.t x₀ κ σ e → ∃ V : Fin r → (epsAt (under y) ⟶ Xo.univ.t.G), (∀ i, Tied Y y (V i).left (spMap (Formalism.L2.Pj.dualMap θ) ≫ (e i).left)) ∧ IsEigFrame Xo.univ.t.act (under y) ((θ.comp κ).comp (tauIn c σ)) V := by
+theorem exists_eigFrame_univ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : Type) [CommRing T] (y : Sp T ⟶ Xo.XF c) (A : Type) [CommRing A] (x₀ : Sp A ⟶ Y.X) (κ : c.F →+* A) (θ : A →+* T) (σ : E →+* ℂ) (r : ℕ) (e : Fin r → (epsAt x₀ ⟶ Y.t.G)), spMap θ ≫ x₀ = y ≫ Y.j → StableEig Y.t x₀ κ σ e → ∃ V : Fin r → (epsAt (under y) ⟶ Xo.univ.t.G), (∀ i, Tied Y y (V i).left (spMap (GlobalTheory.CompanionTheory.Ar.dualMap θ) ≫ (e i).left)) ∧ IsEigFrame Xo.univ.t.act (under y) ((θ.comp κ).comp (tauIn c σ)) V := by
   intro E _ _ _ H D l Xo c O _ β Y T _ y A _ x₀ κ θ σ r e hx hst
   have hq : IsGrpPullback Y.oF.t.G Y.t.G Y.j Y.m.φ := Y.m.cart
   have hp : IsGrpPullback Y.oF.t.G Xo.univ.t.G (pullback.fst _ _) Y.m0.toSABMap.φ := Y.m0.cart

@@ -1,18 +1,60 @@
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ShapeOf
-import Development.AutomorphicArithmetic.CharacterBoxes.ShapeWin
-import Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi
-import Development.AutomorphicArithmetic.CharacterBoxes.Imprimitive
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.CharacterBoxes.ExS
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.CountsIrreducibilityConstants
+public import Formalism.SharpRestriction.GlobalSchurBounds.LinkTied
+public import Formalism.SharpRestriction.GlobalSchurBounds.MainSup
+public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.WuDecayAll
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowsPos
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.PNamed
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.DiscreteSeriesOfFormalDegree
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DivRows3GIff
+public import Formalism.LocalToGlobal.FiniteTOf
+public import Formalism.LocalToGlobal.TieTwRecOf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.JoinSISel
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Formalism.SharpRestriction.Divisibility.ClosedSizeLink.AdmissibleFamilyOfThreshold
+public import Development.AutomorphicArithmetic.CharacterBoxes.DesWin
+public import Development.AutomorphicArithmetic.CharacterBoxes.ZeroFreeAllOfTopG
+public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.RankConditionsOfLayerTwo
+public import Formalism.LocalToGlobal.ClassS
+public import Formalism.SharpRestriction.GlobalSchurBounds.TheoremThreeFamilyOfFormalDegreeInput
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.MinkowskiQ
+public import Formalism.SharpRestriction.SmoothDesignExistence.AdmissibleTopsMertens
+public import Formalism.LocalToGlobal.GroupLattices.LinkGConcreteNoKer
+public import Formalism.LocalToGlobal.ClassRec
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.EtaClosed
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LinkGl
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LinkIRROfJoinEx
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.BaseRowsEqRecordRows
+public import Formalism.LocalToGlobal.BaseRankEqOfRealisation
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LinkSPos
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ResidEvFree
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.CountT
+public import Formalism.SharpRestriction.GlobalSchurBounds.MassRatioUnfoldedOfTheoremTwo
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.WeightedGaugeFactors.FactsDS
+public import Formalism.LocalToGlobal.GroupLattices.ServiceOfTiedSelection
+public import Formalism.SharpRestriction.GlobalSchurBounds.PlugDgt
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.AdmissibleOfTransported
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FinXClosed
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.GapClosed
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.NoColumnCase.LvlWire
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.LinkedMeasures.SlopeId
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.ValueBounds.SlopeMaxB
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.AdmissibleClasses.LinkGCl
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.SharpFunctions.FunTop
+public import Formalism.LocalToGlobal.Divisibility.RecBridgeWire
+public import Formalism.LocalToGlobal.Divisibility.DivisibilityRemainder.RationalColumns.BuRationalOf
+public import Formalism.LocalToGlobal.PtKOfReal
+public import Formalism.LocalToGlobal.Divisibility.SumLeEtaSumNum
+public import Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi
+public import Development.AutomorphicArithmetic.CharacterBoxes.Imprimitive
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.Fc
 
-theorem UpperTheory.Top.plugWin (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
-    (h : Nonempty (Hyps (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) DRS)) : Formalism.HC.ZeroFreeAll :=
-  h.elim fun h => UpperTheory.Top.zeroFreeAll_of_topG (la := 3 / 2) (by norm_num)
-    (GlobalTheory.Fc.shape_of _ _ _ _ (UpperTheory.Top.shapeWin hG) trivial trivial h) fun ψ => UpperTheory.Top.supplyChi ψ (hV ψ)
-
 def UpperTheory.EveryCharacter : Prop :=
   ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ), 1 / 2 < s.re → (χ ≠ 1 ∨ s ≠ 1) → DirichletCharacter.LFunction χ s ≠ 0
-
-theorem UpperTheory.Top.plugAll (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
-    (h : Nonempty (Hyps (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) DRS)) : UpperTheory.EveryCharacter :=
-  UpperTheory.Top.imprimitive (UpperTheory.Top.plugWin hG hV h)

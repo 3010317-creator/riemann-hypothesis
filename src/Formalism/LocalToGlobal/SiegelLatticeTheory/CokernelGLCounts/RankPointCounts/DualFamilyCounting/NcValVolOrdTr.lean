@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalJacobianType.ContinuousTrESymm
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiffProd
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalJacobianType.ContinuousTrESymm
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.DiffProd
+
+@[expose] public section
 
 noncomputable section
 
@@ -113,7 +117,7 @@ theorem trace_mem {x : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) :
       Algebra.isIntegral_trace (RingOfIntegers.isIntegral_coe a)
     exact int_mem (F := F) v ⟨_, hi⟩
   | zero => rw [map_zero]; exact zero_mem _
-  | add x z _ _ hx hz => rw [map_add]; exact add_mem hx hz
+  | add x z _ _ hx hz => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem hx hz
   | smul c x _ hx =>
     show Algebra.trace (Fv F v) (Fv F v ⊗[F] E) ((c : Fv F v) • x) ∈ _
     rw [map_smul, smul_eq_mul]
@@ -137,7 +141,7 @@ theorem trace_v (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x,
     congr 1
     rw [smul_eq_mul, Algebra.smul_def, mul_comm]
   | add x y hx hy =>
-    rw [map_add, map_add, hx, hy, map_add]
+    rw [map_add (f := _), map_add (f := _), hx, hy, map_add (f := _)]
     abel
 
 theorem dual_mem (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x, σ x ≠ x)
@@ -208,8 +212,8 @@ end Gen
 
 end TrW
 
-open TrW in
 
+open TrW in
 theorem annX_of {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F) ℂ) (hC : CondAll) : AnnX X ψ := by
   intro hψ hstd v y
   obtain ⟨hun, htr, hdeg, hfix⟩ := X.B.I.cm
@@ -249,7 +253,7 @@ theorem annX_of {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F) ℂ) (hC
     have h1 := RingOfIntegers.isIntegral_coe ((θ - t) ^ 2)
     push_cast at h1
     rw [← hf] at h1
-    exact (isIntegral_algebraMap_iff (algebraMap X.B.I.F X.B.I.E).injective).mp h1
+    exact (isIntegral_algebraMap_iff ).mp h1
   let e : 𝓞 X.B.I.F := ⟨f, hfi⟩
   have he : ((θ : X.B.I.E) - t) ^ 2 = algebraMap X.B.I.F X.B.I.E (e : X.B.I.F) := hf.symm
   have hev : e ∉ v.asIdeal := by

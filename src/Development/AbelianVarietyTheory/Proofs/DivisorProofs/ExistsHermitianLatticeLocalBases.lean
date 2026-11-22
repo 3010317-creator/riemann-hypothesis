@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsNotRelZero
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR.Datum Formalism.IndefR.Links
 open IsDedekindDomain NumberField MeasureTheory Matrix
@@ -106,17 +110,27 @@ theorem conjSub_isLattice {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.IsLatt
     · rintro _ ⟨x, hx, rfl⟩
       rw [SetLike.mem_coe, mem_conjSub, star_star, ← hS]
       exact Submodule.subset_span hx
-  refine ⟨?_, ?_⟩
-  · rw [e, Submodule.fg_def]
-    exact ⟨_, S.finite_toSet.image _, rfl⟩
-  · refine eq_top_iff.2 fun v _ => ?_
-    have hv : star v ∈ Submodule.span E (Λ : Set (Fin n → E)) := h.span_eq_top ▸ Submodule.mem_top
-    have := star_mem_span star star_smulE hv
-    rw [star_star] at this
-    refine Submodule.span_mono ?_ this
-    rintro _ ⟨x, hx, rfl⟩
-    rw [SetLike.mem_coe, mem_conjSub, star_star]
-    exact hx
+  apply Submodule.IsLattice.of_fg E
+  rw [e, Submodule.fg_def]
+  exact ⟨_, S.finite_toSet.image _, rfl⟩
+
+private theorem conjSub_isFullLattice {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.IsFullLattice E) :
+    (conjSub Λ).IsFullLattice E := by
+  haveI : (conjSub Λ).IsLattice E := conjSub_isLattice h.toIsLattice
+  refine ⟨?_⟩
+  apply eq_top_iff.mpr
+  intro y _
+  have hy : star y ∈ Submodule.span E (Λ : Set (Fin n → E)) := by rw [h.span_eq_top]; trivial
+  have hy' := star_mem_span star star_smulE hy
+  have heq : star '' (Λ : Set (Fin n → E)) = (conjSub Λ : Set (Fin n → E)) := by
+    ext z
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      change star (star x) ∈ Λ
+      simpa only [star_star, SetLike.mem_coe] using hx
+    · intro hz
+      exact ⟨star z, mem_conjSub.mp hz, star_star z⟩
+  simpa only [star_star, heq] using hy' 
 
 theorem exists_coe_iff (z : E) : (∃ b : 𝓞 E, (b : E) = z) ↔ IsIntegral ℤ (star z) := by
   refine ⟨fun ⟨b, hb⟩ => hb ▸ (RingOfIntegers.isIntegral_coe b).map (starRingEnd E).toIntAlgHom, fun h => ?_⟩
@@ -140,8 +154,8 @@ theorem isHerm_spaceW : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
   intro D T L sc G μ₀ hL W i j B τf hemb
   have hX : (Node.grid ((i : ℕ) + 1) ((j : ℕ) + 1)).InRange D.R.m := ⟨i.2, j.2⟩
   have hV := node_isV G hL hX
-  haveI hlat : (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsLattice D.host.E :=
-    GlobalTheory.TripleSpaceW.conjSub_isLattice hV.sd.1
+  haveI hlat : (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsFullLattice D.host.E :=
+    GlobalTheory.TripleSpaceW.conjSub_isFullLattice hV.sd.1
   choose bas0 hbas0 using fun v : B.P =>
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1))))
       (GlobalTheory.AdelicU.isCMExt_host D)
@@ -187,7 +201,7 @@ theorem isHerm_spaceW : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
     rw [e]
     exact GlobalTheory.TripleSpaceW.isCartan_map_conj (W.cart_is _ hX (τf w))
   · show GlobalTheory.AdelicU.IsSplitBasis (B.τ v) _ (if h : v.1 ∈ B.P then bas0 ⟨v.1, h⟩ else 1)
-    rw [dif_pos v.2]
+    rw [dite_eq_left v.2]
     exact hbas0 v
 
 end GlobalTheory.FunObj

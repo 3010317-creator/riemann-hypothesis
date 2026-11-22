@@ -1,30 +1,34 @@
-import Mathlib
-import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.PoincareLelong
-import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.SheetDensityEqSetSheetDensity
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheet
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheetB
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
-import ReciprocityTheory.AnalyticForms.RegularLocalRings.ConeChart
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.AlgDim
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxPosDens
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxSimple
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartZeroSet
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartDim
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartZeroSet
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartDim
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartModel
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PConeVanishingHomog
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PConeSliceIdeal
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PChartDehomogPrime
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PComponentsGenericCount
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSheetLift
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsGenericCount
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsSheetSimpleNull
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SetSegreConeSmul
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.PoincareLelong
+public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.SheetDensityEqSetSheetDensity
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheet
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheetB
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.ConeChart
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.AlgDim
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxPosDens
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxSimple
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartZeroSet
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartDim
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartZeroSet
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartDim
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PGoodChartModel
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PConeVanishingHomog
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PConeSliceIdeal
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PChartDehomogPrime
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PComponentsGenericCount
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSheetLift
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsGenericCount
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsSheetSimpleNull
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SetSegreConeSmul
+
+@[expose] public section
 
 set_option maxSynthPendingDepth 1
 
@@ -47,14 +51,14 @@ attribute [local instance] MvPolynomial.weightedGradedAlgebra
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem isWeightedHomogeneous_of_isMultiHomog [DecidableEq K] {s : MRingOver ℂ ι} {a : K → ℕ}
-    (hs : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog s a) : IsWeightedHomogeneous (blkW ι) s a := by
+    (hs : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog s a) : IsWeightedHomogeneous blkW s a := by
   intro d hd
   funext k
   rw [weight_blkW]
   exact hs d (mem_support_iff.2 hd) k
 
 theorem cone_homog [DecidableEq K] {Q : Ideal (MRingOver ℂ ι)} (hQ : ReciprocityTheory.AnForm.R.IsMultiHomogIdeal Q) :
-    Q.IsHomogeneous (weightedHomogeneousSubmodule ℂ (blkW ι)) := by
+    Q.IsHomogeneous (weightedHomogeneousSubmodule ℂ (blkW (ι := ι))) := by
   obtain ⟨S, hS, rfl⟩ := hQ
   refine Ideal.homogeneous_span _ _ ?_
   intro f hf
@@ -89,22 +93,24 @@ theorem cone_segre_rel {e : ℕ} {Q : Ideal (MRingOver ℂ ι)} (hP : Reciprocit
   obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.mp hmem
   obtain ⟨c, rfl⟩ := Ideal.mem_span_range_iff_exists_fun.mp hb
   let D : K → ℕ := fun _ => r0
-  let comp := weightedHomogeneousComponent (R := ℂ) (blkW ι) (D + fun _ => 1)
-  have hpow : IsWeightedHomogeneous (blkW ι) (segMono ι i ^ (r0 + 1)) (D + fun _ => 1) := by
+  let comp := weightedHomogeneousComponent (R := ℂ) (blkW (ι := ι)) (D + fun _ => 1)
+  have hpow : IsWeightedHomogeneous blkW (segMono ι i ^ (r0 + 1)) (D + fun _ => 1) := by
     have := (segMono_homog (ι := ι) i).pow (r0 + 1)
     convert this using 1
     funext k; simp [D]
   have hcomp := congrArg comp hab
-  rw [map_add, map_sum, weightedHomogeneousComponent_eq_self hpow] at hcomp
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_add (f := _), map_sum, weightedHomogeneousComponent_eq_self hpow] at hcomp
   simp only [comp, comp_mul_homog (psiPoly_homog Ψ _)] at hcomp
   have hcd : ∀ j, ∃ G : MvPolynomial ((k : K) → ι k) ℂ, G.totalDegree ≤ r0 ∧
-      ∀ z : (Σ k, ι k) → ℂ, eval z (weightedHomogeneousComponent (blkW ι) D (c j)) =
+      ∀ z : (Σ k, ι k) → ℂ, eval z (weightedHomogeneousComponent blkW D (c j)) =
         eval (segre z) G :=
     fun j => diag_of_homog r0 (weightedHomogeneousComponent_isWeightedHomogeneous _ _)
   choose G hG hGz using hcd
   refine ⟨r0 + 1, Nat.succ_pos _, G, fun j => by simpa using hG j, fun z hz => ?_⟩
   have h0 := congrArg (eval z) hcomp
-  rw [map_add, hz.2 _ (weightedHomogeneousComponent_mem_of_mem _ _ (cone_homog hP) ha _),
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_add (f := _), hz.2 _ (weightedHomogeneousComponent_mem_of_mem _ _ (cone_homog hP) ha _),
     zero_add, map_sum, map_pow, eval_segMono] at h0
   rw [← h0]
   refine Finset.sum_congr rfl fun j _ => ?_
@@ -131,7 +137,8 @@ theorem cone_pow_mem {Q : Ideal (MRingOver ℂ ι)} {e m : ℕ} {σ : Fin m ≃ 
     have h := hrel z hz
     rw [Fin.sum_univ_succ, hz1, one_mul] at h
     change eval (fun a => segre z (σ a)) f = 0
-    simp only [f, Gx, map_sub, map_add, map_pow, map_sum, map_mul, eval_X, eval_rename, hw,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [f, Gx, map_sub, map_add (f := _), map_pow, map_sum, map_mul, eval_X, eval_rename, hw,
       eval_linPoly, hA, chartProjMatrix_mulVec]
     rw [h]
     simp [Equiv.apply_symm_apply, mul_comm]
@@ -151,7 +158,8 @@ theorem cone_pow_mem {Q : Ideal (MRingOver ℂ ι)} {e m : ℕ} {σ : Fin m ≃ 
     homogeneousComponent_eq_zero (n := r) (φ := Gx 0) (by have := hGx 0; omega)
   have hcomp : homogeneousComponent r f =
       X a ^ r - ∑ j : Fin e, homogeneousComponent (r - 1) (Gx j.succ) * linPoly A j := by
-    simp only [f, map_sub, map_add, map_sum, hX, h0, zero_add,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [f, map_sub, map_add (f := _), map_sum, hX, h0, zero_add,
       homogeneousComponent_mul_of_isHomogeneous_right _ _ (isHomogeneous_linPoly A _), h1, if_true]
   have hmem : homogeneousComponent r f + ∑ j : Fin e, homogeneousComponent (r - 1) (Gx j.succ) * linPoly A j ∈
       leadIdeal J ⊔ linIdeal A :=

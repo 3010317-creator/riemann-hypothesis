@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.CodiffUnit
+module
+
+public import Mathlib
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.CodiffUnit
+
+@[expose] public section
 
 open NumberField Matrix GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen GlobalTheory.LKTrip GlobalTheory.LKGeo UpperTheory.Gal.W2.Seed
 open scoped TensorProduct
@@ -11,7 +15,7 @@ private lemma beta_baseChange {E : Type} [Field E] [NumberField E] {n : ℕ}
     β ((DistribMulAction.toLinearMap ℤ (Fin n → 𝓞 E) b).baseChange ℚ z) = (b : E) • β z := by
   induction z using TensorProduct.induction_on with
   | zero => simp
-  | add x y hx hy => simp only [map_add, hx, hy, smul_add]
+  | add x y hx hy => simp only [map_add (f := _), hx, hy, smul_add]
   | tmul q v =>
     have h1 : ∀ w : Fin n → 𝓞 E, q ⊗ₜ[ℤ] w = q • ((1 : ℚ) ⊗ₜ[ℤ] w) := by
       intro w

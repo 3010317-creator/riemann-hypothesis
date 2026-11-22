@@ -1,6 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarCompactLtTop
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroup
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarCompactLtTop
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroup
+
+@[expose] public section
+
 open MeasureTheory Matrix Formalism.QuantumDeterminants Formalism.MainNotions.S GlobalTheory.SgInf
 open scoped InnerProductSpace ENNReal Topology
 
@@ -184,8 +189,8 @@ theorem map_restrict_le (μ : Measure (Mt k r)) (hU : IsUnimod (GG k r) μ) {x :
 
 end GlobalTheory.SgInf.Mollify
 
-open GlobalTheory.SgInf.Mollify in
 
+open GlobalTheory.SgInf.Mollify in
 theorem GlobalTheory.SgInf.tendsto_average_L2 : ∀ (k r : ℕ) (μ : Measure (Mt k r)), IsHaarOn (GG k r) μ → ∀ {Wp : Type}
     [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] (g : Mt k r → Wp),
     (∀ K : Set (Mt k r), IsCompact K → AEStronglyMeasurable g (μ.restrict K) ∧
@@ -281,5 +286,3 @@ theorem GlobalTheory.SgInf.tendsto_average_L2 : ∀ (k r : ℕ) (μ : Measure (M
         exact eLpNorm_add_le m1 m2 one_le_two
     _ ≤ (δ + δ) + δ := by gcongr; exact hA j
     _ = 3 * ENNReal.ofReal ε := by ring
-
-example : ∀ (k r : ℕ) (μ : Measure (Mt k r)), IsHaarOn (GG k r) μ → ∀ {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] (g : Mt k r → Wp), (∀ K : Set (Mt k r), IsCompact K → AEStronglyMeasurable g (μ.restrict K) ∧ ∫⁻ x in K, (‖g x‖₊ : ENNReal) ^ 2 ∂μ < ⊤) → ∀ K : Set (Mt k r), IsCompact K → Filter.Tendsto (fun j : ℕ => ∫⁻ x in K, (‖avgR μ j g x - g x‖₊ : ENNReal) ^ 2 ∂μ) Filter.atTop (nhds 0) := GlobalTheory.SgInf.tendsto_average_L2

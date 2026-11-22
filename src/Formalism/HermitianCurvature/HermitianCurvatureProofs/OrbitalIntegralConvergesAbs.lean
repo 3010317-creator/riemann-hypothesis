@@ -1,7 +1,11 @@
-import Formalism.HermitianCurvature.StatementG
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhaseFunctionCriticalPoints
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdditiveCharacterPsi
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.AffineChangeOfVariables
+module
+
+public import Formalism.HermitianCurvature.StatementG
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhaseFunctionCriticalPoints
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdditiveCharacterPsi
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AffineChangeOfVariables
+
+@[expose] public section
 
 open Matrix MeasureTheory Filter Topology
 
@@ -37,7 +41,7 @@ theorem mp_mulVec (β : ℂ) {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matr
   have hm : Measurable (fun x : ι → ℂ => M *ᵥ x) :=
     (Continuous.matrix_mulVec continuous_const continuous_id).measurable
   refine ⟨hm, ?_⟩
-  rw [muPi_eq, Measure.map_smul, map_mulVec_volume M h]
+  rw [muPi_eq, Measure.map_smul _ hm.aemeasurable, map_mulVec_volume M h]
 
 theorem mp_vecMul (β : ℂ) {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℂ) (h : ‖M.det‖ = 1) :
     MeasurePreserving (fun x : ι → ℂ => x ᵥ* M) (muPi β ι) (muPi β ι) := by
@@ -251,9 +255,15 @@ def consMap (m : ℕ) (q : RedCoord m) : BlockCoord (m + 1) := (Fin.cons q.1 q.2
 
 theorem mp_consMap (β : ℂ) (m : ℕ) : MeasurePreserving (consMap m) (muRed β m) (muBlock β (m + 1)) := by
   have h1 := (measurePreserving_piFinSuccAbove (fun _ : Fin (m + 1) => mu β) 0).symm
-  have h2 := (measurePreserving_prodAssoc (mu β) (muPi β (Fin m))
-    ((muPi β (UT (m + 1))).prod (muPi β (Fin (m + 1))))).symm
-  have h3 := (h1.prod (MeasurePreserving.id ((muPi β (UT (m + 1))).prod (muPi β (Fin (m + 1)))))).comp h2
+  have h2 := MeasurePreserving.symm
+    (MeasurableEquiv.prodAssoc : ((ℂ × (Fin m → ℂ)) × ((UT (m + 1) → ℂ) × (Fin (m + 1) → ℂ))) ≃ᵐ _)
+    (measurePreserving_prodAssoc (mu β) (muPi β (Fin m))
+      (Measure.prod (muPi β (UT (m + 1))) (muPi β (Fin (m + 1)))))
+  let ν := Measure.prod (muPi β (UT (m + 1))) (muPi β (Fin (m + 1)))
+  have hId : MeasurePreserving
+      (_root_.id : ((UT (m + 1) → ℂ) × (Fin (m + 1) → ℂ)) → _) ν ν :=
+    MeasurePreserving.id ν
+  have h3 := (MeasurePreserving.prod h1 hId).comp h2
   have e : consMap m = (Prod.map (⇑(MeasurableEquiv.piFinSuccAbove (fun _ : Fin (m + 1) => ℂ) 0).symm) id) ∘
       ⇑(MeasurableEquiv.prodAssoc : ((ℂ × (Fin m → ℂ)) × ((UT (m + 1) → ℂ) × (Fin (m + 1) → ℂ))) ≃ᵐ _).symm := by
     funext q

@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open MvPolynomial
 
 namespace GlobalTheory
@@ -26,7 +31,7 @@ theorem span_coeff_eq_top_iff [IsLocalRing V] (f : MvPolynomial σ V) :
       Ideal.span (Set.range fun s => f.coeff s) ≤ IsLocalRing.maximalIdeal V := by
     rw [Ideal.span_le, Set.range_subset_iff, MvPolynomial.ext_iff]
     refine forall_congr' fun s => ?_
-    rw [coeff_map, coeff_zero, IsLocalRing.residue_eq_zero_iff]
+    rw [coeff_map, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, IsLocalRing.residue_eq_zero_iff]
     rfl
   rw [ne_eq, h1]
   constructor

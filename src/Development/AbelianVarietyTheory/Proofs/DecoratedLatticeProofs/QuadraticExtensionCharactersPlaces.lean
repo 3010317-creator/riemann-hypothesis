@@ -1,16 +1,21 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RescOne
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRatDatum
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentSubMulComplementEqComplement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedAtPlaceOfIsHalfSplitPoint
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationTwoVariableModelAndLineExte
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationEqOnVacuaOfEqOneStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricTestFunctionIntegralAdelicReductionStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceFrameMovedBackIsLatticeBasisStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFrameMatrixIffMemSplitHalfHomLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ListConvolutionDistinctPlacesSupportedAndComposiStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseEqOfSameIdempotentPrimeStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RescOne
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRatDatum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentSubMulComplementEqComplement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedAtPlaceOfIsHalfSplitPoint
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationTwoVariableModelAndLineExte
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationEqOnVacuaOfEqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricTestFunctionIntegralAdelicReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceFrameMovedBackIsLatticeBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFrameMatrixIffMemSplitHalfHomLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ListConvolutionDistinctPlacesSupportedAndComposiStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseEqOfSameIdempotentPrimeStatement
+
+@[expose] public section
+
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf GlobalTheory.SplitWeil GlobalTheory.StepData GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.AdForm ValuativeRel
 open scoped TensorProduct Classical
@@ -165,7 +170,7 @@ theorem iterate {ψ : AddChar (AF D.host.F) ℂ} {A : (WO S T → ℂ) →ₗ[�
 theorem omegaG_of_empty {a b : ℕ} (L : Formalism.L2.DIV.LevDat D.host.E ℂ a) (hL : L.Pg = ∅) (χj)
     (y : ∀ w : Formalism.L2.DIV.Pl D.host.E, Matrix (Fin b) (Fin a) (kP w)) : omegaG L χj y = 1 := by
   haveI : IsEmpty L.Pg := ⟨fun w => Finset.notMem_empty w.1 (hL ▸ w.2)⟩
-  rw [omegaG, dif_pos ⟨fun w hw => isEmptyElim (⟨w, hw⟩ : L.Pg), fun w => isEmptyElim w, fun w => isEmptyElim w,
+  rw [omegaG, dite_eq_left ⟨fun w hw => isEmptyElim (⟨w, hw⟩ : L.Pg), fun w => isEmptyElim w, fun w => isEmptyElim w,
     fun w => isEmptyElim w, by convert L.P.H.one_mem using 1⟩]
   rw [Fintype.prod_empty, Fintype.prod_empty, mul_one, mul_one, Subsingleton.elim (⟨_, _⟩ : L.P.H) 1, map_one, Units.val_one]
 
@@ -173,7 +178,8 @@ theorem om_comb {ψ : AddChar (AF D.host.F) ℂ} {χS χT} {om : Om S T} (hom : 
     (c : WO S T →₀ ℂ) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
     om (g, h) (comb ψ S T (c.mapDomain (actO S T g⁻¹ h⁻¹)) f) = comb ψ S T c (om (g, h) f) := by
   change om (g, h) ((c.mapDomain _).sum fun u a => a • heisO ψ S T u f) = c.sum fun u a => a • heisO ψ S T u (om (g, h) f)
-  rw [Finsupp.sum_mapDomain_index (h := fun u (a : ℂ) => a • heisO ψ S T u f) (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _), Finsupp.sum, Finsupp.sum, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [Finsupp.sum_mapDomain_index (h := fun u (a : ℂ) => a • heisO ψ S T u f) (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _), Finsupp.sum, Finsupp.sum, map_sum]
   refine Finset.sum_congr rfl fun u _ => ?_
   rw [map_smul, hom.om_heis g h _ f hf, GlobalTheory.LocModMove.actO_actO_inv'']
 
@@ -259,29 +265,6 @@ theorem int_of_parPhi {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
   · exact h2 i j
   · exact h1.intM i j
   · exact h3 i j
-
-theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.Fam.Base c) (χ : ℕ → (AE D)ˣ →* Circle), c.Is → v.Is → ∀ (r : ℕ) (pl : Fin r → Formalism.L2.DIV.Pl D.host.E) (G : ∀ i, QGeo v B (pl i)) (E : ∀ i, QExt (G i) χ) (ξ : ∀ PP : Formalism.L2.DIV.Pl D.host.E, (Formalism.L2.DIV.kP PP)ˣ →* ℂˣ) (Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (S : GlobalTheory.FinPl.Pl D → Prop), Function.Injective (fun i => (G i).q.v) → (∀ PP, PP ∈ Q ↔ ∃ i, pl i = PP) → (∀ p, S p ↔ ∃ i, (G i).q.v = p) → (∀ i, (G i).Res (E i).δ (ξ (pl i))) → (∀ i, D.R.r = D.R.k + ((G i).s + 1)) → ∀ j, j + 1 < D.R.m → GlobalTheory.FinPl.Moves (c.V j) (B.b j) (B.Λ j) (v.N j) S → GlobalTheory.FinPl.Moves (c.V (j + 1)) (B.b (j + 1)) (B.Λ (j + 1)) (v.N (j + 1)) S → B.b j ∈ GfC (c.V j) → B.b (j + 1) ∈ GfC (c.V (j + 1)) → IsSelfDualC _ (B.Λ j) → IsSelfDualC _ (B.Λ (j + 1)) → ∀ sS sT (LS : Formalism.L2.DIV.LevDat D.host.E ℂ (c.V j).rank) χj vac (d : WO (c.V j) (c.V (j + 1)) →₀ ℂ), LS.Pg = ∅ → LS.r = D.R.r → vac ≠ 0 → GlobalTheory.FinPl.CombAt S d → IsStepVecOf c.ψ c.θ (c.V j) (c.V (j + 1)) sS sT (B.Λ j : Set _) (B.Λ (j + 1) : Set _) (B.β j) (B.β (j + 1)) LS χj Q ξ vac (comb c.ψ _ _ d vac) → ∀ χS χT om, IsWeilDatumO c.ψ (c.V j) (c.V (j + 1)) χS χT om → ∀ g, GlobalTheory.FinPl.Vac c.ψ _ _ (B.Λ j) (B.Λ (j + 1)) S g → om (B.b j, B.b (j + 1)) (comb c.ψ _ _ d g) = comb c.ψ _ _ (aconv (List.ofFn fun i => (E i).eL j)) (om (B.b j, B.b (j + 1)) g) := by
-  intro D c v B χ hc hv r pl G E ξ Q S hinj hQ hS hres hrk j hj hmv hmv' hb hb' hsd hsd' sS sT LS χj vac d hPg hLr hvac hd hstep
-    χS χT om hom g hg
-  have hn : ∀ i, ∃ n, j + n = (G i).s := fun i => ⟨(G i).s - j, by have := (G i).hs; omega⟩
-  refine gen (fun i => (G i).q) pl (fun i => (G i).idem) (fun i => (G i).unit) hinj hQ hS hom hsd hsd' _ _ hPg hvac hd hstep
-    (fun i => (E i).eL j) (fun i => ?_) (fun i π' hπ => ?_) (fun e he Tm hTm i => ?_) g hg
-  · obtain ⟨n, hn⟩ := hn i
-    exact ((E i).eL_at j n hn).1
-  · obtain ⟨n, hn⟩ := hn i
-    obtain ⟨ea, -, mS⟩ := (G i).frame j (n + 1) (by omega)
-    obtain ⟨eb, -, mT⟩ := (G i).frame (j + 1) n (by omega)
-    exact ⟨lat_of_movedTo (G i).q ((hS _).2 ⟨i, rfl⟩) hsd (hv.sd j (by omega)) hmv _ (ea.symm.trans (stdOrd _ _ j (n + 1) (by omega))) mS
-        ((G i).latY j (n + 1) _) π' hπ,
-      lat_of_movedTo (G i).q ((hS _).2 ⟨i, rfl⟩) hsd' (hv.sd (j + 1) hj) hmv' _ (eb.symm.trans (stdOrd _ _ (j + 1) n (by omega))) mT
-        ((G i).latY (j + 1) n _) π' hπ⟩
-  · obtain ⟨n, hn⟩ := hn i
-    obtain ⟨ea, ha, mS⟩ := (G i).frame j (n + 1) (by omega)
-    obtain ⟨eb, hb, mT⟩ := (G i).frame (j + 1) n (by omega)
-    exact puts (G i).q hstep.1.2.inf hom hsd.1 hsd'.1 _ _ he ((hQ _).2 ⟨i, rfl⟩) (G i).idem hstep.1.2.theta hTm ea eb
-      (parPhi (E i).δ) (int_of_parPhi _) _
-      (fun π' hπ hred N => GlobalTheory.T.parahoricTestFunction_integralAdelic_reduction D _ (G i).q (pl i) π' hπ hred _ (E i).tame _ (hres i) _ _ _ _ _ _ _ _
-        (hLr.trans (hrk i)) ea eb ha hb N) _ _ _ _ _ _ mS mT ((E i).reg.1 j n hn) rfl ((E i).eL_at j n hn)
 
 end GlobalTheory.QVec
 end

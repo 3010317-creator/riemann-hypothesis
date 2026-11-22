@@ -1,24 +1,28 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
-import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GmapToAddSubgroup
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmulLatMatOf
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetIdLatGmap
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetOpIdentityOfEntire
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NotDvdDifferent
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OrdDetConjFinite
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DeltaNeZero
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
-import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetStepEqZeroExample
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalisedFamilyLatticeHypAndSmoothStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetCCompSubstStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeCharProductFormulaNormOneStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TameCharacterValuesEqHeckeCharLocalValuesStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalCharEqHeckeCharLocalComponentOfValuesStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.BelowFiniteNonempty
+public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.WeylDualWeylLatticesAgreeOfLowestAlcove
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SubstitutionAdjoint
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.ThDistC
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GmapToAddSubgroup
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmulLatMatOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetIdLatGmap
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetOpIdentityOfEntire
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NotDvdDifferent
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OrdDetConjFinite
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DeltaNeZero
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StandardRankOneLatticeOfLocal
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetStepEqZeroExample
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalisedFamilyLatticeHypAndSmoothStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetCCompSubstStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeCharProductFormulaNormOneStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TameCharacterValuesEqHeckeCharLocalValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalCharEqHeckeCharLocalComponentOfValuesStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -55,28 +59,28 @@ theorem monomial_split {α β : Type} (m : α ⊕ β →₀ ℕ) :
   rw [rename_monomial, rename_monomial, monomial_mul, one_mul]
   congr 2
   ext (x | x)
-  · rw [Finsupp.add_apply, Finsupp.mapDomain_apply Sum.inl_injective, Finsupp.mapDomain_notin_range _ _ (by simp)]
+  · rw [Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inl_injective, Finsupp.mapDomain_notin_range _ _ (by simp)]
     simp
-  · rw [Finsupp.add_apply, Finsupp.mapDomain_apply Sum.inr_injective, Finsupp.mapDomain_notin_range _ _ (by simp)]
+  · rw [Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inr_injective, Finsupp.mapDomain_notin_range _ _ (by simp)]
     simp
 
 theorem jetLin_mul (J : (DVar ι a b →₀ ℕ) → K) (p : Pol K ι b) (q : MvPolynomial (DVar ι a b) K) :
     jetLin J (rename Sum.inl p * rename Sum.inr q) = tabFn J q • p := by
   induction p using MvPolynomial.induction_on' with
-  | add p p' h h' => rw [map_add, add_mul, map_add, h, h', smul_add]
+  | add p p' h h' => rw [map_add (f := _), add_mul, map_add (f := _), h, h', smul_add]
   | monomial m c =>
     induction q using MvPolynomial.induction_on' with
-    | add q q' h h' => rw [map_add, mul_add, map_add, h, h', map_add, add_smul]
+    | add q q' h h' => rw [map_add (f := _), mul_add, map_add (f := _), h, h', map_add (f := _), add_smul]
     | monomial m' c' =>
       have e : ∀ {σ : Type} (m : σ →₀ ℕ) (c : K), (monomial m c : MvPolynomial σ K) = c • monomial m 1 := fun m c => by
         rw [smul_monomial, smul_eq_mul, mul_one]
       have e1 : (m.mapDomain Sum.inl + m'.mapDomain Sum.inr).comapDomain Sum.inl Sum.inl_injective.injOn = m := by
         ext x
-        rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply Sum.inl_injective,
+        rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inl_injective,
           Finsupp.mapDomain_notin_range _ _ (by simp), add_zero]
       have e2 : (m.mapDomain Sum.inl + m'.mapDomain Sum.inr).comapDomain Sum.inr Sum.inr_injective.injOn = m' := by
         ext x
-        rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply Sum.inr_injective,
+        rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inr_injective,
           Finsupp.mapDomain_notin_range _ _ (by simp), zero_add]
       rw [rename_monomial, rename_monomial, monomial_mul, e _ (c * c'), map_smul, jetLin_monomial, e1, e2, e m' c', map_smul,
         tabFn_monomial, smul_monomial, smul_monomial]
@@ -120,7 +124,8 @@ theorem subD_subst (g : ι → Matrix (Fin a) (Fin a) K) (h : ι → Matrix (Fin
     (φ₂ := (aeval _).comp ((subD K ι a b).comp (Formalism.GradedWeylDivisibility.blockAct K g))) (MvPolynomial.algHom_ext fun v => ?_) P
   obtain ⟨τ, α, s⟩ := v
   by_cases hs : s.1 < b
-  · simp only [AlgHom.comp_apply, Formalism.GradedWeylDivisibility.blockAct, subD, aeval_X, map_sum, map_mul, algHom_C, dif_pos hs, Sum.elim_inl,
+  · set_option synthInstance.maxHeartbeats 100000 in
+    simp only [AlgHom.comp_apply, Formalism.GradedWeylDivisibility.blockAct, subD, aeval_X, map_sum, map_mul, algHom_C, dif_pos hs, Sum.elim_inl,
       Sum.elim_inr, rename_X, algebraMap_eq, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm, Finset.sum_congr rfl fun _ _ => Finset.sum_comm, Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun β _ => ?_
@@ -150,7 +155,7 @@ theorem map_jetMap {L : Type} [Field L] (σ : K →+* L) (J : (DVar ι a b →�
     map σ (jetMap J n P) = jetMap (fun m => σ (J m)) n (map σ P) := by
   have h1 : ∀ Q, map σ (jetLin J Q) = jetLin (fun m => σ (J m)) (map σ Q) := fun Q => by
     induction Q using MvPolynomial.induction_on' with
-    | add p p' h h' => simp only [map_add, h, h']
+    | add p p' h h' => simp only [map_add (f := _), h, h']
     | monomial m c =>
       have e : ∀ {M : Type} [Field M] {σ : Type} (m : σ →₀ ℕ) (c : M), (monomial m c : MvPolynomial σ M) = c • monomial m 1 :=
         fun m c => by rw [smul_monomial, smul_eq_mul, mul_one]
@@ -159,7 +164,7 @@ theorem map_jetMap {L : Type} [Field L] (σ : K →+* L) (J : (DVar ι a b →�
   have h2 : ∀ Q, map σ (subD K ι a b Q) = subD L ι a b (map σ Q) := fun Q => by
     induction Q using MvPolynomial.induction_on with
     | C c => simp [subD]
-    | add p q h h' => simp only [map_add, h, h']
+    | add p q h h' => simp only [map_add (f := _), h, h']
     | mul_X p v h =>
       simp only [map_mul, h, map_X]
       congr 1
@@ -178,7 +183,7 @@ theorem map_blockAct {L : Type} [Field L] (σ : K →+* L) (g : ι → Matrix (F
     map σ (Formalism.GradedWeylDivisibility.blockAct K g P) = Formalism.GradedWeylDivisibility.blockAct L (fun τ => (g τ).map σ) (map σ P) := by
   induction P using MvPolynomial.induction_on with
   | C c => simp
-  | add p q h h' => simp only [map_add, h, h']
+  | add p q h h' => simp only [map_add (f := _), h, h']
   | mul_X p v h =>
     simp only [map_mul, h, map_X]
     simp [Formalism.GradedWeylDivisibility.blockAct]
@@ -415,7 +420,8 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
   have hsel' : ∀ v, (sel v).under (𝓞 X.F) = v := fun v => HeightOneSpectrum.ext (hsel v)
   let B : HeightOneSpectrum (𝓞 X.F) → Prop := fun v => ∃ P ∈ rowSG Pr sel mu, P.asIdeal.under (𝓞 X.F) = v.asIdeal
   have unr : ∀ P : HeightOneSpectrum (𝓞 X.E), ¬ B (P.under (𝓞 X.F)) → (m0 j * ξ).UnrAt P := fun P h y hy => by
-    rw [HChar.loc_mul, hμ.unr P (unr_off hX hPr hsel hξ h).1 y hy, (unr_off hX hPr hsel hξ h).2 y hy, one_mul]
+    change (m0 j).loc P y * ξ.loc P y = 1
+    rw [hμ.unr P (unr_off hX hPr hsel hξ h).1 y hy, (unr_off hX hPr hsel hξ h).2 y hy, one_mul]
   let rep : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E) := fun v => if h : B v then h.choose else sel v
   have rep_mem : ∀ P ∈ rowSG Pr sel mu, rep (P.under (𝓞 X.F)) = P := fun P hP => by
     have h : B (P.under (𝓞 X.F)) := ⟨P, hP, rfl⟩
@@ -439,7 +445,9 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
   have key := GlobalTheory.T.heckeChar_productFormula_normOne X.F X.E (m0 j * ξ) rep V x z hX.star_F hX.rankE hs hD.unram
     ⟨fun v k => by rw [HChar.resFin_mul, hμ.triv.1, ξtriv.1, one_mul], fun v k => by
       rw [HChar.resInf_mul, hμ.triv.2, ξtriv.2, one_mul]⟩
-    (fun P y h1 h2 => by rw [HChar.loc_mul, hμ.tame P y h1 h2, xi_tame hξ P y h1 h2, one_mul])
+    (fun P y h1 h2 => by
+      change (m0 j).loc P y * ξ.loc P y = 1
+      rw [hμ.tame P y h1 h2, xi_tame hξ P y h1 h2, one_mul])
     (fun P hP => unr P fun ⟨Q, hQ, e⟩ => by
       have e' : Q = P := ((hu P Q).1 (HeightOneSpectrum.ext e)).elim id fun e => e.trans hP
       subst e'
@@ -554,8 +562,8 @@ theorem ratStep : ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.ho
   have hchi := GlobalTheory.Mem.Col2.ChiFacLaw.chiLaw_ambOf H Z.X s cc δ B χ cD (Z.R.N i) (Z.R.N (i + 1)) hs hχ γ γ' N N' hR.1 hR.2.1
   have hG := indSmooth_of _ _ _ _ _ hsm N N' c x hR
   set A := ambOf s B χ cD with hA
-  have hgN : IsSdLat (gmap γ.1 N) := ⟨gmap_lattice _ _ hR.1.1, by rw [IsUnimodular, dual_gmap _ γ.2, hR.1.2]⟩
-  have hgN' : IsSdLat (gmap γ'.1 N') := ⟨gmap_lattice _ _ hR.2.1.1, by rw [IsUnimodular, dual_gmap _ γ'.2, hR.2.1.2]⟩
+  have hgN : IsSdLat (gmap γ.1 N) := ⟨gmap_fullLattice _ _ hR.1.1, by rw [IsUnimodular, dual_gmap _ γ.2, hR.1.2]⟩
+  have hgN' : IsSdLat (gmap γ'.1 N') := ⟨gmap_fullLattice _ _ hR.2.1.1, by rw [IsUnimodular, dual_gmap _ γ'.2, hR.2.1.2]⟩
   have hR' : InRange (Sall sel mu u) (cAof sel mu cst * cBof sel mu cst u) c (gmap γ.1 N) (gmap γ'.1 N')
       (γ'.1.toLinearMap ∘ₗ x ∘ₗ γ.1.symm.toLinearMap) :=
     ⟨hgN, hgN', hR.2.2.1, hR.2.2.2.1, (divLat_gmap_iff _ _ _ _ _ _ _).2 hR.2.2.2.2⟩

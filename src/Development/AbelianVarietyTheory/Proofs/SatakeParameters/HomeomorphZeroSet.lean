@@ -1,5 +1,9 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -36,8 +40,8 @@ theorem homAt_comp {φ : MvPolynomial (Fin k) ℂ →+* Γ(X, U)} (hφ : Functio
 
 end GlobalTheory.AffCxPts
 
-open GlobalTheory.AffCxPts GlobalTheory.CxPts GlobalTheory.Points in
 
+open GlobalTheory.AffCxPts GlobalTheory.CxPts GlobalTheory.Points in
 theorem GlobalTheory.AffCxPts.homeomorph_zeroSet : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (U : X.Opens),
     IsAffineOpen U → (algX p U).FiniteType → ∃ (k : ℕ) (G : Finset (MvPolynomial (Fin k) ℂ)),
       Nonempty (↥(GlobalTheory.CxPts.ptsIn p (RingHom.id ℂ) U) ≃ₜ

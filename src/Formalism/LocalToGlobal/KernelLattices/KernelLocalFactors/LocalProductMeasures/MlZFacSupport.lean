@@ -1,7 +1,11 @@
-import Mathlib
-import Formalism.LocalToGlobal.KernelLattices.MuProd
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PenultimateKernelDiamondInvariant
-import Formalism.LocalToGlobal.Columns.ReductionExistsInLatticeStabilizerHolds
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.KernelLattices.MuProd
+public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PenultimateKernelDiamondInvariant
+public import Formalism.LocalToGlobal.Columns.ReductionExistsInLatticeStabilizerHolds
+
+@[expose] public section
 
 open NumberField IsDedekindDomain
 
@@ -98,7 +102,7 @@ section Ord
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
 
-theorem ml_ordDet_gmap (Q : HeightOneSpectrum (𝓞 E)) (N : Submodule (𝓞 E) (Sp E n)) (hN : Submodule.IsLattice E N) (γ : Sp E n ≃ₗ[E] Sp E n) :
+theorem ml_ordDet_gmap (Q : HeightOneSpectrum (𝓞 E)) (N : Submodule (𝓞 E) (Sp E n)) (hN : Submodule.IsFullLattice E N) (γ : Sp E n ≃ₗ[E] Sp E n) :
     ordDet Q (gmap γ N) = ordE Q ((LinearEquiv.det γ : Eˣ) : E) + ordDet Q N := by
   obtain ⟨f, hf⟩ := exists_frameD Q hN
   have hf' : ∀ x, (γ * f) x ∈ localization₂ Q.asIdeal (gmap γ N) ↔ x ∈ stdAt E n Q := by
@@ -140,8 +144,8 @@ section Ratio
 
 variable {X : Fields} {n : ℕ}
 
-open Classical in
 
+open Classical in
 def zFac (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (SB : Finset (HeightOneSpectrum (𝓞 X.E)))
     (mU : HeightOneSpectrum (𝓞 X.E) → X.Kˣ) (z : X.E) (v : HeightOneSpectrum (𝓞 X.F)) : X.K :=
   if ∃ P ∈ SB, P.asIdeal.under (𝓞 X.F) = v.asIdeal then 1 else ((mU (sel v) ^ ordE (sel v) z : X.Kˣ) : X.K)

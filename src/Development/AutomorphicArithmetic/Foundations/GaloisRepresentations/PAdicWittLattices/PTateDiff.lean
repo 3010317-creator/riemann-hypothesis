@@ -1,9 +1,14 @@
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramFiberMeasuresChangeOfForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudeActionAdelicLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSimSys
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeVectorBundlePullback
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenModelEqGenericFibre
+module
+
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.PAdicWittLattices.TransCancel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramFiberMeasuresChangeOfForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudeActionAdelicLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSimSys
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeVectorBundlePullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenModelEqGenericFibre
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen GlobalTheory.LKTrip GlobalTheory.LKGeo UpperTheory.Gal.G3
 open UpperTheory.Gal.Int.Geo (Lv IsTrans Integ KS Mem FEt KSEx KSNice)
@@ -31,7 +36,7 @@ theorem UpperTheory.Gal.G3.pTateDiff :
   constructor
   · rintro ⟨z, hz⟩
     refine ⟨inAf D z + w, add_mem (GlobalTheory.LKGeo.GammaUniq.inAf_mem z) hw, ?_⟩
-    rw [e₃, hz, ← hf, ← hf, ← hf, map_add, map_nsmul, smul_add, add_assoc]
+    rw [e₃, hz, ← hf, ← hf, ← hf, map_add (f := _), map_nsmul, smul_add, add_assoc]
   · rintro ⟨v, hv, e₄⟩
     have e₅ : inAf D (g.g n x - y) = n • (v - w) := by
       rw [← hf, map_sub, hf, hf, smul_sub]

@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualImageAdelicPointWittCoreStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticesAgreeAlmostEverywhereStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualImageAdelicPointWittCoreStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticesAgreeAlmostEverywhereStatement
+
+@[expose] public section
 
 noncomputable section
 
@@ -96,30 +100,24 @@ theorem moves_mul {S : HSp D} {L : Lat S} {P : Pl D → Prop} {x x' : GA D S} (h
   rw [mt_mul, ← Matrix.mulVec_mulVec, hx' y hy]
   exact hx _ (supp_mulVec S P x' hy)
 
-theorem moves_inv {S : HSp D} {L : Lat S} {P : Pl D → Prop} {x : GA D S} (hx : Moves S x L L P) :
-    Moves S x⁻¹ L L P := by
-  intro y hy
-  have h1 := hx (mt S x⁻¹ *ᵥ y) (supp_mulVec S P _ hy)
-  rw [Matrix.mulVec_mulVec, ← mt_mul, mul_inv_cancel, mt_one, Matrix.one_mulVec] at h1
-  exact h1.symm
-
 theorem moves_off {S : HSp D} {L : Lat S} {P : Pl D → Prop} {b : GA D S} (hb : b ∈ grpOff S P) :
     Moves S b L L P := by
   intro y hy
   rw [mulVec_off hb hy]
 
-theorem latV_eq_ae : ∀ (D : D7) (S : HSp D) (L M : Lat S), Submodule.IsLattice D.host.E L → Submodule.IsLattice D.host.E M → ∃ T : Finset (Pl D), ∀ v, v ∉ T → latV S L (· = v) = latV S M (· = v) := GlobalTheory.T.lattices_agree_almost_everywhere
+theorem latV_eq_ae : ∀ (D : D7) (S : HSp D) (L M : Lat S), Submodule.IsFullLattice D.host.E L → Submodule.IsFullLattice D.host.E M → ∃ T : Finset (Pl D), ∀ v, v ∉ T → latV S L (· = v) = latV S M (· = v) := GlobalTheory.T.lattices_agree_almost_everywhere
 
 end GlobalTheory.FinPl.PlacesAdeles
 
 namespace GlobalTheory.FinPl
 
-open GlobalTheory.FinPl.PlacesAdeles in
 
+open GlobalTheory.FinPl.PlacesAdeles in
 theorem placesToAdeles (D : D7) : PlacesToAdeles D := by
   classical
   intro S L P hL R h hyp
-  obtain ⟨M, hM, hmove⟩ := (GlobalTheory.T.selfDual_image_adelicPoint_wittCore D S L hL).1 h
+  obtain ⟨M, hM, hmove⟩ : ∃ M : Lat S, IsSelfDualC S M ∧ ∀ P : Pl D → Prop, Moves S h L M P :=
+    (GlobalTheory.T.selfDual_image_adelicPoint_wittCore D S L hL).1 h
   obtain ⟨T, hT⟩ := latV_eq_ae D S L M hL.1 hM.1
   have hfar : ∀ v, v ∉ T → Moves S h L L (· = v) := by
     intro v hv y hy
@@ -174,7 +172,7 @@ theorem placesToAdeles (D : D7) : PlacesToAdeles D := by
     exact moves_mul (hall v hv) (moves_off (inv_mem (congGrp_mono (idOff_le_single hv) hg)))
   refine ⟨r, hr, hrP, g, hg, κ, ⟨hκ, ?_⟩, ?_⟩
   · intro y hy
-    rw [hlat L y hL.1, hlat L _ hL.1]
+    rw [hlat L y hL.1.toIsLattice, hlat L _ hL.1.toIsLattice]
     have hy' := supp_mulVec S P κ hy
     have hey : ∀ v e, e ∈ intAt D (· = v) → ∀ i, (e • y) i ∈ idAt D (· = v) := fun v e he i => by
       simpa [smul_eq_mul] using Ideal.mul_mem_right (y i) _ he.1

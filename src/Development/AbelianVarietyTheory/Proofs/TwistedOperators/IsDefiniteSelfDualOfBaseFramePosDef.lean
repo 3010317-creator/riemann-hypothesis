@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FactTypePrime
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TotallyDefiniteMass
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FactTypePrime
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TotallyDefiniteMass
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S IsDedekindDomain NumberField
 open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
@@ -16,15 +20,19 @@ theorem isLattice_of_squeeze {E M : Type} [Field E] [NumberField E] [AddCommGrou
     [IsScalarTower (𝓞 E) E M] {L Λ : Submodule (𝓞 E) M} (hL : Submodule.IsLattice E L) {c : E} (hc : c ≠ 0)
     (h1 : ∀ x ∈ L, c • x ∈ Λ) (h2 : ∀ x ∈ Λ, c • x ∈ L) : Submodule.IsLattice E Λ := by
   let f : M →ₗ[𝓞 E] M := ((c⁻¹ • LinearMap.id : M →ₗ[E] M)).restrictScalars (𝓞 E)
-  constructor
-  · have hfg : (L.map f).FG := hL.fg.map f
-    have hle : Λ ≤ L.map f := fun x hx => ⟨c • x, h2 x hx, by simp [f, smul_smul, hc]⟩
-    exact hfg.of_le hle
-  · rw [eq_top_iff, ← hL.span_eq_top, Submodule.span_le]
-    intro x hx
-    have : x = c⁻¹ • (c • x) := by simp [smul_smul, hc]
-    rw [this]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span (h1 x hx))
+  have hfg : (L.map f).FG := hL.fg.map f
+  have hle : Λ ≤ L.map f := fun x hx => ⟨c • x, h2 x hx, by simp [f, smul_smul, hc]⟩
+  exact Submodule.IsLattice.of_fg E (hfg.of_le hle)
+
+theorem isFullLattice_of_squeeze {E M : Type} [Field E] [NumberField E] [AddCommGroup M] [Module E M] [Module (𝓞 E) M]
+    [IsScalarTower (𝓞 E) E M] {L Λ : Submodule (𝓞 E) M} (hL : Submodule.IsFullLattice E L) {c : E} (hc : c ≠ 0)
+    (h1 : ∀ x ∈ L, c • x ∈ Λ) (h2 : ∀ x ∈ Λ, c • x ∈ L) : Submodule.IsFullLattice E Λ := by
+  refine { toIsLattice := isLattice_of_squeeze hL.toIsLattice hc h1 h2, span_eq_top := ?_ }
+  rw [eq_top_iff, ← hL.span_eq_top, Submodule.span_le]
+  intro x hx
+  have he : x = c⁻¹ • (c • x) := by simp [smul_smul, hc]
+  rw [he]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span (h1 x hx))
 
 theorem coe_span_dualSet {E : Type} [Field E] [NumberField E] {n : Type} [Fintype n] (σ : E →+* E)
     (J : Matrix n n E) (L : Submodule (𝓞 E) (n → E)) :
@@ -51,8 +59,14 @@ theorem coe_span_dualSet {E : Type} [Field E] [NumberField E] {n : Type} [Fintyp
 theorem isDefUnimod_of_isBaseFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) (N : ℕ), V.SigOK → V.IsPosDef → IsBaseFrame V β Λ N → IsDefUnimod D.sp.cm V.gram Λ := by
   intro D V β Λ N hs hp ⟨_, hdual, hN, h1, h2⟩
   obtain ⟨-, hJ⟩ := GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm
-  have hL : Submodule.IsLattice D.host.E (Formalism.L2.Herm.crdLat V V.L0) :=
-    Formalism.MainNotions.StandardLattice.tMap_lattice (Formalism.L2.Herm.crd V) V.L0 V.standardTuple_isLattice
+  have hL : Submodule.IsFullLattice D.host.E (Formalism.L2.Herm.crdLat V V.L0) := by
+    refine { toIsLattice := Submodule.IsLattice.of_fg D.host.E (V.standardTuple_isLattice.fg.map _)
+             span_eq_top := ?_ }
+    have himage : (Formalism.L2.Herm.crdLat V V.L0 : Set (Fin V.rank → D.host.E)) =
+        (V.frame.equivFun : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)) '' (V.L0 : Set V.V) := rfl
+    rw [himage, ← Submodule.map_span, V.standardTuple_isLattice.span_eq_top,
+      Submodule.map_top, LinearMap.range_eq_top]
+    exact V.frame.equivFun.surjective
   have hmem : ∀ x, x ∈ Formalism.L2.Herm.crdLat V V.L0 ↔ x ∈ L0c D V := by
     intro v
     constructor
@@ -65,7 +79,7 @@ theorem isDefUnimod_of_isBaseFrame : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.ra
       exact hv
   refine ⟨Matrix.ext fun i j => (hJ V).1 i j, (hJ V).2.isUnit,
     GlobalTheory.Proof.TotallyDefiniteMass.isTotDef_gram D.sp.cm V hs hp,
-    isLattice_of_squeeze hL (Nat.cast_ne_zero.2 hN.ne') (fun x hx => h1 x ((hmem x).1 hx))
+    isFullLattice_of_squeeze hL (Nat.cast_ne_zero.2 hN.ne') (fun x hx => h1 x ((hmem x).1 hx))
       (fun x hx => (hmem _).2 (h2 x hx)), ?_⟩
   rw [← coe_span_dualSet]
   exact congrArg SetLike.coe hdual

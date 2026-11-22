@@ -1,10 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocalizedModuleSubtype
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeOfLatMod
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocalizedModuleSubtype
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeOfLatMod
+
+@[expose] public section
+
 open NumberField Formalism.HermitianLatticeCounting.S6 GlobalTheory.HermLat GlobalTheory.DegCnt
 open scoped Pointwise ENNReal Classical
 
@@ -36,7 +41,8 @@ theorem exists_gens (R M : Type) [CommRing R] [IsDomain R] [AddCommGroup M] [Mod
   refine ⟨t, fun N hN hI => eq_top_iff.2 fun m _ => ?_⟩
   choose a ha using fun i => Ideal.Quotient.mk_surjective (b.repr (TensorProduct.mk R (R ⧸ I) M 1 m) i)
   have h0 : TensorProduct.mk R (R ⧸ I) M 1 (m - ∑ i, a i • t i) = 0 := by
-    rw [map_sub, map_sum, sub_eq_zero]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sub, map_sum, sub_eq_zero]
     conv_lhs => rw [← b.sum_repr (TensorProduct.mk R (R ⧸ I) M 1 m)]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, ht, ← ha, ← Ideal.Quotient.algebraMap_eq, algebraMap_smul]
@@ -95,9 +101,9 @@ theorem integral {y x : V} (hy : y ∈ L) (hx : x ∈ L) : H.B y x ∈ (1 : Subm
   rw [← hU.2, mem_dual_iff] at hy
   exact hy.2 x hx
 
+
 omit [FiniteDimensional K V] in
 include hU hp hq in
-
 theorem proj_mem_dual {v : V} (hv : v ∈ L) : p v ∈ dual H (L ⊓ rs (𝓞 K) U) := by
   rw [mem_dual_iff, span_inf ((isLatMod_top_bot_iff L).1 hU.1)]
   refine ⟨hp v, fun a ha => ?_⟩
@@ -106,8 +112,8 @@ theorem proj_mem_dual {v : V} (hv : v ∈ L) : p v ∈ dual H (L ⊓ rs (𝓞 K)
   rw [← h0]
   exact integral H hU hv ha.1
 
-include hc hU hp hq in
 
+include hc hU hp hq in
 theorem mem_dual_iff_proj (d : V) : d ∈ dual H (L ⊓ rs (𝓞 K) (perp H U)) ↔ ∃ v ∈ L, v - p v = d := by
   have hsp := span_inf ((isLatMod_top_bot_iff L).1 hU.1) (perp H U)
   have h0 : ∀ v, ∀ b ∈ perp H U, H.B b (p v) = 0 := fun v b hb => (mem_perp_iff H U _).1 hb _ (hp v)
@@ -150,13 +156,14 @@ theorem mem_dual_iff_proj (d : V) : d ∈ dual H (L ⊓ rs (𝓞 K) (perp H U)) 
     rw [map_sub, LinearMap.sub_apply, this, sub_zero]
     exact integral H hU hv hb.1
 
-include hc hU in
 
+include hc hU in
 theorem idx_ne_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) :
     idx (dual H (L ⊓ rs (𝓞 K) U)) (L ⊓ rs (𝓞 K) U) ≠ 0 := by
   have hL := (isLatMod_top_bot_iff L).1 hU.1
   have hM : IsLatMod (L ⊓ rs (𝓞 K) U) U ⊥ := by
     refine ⟨⟨L ⊓ rs (𝓞 K) U, ?_, by simp⟩, span_inf hL U⟩
+    have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL.fg
     have : IsNoetherian (𝓞 K) L := inferInstance
     have : IsNoetherian (𝓞 K) ↥(L ⊓ rs (𝓞 K) U) := isNoetherian_of_le inf_le_left
     rw [← Module.Finite.iff_fg]

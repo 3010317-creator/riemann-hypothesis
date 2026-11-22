@@ -1,8 +1,13 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ExSub
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsTerTail
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsBisSide
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsMoreBis
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ExSub
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsTerTail
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsBisSide
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsMoreBis
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -30,8 +35,8 @@ theorem pullDeg_sub (a b : K → ℤ) :
 
 end FlagModelJoinLeftAlt
 
-open FlagModelJoinLeftAlt in
 
+open FlagModelJoinLeftAlt in
 theorem FlagModelJoinLeftAlt.proof (hVert : JoinVerticalDivisor.Statement)
     (hFlag : FlagPairJoinLeft.Statement) (hNum : PairNumberJoinLeft.Statement) :
     FlagModelJoinLeftAlt.Statement := by

@@ -1,4 +1,8 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsSmulMem
+
+@[expose] public section
 
 open NumberField Module
 
@@ -30,24 +34,24 @@ theorem finite_rep (hd : IsTotPosDef h) {M : Submodule (𝓞 K) V} (hM : Submodu
   exact ⟨hx, le_rfl⟩
 
 theorem finite_stab_lat (hs : h.IsSymm) (hd : IsTotPosDef h) {M : Submodule (𝓞 K) V}
-    (hM : Submodule.IsLattice K M) :
+    (hM : Submodule.IsFullLattice K M) :
     (MulAction.stabilizer (Formalism.HermitianLatticesTheory.isom h) M : Set (Formalism.HermitianLatticesTheory.isom h)).Finite := by
   have : Finite (Formalism.ThetaLiftIndependence.autL h M) := (Formalism.HermitianLatticesTheory.autFinite K V h hs (trace_pos hd) M hM).to_subtype
   have : Finite (MulAction.stabilizer (Formalism.HermitianLatticesTheory.isom h) M) := Finite.of_equiv _ (stabLatEquiv M).symm
   exact Set.toFinite _
 
 theorem exists_classReps (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) : ∃ s, Formalism.ThetaLiftIndependence.IsClassReps h L s :=
+    (hL : Submodule.IsFullLattice K L) : ∃ s, Formalism.ThetaLiftIndependence.IsClassReps h L s :=
   (Formalism.ThetaLiftIndependence.classRepsDefinite K V h hs (trace_pos hd) L hL).1
 
 theorem exists_pairReps (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (n : K) :
+    (hL : Submodule.IsFullLattice K L) (n : K) :
     ∃ sX : Finset (Submodule (𝓞 K) V × V), (∀ t ∈ sX, t ∈ pairs h L n) ∧
       ∀ p ∈ pairs h L n, ∃! t, t ∈ sX ∧ ∃ g : Formalism.HermitianLatticesTheory.isom h, g • t = p := by
   obtain ⟨s, hs1, hs2⟩ := exists_classReps hs hd hL
   refine OrbSum.exists_reps_of_cover (pairs h L n) (pairs_stable hs L n)
     (⋃ M ∈ s, (fun x => (M, x)) '' {x : V | x ∈ M ∧ h x x = n}) ?_ ?_ ?_
-  · exact Set.Finite.biUnion s.finite_toSet fun M hM => (finite_rep hd (hs1 M hM).1 n).image _
+  · exact Set.Finite.biUnion s.finite_toSet fun M hM => (finite_rep hd (hs1 M hM).1.toIsFullLattice.toIsLattice n).image _
   · intro c hc
     obtain ⟨M, hM, x, hx, rfl⟩ := Set.mem_iUnion₂.mp hc
     exact ⟨hs1 M hM, hx.1, hx.2⟩
@@ -69,7 +73,7 @@ theorem sum_pairs_eq_rep (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (�
   have key := OrbSum.sum_orbits_on (G := Formalism.HermitianLatticesTheory.isom h) (Prod.fst : Submodule (𝓞 K) V × V → _)
     (fun _ _ => rfl) (pairs h L n) (Formalism.HermitianLatticesTheory.genus h L) (pairs_stable hs L n) (fun p hp => hp.1)
     sX s hsX hsr.1 hX (fun M hM => by simp_rw [exists_smul_iff]; exact hsr.2 M hM)
-    (fun M hM => finite_stab_lat hs hd hM.1)
+    (fun M hM => finite_stab_lat hs hd hM.1.toIsFullLattice)
   rw [key]
   refine Finset.sum_congr rfl fun M hM => ?_
   have e1 : Nat.card {p : Submodule (𝓞 K) V × V // p ∈ pairs h L n ∧ p.1 = M} = repCount h M n :=

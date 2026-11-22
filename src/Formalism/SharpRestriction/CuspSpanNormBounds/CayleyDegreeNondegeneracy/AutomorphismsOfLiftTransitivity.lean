@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.FlagStabilizerMemIsotropic
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.FlagStabilizerMemIsotropic
+
+@[expose] public section
 
 noncomputable section
 
@@ -57,7 +61,7 @@ theorem automorphisms_of_lift_transitivity (hL : LiftsConjugateUnderStabilizer D
     exact quotientClass_injective_left D u hT F0 he hz (h1.symm.trans h2)
 
 theorem gluing_mass_of_lift_transitivity (hpos : IsPosDef (D.sp.X 0).hT)
-    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsLattice D.host.E (L0X D Λ (lf D F0)))
+    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsFullLattice D.host.E (L0X D Λ (lf D F0)))
     (hL : LiftsConjugateUnderStabilizer D u) (h4 : GluingCount D u) (h5 : OrthLatticesOneGenus D u) : WordRowsGluing D u :=
   gluing_mass_of_iso_aut_count_genus D u hpos hlat (lattice_classes_of_lift_transitivity D u hL) (automorphisms_of_lift_transitivity D u hL) h4 h5
 
@@ -74,7 +78,7 @@ theorem gluing_count_of_gluing_number (h : GluingNumber D u) : GluingCount D u :
   exact h2 (h1.symm.trans h0)
 
 theorem gluing_mass_of_lift_and_number (hpos : IsPosDef (D.sp.X 0).hT)
-    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsLattice D.host.E (L0X D Λ (lf D F0)))
+    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsFullLattice D.host.E (L0X D Λ (lf D F0)))
     (hL : LiftsConjugateUnderStabilizer D u) (h4 : GluingNumber D u) (h5 : OrthLatticesOneGenus D u) : WordRowsGluing D u :=
   gluing_mass_of_lift_transitivity D u hpos hlat hL (gluing_count_of_gluing_number D u h4) h5
 

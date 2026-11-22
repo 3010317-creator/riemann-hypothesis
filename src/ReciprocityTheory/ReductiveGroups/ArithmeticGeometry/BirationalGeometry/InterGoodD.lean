@@ -1,6 +1,10 @@
-import Mathlib
-import Lemmata.GeneralBFactMore.Imports
-import Lemmata.FirstBlockLemmaA.Imports
+module
+
+public import Mathlib
+public import Lemmata.GeneralBFactMore.Imports
+public import Lemmata.FirstBlockLemmaA.Imports
+
+@[expose] public section
 
 namespace ReciprocityTheory.ChartRestriction.G.Geo
 
@@ -50,7 +54,8 @@ theorem subst_monomial {r : ℕ} (lam : Fin r → k) (m : Fin (r + 1) →₀ ℕ
 
 theorem subst_natDegree_le {r : ℕ} (lam : Fin r → k) (F : MvPolynomial (Fin (r + 1)) k) :
     (subst lam F).natDegree ≤ F.totalDegree := by
-  conv_lhs => rw [F.as_sum, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    conv_lhs => rw [F.as_sum, map_sum]
   refine Polynomial.natDegree_sum_le_of_forall_le _ _ fun m hm => ?_
   exact (subst_monomial lam m _).1.trans (le_totalDegree hm)
 
@@ -58,9 +63,11 @@ theorem subst_coeff_totalDegree {r : ℕ} (lam : Fin r → k) (F : MvPolynomial 
     (subst lam F).coeff F.totalDegree =
       C (eval (Fin.cons (1 : k) lam) (homogeneousComponent F.totalDegree F)) := by
   classical
-  rw [show subst lam F = ∑ v ∈ F.support, subst lam (monomial v (coeff v F)) by
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [show subst lam F = ∑ v ∈ F.support, subst lam (monomial v (AddMonoidAlgebra.coeff F v)) by
     rw [← map_sum, ← F.as_sum]]
-  rw [homogeneousComponent_apply, map_sum, map_sum, Polynomial.finsetSum_coeff,
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [homogeneousComponent_apply, map_sum, map_sum, Polynomial.finsetSum_coeff,
     Finset.sum_filter]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hle : Finsupp.degree m ≤ F.totalDegree := le_totalDegree hm
@@ -74,9 +81,9 @@ theorem homogeneousComponent_totalDegree_ne_zero {σ : Type*} {F : MvPolynomial 
   obtain ⟨m, hm, hmax⟩ := Finset.exists_mem_eq_sup F.support (support_nonempty.mpr hF)
     (fun s => s.sum fun _ e => e)
   intro h0
-  have := congrArg (coeff m) h0
-  rw [coeff_homogeneousComponent, if_pos (by rw [totalDegree, hmax]; rfl), coeff_zero] at this
-  exact (mem_support_iff.mp hm) this
+  have hcoeff := congrArg (AddMonoidAlgebra.coeff · m) h0
+  rw [coeff_homogeneousComponent, if_pos (by rw [totalDegree, hmax]; rfl)] at hcoeff
+  exact (mem_support_iff.mp hm) (hcoeff.trans rfl)
 
 theorem eval_smul_of_degree {σ : Type*} [Fintype σ] (H : MvPolynomial σ k) (d : ℕ)
     (hH : ∀ m ∈ H.support, Finsupp.degree m = d) (c : k) (v : σ → k) :
@@ -113,7 +120,7 @@ theorem eval₂_subst {R : Type*} [CommRing R] [Algebra k R] {r : ℕ} (lam : Fi
   induction F using MvPolynomial.induction_on with
   | C a =>
     simp [subst, Polynomial.eval₂_C, Polynomial.algebraMap_apply]
-  | add p q hp hq => rw [map_add, Polynomial.eval₂_add, hp, hq, map_add]
+  | add p q hp hq => rw [map_add (f := _), Polynomial.eval₂_add, hp, hq, map_add (f := _)]
   | mul_X p j hp =>
     rw [map_mul, Polynomial.eval₂_mul, hp, map_mul]
     congr 1

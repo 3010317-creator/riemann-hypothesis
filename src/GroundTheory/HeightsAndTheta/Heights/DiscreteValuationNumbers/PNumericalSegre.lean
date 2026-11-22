@@ -1,6 +1,11 @@
-import Mathlib
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFlagBundle
-import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.PIntNumSymm
+module
+
+public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFlagBundle
+public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.PIntNumSymm
+
+@[expose] public section
+
 set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.NumbersDVR
@@ -80,8 +85,8 @@ section Lists
 
 variable {K : Type*} [DecidableEq K]
 
-omit [DecidableEq K] in
 
+omit [DecidableEq K] in
 theorem rootList_succ {i : ℕ} (x : Fin (i + 1) → K → ℤ) (α : Fin (i + 1) → ℕ) :
     rootList x α = rootList (fun j => x (Fin.castSucc j)) (Fin.init α) ++
       List.replicate (α (Fin.last i)) (x (Fin.last i)) := by
@@ -177,8 +182,8 @@ theorem intNumL_cons_add (hadd : FieldNumbers.IntNumAdd.Statement.{0}) (F : Type
 
 end NumericalSegreProof
 
-open NumericalSegreProof in
 
+open NumericalSegreProof in
 theorem NumericalSegre.proof (hadd : FieldNumbers.IntNumAdd.Statement.{0})
     (hdim : FlagBundleDim.Statement) (hcut : FlagBundleCut.Statement)
     (hvan : FlagBundlePullbackVanish.Statement) (hbase : FlagBundleLineBase.Statement) :

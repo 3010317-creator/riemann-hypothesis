@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
-import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
+
+@[expose] public section
 
 open Matrix Complex NumberField GlobalTheory GlobalTheory.SW GlobalTheory.ThFr ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD
 open scoped ComplexConjugate Real Topology
@@ -85,7 +89,8 @@ theorem exists_majorant {ι : Type} (A : ι → ℂ) (B : ι → W →ₗ[ℂ] W
       (mul_le_mul_of_nonneg_left (hv.trans (le_abs_self R)) (norm_nonneg _))
   have e : B i v v = ∑ j, ∑ k, b.repr v j * b.repr v k * B i (b j) (b k) := by
     conv_lhs => rw [← b.sum_repr v]
-    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
+    set_option synthInstance.maxHeartbeats 100000 in
+      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
       Finset.mul_sum]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun k _ => by ring
@@ -98,7 +103,7 @@ theorem exists_majorant {ι : Type} (A : ι → ℂ) (B : ι → W →ₗ[ℂ] W
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [← Finset.sum_add_distrib, Finset.sum_div]
     refine Finset.sum_congr rfl fun k _ => ?_
-    simp only [map_add, map_sub, LinearMap.add_apply, LinearMap.sub_apply]
+    simp only [map_add (f := _), map_sub, LinearMap.add_apply, LinearMap.sub_apply]
     ring
   rw [e', Finset.mul_sum]
   refine norm_sum_le_of_le _ fun j _ => ?_
@@ -202,7 +207,8 @@ theorem bd_prod (P Q : MvPolynomial σ ℂ) (u : σ → W) (hu : ∀ s, star (u 
     bd P (barP Q) u (fun p => f p.1 * conj (h (star p.2))) =
       polyDeriv P u f 0 * conj (polyDeriv Q u h 0) := by
   have h1 : polyDeriv (barP Q) u (fun w => conj (h (star w))) 0 = conj (polyDeriv Q u h 0) := by
-    rw [KernSym.polyDeriv_eq_sum_list _ _ (analyticAt_conj hh 0),
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [KernSym.polyDeriv_eq_sum_list _ _ (analyticAt_conj hh 0),
       KernSym.polyDeriv_eq_sum_list _ _ (hh 0), map_sum, barP,
       MvPolynomial.support_map_of_injective _ (starRingEnd ℂ).injective]
     refine Finset.sum_congr rfl fun m _ => ?_

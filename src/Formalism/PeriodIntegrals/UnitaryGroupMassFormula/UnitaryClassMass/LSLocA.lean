@@ -1,5 +1,9 @@
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassMass.SigRTmulOne
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassFiniteness.LatticeClassesFiniteRefinement
+module
+
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassMass.SigRTmulOne
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryClassFiniteness.LatticeClassesFiniteRefinement
+
+@[expose] public section
 
 open NumberField PI.UJClassFin PI.UJClassMass PI.UnitaryGroupMassFormula.UJClassFin IsDedekindDomain Formalism.HermitianLatticesTheory
 open scoped TensorProduct ComplexOrder
@@ -49,7 +53,7 @@ theorem lsLoc : LSLoc := by
   obtain ⟨dJ, hdJ, hdJi⟩ := mat_den J
   obtain ⟨dI, hdI, hdIi⟩ := mat_den J⁻¹
 
-  obtain ⟨⟨c1, hc1, hup⟩, ⟨c2, hc2, hlow⟩⟩ := crdBounds F E V M b L0 hL
+  obtain ⟨⟨c1, hc1, hup⟩, ⟨c2, hc2, hlow⟩⟩ := crdBounds F E V M b L0 hL.toIsFullLattice
   obtain ⟨u, hu, hu'⟩ := up_nat L ⟨c1, hc1, hup⟩
   obtain ⟨k, hk, hk'⟩ := low_nat L ⟨c2, hc2, hlow⟩
   obtain ⟨m', hm', hmO'⟩ := den_mat (F := F) (E := E) (finMat σ J g⁻¹)

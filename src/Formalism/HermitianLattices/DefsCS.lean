@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.HermitianLattices.StatementLat
+module
+
+public import Mathlib
+public import Formalism.HermitianLattices.StatementLat
+
+@[expose] public section
 
 open Module
 
@@ -20,7 +24,7 @@ def TraceReal : Prop :=
     ∃ (N : ℕ) (ι : V →+ EuclideanSpace ℝ (Fin N)),
       (∀ x y : V, inner ℝ (ι x) (ι y) = ((Algebra.trace ℚ K (h x y) : ℚ) : ℝ)) ∧
       (∀ a : K, ∃ C : ℝ, ∀ x : V, ‖ι (a • x)‖ ≤ C * ‖ι x‖) ∧
-      (∀ M : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K M →
+      (∀ M : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K M →
         ∃ _ : DiscreteTopology (zmap ι M), IsZLattice ℝ (zmap ι M))
 
 def GenusCovol : Prop :=
@@ -31,7 +35,7 @@ def GenusCovol : Prop :=
     (∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x)) →
     ∀ (N : ℕ) (ι : V →+ EuclideanSpace ℝ (Fin N)),
       (∀ x y : V, inner ℝ (ι x) (ι y) = ((Algebra.trace ℚ K (h x y) : ℚ) : ℝ)) →
-    ∀ L M : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K L → M ∈ genus h L →
+    ∀ L M : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K L → M ∈ genus h L →
     ∀ [DiscreteTopology (zmap ι L)] [IsZLattice ℝ (zmap ι L)]
       [DiscreteTopology (zmap ι M)] [IsZLattice ℝ (zmap ι M)],
       ZLattice.covolume (zmap ι M) = ZLattice.covolume (zmap ι L)
@@ -48,7 +52,7 @@ def GenusScale : Prop :=
     [FiniteDimensional K V] [Module (NumberField.RingOfIntegers K) V]
     [IsScalarTower (NumberField.RingOfIntegers K) K V]
     (h : V →ₗ⋆[K] V →ₗ[K] K), h.IsSymm →
-    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsLattice K L →
+    ∀ L : Submodule (NumberField.RingOfIntegers K) V, Submodule.IsFullLattice K L →
     ∃ d : ℕ, 0 < d ∧ ∀ M ∈ genus h L, ∀ x ∈ M, ∀ y ∈ M,
       (d : K) * h x y ∈ (1 : Submodule (NumberField.RingOfIntegers K) K)
 

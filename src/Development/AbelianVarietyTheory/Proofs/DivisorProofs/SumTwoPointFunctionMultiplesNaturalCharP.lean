@@ -1,5 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+
+@[expose] public section
+
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct WithConv
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp spMap epsR IsTangent IsGrpPullback)
 open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB RigLB CubicalStr Theta thφ thε thK x3)
@@ -13,7 +18,8 @@ theorem chi_natural : ∀ (p : ℕ) (R : Type) [CommRing R], (p : R) = 0 → ∀
   have hp' : (p : D') = 0 := by
     rw [← map_natCast (algebraMap R D') p, hp, map_zero]
   unfold chi
-  rw [map_sum, ← Finset.sum_sub_distrib]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, ← Finset.sum_sub_distrib]
   have h : ∀ i ∈ Finset.range p, g D' ((spOver φ ≫ x) ^ i) (spOver φ ≫ x) - φ (g D (x ^ i) x) =
       (f D D' φ (x ^ (i + 1)) - f D D' φ (x ^ i)) - f D D' φ x := by
     intro i _

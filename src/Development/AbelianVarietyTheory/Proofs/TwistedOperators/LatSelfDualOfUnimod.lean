@@ -1,12 +1,16 @@
-import Mathlib
-import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ChainMatrices
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelfDualAdelicFrameLevelOne
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsUnitaryOfOrderDvd
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RightInvariantOfFiniteCovolume
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFrameIntegralGramMatrix
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ChainMatrices
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelfDualAdelicFrameLevelOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsUnitaryOfOrderDvd
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RightInvariantOfFiniteCovolume
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseFrameIntegralGramMatrix
+
+@[expose] public section
 
 noncomputable section
 
@@ -178,7 +182,7 @@ local notation "ι" => inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
 theorem isFrame_lat (β : GL (Fin n) 𝒜) : IsFrame β (lat β) := lat_span β
 
 theorem eq_lat {β : GL (Fin n) 𝒜} {Λ : Submodule (𝓞 E) (Fin n → E)} (h : IsFrame β Λ)
-    (hΛ : Submodule.IsLattice E Λ) : Λ = lat β := by
+    (hΛ : Submodule.IsFullLattice E Λ) : Λ = lat β := by
   ext x
   rw [mem_lat, ← h]
   conv_lhs => rw [← global_lattice_one_holds F E (Fin n) Λ (Module.Finite.iff_fg.2 hΛ.fg) hΛ.span_eq_top]
@@ -248,7 +252,7 @@ theorem hatL_of_hat (Λ Λ' : Submodule (𝓞 E) (Fin n → E))
   refine h3.trans (iff_of_eq ?_)
   congr 1
   funext i
-  simp only [mulVec, dotProduct, map_sum, map_mul, AlgEquiv.apply_symm_apply]
+  simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, AlgEquiv.apply_symm_apply, Matrix.map_apply]
   rfl
 
 end Lattice
@@ -331,7 +335,7 @@ theorem toEAf_cA (z : AE D) : toEAf D (cA D z) = sg D (toEAf D z) := by
   induction z using TensorProduct.induction_on with
   | zero => simp only [map_zero]
   | tmul a x => rfl
-  | add a b ha hb => rw [RingHom.map_add, RingHom.map_add, ha, hb, RingHom.map_add, RingHom.map_add]
+  | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb, RingHom.map_add (f := _), RingHom.map_add (f := _)]
 
 theorem sg_sg (z : Ef D) : sg D (sg D z) = z := by
   induction z using TensorProduct.induction_on with
@@ -339,7 +343,7 @@ theorem sg_sg (z : Ef D) : sg D (sg D z) = z := by
   | tmul x a =>
     change star (star x) ⊗ₜ[D.host.F] a = _
     rw [star_star]
-  | add a b ha hb => simp only [map_add, ha, hb]
+  | add a b ha hb => simp only [map_add (f := _), ha, hb]
 
 theorem cP_cP (Q : Pl D.host.E) : cP (cP Q) = Q := by
   refine HeightOneSpectrum.ext (Ideal.ext fun x => ?_)
@@ -466,9 +470,16 @@ abbrev gramOf (V : HSp D) (β : GL (Fin V.rank) (Ef D)) : Matrix (Fin V.rank) (F
 
 theorem isLattice_crdLat (V : HSp D) {L : Submodule (𝓞 D.host.E) V.V} (h : Submodule.IsLattice D.host.E L) :
     Submodule.IsLattice D.host.E (crdLat V L) := by
-  refine ⟨h.fg.map _, ?_⟩
-  have h1 : (crdLat V L : Set (Fin V.rank → D.host.E)) = V.frame.equivFun.toLinearMap '' (L : Set V.V) := rfl
-  rw [h1, ← Submodule.map_span, h.span_eq_top, Submodule.map_top, LinearEquiv.range]
+  exact Submodule.IsLattice.of_fg D.host.E (h.fg.map _)
+
+theorem isFullLattice_crdLat (V : HSp D) {L : Submodule (𝓞 D.host.E) V.V}
+    (h : Submodule.IsFullLattice D.host.E L) :
+    Submodule.IsFullLattice D.host.E (crdLat V L) := by
+  letI := isLattice_crdLat V h.toIsLattice
+  refine ⟨?_⟩
+  have hs := congrArg (Submodule.map V.frame.equivFun.toLinearMap) h.span_eq_top
+  rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range] at hs
+  exact hs
 
 theorem isSD_one {V : HSp D} {β : GL (Fin V.rank) (Ef D)} (h : crdLat V V.L0 = lat β) :
     IsSDFrame V β (crdLat V V.L0) 1 := by
@@ -479,7 +490,7 @@ theorem isSD_one {V : HSp D} {β : GL (Fin V.rank) (Ef D)} (h : crdLat V V.L0 = 
     exact hx
 
 theorem exists_base (V : HSp D) : ∃ β : GL (Fin V.rank) (Ef D), crdLat V V.L0 = lat β := by
-  have hL := isLattice_crdLat V V.standardTuple_isLattice
+  have hL := isFullLattice_crdLat V V.standardTuple_isLattice
   obtain ⟨β, hβ⟩ := GlobalTheory.AdelicFrame.exists_isFrame D.host.F _ hL.fg hL.span_eq_top
   exact ⟨β, eq_lat hβ hL⟩
 
@@ -583,13 +594,19 @@ theorem exists_unitary (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (
   have hL : crdLat V L = lat γ := Submodule.map_comap_eq_of_surjective
     (f := (crd V : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)).restrictScalars (𝓞 D.host.E)) (crd V).surjective _
   have hm : ∀ x, x ∈ L ↔ crd V x ∈ lat γ := fun _ => Iff.rfl
-  have h1 : Submodule.IsLattice D.host.E L := by
-    refine ⟨Submodule.fg_of_fg_map_injective
+  have h1weak : Submodule.IsLattice D.host.E L := by
+    apply Submodule.IsLattice.of_fg D.host.E
+    exact Submodule.fg_of_fg_map_injective
       ((crd V : V.V →ₗ[D.host.E] (Fin V.rank → D.host.E)).restrictScalars (𝓞 D.host.E)) (crd V).injective
-      (hL ▸ (lat_isLattice γ).fg : (crdLat V L).FG), ?_⟩
-    apply Submodule.map_injective_of_injective (f := (crd V).toLinearMap) (crd V).injective
-    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range, ← (lat_isLattice γ).span_eq_top, ← hL]
-    rfl
+      (hL ▸ (lat_isLattice γ).fg : (crdLat V L).FG)
+  have h1 : Submodule.IsFullLattice D.host.E L := by
+    letI := h1weak
+    refine ⟨?_⟩
+    apply LinearMap.map_injective (LinearMap.ker_eq_bot.mpr (crd V).injective)
+    rw [Submodule.map_span, Submodule.map_top, LinearEquiv.range]
+    change Submodule.span D.host.E (crdLat V L : Set (Fin V.rank → D.host.E)) = ⊤
+    rw [hL]
+    exact (lat_isLattice γ).span_eq_top
   have h2 : Formalism.HermitianLatticesTheory.IsUnimodular V.hT L := by
     ext x
     simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual, Submodule.mem_iInf, Submodule.mem_comap, LinearMap.restrictScalars_apply,
@@ -605,7 +622,7 @@ theorem exists_unitary (V : HSp D) (γ : GL (Fin V.rank) (Ef D)) (hγ : Unimod (
       rw [hT_crd D.sp.cm]
       exact h _ hy
   obtain ⟨k, -, hk⟩ := GlobalTheory.VolumeRatioTypings.exists_conj V L h1 h2
-  refine ⟨Formalism.IndefR.Lev.finE V k, GlobalTheory.LevSplit.finE_mem_UA V k, eq_lat (fun x => ?_) (isLattice_crdLat V V.standardTuple_isLattice)⟩
+  refine ⟨Formalism.IndefR.Lev.finE V k, GlobalTheory.LevSplit.finE_mem_UA V k, eq_lat (fun x => ?_) (isFullLattice_crdLat V V.standardTuple_isLattice)⟩
   have hk' : ∀ y, y ∈ GlobalTheory.AdLat.hat D.host.F (crdLat V V.L0 : Set (Fin V.rank → D.host.E)) ↔
       finMat D.sp.cm.sig V.gram k *ᵥ y ∈ GlobalTheory.AdLat.hat D.host.F (lat γ : Set (Fin V.rank → D.host.E)) := by
     rw [← hL, GlobalTheory.LevelChoices.coe_crdLat]

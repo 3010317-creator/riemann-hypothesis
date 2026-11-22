@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Skeleton
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Skeleton
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas
+
+@[expose] public section
 
 noncomputable section
 
@@ -11,7 +15,7 @@ namespace PI.UnitaryGroupMassFormula.BetaLUniq
 def LineReduce' : Prop :=
   ∀ {E : Type} [Field E] [NumberField E] [StarRing E] (S : HSpace E) (Λ : Submodule (𝓞 E) S.V) {r : ℕ} {T T' : E} (F : LFlag S r T) (F' F'' : LFlag S r T')
     (β₁ β₂ : S.V ≃ₗ[E] S.V) (k : ℕ), finrank E S.V = k + 2 * r + 1 →
-    Submodule.IsLattice E Λ → IsLift Λ F' →
+    Submodule.IsFullLattice E Λ → IsLift Λ F' →
     (finrank E (UUE Λ F F') = 2 * r + 2 ∧ UUE Λ F F' ⊓ orth S (UUE Λ F F') = ⊥) →
     (∀ w ∈ orth S (Xplus F'), S.hT w w = 0 → w ∈ Xsp F') →
     β₁ ∈ Formalism.HermitianLatticesTheory.isom S.hT → β₂ ∈ Formalism.HermitianLatticesTheory.isom S.hT →
@@ -41,7 +45,7 @@ theorem mem_orth_sup {U U' : Submodule E S.V} {v : S.V} :
     rw [mem_orth] at h1 h2 ⊢
     intro x hx
     obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.mp hx
-    rw [map_add, LinearMap.add_apply, h1 a ha, h2 b hb, add_zero]
+    rw [map_add (f := _), LinearMap.add_apply, h1 a ha, h2 b hb, add_zero]
 
 theorem mem_orth_span {s : Set S.V} {v : S.V} :
     v ∈ orth S (Submodule.span E s) ↔ ∀ x ∈ s, S.hT x v = 0 := by
@@ -50,7 +54,7 @@ theorem mem_orth_span {s : Set S.V} {v : S.V} :
   induction hx using Submodule.span_induction with
   | mem x hx => exact h x hx
   | zero => simp
-  | add x y _ _ hx hy => rw [map_add, LinearMap.add_apply, hx, hy, add_zero]
+  | add x y _ _ hx hy => rw [map_add (f := _), LinearMap.add_apply, hx, hy, add_zero]
   | smul c x _ hx => rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, hx, smul_zero]
 
 theorem mem_orth_span_singleton {z v : S.V} :

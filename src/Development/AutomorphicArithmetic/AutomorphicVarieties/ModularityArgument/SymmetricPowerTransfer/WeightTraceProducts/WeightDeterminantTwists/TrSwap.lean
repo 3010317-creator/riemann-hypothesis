@@ -1,4 +1,8 @@
-import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.WeightTraceProducts.MemHomogeneousExponentsOneBlock
+module
+
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.WeightTraceProducts.MemHomogeneousExponentsOneBlock
+
+@[expose] public section
 
 open Polynomial UpperTheory.V.Z.Sym.Wt
 
@@ -33,7 +37,8 @@ private theorem homogeneous_trace_mul {d : ℕ} (n : ℕ) (g h : GL (Fin d) ℂ)
       rw [MvPolynomial.notMem_support_iff.1 hm', monomial_zero]
   rw [hcomp]
   conv_lhs => rw [hQsum]
-  rw [map_sum, MvPolynomial.coeff_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, MvPolynomial.coeff_sum]
   apply Finset.sum_congr rfl
   intro m' _
   rw [show monomial m' (coeff m' (sbs (fun _ : Unit => h) (monomial m 1))) =
@@ -53,7 +58,7 @@ theorem UpperTheory.V.Z.Sym.Wt.trSwap :
       Finsupp.mapDomain (UpperTheory.V.Z.Sym.Wt.flip I d) (glue μ) = glue (fun k => μ (k.1, !k.2)) := by
     intro μ
     ext ⟨⟨i, b⟩, j⟩
-    have := Finsupp.mapDomain_apply hinj (glue μ) ((i, !b), j)
+    have := Finsupp.mapDomain_apply_of_injective hinj (glue μ) ((i, !b), j)
     rw [show UpperTheory.V.Z.Sym.Wt.flip I d ((i, !b), j) = ((i, b), j) by
       simp [UpperTheory.V.Z.Sym.Wt.flip]] at this
     rw [this, glue_apply, glue_apply]
@@ -86,8 +91,8 @@ theorem UpperTheory.V.Z.Sym.Wt.trSwap :
     apply Finset.prod_congr rfl
     intro v _
     rw [Fintype.prod_bool]
-    show MvPolynomial.coeff (μ (v, true))
-        ((sbs fun _ : Unit => invT ℂ d (g v)) (MvPolynomial.monomial (μ (v, false)) 1)) *
-      MvPolynomial.coeff (μ (v, false))
-        ((sbs fun _ : Unit => g v) (MvPolynomial.monomial (μ (v, true)) 1)) = _
+    show AddMonoidAlgebra.coeff ((sbs fun _ : Unit => invT ℂ d (g v)) (MvPolynomial.monomial (μ (v, false)) 1))
+        (μ (v, true)) *
+      AddMonoidAlgebra.coeff ((sbs fun _ : Unit => g v) (MvPolynomial.monomial (μ (v, true)) 1))
+        (μ (v, false)) = _
     exact mul_comm _ _

@@ -1,7 +1,11 @@
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LocalDensityRatio
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AbsNormEqProdOfMem
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsClassReps
-import Formalism.HermitianLattices.HermitianLatticesProofs.MassBasic
+module
+
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.LocalDensityRatio
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.AbsNormEqProdOfMem
+public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsClassReps
+public import Formalism.HermitianLattices.HermitianLatticesProofs.MassBasic
+
+@[expose] public section
 
 open NumberField Module
 open scoped Classical
@@ -17,7 +21,7 @@ variable {V : Type} [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Modul
   [IsScalarTower (𝓞 K) K V]
 
 theorem repMass_eq_sum {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h)
-    {L : Submodule (𝓞 K) V} (hL : Submodule.IsLattice K L) {s : Finset (Submodule (𝓞 K) V)}
+    {L : Submodule (𝓞 K) V} (hL : Submodule.IsFullLattice K L) {s : Finset (Submodule (𝓞 K) V)}
     (hsr : Formalism.ThetaLiftIndependence.IsClassReps h L s) (t : K) :
     repMass h L t = ∑ M ∈ s, (repCount h M t : ℝ) / ((Nat.card (Formalism.ThetaLiftIndependence.autL h M) : ℕ) : ℝ) := by
   classical
@@ -25,11 +29,11 @@ theorem repMass_eq_sum {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : 
   obtain ⟨sX, hsX, hX⟩ := StabilizerLattices.exists_pairReps hs hd hL t
   have e1 := StabilizerLattices.sum_pairs_eq_rep hs hd t hsr hsX hX
   have e2 := StabilizerLattices.sum_pairs_eq_rep hs hd t hex.choose_spec hsX hX
-  simp only [repMass, dif_pos hex]
+  simp only [repMass, dite_eq_left hex]
   rw [← e2, e1]
 
 theorem integral_of_mem_genus {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) {L M : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L)
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L)
     (hM : M ∈ Formalism.HermitianLatticesTheory.genus h L) : Formalism.HermitianLatticesTheory.IsIntegralLat h M := by
   exact Formalism.HermitianLatticesTheory.genusBasic_int (IsFractionRing.injective (𝓞 K) K)
     (fun r => Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range r) h L M hM.2 hLi
@@ -52,16 +56,16 @@ theorem exists_mem_boxSet (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} (
   exact ⟨hd x hx0 φ, hxT φ⟩
 
 theorem ballCount_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K}
-    (hs : h.IsSymm) (hd : IsTotPosDef h) {M : Submodule (𝓞 K) V} (hM : Submodule.IsLattice K M)
+    (hs : h.IsSymm) (hd : IsTotPosDef h) {M : Submodule (𝓞 K) V} (hM : Submodule.IsFullLattice K M)
     (hMi : Formalism.HermitianLatticesTheory.IsIntegralLat h M) {T : ℝ} (hT : 0 ≤ T) :
     ballCount h M T =
       1 + ∑ n ∈ (finite_boxSet hK hF T).toFinset, repCount h M (algebraMap F K (n : F)) := by
   classical
-  let Fn : 𝓞 F → Finset V := fun n => (StabilizerLattices.finite_rep hd hM (algebraMap F K (n : F))).toFinset
+  let Fn : 𝓞 F → Finset V := fun n => (StabilizerLattices.finite_rep hd hM.toIsLattice (algebraMap F K (n : F))).toFinset
   have hset : {x : V | x ∈ M ∧ ∀ φ : K →+* ℂ, (φ (h x x)).re ≤ T} =
       ↑(insert 0 ((finite_boxSet hK hF T).toFinset.biUnion Fn)) := by
     ext x
-    simp only [Set.mem_setOf_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe,
+    simp only [Set.mem_ofPred_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe,
       Finset.mem_biUnion, Set.Finite.mem_toFinset, Fn]
     constructor
     · rintro ⟨hx, hxT⟩
@@ -74,7 +78,7 @@ theorem ballCount_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : 
       · exact ⟨hx, fun φ => by rw [he]; exact (hn φ).2⟩
   obtain ⟨φ0⟩ : Nonempty (K →+* ℂ) := inferInstance
   have h0 : (0 : V) ∉ (finite_boxSet hK hF T).toFinset.biUnion Fn := by
-    simp only [Finset.mem_biUnion, Set.Finite.mem_toFinset, Fn, Set.mem_setOf_eq, not_exists, not_and]
+    simp only [Finset.mem_biUnion, Set.Finite.mem_toFinset, Fn, Set.mem_ofPred_eq, not_exists, not_and]
     intro n hn _ he
     have h1 := (hn φ0).1
     rw [← he] at h1
@@ -84,16 +88,16 @@ theorem ballCount_eq (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : 
     intro n _ m _ hnm
     rw [Finset.disjoint_left]
     intro x hxn hxm
-    simp only [Fn, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hxn hxm
+    simp only [Fn, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hxn hxm
     apply hnm
     exact RingOfIntegers.ext ((algebraMap F K).injective (hxn.2.symm.trans hxm.2))
   unfold ballCount
-  rw [← Set.coe_setOf, Nat.card_coe_set_eq, hset, Set.ncard_coe_finset,
+  rw [← Set.coe_ofPred, Nat.card_coe_set_eq, hset, Set.ncard_coe_finset,
     Finset.card_insert_of_notMem h0, Finset.card_biUnion hdisj, add_comm]
   congr 1
   refine Finset.sum_congr rfl fun n _ => ?_
   unfold repCount
-  rw [← Set.coe_setOf, Nat.card_coe_set_eq, Set.ncard_eq_toFinset_card _ (StabilizerLattices.finite_rep hd hM _)]
+  rw [← Set.coe_ofPred, Nat.card_coe_set_eq, Set.ncard_eq_toFinset_card _ (StabilizerLattices.finite_rep hd hM.toIsLattice _)]
 
 private theorem repCount_zero_eq_one_of_isTotPosDef {h : V →ₗ⋆[K] V →ₗ[K] K} (hd : IsTotPosDef h) (M : Submodule (𝓞 K) V) :
     repCount h M 0 = 1 := by
@@ -107,13 +111,13 @@ private theorem repCount_zero_eq_one_of_isTotPosDef {h : V →ₗ⋆[K] V →ₗ
 
 theorem sum_ballCount (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L)
+    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L)
     {s : Finset (Submodule (𝓞 K) V)} (hsr : Formalism.ThetaLiftIndependence.IsClassReps h L s) {T : ℝ} (hT : 0 ≤ T) :
     ∑ M ∈ s, (ballCount h M T : ℝ) / (Nat.card (Formalism.ThetaLiftIndependence.autL h M) : ℝ) =
       Formalism.HermitianLatticesTheory.mass h L + ∑ᶠ n ∈ boxSet K F T, repMass h L (algebraMap F K (n : F)) := by
   classical
-  have hM : ∀ M ∈ s, Submodule.IsLattice K M ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h M := fun M hMs =>
-    ⟨(hsr.1 M hMs).1, integral_of_mem_genus hs hL hLi (hsr.1 M hMs)⟩
+  have hM : ∀ M ∈ s, Submodule.IsFullLattice K M ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h M := fun M hMs =>
+    ⟨(hsr.1 M hMs).1.toIsFullLattice, integral_of_mem_genus hs hL hLi (hsr.1 M hMs)⟩
   have hmass : Formalism.HermitianLatticesTheory.mass h L = ∑ M ∈ s, ((Nat.card (Formalism.ThetaLiftIndependence.autL h M) : ℕ) : ℝ)⁻¹ := by
     have hex : ∃ s, Formalism.ThetaLiftIndependence.IsClassReps h L s := ⟨s, hsr⟩
     rw [Formalism.HermitianLatticesTheory.massBasic_mass_eq h L hex]

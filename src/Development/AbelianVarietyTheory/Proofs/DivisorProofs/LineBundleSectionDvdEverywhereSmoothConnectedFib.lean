@@ -1,17 +1,22 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
-import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.MumfordConstruction
-import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-import Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsUniquePartner
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SecCmp
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalDomain
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ThetaGen
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueExpansionSectionAdmissibleBase
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EgaHolds
-import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpandsAtSecIsMul
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemStalkIdealOfCodimOne
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsUniqueLbIsoPullEqOfCoheightLeOne
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsUniquePartner
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SecCmp
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationCompleteLocalNormalDomain
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ThetaGen
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueExpansionSectionAdmissibleBase
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EgaHolds
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpandsAtSecIsMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemStalkIdealOfCodimOne
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsUniqueLbIsoPullEqOfCoheightLeOne
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj IsLocalRing NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
@@ -81,7 +86,7 @@ theorem exists_specializes_not_dvd {X : Scheme.{0}} {U W : X.Opens} (c : Γ(X, W
   have hsp : yV.1 ⤳ x := by
     have hle : Pt ≤ hV.primeIdealOf ⟨x, hxV⟩ := by
       show P ≤ (hV.primeIdealOf ⟨x, hxV⟩).asIdeal
-      rw [← IsLocalization.AtPrime.comap_maximalIdeal (X.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxV⟩).asIdeal]
+      rw [← IsLocalization.AtPrime.under_maximalIdeal (X.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxV⟩).asIdeal]
       exact Ideal.comap_mono (IsLocalRing.le_maximalIdeal hQ.ne_top)
     have := ((PrimeSpectrum.le_iff_specializes _ _).1 hle).map hV.fromSpec.continuous
     rwa [hV.fromSpec_primeIdealOf] at this
@@ -90,7 +95,7 @@ theorem exists_specializes_not_dvd {X : Scheme.{0}} {U W : X.Opens} (c : Γ(X, W
   rw [hPt] at hlocy
   have hdim : Order.coheight yV.1 ≤ 1 := by
     rw [← GlobalTheory.ringKrullDim_stalk_le_one_iff, IsLocalization.AtPrime.ringKrullDim_eq_height P (X.presheaf.stalk yV.1)]
-    have := IsLocalization.height_comap (hV.primeIdealOf ⟨x, hxV⟩).asIdeal.primeCompl Q
+    have := IsLocalization.height_under (hV.primeIdealOf ⟨x, hxV⟩).asIdeal.primeCompl Q
     change (P.height : WithBot ℕ∞) ≤ 1
     rw [show P = Ideal.under Γ(X, V) Q from rfl, this]
     exact_mod_cast hQ1

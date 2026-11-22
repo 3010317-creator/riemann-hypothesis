@@ -1,5 +1,9 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.AutomorphismsOfLiftTransitivity
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.MassLowerBoundOfMassFormula
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.AutomorphismsOfLiftTransitivity
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.MassLowerBoundOfMassFormula
+
+@[expose] public section
 
 noncomputable section
 
@@ -13,7 +17,7 @@ theorem gluing_mass_of_lift_number_genus (D : D7) (u : D.what₂.Word) (hL : Lif
     (h5 : OrthLatticesOneGenus D u) : WordRowsGluing D u := by
   intro hT
   exact gluing_mass_of_lift_and_number D u (orth_space_posDef D u hT.pos)
-    (fun hT h3 hsp F0 he hz Λ hΛ => (orthLattice_structure D u hT h3 hsp F0 he hz Λ hΛ).1) hL h4 h5 hT
+    (fun _ _ _ F0 he hz Λ hΛ => orthLattice_isLattice F0 he hz Λ hΛ.2.1.1 hΛ.2.1.2.1) hL h4 h5 hT
 
 end Formalism.MainNotions.BridgeLemma₂
 

@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenCoverAlgebraPointLiesInCoverStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechFirstCohomologyAwayNaturalStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointwiseCocycleLocalSectionsGlueBasicOpenCoverStatement
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDatNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenCoverAlgebraPointLiesInCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechFirstCohomologyAwayNaturalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointwiseCocycleLocalSectionsGlueBasicOpenCoverStatement
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -44,8 +48,8 @@ end GlobalTheory.PtExt.CocSec
 
 end
 
-open GlobalTheory.PtExt.CocSec in
 
+open GlobalTheory.PtExt.CocSec in
 theorem GlobalTheory.PtExt.CocSec.exists_section : ∀ (R : Type) [CommRing R] (X : Over (Sp R)) (K : Type) (W : K → X.left.Opens), ⨆ i, W i = ⊤ → ∀ u : Fn1 X, IsCoc W u → ∀ (D : Type) [CommRing D] [Algebra R D] (x : Pt X D), ∃ σ : ∀ (E : Type) [CommRing E] [Algebra R E], (D →ₐ[R] E) → E, ∀ (E : Type) [CommRing E] [Algebra R E] (E' : Type) [CommRing E'] [Algebra R E'] (ψ : D →ₐ[R] E) (θ : E →ₐ[R] E'), Sm W (spOver ψ ≫ x) → σ E' (θ.comp ψ) - θ (σ E ψ) = u E E' θ (spOver ψ ≫ x) := by
   intro R _ X K W hW u hu D _ _ x
   obtain ⟨n, s, hs, hsm⟩ := GlobalTheory.T.exists_basicOpen_cover_algebraPoint_liesInCover R X K W hW D x
@@ -74,7 +78,7 @@ theorem GlobalTheory.PtExt.CocSec.exists_section : ∀ (R : Type) [CommRing R] (
     (fun a E _ _ E' _ _ ψ θ ha ↦ by
       have h1 := hk a E E' ψ θ ha
       have h2 := he1 a E E' ψ θ ha
-      simp only [map_add]
+      simp only [map_add (f := _)]
       linear_combination h1 + h2)
     (fun a b E _ _ ψ ha hb ↦ by
       have h := he2 a b E ψ ha hb

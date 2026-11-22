@@ -1,9 +1,14 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsExhaustionGL
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Langlands
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsExhaustionGL
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+
+@[expose] public section
+
 open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.Published
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
@@ -28,17 +33,17 @@ theorem iso_tensor_dual (a : WDRep h V) (b : WDRep h V') :
     | tmul f g =>
       refine TensorProduct.ext' fun m n => ?_
       simp [TensorProduct.dualDistrib_apply]
-    | add x y hx hy => simp only [map_add, hx, hy]
+    | add x y hx hy => simp only [map_add (f := _), hx, hy]
   · induction x using TensorProduct.induction_on with
     | zero => simp
     | tmul f g =>
       refine TensorProduct.ext' fun m n => ?_
       simp [TensorProduct.dualDistrib_apply]
       ring
-    | add x y hx hy => simp only [map_add, hx, hy]
+    | add x y hx hy => simp only [map_add (f := _), hx, hy]
+
 
 omit [IsAlgClosure E Ω] in
-
 theorem qPow_neg' (s : ℝ) : qPow w (-s) = (qPow w s)⁻¹ :=
   eq_inv_of_mul_eq_one_left (by rw [← qPow_add, neg_add_cancel, qPow_zero])
 
@@ -81,7 +86,7 @@ theorem spDualMap_apply {n : ℕ} (f : Dual ℂ (Fin n → ℂ)) (i : Fin n) :
     spDualMap n f i = (-1 : ℂ) ^ (i : ℕ) * f (Pi.single i.rev 1) := rfl
 
 theorem spDualMap_injective (n : ℕ) : Function.Injective (spDualMap n) := by
-  rw [injective_iff_map_eq_zero]
+  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro f hf
   refine LinearMap.pi_ext fun j x => ?_
   have := congrFun hf j.rev
@@ -104,7 +109,7 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       LinearMap.neg_apply, LinearMap.dualMap_apply, shiftEnd_single, shiftEnd_apply]
     by_cases hi : 1 ≤ (i : ℕ)
     · have hr : (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dif_pos hr, if_pos hi]
+      rw [dite_eq_left hr, if_pos hi]
       have he : (⟨(i.rev : ℕ) + 1, hr⟩ : Fin n) = (⟨(i : ℕ) - 1, by omega⟩ : Fin n).rev := by
         ext; simp only [Fin.val_rev]; omega
       rw [he]
@@ -112,12 +117,12 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       simp only [hk, Nat.add_sub_cancel, pow_succ]
       ring
     · have hr : ¬ (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dif_neg hr, if_neg hi]
+      rw [dite_eq_right hr, if_neg hi]
       simp
 
 namespace WDClass
 
-theorem lpDual_lpZero : (WD.lpZero h).lpDual = WD.lpZero h := by
+theorem lpDual_lpZero : (WD.lpZero (h := h)).lpDual = WD.lpZero h := by
   rw [WD.lpZero, WD.lpDual_mk]
   exact WD.sound ⟨LinearEquiv.ofFinrankEq _ _ (by simp [Subspace.dual_finrank_eq]),
     fun _ _ => Subsingleton.elim _ _, fun _ => Subsingleton.elim _ _⟩

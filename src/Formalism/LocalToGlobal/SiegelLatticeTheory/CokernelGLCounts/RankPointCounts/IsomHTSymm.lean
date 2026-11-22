@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.YvMemUUE
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.YvMemUUE
+
+@[expose] public section
 
 noncomputable section
 
@@ -41,7 +45,8 @@ private theorem yv_mapFlag {T0 T1 : E} {γ : S.V ≃ₗ[E] S.V} (h : γ ∈ Form
     (F : FlagG S r T0) (F' : FlagG S r T1) :
     yv (mapFlag γ h F) (mapFlag γ h F') = γ (yv F F') := by
   simp only [yv, omp, Dl, Zhat_mapFlag', mapFlag_fvec']
-  simp [map_sum, map_smul, mapFlag]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp [map_sum, map_smul, mapFlag]
 
 private theorem mapFlag_X' {T0 : E} {γ : S.V ≃ₗ[E] S.V} (h : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT)
     (F : FlagG S r T0) : (mapFlag γ h F).X = F.X.map (γ : S.V →ₗ[E] S.V) := by
@@ -85,9 +90,7 @@ private theorem mem_Hp_iff_orthogonal {T0 T1 : E} (Λ : Submodule (NumberField.R
 private theorem isLattice_sup_span_singleton (Λ : Submodule (NumberField.RingOfIntegers E) S.V)
     (hΛ : Submodule.IsLattice E Λ) (v : S.V) :
     Submodule.IsLattice E (Λ ⊔ Submodule.span (NumberField.RingOfIntegers E) {v}) := by
-  refine ⟨hΛ.fg.sup (Submodule.fg_span_singleton v), ?_⟩
-  rw [eq_top_iff, ← hΛ.span_eq_top]
-  exact Submodule.span_mono (SetLike.coe_subset_coe.2 le_sup_left)
+  exact Submodule.IsLattice.of_fg E (hΛ.fg.sup (Submodule.fg_span_singleton v))
 
 private theorem flagG_ext_of_e_eq_of_z_eq {T0 : E} (F G : FlagG S r T0) (he : F.e = G.e) (hz : F.z = G.z) :
     F = G := by

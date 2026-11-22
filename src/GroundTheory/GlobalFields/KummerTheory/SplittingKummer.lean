@@ -1,7 +1,11 @@
-import Mathlib
-import GroundTheory.GlobalFields.KummerTheory.Degree
-import GroundTheory.GlobalFields.KummerTheory.Splitting
-import GroundTheory.GlobalFields.KummerTheory.SplittingInfinite
+module
+
+public import Mathlib
+public import GroundTheory.GlobalFields.KummerTheory.Degree
+public import GroundTheory.GlobalFields.KummerTheory.Splitting
+public import GroundTheory.GlobalFields.KummerTheory.SplittingInfinite
+
+@[expose] public section
 
 noncomputable section
 
@@ -17,8 +21,8 @@ variable {K : Type*} [Field K] {n : ℕ} [NeZero n] [HasEnoughRootsOfUnity K n]
   {F E : Type*} [Field F] [Field E] [Algebra K F] [Algebra F E] [Algebra K E]
   [IsScalarTower K F E]
 
-omit [NeZero n] [HasEnoughRootsOfUnity K n] [IsScalarTower K F E] in
 
+omit [NeZero n] [HasEnoughRootsOfUnity K n] [IsScalarTower K F E] in
 theorem kummerExtension_pow_eq {y : kummerExtension K n Ω Δ} {a : K}
     (hy : (y : Ω) ^ n = algebraMap K Ω a) :
     y ^ n = algebraMap K (kummerExtension K n Ω Δ) a :=
@@ -57,7 +61,7 @@ theorem algHom_kummerExtension_mem_fieldRange (ι : kummerExtension K n Ω Δ �
     exact (ι.commutes x).symm
   | add x y hx hy ihx ihy =>
     show ι (⟨x, hx⟩ + ⟨y, hy⟩) ∈ _
-    rw [map_add]
+    rw [map_add (f := _)]
     exact add_mem ihx ihy
   | inv x hx ih =>
     show ι (⟨x, hx⟩⁻¹) ∈ _
@@ -68,8 +72,8 @@ theorem algHom_kummerExtension_mem_fieldRange (ι : kummerExtension K n Ω Δ �
     rw [map_mul]
     exact mul_mem ihx ihy
 
-omit [Algebra K E] [IsScalarTower K F E] in
 
+omit [Algebra K E] [IsScalarTower K F E] in
 theorem finrank_eq_one_of_tensor_surjective {A : Type*} [CommRing A] [Algebra K A]
     (g : F ⊗[K] A →ₐ[F] E) (hg : Function.Surjective g)
     (hA : ∀ m : A, g (1 ⊗ₜ m) ∈ (algebraMap F E).fieldRange) : finrank F E = 1 := by
@@ -120,8 +124,8 @@ variable {K : Type*} [Field K] [NumberField K] {n : ℕ} [NeZero n] [HasEnoughRo
 instance numberField_kummerExtension : NumberField (kummerExtension K n Ω Δ) :=
   NumberField.of_module_finite K _
 
-open SemiLocal in
 
+open SemiLocal in
 theorem splitsCompletely_kummerExtension_iff (v : HeightOneSpectrum (𝓞 K)) :
     SplitsCompletely (kummerExtension K n Ω Δ) v ↔
       ∀ a ∈ Δ, ∃ x : v.adicCompletion K, x ^ n = algebraMap K (v.adicCompletion K) (a : K) := by
@@ -135,8 +139,8 @@ theorem splitsCompletely_kummerExtension_iff (v : HeightOneSpectrum (𝓞 K)) :
   obtain ⟨w⟩ := nonempty_placesOver (kummerExtension K n Ω Δ) v
   exact (key w).1 (h w)
 
-open scoped NumberField.LiesOver in
 
+open scoped NumberField.LiesOver in
 theorem InfinitePlace.splitsCompletely_kummerExtension_iff (v : NumberField.InfinitePlace K) :
     InfinitePlace.SplitsCompletely (kummerExtension K n Ω Δ) v ↔
       ∀ a ∈ Δ, ∃ x : v.Completion, x ^ n = algebraMap K v.Completion (a : K) := by

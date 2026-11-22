@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedCechToCatCochainsOneApplyValueAtSubset
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegralConjInnerMulInnerOfIsEmptyEquiv
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedCechToCatCochainsOneApplyValueAtSubset
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegralConjInnerMulInnerOfIsEmptyEquiv
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,8 +18,8 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.ModelS.SkewInt
 
-open scoped Matrix.Norms.Operator in
 
+open scoped Matrix.Norms.Operator in
 theorem exp_entry_hasDerivAt {n : ℕ} (X : Mat n) (t : ℝ) (i j : Fin n) :
     HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) : Mat n) i j)
       ((NormedSpace.exp (t • X) * X : Mat n) i j) t := by
@@ -72,9 +76,9 @@ theorem integral_Rd_skew : ∀ (n : ℕ) [MeasurableSpace (Matrix.unitaryGroup (
   · simpa using key
   · intro t _
     simp only [hval]
-    exact cU.comp (continuous_mul_right (kt t))
+    exact cU.comp (continuous_mul_const (kt t))
   · simp only [hval]
-    exact cR.comp (continuous_mul_right (kt 0))
+    exact cR.comp (continuous_mul_const (kt 0))
   · intro y t _
     have hg : y.1 * (NormedSpace.exp (t • X) : Mat n) ∈ GLs n := by
       rw [hval]

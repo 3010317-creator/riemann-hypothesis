@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.WittOnFalse
-import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
-import Development.AbelianVarietyTheory.Definitions.Divisors.FibreRankCompOfSurjective
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.WittOnFalse
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FibreRankCompOfSurjective
+
+@[expose] public section
+
 open CategoryTheory TensorProduct MvPowerSeries GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Katz
 
 set_option autoImplicit false
@@ -65,9 +70,8 @@ def iterFrobSemi : SemiBialgHom (algebraMap (IterFrobBase K p r) K) H H where
               rw [smul_pow]⟩ c := by
       intro c
       induction c with
-      | zero => exact map_zero _
       | add x y hx hy =>
-        rw [map_add, ← hx, ← hy]
+        rw [map_add (f := _), ← hx, ← hy]
         exact map_add _ (@id (H ⊗[K] H) x) (@id (H ⊗[K] H) y)
       | tmul x y =>
         change (x ⊗ₜ[K] y) ^ p ^ r = (x ^ p ^ r) ⊗ₜ[K] (y ^ p ^ r)
@@ -113,9 +117,8 @@ theorem finrank_le_frobKer_mul_span_pow (p : ℕ) [Fact p.Prime] (K H : Type) [F
   · refine Submodule.finrank_mono ?_
     rintro _ ⟨x, rfl⟩
     induction x with
-    | zero => simp
     | add x y hx hy =>
-      rw [map_add]
+      rw [map_add (f := _)]
       exact Submodule.add_mem _ hx hy
     | tmul c a =>
       change f (c ⊗ₜ a) ∈ _

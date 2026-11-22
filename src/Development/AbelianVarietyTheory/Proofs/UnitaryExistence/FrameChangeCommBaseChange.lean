@@ -1,8 +1,12 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
-import Formalism.LocalToGlobal.ProjectiveLattices.AllTest
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
+public import Formalism.LocalToGlobal.ProjectiveLattices.AllTest
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+
+@[expose] public section
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.Frames
@@ -22,23 +26,23 @@ theorem spMap_id (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 (Sp A) :=
   simp only [spMap, CommRingCat.ofHom_id, Spec.map_id]
 
 theorem dualMap_alg {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) :
-    (dualMap φ).comp (algebraMap S (DualNumber S)) = (algebraMap T (DualNumber T)).comp φ :=
+    (_root_.Formalism.L2.Pj.dualMap φ).comp (algebraMap S (DualNumber S)) = (algebraMap T (DualNumber T)).comp φ :=
   RingHom.ext fun a => by
-    ext <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
+    ext <;> simp [_root_.Formalism.L2.Pj.dualMap, TrivSqZeroExt.algebraMap_eq_inl]
 
 theorem dualMap_eps {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) (a : S) :
-    (dualMap φ).comp (epsMul a) = (epsMul (φ a)).comp (dualMap φ) :=
+    (_root_.Formalism.L2.Pj.dualMap φ).comp (epsMul a) = (epsMul (φ a)).comp (_root_.Formalism.L2.Pj.dualMap φ) :=
   RingHom.ext fun x => by
-    ext <;> simp [dualMap, epsMul, mul_comm]
+    ext <;> simp [_root_.Formalism.L2.Pj.dualMap, epsMul, mul_comm]
 
 theorem isCombAt_pull {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) {x : Sp S ⟶ Xo.X}
     {x' : Sp T ⟶ Xo.X} (hx : x' = spMap φ ≫ x) {m : ℕ} {v : Fin m → (Sp (DualNumber S) ⟶ Xo.univ.t.G.left)}
-    {v' : Fin m → (Sp (DualNumber T) ⟶ Xo.univ.t.G.left)} (hv : ∀ j, v' j = spMap (dualMap φ) ≫ v j)
+    {v' : Fin m → (Sp (DualNumber T) ⟶ Xo.univ.t.G.left)} (hv : ∀ j, v' j = spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ v j)
     {cf : Fin m → S} {w : Sp (DualNumber S) ⟶ Xo.univ.t.G.left} {w' : Sp (DualNumber T) ⟶ Xo.univ.t.G.left}
-    (hw : w' = spMap (dualMap φ) ≫ w) (h : IsCombAt x v cf w) : IsCombAt x' v' (fun j => φ (cf j)) w' := by
+    (hw : w' = spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ w) (h : IsCombAt x v cf w) : IsCombAt x' v' (fun j => φ (cf j)) w' := by
   obtain ⟨u, hu, hprod⟩ := h
-  let D : tEps x' ⟶ tEps x := Over.homMk (spMap (dualMap φ)) (by
-    show spMap (dualMap φ) ≫ spMap (algebraMap S (DualNumber S)) ≫ x = spMap (algebraMap T (DualNumber T)) ≫ x'
+  let D : tEps x' ⟶ tEps x := Over.homMk (spMap (_root_.Formalism.L2.Pj.dualMap φ)) (by
+    show spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ spMap (algebraMap S (DualNumber S)) ≫ x = spMap (algebraMap T (DualNumber T)) ≫ x'
     rw [hx, ← Category.assoc, ← Category.assoc, spMap_comp_ring, spMap_comp_ring, dualMap_alg])
   have hL : ∀ L : List (tEps x ⟶ Xo.univ.t.G), (L.map (D ≫ ·)).prod = D ≫ L.prod := by
     intro L
@@ -46,7 +50,7 @@ theorem isCombAt_pull {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) {x
     | nil => simp [MonObj.comp_one]
     | cons a L ih => rw [List.map_cons, List.prod_cons, List.prod_cons, ih, MonObj.comp_mul]
   refine ⟨fun j => D ≫ u j, fun j => ?_, ?_⟩
-  · show spMap (dualMap φ) ≫ (u j).left = spMap (epsMul (φ (cf j))) ≫ v' j
+  · show spMap (_root_.Formalism.L2.Pj.dualMap φ) ≫ (u j).left = spMap (epsMul (φ (cf j))) ≫ v' j
     rw [hu j, hv j, ← Category.assoc, ← Category.assoc, spMap_comp_ring, spMap_comp_ring, dualMap_eps]
   · have e : (List.ofFn fun j => D ≫ u j) = (List.ofFn u).map (D ≫ ·) := by
       rw [List.map_ofFn]

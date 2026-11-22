@@ -1,6 +1,10 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneAtOne
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationXiZeroEqOne
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneAtOne
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationXiZeroEqOne
+
+@[expose] public section
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.S Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory IsDedekindDomain NumberField Matrix Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.AutomorphicEvaluation Formalism.L2.SG.HidaSetting Formalism.L2.SG.PoincareInHH.PoincareSetting Formalism.L2.SG.RowDict Formalism.L2.SG.RowsJoinPinned GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.Core.Rk GlobalTheory.Core.Mi
 open scoped TensorProduct InnerProductSpace Classical
@@ -14,8 +18,8 @@ noncomputable section
 
 namespace GlobalTheory.Core.Mi.LatMatch
 
-open GlobalTheory.LatPair in
 
+open GlobalTheory.LatPair in
 theorem exists_pair_of_line {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : Type}
     (Λ : Submodule 𝒪[k] (n ⊕ Fin 1 → k)) (hΛ : Λ.IsLattice k) (q : Unif k) (m : k)
     (h1 : ∀ t : k, (Sum.elim 0 (fun _ => t) : n ⊕ Fin 1 → k) ∈ Λ ↔ m * t ∈ 𝒪[k])
@@ -71,22 +75,8 @@ theorem exists_pair_of_line {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
     · refine Submodule.fg_of_fg_map_injective (inX k n 1) (fun x y h => ?_) (hΛ.fg.of_le (Submodule.map_comap_le _ _))
       funext j
       exact congrFun h (Sum.inl j)
-    · rw [eq_top_iff]
-      intro y _
-      have hle : Submodule.span k (Λ : Set (n ⊕ Fin 1 → k)) ≤
-          (Submodule.span k (L : Set (n → k))).comap (LinearMap.funLeft k k Sum.inl) := by
-        refine Submodule.span_le.2 fun x hx => ?_
-        have h3 := (key x ⟨_, hint x hx⟩ rfl).1 hx
-        have h4 : e ∘ Sum.inl ∈ Submodule.span k (L : Set (n → k)) := by
-          rw [← q.inv_smul_smul (e ∘ Sum.inl)]
-          exact Submodule.smul_mem _ _ (Submodule.subset_span hqe)
-        have h5 := add_mem (Submodule.subset_span (R := k) (s := (L : Set (n → k))) h3)
-          (Submodule.smul_mem _ ((q.1 : k) * (m * x (Sum.inr 0))) h4)
-        have h6 : ∀ a b : n → k, a - (⟨_, hint x hx⟩ : 𝒪[k]) • b + ((q.1 : k) * (m * x (Sum.inr 0))) • b = a :=
-          fun a b => sub_add_cancel a _
-        rw [h6] at h5
-        exact h5
-      exact hle (x := Sum.elim y 0) (by rw [hΛ.span_eq_top]; trivial)
+    · intro s hs hli
+      exact (LinearIndependent.iff_fractionRing _ _).mp hli
   have hglue : IsGlue L (e ∘ Sum.inl) := by
     refine (isGlue_iff q).2 ⟨hlat, fun h => hqi ?_, hqe⟩
     have h3 : (Sum.elim 0 (fun _ => e (Sum.inr 0)) : n ⊕ Fin 1 → k) ∈ Λ := by

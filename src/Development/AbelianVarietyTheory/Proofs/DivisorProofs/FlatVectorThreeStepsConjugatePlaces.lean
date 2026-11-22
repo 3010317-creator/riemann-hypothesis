@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SuppAtMul
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.SqEqOneOfFixDat
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SuppAtMul
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.SqEqOneOfFixDat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
+
+@[expose] public section
 
 set_option autoImplicit false
 noncomputable section
@@ -59,7 +63,8 @@ theorem mem_or_conj_mem {A B : Finset (Pl D.host.E)} (hA : SplitSet A) (hB : Spl
   have k : idemAt P * idem A = idemAt P :=
     GlobalTheory.PlaceModelSum.mul_sum_orth (fun a ha => (hA.isIdemAt ha).1) (fun a ha b hb hab => hA.mul_eq_zero ha hb hab) hP
   have k' : idemAt P * cA D (idem A) = 0 := by
-    rw [idem, map_sum, Finset.mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [idem, map_sum, Finset.mul_sum]
     exact Finset.sum_eq_zero fun j hj => hA.mul_conj hP hj
   have l : idemAt P * idem B = 0 := by
     rw [idem, Finset.mul_sum]
@@ -67,7 +72,8 @@ theorem mem_or_conj_mem {A B : Finset (Pl D.host.E)} (hA : SplitSet A) (hB : Spl
     rw [eq_of_mul_ne_zero (hA.isIdemAt hP) (hB.isIdemAt hj) h0]
     exact hj
   have l' : idemAt P * cA D (idem B) = 0 := by
-    rw [idem, map_sum, Finset.mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [idem, map_sum, Finset.mul_sum]
     refine Finset.sum_eq_zero fun j hj => by_contra fun h0 => hn.2 ?_
     rw [eq_of_mul_ne_zero (hA.isIdemAt hP) (isIdemAt_conj (hB.isIdemAt hj)) h0, conjPl_conjPl]
     exact hj
@@ -75,7 +81,8 @@ theorem mem_or_conj_mem {A B : Finset (Pl D.host.E)} (hA : SplitSet A) (hB : Spl
   linear_combination idemAt P * h - k - k' + l + l'
 
 theorem idem_image_conj {A : Finset (Pl D.host.E)} (hA : SplitSet A) : idem (A.image conjPl) = cA D (idem A) := by
-  rw [idem, Finset.sum_image (fun a _ b _ (hab : conjPl a = conjPl b) => by rw [← conjPl_conjPl a, hab, conjPl_conjPl b]),
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [idem, Finset.sum_image (fun a _ b _ (hab : conjPl a = conjPl b) => by rw [← conjPl_conjPl a, hab, conjPl_conjPl b]),
     idem, map_sum]
   exact Finset.sum_congr rfl fun P hP => idemAt_conj (hA.isIdemAt hP)
 
@@ -121,8 +128,8 @@ theorem idemAt_mul_idem {Q K : Finset (Pl D.host.E)} (hQ : SplitSet Q) (hK : K �
   rw [idem, Finset.mul_sum]
   exact Finset.sum_eq_zero fun j hj => hQ.mul_eq_zero hP (hK hj) fun e => hn (e ▸ hj)
 
-open GlobalTheory.ExportSeries.Model GlobalTheory.AdelicLatMove in
 
+open GlobalTheory.ExportSeries.Model GlobalTheory.AdelicLatMove in
 theorem tensorHalf_dat (F : Frame S T) {Q J K : Finset (Pl D.host.E)} (hQ : SplitSet Q) (hd : Disjoint J K)
     (hU : ∀ P, P ∈ Q ↔ P ∈ J ∨ P ∈ K) {ω ω' : Reds D T.rank S.rank → ℂ}
     (hω : ∀ y y', (∀ PP ∈ J, y PP = y' PP) → ω y = ω y') (hω' : ∀ y y', (∀ PP ∈ K, y PP = y' PP) → ω' y = ω' y') :

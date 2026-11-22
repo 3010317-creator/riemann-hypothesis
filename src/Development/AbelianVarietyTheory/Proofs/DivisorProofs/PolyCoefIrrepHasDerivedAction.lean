@@ -1,6 +1,10 @@
-import Development.AbelianVarietyTheory.Definitions.Divisors.DatumEquiv
-import Development.AbelianVarietyTheory.Definitions.Divisors.VdmSplit
-import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.URepCompRed
+module
+
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumEquiv
+public import Development.AbelianVarietyTheory.Definitions.Divisors.VdmSplit
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.URepCompRed
+
+@[expose] public section
 
 section
 open GlobalTheory.PsCo.PcEG
@@ -33,7 +37,8 @@ lemma not_cdom {Λ : Fin n → ℝ} {a b : Fin n} (hab : a < b) :
     abel
   rw [hl] at he
   have h := congrArg ψ he
-  simp only [map_sum, map_smul, Formalism.REAL.root, map_sub, hψ, smul_eq_mul] at h
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [map_sum, map_smul, Formalism.REAL.root, map_sub, hψ, smul_eq_mul] at h
   have hr : ∑ x, ∑ y, (c x y : ℝ) * (((x : ℕ) : ℝ) - ((y : ℕ) : ℝ)) ≤ 0 := by
     refine Finset.sum_nonpos fun x _ => Finset.sum_nonpos fun y _ => ?_
     by_cases h0 : c x y = 0
@@ -55,8 +60,8 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSp
   (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H))
   (hσ : ∀ g : KG ε, σ (toMK g) = ((τ g : unitary (H →L[ℂ] H)) : H →L[ℂ] H))
 
-include hder in
 
+include hder in
 lemma conj (g : KG ε) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : inK ε Y) :
     ((τ g : unitary (H →L[ℂ] H)) : H →L[ℂ] H) * dτ Y * star ((τ g : unitary (H →L[ℂ] H)) : H →L[ℂ] H) =
       dτ (toMK g * Y * star (toMK g)) := by
@@ -89,8 +94,8 @@ lemma conj (g : KG ε) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : inK ε Y) :
   have h3 := h2.unique (by simpa [Function.comp_def, mul_assoc] using h1)
   simpa [mul_assoc] using h3
 
-include hder in
 
+include hder in
 lemma conj_single (g : KG ε) {a b : Fin n} (hab : ε a = ε b) :
     ((τ g : unitary (H →L[ℂ] H)) : H →L[ℂ] H) * dτ (Matrix.single a b 1) *
       star ((τ g : unitary (H →L[ℂ] H)) : H →L[ℂ] H) =
@@ -99,11 +104,11 @@ lemma conj_single (g : KG ε) {a b : Fin n} (hab : ε a = ε b) :
   have e : toMK g * (kp1 a b + Complex.I • kp2 a b) * star (toMK g) =
       toMK g * kp1 a b * star (toMK g) + Complex.I • (toMK g * kp2 a b * star (toMK g)) := by
     rw [Matrix.mul_add, Matrix.add_mul, Matrix.mul_smul, Matrix.smul_mul]
-  rw [e, map_add, map_smul, map_add, map_smul, ← conj τ dτ hder g (inK_hermitian_unit hab),
+  rw [e, map_add (f := _), map_smul, map_add (f := _), map_smul, ← conj τ dτ hder g (inK_hermitian_unit hab),
     ← conj τ dτ hder g (inK_skew_hermitian_unit hab), mul_add, add_mul, mul_smul_comm, smul_mul_assoc]
 
-include hder hσ in
 
+include hder hσ in
 lemma dτ_of_wt {μ : Fin n → ℝ} {v : H}
     (hv : Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) σ μ v) (a : Fin n) :
     dτ (Matrix.single a a 1) v = ((μ a : ℝ) : ℂ) • v := by
@@ -118,8 +123,7 @@ lemma dτ_of_wt {μ : Fin n → ℝ} {v : H}
     rw [toMK_onepCurve, ← Matrix.diagonal_smul, torep_exp_diag]
     congr 1
     funext b
-    simp only [d, Pi.smul_apply, smul_eq_mul]
-    split_ifs <;> simp
+    by_cases h : b = a <;> simp [d, h]
   have hval : ∀ t : ℝ, ((τ (γ t) : unitary (H →L[ℂ] H)) : H →L[ℂ] H) v =
       Complex.exp (((μ a * t : ℝ) : ℂ) * Complex.I) • v := by
     intro t
@@ -148,8 +152,8 @@ lemma dτ_of_wt {μ : Fin n → ℝ} {v : H}
   rw [hdX, _root_.smul_apply, mul_comm, mul_smul] at heq
   exact smul_right_injective _ Complex.I_ne_zero heq
 
-include hder hσ in
 
+include hder hσ in
 lemma hw {Λ : Fin n → ℝ}
     (hK5 : ∀ (μ : Fin n → ℝ) (v : H), v ∈ (⊤ : Submodule ℂ H) → v ≠ 0 →
       Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) σ μ v → Formalism.MainNotions.S.CDom ε μ Λ)

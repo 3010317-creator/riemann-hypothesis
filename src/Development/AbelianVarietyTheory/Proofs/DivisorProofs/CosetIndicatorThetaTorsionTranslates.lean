@@ -1,10 +1,15 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexOfLeNsmul
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalPoints
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLatticeTransportPreservesSelfDual
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexOfLeNsmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLatticeTransportPreservesSelfDual
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Col Formalism.L2.Ker GlobalTheory.IndefiniteRowSideFullHecke.PlaceLogThetaBounds GlobalTheory.ColNorms
 open scoped ComplexOrder
 
@@ -44,13 +49,14 @@ theorem sm_avg {α : Type} (R : Finset α) (f : α → ℂ) (hf : ∀ x ∈ R, S
   · push_cast
     congr 1
     exact Finset.sum_congr rfl fun x hx => (hg x hx).1
-  · rw [map_mul, map_inv₀, map_natCast, map_sum, norm_mul, norm_inv, Complex.norm_natCast]
-    have h1 : ‖∑ x ∈ R, ρ (g x)‖ ≤ R.card := by
-      refine (norm_sum_le _ _).trans ?_
-      refine (Finset.sum_le_sum fun x hx => (hg x hx).2 ρ).trans ?_
-      simp
-    calc (R.card : ℝ)⁻¹ * ‖∑ x ∈ R, ρ (g x)‖ ≤ (R.card : ℝ)⁻¹ * R.card := by gcongr
-      _ ≤ 1 := inv_mul_le_one
+  set_option synthInstance.maxHeartbeats 100000 in
+    · rw [map_mul, map_inv₀, map_natCast, map_sum, norm_mul, norm_inv, Complex.norm_natCast]
+      have h1 : ‖∑ x ∈ R, ρ (g x)‖ ≤ R.card := by
+        refine (norm_sum_le _ _).trans ?_
+        refine (Finset.sum_le_sum fun x hx => (hg x hx).2 ρ).trans ?_
+        simp
+      calc (R.card : ℝ)⁻¹ * ‖∑ x ∈ R, ρ (g x)‖ ≤ (R.card : ℝ)⁻¹ * R.card := by gcongr
+        _ ≤ 1 := inv_mul_le_one
 
 theorem sm_of_pow {x : ℂ} {n : ℕ} (hn : 0 < n) (h : x ^ n = 1) : Sm x := by
   have hx : x ∈ TaylorLogMetric.Qbar := by
@@ -96,7 +102,7 @@ theorem opU_neg_opU (H : Sesq V) (hH : IsHerm H) (s y : V) (e : V → ℂ) (z : 
   have h2 : Complex.I * (altE H s y : ℂ) = (H s y - H y s) / 2 := by
     rw [hH s y, Complex.sub_conj]; unfold altE; push_cast; ring
   rw [mul_assoc, h2]
-  simp only [map_add, map_neg, map_sub, LinearMap.add_apply, LinearMap.neg_apply, LinearMap.sub_apply]
+  simp only [map_add (f := _), map_neg, map_sub, LinearMap.add_apply, LinearMap.neg_apply, LinearMap.sub_apply]
   ring
 
 theorem xiInd_expand (H : Sesq V) (hH : IsHerm H) (α : V → ℂ) (vol : ℝ) (M : AddSubgroup V) (SA SB : Finset V) (e : V → ℂ) (s z : V) :
@@ -130,7 +136,8 @@ theorem pres_of_finset (D : D7) (T : TaylorLogMetric.Tor D) {a b : ℕ} (L : Sub
 
 theorem HV_herm {ι : Type} [Fintype ι] {a b : ℕ} (sc : ℝ) : IsHerm (Formalism.L2.Ker.HV sc : Sesq (Formalism.L2.Ker.VV ι a b)) := by
   intro x y
-  simp only [Formalism.L2.Ker.HV, LinearMap.mk₂'ₛₗ_apply, map_mul, map_sum, Complex.conj_ofReal, Complex.conj_conj]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [Formalism.L2.Ker.HV, LinearMap.mk₂'ₛₗ_apply, map_mul, map_sum, Complex.conj_ofReal, Complex.conj_conj]
   simp only [mul_comm]
 
 section Host
@@ -183,7 +190,7 @@ theorem pres_thInd : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (𝓞 
   intro D X s cc dl B χ cD hX hs hC a b S L L' c x hL hL' hc
   have hdl : dl ≠ 0 := (GlobalTheory.CurveLattice.lattice_of_curve D (GlobalTheory.InducedType.induced_type D).1 cc dl hC).2.1
   have : Nonempty X.Tau := Fintype.card_pos_iff.1 hX.f_pos
-  obtain ⟨hA, hB, hcard⟩ := GlobalTheory.ColNorms.HalfReps.half_reps X.E X.Tau a b (X.embC s.σ₀) dl (ambOf s B χ cD).AA S L L' c hdl (AA_fg s cc dl B χ cD) hL.1 hL'.1 hc
+  obtain ⟨hA, hB, hcard⟩ := GlobalTheory.ColNorms.HalfReps.half_reps X.E X.Tau a b (X.embC s.σ₀) dl (ambOf s B χ cD).AA S L L' c hdl (AA_fg s cc dl B χ cD) hL.1 hL'.1.toIsLattice hc
   obtain ⟨hQ, hrat⟩ := GlobalTheory.RationalPoints.rational_points D cc dl hC a b _ _ ((GlobalTheory.SeamSelfDual.seam_selfDual D X s hs a).2 L hL) ((GlobalTheory.SeamSelfDual.seam_selfDual D X s hs b).2 L' hL')
   set Hh : Sesq (Formalism.L2.Ker.VV X.Tau a b) := Formalism.L2.Ker.HV (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc dl))⁻¹ with hHh
   have hQ' : ∀ u : HomE X.E a b, StandardLatticesGL3.LaQ D (TaylorLogMetric.tor0 D cc dl) (s.lat L) (s.lat L') (rel s (embH (X.embC s.σ₀) dl u)) := fun u => by

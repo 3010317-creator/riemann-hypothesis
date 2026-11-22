@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.NilradicalLatticeZMemSpan
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RankOneTensors
+module
+
+public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.NilradicalLatticeZMemSpan
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RankOneTensors
+
+@[expose] public section
 
 noncomputable section
 
@@ -39,7 +43,6 @@ theorem decomp (μR : Measure G) (R : Set G) (hR : μR Rᶜ = 0) (Γ0 : Subgroup
       | simpa [ae_iff] using hR
   have hae : P =ᵐ[μR] ⋃ s : Γ0, (P ∩ (fun x => (s : G) * x) ⁻¹' Q) := by
     filter_upwards [hRae] with x hx
-    apply propext
     constructor
     · intro hxP
       obtain ⟨s, hs, hsQ⟩ := (hQu x hx).exists
@@ -118,11 +121,11 @@ theorem formAllC_holds : FormAllC := by
 
   have hFE : ∃ Ω, IsSFund X.B.I (ROinf t) Ω := fundExistsC_holds D X Y u u' t
   have hFO : IsSFund X.B.I (ROinf t) (FundOf t) := by
-    unfold FundOf; rw [dif_pos hFE]; exact hFE.choose_spec
+    unfold FundOf; rw [dite_eq_left hFE]; exact hFE.choose_spec
 
   set Γ0 := ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin with hΓ0
   have hΓc : Countable Γ0 := by
-    have := ROsub_discrete X (X.Fu u) (X.Fu u') t.lam t.lam' ((Y.rowsOK u).1 t.lam t.mem).1.1 t.lin
+    have := ROsub_discrete X (X.Fu u) (X.Fu u') t.lam t.lam' (((Y.rowsOK u).1 t.lam t.mem).1.1).toIsFullLattice t.lin
     exact countable_of_discrete Γ0
   have hΓR : ∀ s ∈ Γ0, s ∈ Rset t := by
     rintro _ ⟨x, n, hxn, rfl, hn, hn'⟩

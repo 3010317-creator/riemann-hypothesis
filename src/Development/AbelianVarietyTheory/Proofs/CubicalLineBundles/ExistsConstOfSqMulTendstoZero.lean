@@ -1,6 +1,10 @@
-import Mathlib
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassPAddOfNeOfDerivNeZero
+module
+
+public import Mathlib
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassPAddOfNeOfDerivNeZero
+
+@[expose] public section
 
 open Filter PeriodPair
 open scoped Topology
@@ -155,9 +159,9 @@ private lemma half_add_half_notMem_lattice (L : PeriodPair) :
   rw [Int.cast_eq_zero] at h'
   omega
 
+
 open Filter PeriodPair in
 open scoped Topology in
-
 lemma _root_.GlobalTheory.PeriodicWeierstrass.exists_eq_of_sq_mul_tendsto (L : PeriodPair) {g : ℂ → ℂ} {a : ℂ}
     (hd : ∀ z ∉ L.lattice, DifferentiableAt ℂ g z) (hp : ∀ z, ∀ l ∈ L.lattice, g (z + l) = g z)
     (h : Tendsto (fun z ↦ z ^ 2 * g z) (𝓝[≠] 0) (𝓝 a)) :
@@ -300,9 +304,9 @@ private lemma tendsto_pow_three_mul_derivWeierstrassP (L : PeriodPair) :
   field_simp
   ring
 
+
 open Filter PeriodPair in
 open scoped Topology in
-
 lemma _root_.GlobalTheory.PeriodicWeierstrass.exists_eq_of_cube_mul_tendsto (L : PeriodPair) {g : ℂ → ℂ}
     (hd : ∀ z ∉ L.lattice, DifferentiableAt ℂ g z) (hp : ∀ z, ∀ l ∈ L.lattice, g (z + l) = g z)
     (h : Tendsto (fun z ↦ z ^ 3 * g z) (𝓝[≠] 0) (𝓝 (-2))) :
@@ -326,9 +330,9 @@ lemma _root_.GlobalTheory.PeriodicWeierstrass.exists_eq_of_cube_mul_tendsto (L :
   simp only [hf₀] at this
   linear_combination this
 
+
 open Filter PeriodPair in
 open scoped Topology in
-
 lemma _root_.GlobalTheory.PeriodicWeierstrass.tendsto_leading (W : WeierstrassCurve ℂ)
     {x y t : ℂ → ℂ} {c : ℂ} (hc : c ≠ 0)
     (hE : ∀ᶠ z in 𝓝[≠] 0, W.toAffine.Equation (x z) (y z))
@@ -387,9 +391,9 @@ lemma _root_.GlobalTheory.PeriodicWeierstrass.tendsto_leading (W : WeierstrassCu
 
 end PeriodicWeierstrass
 
+
 open Filter PeriodPair in
 open scoped Topology in
-
 theorem _root_.GlobalTheory.invariants_eq_of_periodic_solution :
     ∀ (L : PeriodPair) (W : WeierstrassCurve ℂ) (x y t : ℂ → ℂ) (c : ℂ), c ≠ 0 →
   DifferentiableOn ℂ x (L.lattice : Set ℂ)ᶜ → DifferentiableOn ℂ y (L.lattice : Set ℂ)ᶜ →
@@ -471,16 +475,16 @@ theorem _root_.GlobalTheory.invariants_eq_of_periodic_solution :
   open Polynomial in
   have hcub : (C 4 * X ^ 3 - C L.g₂ * X - C L.g₃ : ℂ[X]) ≠ 0 := by
     intro h
-    have := congrArg (Polynomial.coeff · 3) h
+    have := congrArg (AddMonoidAlgebra.coeff · 3) h
     norm_num [Polynomial.coeff_X, Polynomial.coeff_C] at this
   have hlin := pow_eq_zero_iff two_ne_zero |>.mp ((mul_eq_zero.mp hp).resolve_right hcub)
   have hβ₁ : 2 * b + 2 * W.a₁ * c = 0 := by
-    have := congrArg (Polynomial.coeff · 1) hlin
+    have := congrArg (AddMonoidAlgebra.coeff · 1) hlin
     simp only [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C,
       Polynomial.coeff_zero, one_ne_zero, zero_ne_one, ↓reduceIte, add_zero, zero_add] at this
     exact this
   have hβ₀ : 2 * k' + 2 * W.a₁ * c * k + 2 * W.a₃ * c ^ 3 = 0 := by
-    have := congrArg (Polynomial.coeff · 0) hlin
+    have := congrArg (AddMonoidAlgebra.coeff · 0) hlin
     simp only [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C,
       Polynomial.coeff_zero, one_ne_zero, zero_ne_one, ↓reduceIte, add_zero, zero_add] at this
     exact this

@@ -1,4 +1,8 @@
-import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.ExtendByIdentitySymmFixOrth
+module
+
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.ExtendByIdentitySymmFixOrth
+
+@[expose] public section
 
 noncomputable section
 
@@ -84,8 +88,8 @@ theorem isLattice_gmap_of_flag_isometry {T : D.host.E} (F0 : FlagG (VS D) D.R.rS
   refine ⟨?_, hLsub⟩
   obtain ⟨⟨hlat1, hgen1⟩, ⟨hL, hU, hLift, hConv⟩, hXS⟩ := hΛ
   obtain ⟨_, hloc, _, huni, _⟩ := isomAct (𝓞 D.host.E) D.host.E (VS D).V (VS D).hT σ hσ Λ
-  refine ⟨⟨isomAct_lattice σ Λ hlat1, fun p hp => ?_⟩,
-    ⟨isomAct_lattice σ Λ hL, huni.2 hU, ⟨?_, hLift.2⟩, ?_, fun c hc => hConv.2 c ?_⟩, hXLam.trans hXS⟩
+  refine ⟨⟨isomAct_spanningLattice σ Λ hlat1, fun p hp => ?_⟩,
+    ⟨isomAct_fullLattice σ Λ hL, huni.2 hU, ⟨?_, hLift.2⟩, ?_, fun c hc => hConv.2 c ?_⟩, hXLam.trans hXS⟩
   · obtain ⟨g, hg, e⟩ := hgen1 p hp
     exact ⟨σ * g, (isom (VS D).hT).mul_mem hσ hg, by rw [gmap_mul, e, hloc p]⟩
   · rw [isomAct_mem_gmap]
@@ -132,7 +136,7 @@ theorem isometries_transport_lattices (u : D.what₂.Word) : IsometriesTransport
   rw [e1, e2, extendByIdentity_symm_apply D γ w _ (Submodule.smul_mem _ c hzO)]
 
 theorem gluing_mass_of_iso_aut_count_genus (u : D.what₂.Word) (hpos : IsPosDef (D.sp.X 0).hT)
-    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsLattice D.host.E (L0X D Λ (lf D F0)))
+    (hlat : ForPrimeFlagLattice D u fun F0 Λ => Submodule.IsFullLattice D.host.E (L0X D Λ (lf D F0)))
     (h1 : LatticeClassesIff D u) (h2 : CardAutEqCardIsometryStabilizer D u) (h4 : GluingCount D u)
     (h5 : OrthLatticesOneGenus D u) : WordRowsGluing D u :=
   gluing_mass_of_gluing_facts D u hpos hlat h1 h2 (isometries_transport_lattices D u) h4 h5

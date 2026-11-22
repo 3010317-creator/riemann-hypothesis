@@ -1,6 +1,10 @@
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatTranslateOfPrime
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CohomologicalCsdTempered
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Realised
+module
+
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatTranslateOfPrime
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CohomologicalCsdTempered
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Realised
+
+@[expose] public section
 
 set_option synthInstance.maxHeartbeats 200000
 
@@ -142,7 +146,7 @@ theorem realTw_le_alt (s1 : _root_.GlobalTheory.BigOn.Exp.TupLe.PlacesCondition)
       rw [ea]
       exact Submodule.smul_mem _ (⟨_, ⟨algebraMap _ _ a, h2 a⟩⟩ : imO ex.nch w e) (Submodule.subset_span ⟨s, h', P', hd, hg⟩)
     | zero => rw [map_zero]; exact zero_mem _
-    | add _ _ _ _ a b => rw [map_add]; exact add_mem a b
+    | add _ _ _ _ a b => rw [RingHom.map_add (Ideal.Quotient.mk (towerIdeal p n))]; exact add_mem a b
     | smul a y _ hy =>
       rw [show a • y = (a : ℂ) • y from rfl, map_smul]
       exact Submodule.smul_mem _ a hy

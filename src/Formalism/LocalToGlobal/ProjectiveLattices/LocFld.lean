@@ -1,4 +1,8 @@
-import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProof
+module
+
+public import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProof
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -69,7 +73,7 @@ theorem isPrecomplete : IsPrecomplete (IsLocalRing.maximalIdeal Ow) Ow := by
     rw [Valued.cauchy_iff]
     refine ⟨map_neBot, fun γ => ?_⟩
     obtain ⟨n, hn⟩ := exists_pow_lt₀ hπ1 (Units.map (MonoidWithZeroHom.ValueGroup₀.embedding
-      (f := (.ofClass (Valued.v : Valuation Lw ℤᵐ⁰)))) γ)
+      (f := (.ofClass (Valued.v : Valuation Lw ℤᵐ⁰)))).toMonoidHom γ)
     refine ⟨g '' Set.Ici n, image_mem_map (Ici_mem_atTop n), ?_⟩
     rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩
     rw [Valuation.restrict_lt_iff_lt_embedding]
@@ -170,14 +174,16 @@ lemma exists_e : ∃ e : ℕ, 0 < e ∧ ∀ x : L, valV Ow (kMap w x) = w.valuat
       valuedAdicCompletion_eq_valuation', valuation_lt_one_iff_mem]⟩
   exact ⟨w.asIdeal.ramificationIdx' m.asIdeal,
     Nat.pos_of_ne_zero (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver m.asIdeal w.ne_bot),
-    fun x => (valuation_liesOver (FractionRing Ow) w m x).symm⟩
+    fun x => by
+      simpa only [Ideal.ramificationIdx'_eq_ramificationIdx w.asIdeal m.asIdeal w.ne_bot,
+        valV, m, RingHom.algebraMap_toAlgebra] using (valuation_liesOver (FractionRing Ow) w m x).symm⟩
 
 end Compl
 
 end LocFldPf
 
-open LocFldPf in
 
+open LocFldPf in
 theorem locFld : LocFld := by
   intro K L _ _ _ _ j la
   let : Algebra K L := j.toAlgebra
@@ -201,7 +207,7 @@ theorem locFld : LocFld := by
   rw [h1, show j a = algebraMap K L a from rfl, ← valuation_liesOver L la w a, ← pow_mul,
     WithZero.log_pow]
   push_cast
-  simp
+  simp [Ideal.ramificationIdx'_eq_ramificationIdx la.asIdeal w.asIdeal la.ne_bot]
 
 section Cor
 
@@ -209,11 +215,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
-
-theorem algPtLa_of_numPt (hN : XoNumPt Xo c) : AlgPtLa Xo c := algPtLa_of hN locFld
-
-theorem intFrNe_of_numPt (hN : XoNumPt Xo c) (hE : IntFrExt Xo c) : IntFrNe Xo c (algCls Xo c) :=
-  intFrNe_of' hN locFld hE
 
 end Cor
 

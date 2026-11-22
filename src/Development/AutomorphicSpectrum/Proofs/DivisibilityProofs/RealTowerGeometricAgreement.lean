@@ -1,7 +1,11 @@
-import Mathlib
-import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
-import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsC2AtOfIsPotential
+module
+
+public import Mathlib
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsC2AtOfIsPotential
+
+@[expose] public section
 
 noncomputable section
 
@@ -19,8 +23,8 @@ def lineCoef : Option (Ψ × Fin N) → Option (Ψ × Fin N) → ℤ
   | some _, none => 0
   | some r, some p => Cmp.rootCoef r p
 
-omit [DecidableEq Ψ] in
 
+omit [DecidableEq Ψ] in
 theorem line_smooth (M : RootModel Ψ N) (o : Option (Ψ × Fin N)) : IsSmoothHerm (M.line 1 o) := by
   cases o with
   | none => exact M.A_smooth
@@ -33,7 +37,8 @@ theorem geoMono_word (hI : PB.Inputs) (M : RootModel Ψ N) {J : Ideal (MRing M.�
         ((M.δ : ℝ) * (M.kA : ℝ) ^ (∑ j, Finsupp.single (w j) (1 : ℕ)) none) := by
   classical
   have hdeg : (∑ j, Finsupp.single (w j) (1 : ℕ)).degree = dimFl Ψ N := by
-    rw [map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum]
     simp [Finsupp.degree_single]
   have hms : Finsupp.toMultiset (∑ j, Finsupp.single (w j) (1 : ℕ)) = Multiset.map w Finset.univ.val := by
     rw [Finsupp.toMultiset_sum]
@@ -49,7 +54,7 @@ theorem geoMono_word (hI : PB.Inputs) (M : RootModel Ψ N) {J : Ideal (MRing M.�
       have := k.2
       simp [Multiset.length_toList]
     unfold monoLines
-    rw [hms, dif_pos hk, hρ k hk]
+    rw [hms, dite_eq_left hk, hρ k hk]
     rfl
   unfold RootModel.geoMono
   rw [if_pos hdeg, hML]
@@ -58,8 +63,8 @@ theorem geoMono_word (hI : PB.Inputs) (M : RootModel Ψ N) {J : Ideal (MRing M.�
     (fun j => line_smooth M _)).trans ?_
   exact mIntSymm R.A (fun j => potOf R (M.line 1 (w j))) ρ _
 
-omit [DecidableEq Ψ] in
 
+omit [DecidableEq Ψ] in
 theorem geoFun_pow (M : RootModel Ψ N) (a : Option (Ψ × Fin N) → ℝ) :
     M.geoFun ((∑ o, C (a o) * X o) ^ dimFl Ψ N) =
       ∑ w : Fin (dimFl Ψ N) → Option (Ψ × Fin N),
@@ -74,7 +79,8 @@ theorem geoFun_pow (M : RootModel Ψ N) (a : Option (Ψ × Fin N) → ℝ) :
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [Finset.prod_mul_distrib, monomial_sum_one, smul_eq_C_mul, map_prod]
     rfl
-  rw [h1, map_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [h1, map_sum]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [map_smul, smul_eq_mul]
   congr 1
@@ -83,11 +89,12 @@ theorem geoFun_pow (M : RootModel Ψ N) (a : Option (Ψ × Fin N) → ℝ) :
     rw [coe_basisMonomials]
   rw [this, RootModel.geoFun, Module.Basis.constr_basis]
 
-omit [DecidableEq Ψ] in
 
+omit [DecidableEq Ψ] in
 theorem linA_eq (lam : Wt Ψ N) (s : ℝ) :
     linA lam s = ∑ o : Option (Ψ × Fin N), C (o.elim s fun r => -lam r.1 r.2) * X o := by
-  simp only [linA, toA, linRoot, map_neg, map_sum, map_mul, rename_C, rename_X, Fintype.sum_option,
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [linA, toA, linRoot, map_neg, map_sum, map_mul, rename_C, rename_X, Fintype.sum_option,
     Option.elim, neg_mul, Finset.sum_neg_distrib]
   rw [add_comm]
 
@@ -134,8 +141,8 @@ theorem line_deg {M : RootModel Ψ N} {S : PB.AnSys (dimFl Ψ N) (Option (Ψ × 
     show (M.x 1 r).a k = _
     rw [M.x_deg, xdeg_eq R r k]
 
-omit [DecidableEq Ψ] in
 
+omit [DecidableEq Ψ] in
 theorem prod_coef (M : RootModel Ψ N) (lam : Wt Ψ N) (s : ℝ) (w : Fin (dimFl Ψ N) → Option (Ψ × Fin N)) :
     ∏ j, M.coef lam s (w j) =
       (∏ j, (w j).elim s fun r => -lam r.1 r.2) / (M.kA : ℝ) ^ (∑ j, Finsupp.single (w j) (1 : ℕ)) none := by
@@ -145,7 +152,7 @@ theorem prod_coef (M : RootModel Ψ N) (lam : Wt Ψ N) (s : ℝ) (w : Fin (dimFl
     cases h : w j with
     | none => simp [RootModel.coef, div_eq_mul_inv]
     | some r => simp [RootModel.coef]
-  simp only [h1, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, Finsupp.finset_sum_apply]
+  simp only [h1, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, Finsupp.finsetSum_apply]
   rw [inv_pow, div_eq_mul_inv]
 
 theorem sum_coef_lineCoef (M : RootModel Ψ N) (lam : Wt Ψ N) (s : ℝ) (a : Option (Ψ × Fin N)) :

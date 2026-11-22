@@ -1,5 +1,9 @@
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SlabCountPfLeviSteps
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ReHermitianCombinationNonpos
+module
+
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SlabCountPfLeviSteps
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ReHermitianCombinationNonpos
+
+@[expose] public section
 
 noncomputable section
 
@@ -53,31 +57,38 @@ theorem lw_isLattice (Λ : Submodule (𝓞 D.host.E) (VS D).V) (hΛ : Submodule.
     exact Submodule.fg_of_fg_map_injective ((Wsp X u').subtype.restrictScalars (𝓞 D.host.E)) Subtype.val_injective
       ((isNoetherian_submodule.1 this) _ hle)
   ·
-    rw [eq_top_iff]
-    rintro ⟨w, hw⟩ -
-    obtain ⟨s, hs, hsw⟩ := Formalism.L2.SG.Pf.exists_smul_mem Λ w
-    have hsW : s • w ∈ Wsp X u' := (Wsp X u').smul_of_tower_mem s hw
-    have hmem : (⟨s • w, hsW⟩ : Wsp X u') ∈ LW X u' Λ := by
-      show s • w ∈ ((Λ ⊓ (orth (VS D) (Xsp (lf D (X.Fu u')))).restrictScalars (𝓞 D.host.E)).map
-        ((piWL X u').restrictScalars (𝓞 D.host.E)))
-      refine ⟨s • w, ⟨hsw, ?_⟩, ?_⟩
-      · exact (orth (VS D) (Xsp (lf D (X.Fu u')))).smul_of_tower_mem s (wsp_le_orth X u' hw)
-      · exact piWL_of_mem X u' hsW
-    have hs' : (algebraMap (𝓞 D.host.E) D.host.E s) ≠ 0 := by
-      simpa using hs
-    have e : (⟨w, hw⟩ : Wsp X u') =
-        (algebraMap (𝓞 D.host.E) D.host.E s)⁻¹ • (⟨s • w, hsW⟩ : Wsp X u') := by
-      ext
-      simp only [Submodule.coe_smul]
-      rw [← algebraMap_smul D.host.E s w, smul_smul, inv_mul_cancel₀ hs', one_smul]
-    rw [e]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
+    intro s hs hli
+    exact (LinearIndependent.iff_fractionRing _ _).mp hli
+
+theorem lw_isFullLattice (Λ : Submodule (𝓞 D.host.E) (VS D).V) (hΛ : Submodule.IsFullLattice D.host.E Λ) :
+    Submodule.IsFullLattice D.host.E (LW X u' Λ) := by
+  letI : Submodule.IsFullLattice D.host.E Λ := hΛ
+  refine { toIsLattice := lw_isLattice X u' Λ hΛ.toIsLattice, span_eq_top := ?_ }
+  rw [eq_top_iff]
+  rintro ⟨w, hw⟩ -
+  obtain ⟨s, hs, hsw⟩ := Formalism.L2.SG.Pf.exists_smul_mem Λ w
+  have hsW : s • w ∈ Wsp X u' := (Wsp X u').smul_of_tower_mem s hw
+  have hmem : (⟨s • w, hsW⟩ : Wsp X u') ∈ LW X u' Λ := by
+    show s • w ∈ ((Λ ⊓ (orth (VS D) (Xsp (lf D (X.Fu u')))).restrictScalars (𝓞 D.host.E)).map
+      ((piWL X u').restrictScalars (𝓞 D.host.E)))
+    refine ⟨s • w, ⟨hsw, ?_⟩, ?_⟩
+    · exact (orth (VS D) (Xsp (lf D (X.Fu u')))).smul_of_tower_mem s (wsp_le_orth X u' hw)
+    · exact piWL_of_mem X u' hsW
+  have hs' : (algebraMap (𝓞 D.host.E) D.host.E s) ≠ 0 := by
+    simpa using hs
+  have e : (⟨w, hw⟩ : Wsp X u') =
+      (algebraMap (𝓞 D.host.E) D.host.E s)⁻¹ • (⟨s • w, hsW⟩ : Wsp X u') := by
+    ext
+    simp only [Submodule.coe_smul]
+    rw [← algebraMap_smul D.host.E s w, smul_smul, inv_mul_cancel₀ hs', one_smul]
+  rw [e]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
 
 theorem leviWFinC_of (hP : LeviPosC) : LeviWFinC := by
   intro D X Y u' Λ hΛ
-  have hlat : Submodule.IsLattice D.host.E Λ := (((Y.rowsOK u').1 Λ hΛ).1).1
+  have hlat : Submodule.IsFullLattice D.host.E Λ := ((((Y.rowsOK u').1 Λ hΛ).1).1).toIsFullLattice
   refine Formalism.HermitianLatticesTheory.autFinite D.host.E (Wsp X u') (hW X u') (hW_symm X u') ?_ (LW X u' Λ)
-    (lw_isLattice X u' Λ hlat)
+    (lw_isFullLattice X u' Λ hlat)
   intro x hx
   exact hP D X u' x x.2 (fun h => hx (Subtype.ext h))
 

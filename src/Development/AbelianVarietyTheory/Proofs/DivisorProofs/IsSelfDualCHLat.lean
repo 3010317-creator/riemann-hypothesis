@@ -1,8 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
-import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
+public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SplitOffBadOfSuppSplitOff
+
+@[expose] public section
+
 open NumberField Matrix Complex MeasureTheory IsDedekindDomain
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.FD GlobalTheory GlobalTheory.ThFr GlobalTheory.Dict GlobalTheory.AdTh
 open GlobalTheory.SW hiding Level IsSB
@@ -35,7 +40,12 @@ theorem hLat_one (V : HSp D) : Bridge.hLat V 1 = GlobalTheory.Member.latC V := b
   simp [GlobalTheory.AdLat.latOf]
 
 theorem isSelfDualC_hLat (V : HSp D) (g : Bridge.Gf V) : IsSelfDualC V (Bridge.hLat V g) := by
-  refine ⟨GlobalTheory.RepsCompare.isLattice_hLat V g, fun v => ?_⟩
+  have hfull : Submodule.IsFullLattice D.host.E (Bridge.hLat V g) := by
+    obtain ⟨-, -, hfg, hsp, -⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D V
+    obtain ⟨Λ, hΛ, h1, h2, -⟩ := exists_lattice_latOf D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) g.1 hfg hsp
+    rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat V g).trans hΛ.symm)]
+    exact { toIsLattice := Submodule.IsLattice.of_fg D.host.E h1, span_eq_top := h2 }
+  refine ⟨hfull, fun v => ?_⟩
   obtain ⟨-, -, hfg, hsp, c2, -, -, gh, gd, -, hsd⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D V
   have key := latOf_selfDual D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) (GlobalTheory.Member.cF D) V.gramᵀ 1 g.1 hfg hsp c2 gh gd
     one_ne_zero hsd (GlobalTheory.RepsCompare.isUnA_gf V g)
@@ -55,9 +65,9 @@ theorem mulVec_mem_hatL (V : HSp D) (g : GA D V) (Λ Λ' : Submodule (𝓞 D.hos
     (Formalism.L2.Theta.mt V g).map (toEAf D) *ᵥ x ∈ Formalism.L2.Herm.hatL (F := D.host.F) Λ' := by
   have h := GlobalTheory.PrincInLevel.swap_mem_hatL Λ' _ (H _ (GlobalTheory.PrincInLevel.swap_symm_mem_hat Λ x hx))
   convert h using 1
-  funext i
-  simp only [Matrix.mulVec, dotProduct, map_sum, map_mul, AlgEquiv.apply_symm_apply]
-  rfl
+  ext i
+  simp [Matrix.mulVec, dotProduct, map_sum, map_mul, toEAf, finPart,
+    finHom, Formalism.L2.Theta.mt, Formalism.UG.bc]
 
 theorem actO_mem (S T : HSp D) (g : GA D S) (h : GA D T)
     (ΛS ΛS' : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E))

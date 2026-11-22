@@ -1,7 +1,11 @@
-import Mathlib
-import Development.WeilBound.CoreStatements.ResolutionCharZero.PrincipalisationCharZeroBotOfEff
-import Development.WeilBound.CoreStatements.ResolutionCharZero.FromResIso
-import Development.WeilBound.CoreStatements.ResolutionCharZero.FromResSnc
+module
+
+public import Mathlib
+public import Development.WeilBound.CoreStatements.ResolutionCharZero.PrincipalisationCharZeroBotOfEff
+public import Development.WeilBound.CoreStatements.ResolutionCharZero.FromResIso
+public import Development.WeilBound.CoreStatements.ResolutionCharZero.FromResSnc
+
+@[expose] public section
 
 noncomputable section
 
@@ -121,7 +125,9 @@ theorem isLocallyGeneratedByNonZeroDivisor_exceptionalProduct_le {k : Type} [Fie
   | 0, _ => by
     simpa [BlowupSequence.exceptionalProduct] using Blowup.isLocallyGeneratedByNonZeroDivisor_top (s.obj 0)
   | i + 1, hi => by
-    obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hsm, -⟩ := id h
+    have hprincipal := h
+    unfold IsPrincipalizingSequence at hprincipal
+    obtain ⟨_ideal, _boundary, -, -, -, -, -, -, -, -, -, hsm, -⟩ := hprincipal
     have hlt : i < s.length := hi
     have hb : Blowup.IsBlowupAlongIdealSheaf (s.blowupMap i) (s.center i) := s.isBlowup i hlt
     have ih := isLocallyGeneratedByNonZeroDivisor_exceptionalProduct_le h i hlt.le
@@ -140,7 +146,9 @@ theorem isLocallyGeneratedByNonZeroDivisor_exceptionalProduct {k : Type} [Field 
 
 theorem gEff : GEff := by
   intro k _ _ X p _ _ _ I L s hI hL hs
-  obtain ⟨-, -, -, -, -, -, -, -, -, -, htop, -, -⟩ := id hs
+  have hprincipal := hs
+  unfold IsPrincipalizingSequence at hprincipal
+  obtain ⟨_ideal, _boundary, -, -, -, -, -, -, -, -, htop, -, -⟩ := hprincipal
   rw [htop]
   exact effCartier_of (isLocallyGeneratedByNonZeroDivisor_exceptionalProduct hs)
 

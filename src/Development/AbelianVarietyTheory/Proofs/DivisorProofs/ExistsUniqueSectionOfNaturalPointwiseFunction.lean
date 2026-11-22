@@ -1,9 +1,13 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBase
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalPointwiseCochainConstOfGlobalSectionsBase
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -62,7 +66,7 @@ theorem ext_of_evU (R : Type) [CommRing R] (Y : Over (Sp R)) (U : Y.left.Opens) 
   have hz : ⊤ ≤ z.left ⁻¹ᵁ U := fromSpecStalk_top y U hy
   have e := h S z hz
   unfold evU at e
-  rw [dif_pos hz, dif_pos hz] at e
+  rw [dite_eq_left hz, dite_eq_left hz] at e
   unfold evalAt at e
   change (Scheme.ΓSpecIso S).hom ((Y.left.fromSpecStalk y).appLE U ⊤ hz a) =
     (Scheme.ΓSpecIso S).hom ((Y.left.fromSpecStalk y).appLE U ⊤ hz a') at e
@@ -102,7 +106,7 @@ theorem exists_unique_section : ∀ (R : Type) [CommRing R] (Y : Over (Sp R)) (U
       rw [hw, CommRingCat.ofHom_id, Spec.map_id, Category.id_comp]
     rw [← h1, hs (CommRingCat.of E) w ⟨(), le_top⟩]
     unfold evU
-    rw [dif_pos hz]
+    rw [dite_eq_left hz]
     unfold evalAt
     simp only [RingHom.comp_apply]
     congr 1
