@@ -89,7 +89,7 @@ lemma ndEul_coeff (s : Fin n) (g : MvPolynomial (Fin r × Fin n) R) (m : Fin r �
   | mul_X p v hp =>
     have hX : ndEul R r n s (X v) = colW r n v s • X v := mkDerivation_X _ _ _
     rw [Derivation.leibniz, hX, MvPolynomial.coeff_add, smul_eq_mul, smul_eq_mul,
-      mul_smul_comm, coeff_smul, coeff_mul_X', coeff_X_mul']
+      mul_smul_comm, MvPolynomial.coeff_smul, coeff_mul_X', coeff_X_mul']
     split_ifs with h
     · rw [hp]
       have hle : Finsupp.single v 1 ≤ m := by
@@ -106,7 +106,7 @@ lemma ndEul_homog {g : MvPolynomial (Fin r × Fin n) R} {μ : Fin n → ℕ}
     (hg : IsWeightedHomogeneous (colW r n) g μ) (s : Fin n) :
     ndEul R r n s g = (μ s : R) • g := by
   ext m
-  rw [ndEul_coeff, coeff_smul, smul_eq_mul]
+  rw [ndEul_coeff, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases h : AddMonoidAlgebra.coeff g m = 0
   · simp [h]
   · rw [nd_weight_apply, hg h]
@@ -115,7 +115,7 @@ lemma ndEul_neg_eq_zero [IsDomain R] [CharZero R] {g : MvPolynomial (Fin r × Fi
     (s : Fin n) (h : ndEul R r n s g = -g) : g = 0 := by
   ext m
   have h1 := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [ndEul_coeff, coeff_neg] at h1
+  rw [ndEul_coeff, MvPolynomial.coeff_neg] at h1
   have h2 : ((Finsupp.weight (fun v => colW r n v s) m : R) + 1) * AddMonoidAlgebra.coeff g m = 0 := by
     linear_combination h1
   rcases mul_eq_zero.1 h2 with h3 | h3
