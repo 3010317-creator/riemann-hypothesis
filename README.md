@@ -6,10 +6,26 @@ A [Comparator](https://github.com/leanprover/comparator) setup and community bui
 claims a proof of the Riemann Hypothesis, and of GRH for Dirichlet L-functions, announced on
 2026-11-20 at <https://alpo.ge/remark.pdf>.
 
-The first commit, `40e56bab`, is the submitted Lean source exactly as published. Since then,
-cleanup pull requests have removed 10,724 of its 175,187 files and edited 18; the
-[notes](verification/NOTES.md#source) list them. Check out `40e56bab` for the original. This
-repository also adds Comparator files and cache infrastructure:
+The first commit, `40e56bab`, is the submitted Lean source exactly as published, for Lean
+`v4.33.1`. The source on `main` has changed since then in two ways:
+
+- **Cleanup.** Merged pull requests delete files the proof does not use and shorten proofs.
+- **Port.** [#66](https://github.com/leanprover-community/riemann-hypothesis/pull/66) moved the
+  project to Lean and Mathlib `v4.36.0`. It adapts proofs throughout the source, converts every
+  file but `Challenge.lean` to Lean's module system and deletes files `Main` does not reach; the
+  pull request has the figures. It also undid part of the earlier cleanup, which
+  [PR66-MERGED-WORK.md](verification/PR66-MERGED-WORK.md) lists.
+
+The port did not touch the statements: `src/Challenge.lean` is byte for byte the file from
+before it, and `src/Statements.lean` differs only in its module header.
+
+`git diff --stat 40e56bab HEAD -- src` shows every change so far, and the
+[notes](verification/NOTES.md#source) have more detail on the cleanup. For the original, check
+out `40e56bab` or use
+[riemann-hypothesis-original](https://github.com/homeowmorphism/riemann-hypothesis-original),
+which keeps the published source frozen.
+
+This repository also adds Comparator files, cache infrastructure and CI:
 
 | File | What it is |
 |---|---|
@@ -18,7 +34,9 @@ repository also adds Comparator files and cache infrastructure:
 | [`export-targets.txt`](export-targets.txt) | the declarations to export |
 | [`verification/`](verification/NOTES.md) | our notes, and the results once there are some |
 | [`docs/references.bib`](docs/references.bib) | the works cited in docstrings under `src/` |
-| [`scripts/`](scripts/) | public Lake cache configuration and reproducible bootstrap/publishing tools |
+| [`scripts/`](scripts/) | the cache client, the tools that bootstrap and publish caches, and the CI build scripts |
+| [`tools/ci_native/`](tools/ci_native/README.md) | tools that lend a registered runner to a bounded batch of a build, in place of a whole pull request |
+| [`.github/workflows/`](.github/workflows/) | CI, described [below](#ci) |
 
 ## Using the build cache
 
@@ -30,20 +48,25 @@ lake build --no-build
 ```
 
 The cache settings are in `lakefile.toml`; no user configuration is needed. The first command
-fetches both caches anonymously and extracts the oleans to `.lake/build`. It prefers a successful
-CI build matching the current clean source, configuration, dependency manifest and toolchain;
-documentation-only commits can reuse the same cache. Otherwise it tries the original published
-cache. The second command checks the default build targets without compiling them. The original
-project cache is 4.94 GB and contains portable Lean outputs and generated C. Subsequent ordinary
-builds compile changed modules and their dependents.
+needs Python 3.11 or newer as `python3`. It fetches both caches anonymously and extracts the
+oleans to `.lake/build`. It prefers a successful CI build matching the current clean source,
+configuration, dependency manifest and toolchain; documentation-only commits can reuse the same
+cache. Otherwise it tries the complete build of the Lean 4.36 port pinned in
+[`scripts/cache-baselines.json`](scripts/cache-baselines.json), which fits a tree whose `src/`,
+`lakefile.toml`, `lake-manifest.json` and `lean-toolchain` are the ones #66 merged. If neither
+fits, the command stops after fetching Mathlib and says that no cache matches; `lake build`
+then compiles the project. The second command checks the default build targets without
+compiling them. Subsequent ordinary builds compile changed modules and their dependents.
 
 The community cache includes outputs from **untrusted pull requests and volunteer machines**.
 Download integrity checks do not verify proofs. Use an independent fresh build when you need
 to trust the result.
 
-The [cache notes](verification/CACHE.md) describe the pinned published archive, the cheaper
-bootstrap that reuses its proofs, and how to produce and publish future caches. For independent
-verification, follow the clean-build instructions below.
+The [cache notes](verification/CACHE.md) describe the archive published for the original Lean
+4.33.1 source, the cheaper bootstrap that reuses its proofs, and how to produce and publish
+future caches. [PORTABLE-CACHE.md](verification/PORTABLE-CACHE.md) describes how a finished
+Lean 4.36 build is turned into a cache. For independent verification, follow the clean-build
+instructions below.
 
 ## What is claimed
 
@@ -62,18 +85,18 @@ export LEAN_ABORT_ON_PANIC=1   # as Comparator sets it: stop on an internal erro
 export LAKE_ARTIFACT_CACHE=false   # rebuild the submission even if cache-env.sh was sourced earlier
 export MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4   # Mathlib's current cache server
 
-# 1. Export the challenge. Clean clone at $CLEAN, Lean v4.33.1.
+# 1. Export the challenge. Clean clone at $CLEAN, Lean v4.36.0.
 cd "$CLEAN"
 lake exe mathlib/cache get
 lake build Challenge
-lake env lean4export Challenge -- $(cat export-targets.txt) > challenge.export
+lake env leanexport Challenge -- $(cat export-targets.txt) > challenge.export
 
 # 2. Build the solution. Second clone, inside a sandbox with no network. Takes hours.
 lake exe mathlib/cache get      # before entering the sandbox
 lake build Main         # inside the sandbox
 
 # 3. Export the solution. Still inside the sandbox; only solution.export comes out.
-lake env lean4export Main -- $(cat "$CLEAN/export-targets.txt") > solution.export
+lake env leanexport Main -- $(cat "$CLEAN/export-targets.txt") > solution.export
 
 # 4. Judge. Lean v4.36.0, from an empty directory, with the config from the clean clone.
 lake comparator --config "$CLEAN/comparator.json" \
@@ -82,25 +105,47 @@ lake comparator --config "$CLEAN/comparator.json" \
 
 What to know before running it:
 
-- **Two Lean versions.** The project is pinned to Lean `v4.33.1`, and `lake comparator` exists
-  only from Lean 4.35. So the proof is built and exported with `v4.33.1` and judged with
-  `v4.36.0`. The exporter is [lean4export](https://github.com/leanprover/lean4export) at tag
-  `v4.33.0`, built with Lean `v4.33.1`.
+- **One Lean version.** Since
+  [#66](https://github.com/leanprover-community/riemann-hypothesis/pull/66) the project is
+  pinned to Lean `v4.36.0`, the release that judges it, so one toolchain builds, exports and
+  judges. The exporter is `leanexport`, the copy of
+  [lean4export](https://github.com/leanprover/lean4export) that Lean `v4.36.0` ships; nothing
+  has to be built separately.
+- **The published source needs two.** Before #66 the project was pinned to Lean `v4.33.1`,
+  which has neither `lake comparator` nor `leanexport`. To check commit `40e56bab`, or anything
+  else from before the port, build and export with `v4.33.1` and judge with `v4.36.0`, as
+  [the README at `7cce738b`](https://github.com/leanprover-community/riemann-hypothesis/blob/7cce738ba719a32964ca3822d0994f4c6952c7ae/README.md#checking-it)
+  describes.
 - **Challenge first.** Compiling the submission runs its code, so the challenge is exported
-  where none of that code has been compiled. CI does step 1 on every push and publishes the
-  result as the `challenge-export` artifact. Its sha256 is
-  `bd484ac9886a96f26b1d9a7a59ebd45b7a70d102c015d4f31f9302bbdd6ab2b9`.
+  where none of that code has been compiled. CI builds `Challenge` against Mathlib alone on
+  every push, but does not export it. The sha256 that earlier versions of this README gave for
+  `challenge.export`, `bd484ac9…`, belongs to Lean `v4.33.1` and its Mathlib; no checksum for
+  the port is recorded here yet.
 - **Not `lake exe cache get`.** In this repository that command also downloads prebuilt files
   for the submission itself, and `lake build Main` then compiles nothing. Steps 1 and 2 use
   `lake exe mathlib/cache get`, which fetches Mathlib only.
-- **Cost.** Hours on a large machine, about 100 GB of disk, and a lot of memory for step 4.
+- **Cost.** Not measured for the port yet. The published source took hours on a large machine,
+  about 100 GB of disk, and a lot of memory for step 4.
 
 The [notes](verification/NOTES.md) have the details: where the source came from, the Lean
 version and its known kernel fixes, the tools, the sandboxes, the test of these steps, and the
-limits of what a passing run shows.
+limits of what a passing run shows. They describe the published source on Lean `v4.33.1` and
+have not been updated for the port: the dependency pins, tool versions, smoke test and checker
+results in them are that setup's. No run of the steps above on the port is recorded here yet.
+
+## CI
+
+| Workflow | What it does |
+|---|---|
+| [`checks`](.github/workflows/checks.yml) | builds `Challenge` against Mathlib alone on GitHub's runners, on every push and pull request |
+| [`Build PR`](.github/workflows/build-pr.yml) | builds a pull request's merge result in full on a pool of volunteer machines, automatically or on a maintainer's dispatch |
+| [`Publish CI cache`](.github/workflows/publish-ci-cache.yml) | publishes the compiled modules of a finished `Build PR` run; `lake exe cache get` restores only complete, successful builds |
+
+Full builds run on machines that volunteers lend. To lend one, see
+[CI-RUNNERS.md](verification/CI-RUNNERS.md).
 
 ## License
 
 The submission belongs to its author and was published without a license. It is mirrored here
-for verification only: unmodified at commit `40e56bab`, and with the changes listed in the
-[notes](verification/NOTES.md#source) since.
+for verification only: unmodified at commit `40e56bab`, and changed since then as the top of
+this page and the [notes](verification/NOTES.md#source) describe.
