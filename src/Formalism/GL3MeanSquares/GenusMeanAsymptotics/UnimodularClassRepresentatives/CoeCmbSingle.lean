@@ -18,8 +18,7 @@ local notation "jK" => algebraMap (𝓞 K) K
 def cmb (b : Basis κ K V) (c : κ → 𝓞 K) : spanO b := (bO b).equivFun.symm c
 
 theorem coe_cmb (b : Basis κ K V) (c : κ → 𝓞 K) : (cmb b c : V) = ∑ l, c l • b l := by
-  rw [cmb, Basis.equivFun_symm_apply, Submodule.coe_sum]
-  exact Finset.sum_congr rfl fun l _ => by rw [Submodule.coe_smul, bO_apply]
+  simp [cmb, Basis.equivFun_symm_apply, bO_apply]
 
 theorem crd_cmb (b : Basis κ K V) (c : κ → 𝓞 K) : crd b (cmb b c) = c :=
   (bO b).equivFun.apply_symm_apply c

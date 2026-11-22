@@ -60,13 +60,11 @@ theorem InI.divK (h𝔭 : 𝔭.IsMaximal) (hF : IsFixF K F) {D : K} (hD : star D
   have hδ0' := κι_ne_zero (K := K) hδ0
   have hD0 : D ≠ 0 := by
     rintro rfl
-    rw [mul_zero] at e
-    exact hδ0' e
+    exact hδ0' (by simpa using e)
   have : D⁻¹ * a = κ (ι t) * ((κ (ι δ))⁻¹ * a) := by
     rw [e]
     field_simp
-  rw [this]
-  exact h2
+  simpa [this] using h2
 
 theorem inI_of_trace (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) {k : ℕ} {z : K}
     (h : ∀ c : 𝓞 K, InI 𝔭 k (κ c * z + star (κ c * z))) : InI 𝔭 k z := by

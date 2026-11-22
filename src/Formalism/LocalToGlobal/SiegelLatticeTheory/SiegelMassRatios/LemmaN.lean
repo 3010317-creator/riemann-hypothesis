@@ -82,9 +82,7 @@ theorem orderOf_dvd_of_isProP {p : ℕ} {Q : Type} [Group Q] [TopologicalSpace Q
 theorem eq_one_of_dvd_two_primes {G : Type} [Group G] {β : G} {g₁ g₂ a b : ℕ}
     (hg₁ : g₁.Prime) (hg₂ : g₂.Prime) (hne : g₁ ≠ g₂)
     (ha : orderOf β ∣ g₁ ^ a) (hb : orderOf β ∣ g₂ ^ b) : β = 1 := by
-  have hcop : Nat.Coprime (g₁ ^ a) (g₂ ^ b) := Nat.coprime_pow_primes a b hg₁ hg₂ hne
-  have h1 : orderOf β = 1 := Nat.eq_one_of_dvd_coprimes hcop ha hb
-  exact orderOf_eq_one_iff.mp h1
+  exact orderOf_eq_one_iff.mp (Nat.eq_one_of_dvd_coprimes (Nat.coprime_pow_primes a b hg₁ hg₂ hne) ha hb)
 
 theorem lemmaNc : LemmaNc := by
   intro Γ _ β hfin g₁ g₂ hg₁ hg₂ hne _ _ Q₁ _ _ hQ₁ Q₂ _ _ hQ₂ f₁ f₂ i₁ i₂

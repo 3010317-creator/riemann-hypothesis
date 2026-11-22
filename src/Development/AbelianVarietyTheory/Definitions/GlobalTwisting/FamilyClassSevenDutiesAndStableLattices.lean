@@ -64,8 +64,7 @@ theorem familyClass_points_satisfy_objectProperty (QO : ∀ D : D7, Obj D → Pr
 theorem TwAllAt.twAt {D : D7} {C : NChoice D} {T : ThData D} (h : TwAllAt D C T) : LocalQuadraticParts.TWAt D C T := by
   obtain ⟨hc, N0, S, hS⟩ := h
   refine ⟨hc, N0, S, fun w hw => ⟨(hS w hw).1, ?_⟩⟩
-  have := (hS w hw).2 1 (by simp)
-  rwa [zpow_one] at this
+  simpa only [zpow_one] using (hS w hw).2 1 (by simp)
 
 theorem twAllAt_of_untwisted {D : D7} (C : NChoice D) (T : ThData D) (h : ∀ w, D.what₂.muAt w = D.what₂.mu0) : TwAllAt D C T :=
   ⟨fun w hw => absurd (h w) hw, fun _ => 0, fun _ _ _ => ∅, fun w hw => absurd (h w) hw⟩

@@ -41,11 +41,8 @@ theorem csDual_sig_C (σ : E →ₐ[F] E) (c : 𝓞 F) :
 
 theorem csDual_sig_mem (σ : E →ₐ[F] E) {s : 𝒜} (hs : s ∈ 𝒮) :
     sigR σ (FiniteAdeleRing (𝓞 F) F) s ∈ 𝒮 := by
-  have key : ∀ s ∈ tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F),
-      s ∈ (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)).comap
-        (sigR σ (FiniteAdeleRing (𝓞 F) F)) := by
-    intro s hs'
-    refine (Subring.closure_le.2 ?_) hs'
+  have key : 𝒮 ≤ Subring.comap (sigR σ (FiniteAdeleRing (𝓞 F) F)) 𝒮 := by
+    apply Subring.closure_le.2
     rintro _ (⟨⟨x, hx⟩, rfl⟩ | ⟨⟨y, hy⟩, rfl⟩)
     · obtain ⟨a, ha⟩ := hx
       have hint : IsIntegral ℤ (σ x) := by
@@ -63,7 +60,7 @@ theorem csDual_sig_mem (σ : E →ₐ[F] E) {s : 𝒜} (hs : s ∈ 𝒮) :
       show sigR σ (FiniteAdeleRing (𝓞 F) F) ((1 : E) ⊗ₜ[F] y) ∈ tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)
       rw [e2]
       exact Subring.subset_closure (Or.inr ⟨⟨y, hy⟩, rfl⟩)
-  exact key s hs
+  exact key hs
 
 end CsDual
 
