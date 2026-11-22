@@ -65,7 +65,7 @@ lemma LFocks_C_mul_left (c : ℂ) (f g : MvPolynomial σ ℂ) :
     fockF (C c * f) g = c * fockF f g := by
   rw [C_mul', fischerInner_eq_sum_of_subset (c • f) g f.support support_smul, fockF, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
-  rw [coeff_smul, smul_eq_mul]
+  rw [AddMonoidAlgebra.coeff_smul_apply, smul_eq_mul]
   ring
 
 lemma LFocks_C_mul_right (c : ℂ) (f g : MvPolynomial σ ℂ) :

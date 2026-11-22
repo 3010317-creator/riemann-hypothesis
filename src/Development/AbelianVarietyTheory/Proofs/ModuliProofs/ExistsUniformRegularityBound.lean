@@ -503,7 +503,7 @@ theorem contr_comp (φ : L →ₗ[K] K) (e : ℕ) (F : MvPolynomial σ L) :
 theorem contr_smul_map (φ : L →ₗ[K] K) (c : L) (F : MvPolynomial σ K) :
     contr φ (c • map (algebraMap K L) F) = φ c • F := by
   ext m
-  rw [coeff_contr, coeff_smul, coeff_smul, coeff_map, smul_eq_mul, mul_comm, ← Algebra.smul_def,
+  rw [coeff_contr, AddMonoidAlgebra.coeff_smul_apply, AddMonoidAlgebra.coeff_smul_apply, coeff_map, smul_eq_mul, mul_comm, ← Algebra.smul_def,
     map_smul, smul_eq_mul, smul_eq_mul, mul_comm]
 
 theorem contr_map (φ : L →ₗ[K] K) (F : MvPolynomial σ K) :
@@ -567,7 +567,7 @@ theorem finrank_extSub (W : Submodule K (MvPolynomial σ K)) [Module.Finite K W]
       have : F = ∑ j ∈ F.support.biUnion fun m => (b.repr (AddMonoidAlgebra.coeff F m)).support,
           b j • map (algebraMap K L) (contr (b.coord j) F) := by
         ext m
-        simp only [coeff_sum, coeff_smul, coeff_map, coeff_contr, smul_eq_mul]
+        simp only [coeff_sum, AddMonoidAlgebra.coeff_smul_apply, coeff_map, coeff_contr, smul_eq_mul]
         conv_lhs => rw [← b.linearCombination_repr (AddMonoidAlgebra.coeff F m), Finsupp.linearCombination_apply]
         rw [Finsupp.sum_of_support_subset (s := F.support.biUnion
           fun m => (b.repr (AddMonoidAlgebra.coeff F m)).support) _ _ _ (by simp)]

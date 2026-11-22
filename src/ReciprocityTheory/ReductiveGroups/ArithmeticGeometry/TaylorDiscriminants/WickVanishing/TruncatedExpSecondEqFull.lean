@@ -86,7 +86,7 @@ def lamL (W : (σ →₀ ℕ) → k) : MvPolynomial σ k →ₗ[k] k where
     simp only [RingHom.id_apply, smul_eq_mul]
     rw [lam_eq W (r • P) P.support support_smul, lam, mul_sum]
     refine sum_congr rfl fun m _ => ?_
-    rw [coeff_smul, smul_eq_mul, mul_assoc]
+    rw [AddMonoidAlgebra.coeff_smul_apply, smul_eq_mul, mul_assoc]
 
 theorem lamL_apply (W : (σ →₀ ℕ) → k) (R : MvPolynomial σ k) : lamL W R = lam W R := rfl
 

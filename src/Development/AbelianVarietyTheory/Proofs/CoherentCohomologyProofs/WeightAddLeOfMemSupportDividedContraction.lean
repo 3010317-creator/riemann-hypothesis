@@ -154,7 +154,7 @@ theorem coeff_dividedDeriv (β m : σ →₀ ℕ) (P : MvPolynomial σ R) :
   classical
   induction P using MvPolynomial.induction_on' with
   | monomial n c =>
-    rw [dividedDeriv_monomial, coeff_smul, coeff_monomial, coeff_monomial]
+    rw [dividedDeriv_monomial, AddMonoidAlgebra.coeff_smul_apply, coeff_monomial, coeff_monomial]
     by_cases h : n = m + β
     · subst h; simp
     · rw [if_neg h, smul_zero]

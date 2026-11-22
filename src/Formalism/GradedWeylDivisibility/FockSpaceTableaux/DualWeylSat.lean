@@ -57,7 +57,7 @@ theorem dualWeylModuleSaturated : DualWeylSat := by
   rw [lsat_mem_dualWeyl] at hcf ⊢
   obtain ⟨hwh, hcol⟩ := hcf
   refine ⟨fun {d} hd => hwh ?_, fun l j hlj => ?_⟩
-  · rw [coeff_smul, smul_eq_mul]
+  · rw [AddMonoidAlgebra.coeff_smul_apply, smul_eq_mul]
     exact mul_ne_zero hc hd
   · have h := hcol l j hlj
     rw [smul_eq_C_mul, map_mul, map_mul, algHom_C, algHom_C] at h
