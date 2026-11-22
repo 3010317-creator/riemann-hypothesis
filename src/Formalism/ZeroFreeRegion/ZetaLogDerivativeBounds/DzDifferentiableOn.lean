@@ -24,9 +24,6 @@ lemma norm_dz_le {s : ℂ} (hs : 0 < s.re) (n : ℕ) :
   rw [dz, d_eq ha s, norm_mul, mul_assoc]
   exact mul_le_mul_of_nonneg_left (norm_eint_le ha hs) (norm_nonneg _)
 
-lemma summable_shift {p : ℝ} (hp : p < -1) : Summable (fun n : ℕ => ((n : ℝ) + 1) ^ p) := by
-  have h := (summable_nat_add_iff 1).mpr (Real.summable_nat_rpow.mpr hp)
-  simpa [Nat.cast_add, Nat.cast_one] using h
 
 lemma summable_norm_dz {s : ℂ} (hs : 0 < s.re) : Summable (fun n => ‖dz s n‖) :=
   Summable.of_nonneg_of_le (fun n => norm_nonneg _) (fun n => norm_dz_le hs n)
