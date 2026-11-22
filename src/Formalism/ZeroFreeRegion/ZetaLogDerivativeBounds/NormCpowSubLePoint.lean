@@ -10,6 +10,11 @@ noncomputable section
 
 namespace Formalism.ZF
 
+lemma summable_shift {p : ℝ} (hp : p < -1) : Summable (fun n : ℕ => ((n : ℝ) + 1) ^ p) := by
+  have h := (summable_nat_add_iff 1).mpr (Real.summable_nat_rpow.mpr hp)
+  simpa only [Nat.cast_add, Nat.cast_one] using h
+
+
 namespace ComplexPowerDifferenceIntegral
 
 lemma cpow_sub_eq_integral' {x y : ℝ} (hx : 0 < x) (hxy : x ≤ y) {s : ℂ} (hs : s ≠ 0) :
