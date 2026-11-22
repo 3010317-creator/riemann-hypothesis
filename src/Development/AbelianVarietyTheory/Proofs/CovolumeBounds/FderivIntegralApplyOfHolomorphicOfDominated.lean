@@ -99,7 +99,7 @@ theorem aestronglyMeasurable_fderiv_of_param {F : T → E → V} {x₀ : E}
     AEStronglyMeasurable (fun t => fderiv ℂ (F t) x₀) μ := by
   let b := Module.finBasis ℂ E
   have key : (fun t => fderiv ℂ (F t) x₀) = fun t =>
-      ∑ i, ContinuousLinearMap.smulRightL ℂ E V
+      ∑ i, StrongDual.smulRightL ℂ E V
         (LinearMap.toContinuousLinearMap (b.coord i)) (fderiv ℂ (F t) x₀ (b i)) := by
     funext t
     ext v
@@ -110,7 +110,7 @@ theorem aestronglyMeasurable_fderiv_of_param {F : T → E → V} {x₀ : E}
     simpa using h
   rw [key]
   refine Finset.aestronglyMeasurable_fun_sum _ fun i _ => ?_
-  exact (ContinuousLinearMap.smulRightL ℂ E V
+  exact (StrongDual.smulRightL ℂ E V
     (LinearMap.toContinuousLinearMap (b.coord i))).continuous.comp_aestronglyMeasurable
       (aestronglyMeasurable_fderiv_apply_of_param hmeas hdiff (b i))
 

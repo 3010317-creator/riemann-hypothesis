@@ -73,7 +73,7 @@ theorem _root_.GlobalTheory.exists_maximal_minor_ne_zero_of_linearIndependent
   set A : Matrix (Fin r) ι K := Matrix.of fun k a => w a k with hA
   have hcol : A.col = w := rfl
   have hrank : A.rank = Fintype.card ι := by
-    rw [Matrix.rank_eq_finrank_span_cols, hcol, finrank_span_eq_card hw]
+    rw [← Matrix.finrank_span_range_col, hcol, finrank_span_eq_card hw]
   have htop : Submodule.span K (Set.range A.row) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
     rw [← Matrix.rank_eq_finrank_span_row, hrank, Module.finrank_fintype_fun_eq_card]
