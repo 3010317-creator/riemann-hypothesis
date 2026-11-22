@@ -1,6 +1,10 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictPlan
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StrongApproximation.DedekindLFunctions
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictPlan
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StrongApproximation.DedekindLFunctions
+
+@[expose] public section
 
 noncomputable section
 
@@ -20,10 +24,6 @@ theorem nonempty_places : Nonempty (HeightOneSpectrum (𝓞 F)) := by
 theorem nontrivial : Nontrivial (Af F) := by
   obtain ⟨v⟩ := nonempty_places (F := F)
   exact ⟨⟨0, 1, fun h => zero_ne_one (congrArg (fun a : Af F => a v) h)⟩⟩
-
-theorem algebraMap_injective : Function.Injective (algebraMap F (Af F)) := by
-  haveI := nontrivial (F := F)
-  exact (algebraMap F (Af F)).injective
 
 theorem comp_algebraMap (r : 𝓞 F) (v : HeightOneSpectrum (𝓞 F)) :
     (algebraMap (𝓞 F) (Af F) r) v = algebraMap (𝓞 F) (v.adicCompletion F) r := by

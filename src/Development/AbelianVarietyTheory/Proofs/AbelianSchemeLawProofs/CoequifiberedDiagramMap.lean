@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 noncomputable section
 
@@ -43,8 +47,8 @@ lemma map_mem_invariants {U V : Y.Opens} (h : U ≤ V) {x : Γ(X, f ⁻¹ᵁ V)}
     map_pullOver _ _ _ _ h, CommRingCat.comp_apply, CommRingCat.comp_apply,
     (mem_invariants ..).1 hx]
 
-set_option backward.isDefEq.respectTransparency false in
 
+set_option backward.isDefEq.respectTransparency false in
 def diagram : Y.Opensᵒᵖ ⥤ CommRingCat where
   obj U := .of (invariants f g a ha p hp U.unop)
   map {V U} i :=
@@ -65,8 +69,8 @@ def diagramMap : Y.presheaf ⟶ diagram f g a ha p hp where
 set_option backward.isDefEq.respectTransparency false in
 lemma isLocalization_preimage [QuasiCompact f] [QuasiSeparated f] {U : Y.Opens}
     (hU : IsAffineOpen U) (r : Γ(Y, U)) :
-    letI := (X.presheaf.map (homOfLE (f.preimage_mono (Y.basicOpen_le r))).op).hom.toAlgebra
-    IsLocalization.Away (f.app U r) Γ(X, f ⁻¹ᵁ Y.basicOpen r) := by
+    @IsLocalization.Away _ _ (f.app U r) Γ(X, f ⁻¹ᵁ Y.basicOpen r) _
+      (X.presheaf.map (homOfLE (f.preimage_mono (Y.basicOpen_le r))).op).hom.toAlgebra := by
   let : Algebra Γ(X, f ⁻¹ᵁ U) Γ(X, X.basicOpen (f.app _ r)) :=
     (X.presheaf.map (homOfLE (X.basicOpen_le _)).op).hom.toAlgebra
   rw! (castMode := .all) [f.preimage_basicOpen r]
@@ -146,9 +150,9 @@ def toQuotPiece (U : Y.affineOpens) : (f ⁻¹ᵁ U.1).toScheme ⟶ quot f g a h
   (f ⁻¹ᵁ U.1).toSpecΓ ≫ Spec.map (invariantsInclusion f g a ha p hp U.1) ≫
     (cover f g a ha p hp).f U
 
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-
 def toQuot : X ⟶ quot f g a ha p hp :=
   Scheme.OpenCover.glueMorphismsOfLocallyDirected
     ((directedCover Y).pullback₁ f)
@@ -184,7 +188,6 @@ lemma ι_toQuot (U : Y.affineOpens) :
 
 def fromQuot : quot f g a ha p hp ⟶ Y := (glueData f g a ha p hp).toBase
 
-@[reassoc]
 lemma ι_fromQuot (U : Y.affineOpens) :
     (cover f g a ha p hp).f U ≫ fromQuot f g a ha p hp =
       Spec.map ((diagramMap f g a ha p hp).app (.op U.1)) ≫ U.2.fromSpec :=
@@ -196,7 +199,6 @@ lemma fromQuot_preimage (U : Y.affineOpens) :
   simpa using! (glueData f g a ha p hp).toBase_preimage_eq_opensRange_ι U
 
 set_option backward.isDefEq.respectTransparency false in
-@[reassoc (attr := simp)]
 lemma toQuot_fromQuot : toQuot f g a ha p hp ≫ fromQuot f g a ha p hp = f := by
   refine Scheme.Cover.hom_ext (X.openCoverOfIsOpenCover _
     (.comap (iSup_affineOpens_eq_top Y) f.base.1)) _ _ fun U ↦ ?_
@@ -207,9 +209,9 @@ lemma toQuot_fromQuot : toQuot f g a ha p hp ≫ fromQuot f g a ha p hp = f := b
 
 set_option backward.isDefEq.respectTransparency false
 
-omit [QuasiCompact f] [QuasiSeparated f] [QuasiCompact g] [QuasiSeparated g] in
 
-lemma of_charts (P : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget P] {ι : Type}
+omit [QuasiCompact f] [QuasiSeparated f] in
+private lemma of_charts_aux (P : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget P] {ι : Type}
     (X' Y' : ι → Scheme.{0}) (u : ∀ i, X' i ⟶ X) (v : ∀ i, Y' i ⟶ Y) (f' : ∀ i, X' i ⟶ Y' i)
     [∀ i, IsOpenImmersion (v i)] (hv : ∀ y, ∃ i z, v i z = y)
     (h : ∀ i, IsPullback (f' i) (u i) (v i) f) (hP : ∀ i, P (f' i)) : P f := by
@@ -220,7 +222,14 @@ lemma of_charts (P : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget P] {ι
   exact hP i
 
 omit [QuasiCompact f] [QuasiSeparated f] [QuasiCompact g] [QuasiSeparated g] in
+lemma of_charts (P : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget P] {ι : Type}
+    (X' Y' : ι → Scheme.{0}) (u : ∀ i, X' i ⟶ X) (v : ∀ i, Y' i ⟶ Y) (f' : ∀ i, X' i ⟶ Y' i)
+    [∀ i, IsOpenImmersion (v i)] (hv : ∀ y, ∃ i z, v i z = y)
+    (h : ∀ i, IsPullback (f' i) (u i) (v i) f) (hP : ∀ i, P (f' i)) : P f :=
+  of_charts_aux f P X' Y' u v f' hv h hP
 
+
+omit [QuasiCompact f] [QuasiSeparated f] [QuasiCompact g] [QuasiSeparated g] in
 lemma isPullback_of_charts {Z Q : Scheme.{0}} (b : W ⟶ Z) (q : X ⟶ Q) (q' : Z ⟶ Q) {ι : Type}
     (W' X' : ι → Scheme.{0}) (u : ∀ i, W' i ⟶ W) (v : ∀ i, X' i ⟶ X) (a' : ∀ i, W' i ⟶ X' i)
     [∀ i, IsOpenImmersion (v i)] (hv : ∀ y, ∃ i z, v i z = y)
@@ -277,7 +286,7 @@ lemma exists_fromSpec_eq [IsAffineHom f] (x : X) :
 
 lemma isFinite_fromQuot [IsFinite f] [IsLocallyNoetherian Y] :
     IsFinite (fromQuot f g a ha p hp) := by
-  refine of_charts _ @IsFinite _ _ _ _ _ (fun y ↦ ?_) (isPullback_fromQuot f g a ha p hp)
+  refine of_charts_aux _ @IsFinite _ _ _ _ _ (fun y ↦ ?_) (isPullback_fromQuot f g a ha p hp)
     fun U ↦ ?_
   · exact exists_fromSpec_eq (𝟙 Y) y
   · rw [IsFinite.SpecMap_iff]
@@ -294,8 +303,8 @@ lemma isFinite_fromQuot [IsFinite f] [IsLocallyNoetherian Y] :
       (IsScalarTower.toAlgHom Γ(Y, U.1) (invariants f g a ha p hp U.1)
         Γ(X, f ⁻¹ᵁ U.1)).toLinearMap Subtype.val_injective
 
-omit [QuasiCompact f] [QuasiSeparated f] [QuasiCompact g] [QuasiSeparated g] in
 
+omit [QuasiCompact f] [QuasiSeparated f] [QuasiCompact g] [QuasiSeparated g] in
 theorem exists_quotient [IsFinite f] [IsAffineHom g] [IsLocallyNoetherian Y]
     (H : ∀ U : Y.affineOpens, (invariants f g a ha p hp U.1).subtype.FaithfullyFlat ∧
       IsPushout (CommRingCat.ofHom (invariants f g a ha p hp U.1).subtype)
@@ -310,10 +319,10 @@ theorem exists_quotient [IsFinite f] [IsAffineHom g] [IsLocallyNoetherian Y]
   · have : IsFinite (toQuot f g a ha p hp ≫ fromQuot f g a ha p hp) := by
       rw [toQuot_fromQuot]; infer_instance
     exact .of_comp _ (fromQuot f g a ha p hp)
-  · exact of_charts _ @Flat _ _ _ _ _ hc
+  · exact of_charts_aux _ @Flat _ _ _ _ _ hc
       (fun U ↦ isPullback_toQuot f g a ha p hp U (U.2.preimage f))
       fun U ↦ ((flat_and_surjective_SpecMap_iff _).2 (H U).1).1
-  · exact of_charts _ @Surjective _ _ _ _ _ hc
+  · exact of_charts_aux _ @Surjective _ _ _ _ _ hc
       (fun U ↦ isPullback_toQuot f g a ha p hp U (U.2.preimage f))
       fun U ↦ ((flat_and_surjective_SpecMap_iff _).2 (H U).1).2
   · refine isPullback_of_charts a p _ _ _ _ _ _ _ (exists_fromSpec_eq f)

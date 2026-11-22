@@ -1,12 +1,16 @@
-import Formalism.HarderNarasimhan.DegSupermodZ
-import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ExistsSmulMemOfFinrankEq
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.FinSup
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.RatioMax
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DegSupermod
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.MuChar
-import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HNStep
+module
+
+public import Formalism.HarderNarasimhan.DegSupermodZ
+public import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ExistsSmulMemOfFinrankEq
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.FinSup
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.RatioMax
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DegSupermod
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.MuChar
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HNStep
+
+@[expose] public section
 
 open Module Submodule
 
@@ -72,8 +76,8 @@ theorem eq_zero_of_abs_le_mul (a : ℝ) (n : ℕ) (h : ∀ t : ℝ, 0 < t → |a
   rw [div_mul_eq_mul_div, le_div_iff₀ hD] at h1
   nlinarith [hpos, h1, mul_nonneg hpos.le (Nat.cast_nonneg n)]
 
-universe u v w in
 
+universe u v w in
 theorem hnSlopes_of (h1 : HNStep.{u, v, w}) (h2 : MuChar.{u, v, w})
     (h3 : DegSupermod.{u, v, w}) (h4 : SatBasic.{u, v, w}) : HNSlopes.{u, v, w} := by
   intro R V E _ _ _ _ _ _ ρ L hL

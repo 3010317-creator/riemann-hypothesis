@@ -1,4 +1,9 @@
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFinSubRange
+module
+
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFinSubRange
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits
 open AlgebraicGeometry.Scheme AlgebraicGeometry.Scheme.AffineZariskiSite
 
@@ -18,8 +23,8 @@ structure QCohSub {X Y : Scheme.{0}} (f : X ⟶ Y) (F : ∀ V : Y.Opens, Subring
 
 variable {X Y : Scheme.{0}} {f : X ⟶ Y} {F : ∀ V : Y.Opens, Subring Γ(X, f ⁻¹ᵁ V)}
 
-set_option backward.isDefEq.respectTransparency false in
 
+set_option backward.isDefEq.respectTransparency false in
 def diagram (H : QCohSub f F) : Y.AffineZariskiSiteᵒᵖ ⥤ CommRingCat where
   obj U := .of (F U.unop.1)
   map {V U} i :=
@@ -83,9 +88,9 @@ def relSpec (H : QCohSub f F) : Scheme := (glueData H).glued
 
 def relCover (H : QCohSub f F) : (relSpec H).OpenCover := (glueData H).cover
 
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-
 def toRel (H : QCohSub f F) : X ⟶ relSpec H :=
   Scheme.OpenCover.glueMorphismsOfLocallyDirected
     ((directedCover Y).pullback₁ f)
@@ -122,7 +127,6 @@ lemma ι_toRel (H : QCohSub f F) (U : Y.affineOpens) :
 
 def fromRel (H : QCohSub f F) : relSpec H ⟶ Y := (glueData H).toBase
 
-@[reassoc]
 lemma ι_fromRel (H : QCohSub f F) (U : Y.affineOpens) :
     (relCover H).f U ≫ fromRel H =
       Spec.map ((diagramMap H).app (.op U)) ≫ U.2.fromSpec :=
@@ -134,7 +138,6 @@ lemma fromRel_preimage (H : QCohSub f F) (U : Y.affineOpens) :
   simpa using! (glueData H).toBase_preimage_eq_opensRange_ι U
 
 set_option backward.isDefEq.respectTransparency false in
-@[reassoc (attr := simp)]
 lemma toRel_fromRel (H : QCohSub f F) : toRel H ≫ fromRel H = f := by
   refine Scheme.Cover.hom_ext (X.openCoverOfIsOpenCover _
     (.comap (iSup_affineOpens_eq_top Y) f.base.1)) _ _ fun U ↦ ?_
@@ -157,8 +160,8 @@ lemma isFinite_fromRel (H : QCohSub f F)
   rw [← cancel_mono U.2.fromSpec]
   simp [IsAffineOpen.isoSpec_hom, e, ι_fromRel]
 
-set_option backward.isDefEq.respectTransparency.types false in
 
+set_option backward.isDefEq.respectTransparency.types false in
 def relObjIso (H : QCohSub f F) {U : Y.Opens} (hU : IsAffineOpen U) :
     Γ(relSpec H, fromRel H ⁻¹ᵁ U) ≅ .of (F U) :=
   (relSpec H).presheaf.mapIso (eqToIso
@@ -170,16 +173,20 @@ lemma toRel_app_preimage (H : QCohSub f F) (U : Y.affineOpens) :
     (toRel H).app (fromRel H ⁻¹ᵁ ↑U) =
       (relObjIso H U.2).hom ≫
       CommRingCat.ofHom (F U.1).subtype ≫
-      X.presheaf.map (eqToHom (by simp [← Scheme.Hom.comp_preimage])).op := by
+      X.presheaf.map (eqToHom (by
+        rw [← Scheme.Hom.comp_preimage (toRel H) (fromRel H), toRel_fromRel])).op := by
   dsimp [relObjIso]
   change _ = (relSpec H).presheaf.map (eqToHom (by simp [fromRel_preimage])).op ≫
       (((relCover H).f U).appIso _).hom ≫
       (Scheme.ΓSpecIso _).hom ≫
       CommRingCat.ofHom (F U.1).subtype ≫
-      X.presheaf.map (eqToHom (by simp [← Scheme.Hom.comp_preimage])).op
+      X.presheaf.map (eqToHom (by
+        rw [← Scheme.Hom.comp_preimage (toRel H) (fromRel H), toRel_fromRel])).op
   have H' : toRel H ⁻¹ᵁ fromRel H ⁻¹ᵁ U =
       (f ⁻¹ᵁ U).ι ''ᵁ (((f ⁻¹ᵁ U).ι ≫ toRel H) ⁻¹ᵁ fromRel H ⁻¹ᵁ U) := by
-    simp [← Scheme.Hom.comp_preimage]
+    rw [Scheme.Hom.comp_preimage, Scheme.Hom.image_preimage_eq_opensRange_inf,
+      Scheme.Opens.opensRange_ι, ← Scheme.Hom.comp_preimage (toRel H) (fromRel H),
+      toRel_fromRel, inf_idem]
   convert! congr($(Scheme.Hom.congr_app (ι_toRel H U) (fromRel H ⁻¹ᵁ U)) ≫
     X.presheaf.map (eqToHom H').op) using 1
   · simp [Hom.app_eq_appLE]
@@ -194,7 +201,8 @@ lemma toRel_app_preimage (H : QCohSub f F) (U : Y.affineOpens) :
 
 lemma relObjIso_hom_subtype (H : QCohSub f F) {U : Y.Opens} (hU : IsAffineOpen U) :
     (relObjIso H hU).hom ≫ CommRingCat.ofHom (F U).subtype =
-    (toRel H).appLE _ _ (by simp [← Scheme.Hom.comp_preimage]) := by
+    (toRel H).appLE _ _ (by
+      rw [← Scheme.Hom.comp_preimage (toRel H) (fromRel H), toRel_fromRel]) := by
   rw [Hom.appLE, toRel_app_preimage H ⟨U, hU⟩, Category.assoc]
   simp [← Functor.map_comp]
   rfl
@@ -244,8 +252,8 @@ lemma isIntegral_relSpec (H : QCohSub f F) [AlgebraicGeometry.IsIntegral X] [IsD
     simpa using (toRel H).denseRange.closure_range.symm
   isIntegral_of_irreducibleSpace_of_isReduced _
 
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
 
+open ReciprocityTheory.ChartRestriction.G.Geo.Tor in
 theorem exists_finite_cover {S : Scheme.{0}} {K : Type} [Field K] (gp : Sp K ⟶ S) [AlgebraicGeometry.IsIntegral S]
     [IsDominant gp] (F : ∀ V : S.Opens, Subring Γ(Sp K, gp ⁻¹ᵁ V)) (hF : GlobalTheory.Mum.IsFinSub gp F) :
     ∃ (S' : Scheme) (h : S' ⟶ S) (gp' : Sp K ⟶ S') (hgp : gp' ≫ h = gp),
@@ -273,7 +281,7 @@ theorem exists_finite_cover {S : Scheme.{0}} {K : Type} [Field K] (gp : Sp K ⟶
     obtain ⟨c, hc⟩ := hx x.1 x.2
     have : x = ∑ y : t, c y.1 • (⟨y.1, ht y.1 y.2⟩ : F U.1) := by
       apply Subtype.ext
-      rw [hc, AddSubmonoidClass.coe_finset_sum, ← Finset.sum_coe_sort]
+      rw [hc, AddSubmonoidClass.coe_finsetSum, ← Finset.sum_coe_sort]
       rfl
     rw [this]
     exact Submodule.sum_mem _ fun y _ ↦ Submodule.smul_mem _ _ (Submodule.subset_span ⟨y, rfl⟩)

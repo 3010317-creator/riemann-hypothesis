@@ -1,5 +1,9 @@
-import Mathlib
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.MeasureEqOfCos
+module
+
+public import Mathlib
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.MeasureEqOfCos
+
+@[expose] public section
 
 noncomputable section
 
@@ -14,12 +18,12 @@ variable {K V X : Type} [Field K] [TopologicalSpace K]
   [AddCommGroup X] [Module K X] [TopologicalSpace X] [IsTopologicalAddGroup X] [ContinuousSMul K X]
 
 def smulSub {W : Type} [AddCommGroup W] [Module K W] (t : K) (P : AddSubgroup W) : AddSubgroup W :=
-  P.map (DistribMulAction.toAddMonoidHom W t)
+  P.map (DistribSMul.toAddMonoidHom W t)
 
 omit [TopologicalSpace K] in
 theorem mem_smulSub {W : Type} [AddCommGroup W] [Module K W] (t : K) (P : AddSubgroup W) (z : W) :
     z ∈ smulSub t P ↔ ∃ p ∈ P, t • p = z := by
-  simp only [smulSub, AddSubgroup.mem_map, DistribMulAction.toAddMonoidHom_apply]
+  simp only [smulSub, AddSubgroup.mem_map, DistribSMul.toAddMonoidHom_apply]
 
 theorem coe_smulSub {W : Type} [AddCommGroup W] [Module K W] (t : K) (P : AddSubgroup W) :
     (smulSub t P : Set W) = (fun p => t • p) '' (P : Set W) := by
@@ -89,7 +93,7 @@ theorem reach_of_approx (π : K) (hπ : Tendsto (fun k : ℕ => π ^ k) atTop (�
       rfl
     | succ k ih =>
       have e1 : σ (k + 1) = σ k + π ^ (k + 1) • fl (ps (k + 1)) := Finset.sum_range_succ _ _
-      rw [hpsS (k + 1), e1, map_add, hDs, sub_add_eq_sub_sub, ih, ← smul_sub,
+      rw [hpsS (k + 1), e1, map_add (f := _), hDs, sub_add_eq_sub_sub, ih, ← smul_sub,
         ← hrel _ (hpsP (k + 1)), smul_smul, ← pow_succ]
 
   have hsmallP : ∀ N ∈ 𝓝 (0 : X), ∀ᶠ c in 𝓝 (0 : K), ∀ q ∈ P, c • q ∈ N := fun N hN =>
@@ -126,7 +130,7 @@ theorem filt_abstract [ContinuousMul K] (π : K) (hπ0 : π ≠ 0) (hπ : Tendst
     (hsmall : ∀ U ∈ 𝓝 (0 : X), ∃ N2 ∈ 𝓝 (0 : V), ∀ c : K, (∀ w ∈ L, c • w ∈ N2) →
       ∀ w ∈ L, c • G w ∈ U) :
     ∃ N ∈ 𝓝 (0 : V), ∀ y, y - x ∈ N → ∀ Λ0 : AddSubgroup V,
-      (∃ c : K, c ≠ 0 ∧ Λ0 = L.map (DistribMulAction.toAddMonoidHom V c)) → (Λ0 : Set V) ⊆ N →
+      (∃ c : K, c ≠ 0 ∧ Λ0 = L.map (DistribSMul.toAddMonoidHom V c)) → (Λ0 : Set V) ⊆ N →
       ∃ (Λ : ℕ → AddSubgroup V) (H : ℕ → AddSubgroup X) (D : V →+ X),
         Λ 0 = Λ0 ∧ (∀ n, IsOpen (Λ n : Set V)) ∧ (∀ n, IsCompact (Λ n : Set V)) ∧ Antitone Λ ∧
         (∀ n, IsOpen (H n : Set X)) ∧ (∀ n, IsCompact (H n : Set X)) ∧

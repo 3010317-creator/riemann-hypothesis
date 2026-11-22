@@ -1,5 +1,9 @@
-import Formalism.FormalGroupLog.FormalGroupLogProofs.HomPsSubstMvSubst
-import Formalism.FormalGroupLog.FormalGroupLogProofs.ConstantCoeffSubstOfZero
+module
+
+public import Formalism.FormalGroupLog.FormalGroupLogProofs.HomPsSubstMvSubst
+public import Formalism.FormalGroupLog.FormalGroupLogProofs.ConstantCoeffSubstOfZero
+
+@[expose] public section
 
 namespace Formalism.G
 
@@ -20,6 +24,5 @@ theorem homComp : HomComp := by
 theorem logIffHomGa : LogIffHomGa := by
   exact log_iff_hom_additive
 theorem substInjective : SubstInjective := substInjective_statement
-theorem isCommOfRat : IsCommOfRat := is_comm_of_rat
 
 end Formalism.G

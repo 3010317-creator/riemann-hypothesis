@@ -1,6 +1,10 @@
-import Formalism.HermitianCurvature.ThetaExistenceInductiveFromPieces
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.KernelNonzeroModulusDeterminantEq
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelPropertiesOfHypotheses
+module
+
+public import Formalism.HermitianCurvature.ThetaExistenceInductiveFromPieces
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.KernelNonzeroModulusDeterminantEq
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelPropertiesOfHypotheses
+
+@[expose] public section
 
 set_option maxHeartbeats 400000
 
@@ -58,14 +62,6 @@ theorem out_sub_mem {K : Type} [CommRing K] (Λ : AddSubgroup K) (z : K) :
     (Quotient.out ((z : K) : K ⧸ Λ) : K) - z ∈ Λ := by
   simpa [sub_eq_add_neg, add_comm] using
     Λ.neg_mem (QuotientAddGroup.eq.mp (QuotientAddGroup.out_eq' ((z : K) : K ⧸ Λ)))
-
-theorem nat_tri (m : ℕ) : m * (m + 1) / 2 = m * (m - 1) / 2 + m := by
-  cases m with
-  | zero => simp
-  | succ k =>
-    have : (k + 1) * (k + 1 + 1) = (k + 1) * (k + 1 - 1) + 2 * (k + 1) := by
-      simp only [Nat.add_sub_cancel]; ring
-    rw [this, Nat.add_mul_div_left _ _ (by norm_num)]
 
 open Classical in
 theorem uGram_eq_sum {K : Type} [CommRing K] (R : Subring K) (ψ : AddChar K ℂ) (m : ℕ)
@@ -278,7 +274,7 @@ theorem avgDataExists_main : AvgDataExists := by
     have hlh' : l ∈ Λ h' := by
       have := hlV.2; simp only [Set.mem_iInter] at this; exact this h' hh'
     unfold NsK
-    rw [dif_pos hu', dif_pos hu]
+    rw [dite_eq_left hu', dite_eq_left hu]
     unfold Ns
     have hz0 : ((hu.unit : Kˣ) : K) ∈ Om := by rw [IsUnit.unit_spec]; exact hz
     have hd : ((hu'.unit : Kˣ) : K) - ((hu.unit : Kˣ) : K) = l := by
@@ -380,7 +376,8 @@ theorem cutNormEval_main : CutNormEval := by
     rw [Finset.sum_congr rfl fun p _ => Finset.sum_comm, Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro y _
-    rw [map_sum, Finset.sum_mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, Finset.sum_mul_sum]
     simp only [Finset.mul_sum]
   rw [swap]
   have ind : ∀ y ∈ T, c * ∑ p ∈ D.A ×ˢ D.B, ψ (((Quotient.out y : K) - z₁) * (p.1 + p.2)) =

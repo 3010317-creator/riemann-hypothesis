@@ -1,6 +1,11 @@
-import Mathlib
-import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenConnectedComponentOfIsLocallyNoetherian
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenConnectedComponentOfIsLocallyNoetherian
+
+@[expose] public section
+
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj IsLocalRing NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
@@ -9,8 +14,8 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.EtaleFinitePiece
 
-open Polynomial in
 
+open Polynomial in
 theorem exists_etale_algebra (R L : Type) [CommRing R] [Field L] [Algebra R L] [Algebra.QuasiFinite R L] :
     ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra R R₁) (_ : Algebra.Etale R R₁) (ψ : R₁ →ₐ[R] L),
       ∀ (Ω : Type) [Field Ω] (a₁ a₂ : L →+* Ω),
@@ -97,15 +102,15 @@ theorem exists_etale_algebra (R L : Type) [CommRing R] [Field L] [Algebra R L] [
     induction hz using IntermediateField.adjoin_induction with
     | mem x hx => obtain rfl := hx; exact hθ'
     | algebraMap k => exact hK k
-    | add x y _ _ hx hy => rw [map_add, map_add, hx, hy]
+    | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
     | inv x _ hx => rw [map_inv₀, map_inv₀, hx]
     | mul x y _ _ hx hy => rw [map_mul, map_mul, hx, hy]
   exact IsPurelyInseparable.injective_comp_algebraMap Ks L Ω hKs
 
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 open TensorProduct in
-
 theorem exists_finite_piece {X S : Scheme.{0}} (f : X ⟶ S) [LocallyOfFiniteType f]
     {x : X} (hx : f.QuasiFiniteAt x) :
     ∃ (T : Scheme.{0}) (g : T ⟶ S) (Z : Scheme.{0}) (io : Z ⟶ pullback f g) (z : Z), Etale g ∧
@@ -234,8 +239,8 @@ theorem quasiFiniteAt_of_isolated {H X : Scheme.{0}} (φ : H ⟶ X) [LocallyOfFi
     have : w = z := congrArg Subtype.val h
     exact this ▸ hzO
 
-set_option backward.isDefEq.respectTransparency false in
 
+set_option backward.isDefEq.respectTransparency false in
 theorem main : ∀ (U Y : Scheme.{0}) (τ : U ⟶ Y), IsLocallyNoetherian Y → LocallyOfFiniteType τ → IsSeparated τ →
     ∀ x : U, (∃ O : U.Opens, x ∈ O ∧ ∀ u ∈ O, τ u = τ x → u = x) →
     ∃ (T : Scheme.{0}) (h : T ⟶ Y) (W : (pullback τ h).Opens) (p : ↥(pullback τ h)),
