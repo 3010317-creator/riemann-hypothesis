@@ -52,9 +52,12 @@ namespace UpperTheory.Reformulated.B.P6.BlockTriangularLevi
 
 open scoped Sigma DFunLike EquivLike Equiv Matrix CommSemiring CommRing Membership Set Preorder PartialOrder SemilatticeInf Lattice DistribLattice MulZeroClass Units Semiring HMul MulOne MulOneClass Monoid DivInvMonoid Group OfNat One Inv InvOneClass DivInvOneMonoid DivisionMonoid Subgroup Submonoid Subsemigroup Subtype SetLike MulZeroOneClass MonoidHom OneHom Pi PUnit Fin Finset HAdd AddMonoidWithOne AddGroupWithOne Ring DivisionRing Field CommGroup Circle DivisionSemiring Semifield Complex SeminormedRing SeminormedCommRing NormedCommRing NormedField AddChar Zero HSub
 
-noncomputable def GlobalTheory.SmGL.blk :
-    {α n : Type} → {m : α → Type} → (a : α) × m a ≃ n → n → α :=
-  fun {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) (i : n) ↦ Sigma.fst (β := fun (a : α) ↦ m a) (DFunLike.coe (β := fun (x_h1 : n) ↦ (a : α) × m a) e.symm i)
+namespace GlobalTheory.SmGL
+
+noncomputable def blk {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) (i : n) : α :=
+  (e.symm i).1
+
+end GlobalTheory.SmGL
 
 theorem blockIndex_sigma_equiv {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) (a : α) (i : m a) :
     GlobalTheory.SmGL.blk (m := m) e (e ⟨a, i⟩) = a := by
@@ -84,83 +87,124 @@ theorem blockTriangular_mul_submatrix {R : Type} [CommRing R] {α n : Type} {m :
   · intro h
     exact absurd (Finset.mem_univ a) h
 
-theorem GlobalTheory.SmGL.parab_obl_1 :
-    ∀ (R : Type) [inst_h0 : CommRing R] {α n : Type} {m : α → Type} [inst_h2 : LinearOrder α] [inst_h3 : Fintype n] [inst_h4 : DecidableEq n] (e : (a : α) × m a ≃ n) {x y : GL n R}, Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} x → Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} y → Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} (x * y) := by
-  intro R _ α n m _ _ _ e x y hx hy
+namespace GlobalTheory.SmGL
+
+theorem parab_obl_1 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) {x y : GL n R}
+    (hx : x ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)})
+    (hy : y ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)}) :
+    x * y ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)} := by
   show ((x * y : GL n R) : Matrix n n R).BlockTriangular _
   rw [Units.val_mul]
   exact Matrix.BlockTriangular.mul hx hy
 
-theorem GlobalTheory.SmGL.parab_obl_2 :
-    ∀ (R : Type) [inst_h0 : CommRing R] {α n : Type} {m : α → Type} [inst_h2 : LinearOrder α] [inst_h3 : Fintype n] [inst_h4 : DecidableEq n] (e : (a : α) × m a ≃ n), Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} (OfNat.ofNat (nat_lit 1)) := by
-  intro R _ α n m _ _ _ e
+theorem parab_obl_2 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) :
+    (1 : GL n R) ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)} := by
   show ((1 : GL n R) : Matrix n n R).BlockTriangular _
   rw [Units.val_one]
   exact Matrix.blockTriangular_one
 
-theorem GlobalTheory.SmGL.parab_obl_3 :
-    ∀ (R : Type) [inst_h0 : CommRing R] {α n : Type} {m : α → Type} [inst_h2 : LinearOrder α] [inst_h3 : Fintype n] [inst_h4 : DecidableEq n] (e : (a : α) × m a ≃ n) {x : GL n R}, Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} x → Membership.mem (γ := Set (GL n R)) {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)} x⁻¹ := by
-  intro R _ α n m _ _ _ e x hx
+theorem parab_obl_3 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) {x : GL n R}
+    (hx : x ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)}) :
+    x⁻¹ ∈ {g : GL n R | g.val.BlockTriangular (blk (m := m) e)} := by
   show ((x⁻¹ : GL n R) : Matrix n n R).BlockTriangular _
   rw [Matrix.coe_units_inv]
-  haveI : Invertible (x : Matrix n n R) := x.invertible
+  have : Invertible (x : Matrix n n R) := x.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
 
-noncomputable def GlobalTheory.SmGL.parab :
-    (R : Type) → [inst_h0 : CommRing R] → {α n : Type} → {m : α → Type} → [inst_h2 : LinearOrder α] → [inst_h3 : Fintype n] → [inst_h4 : DecidableEq n] → (a : α) × m a ≃ n → Subgroup (GL n R) :=
-  fun (R : Type) {inst_h0 : CommRing R} {α n : Type} {m : α → Type} {inst_h2 : LinearOrder α} {inst_h3 : Fintype n} {inst_h4 : DecidableEq n} (e : (a : α) × m a ≃ n) ↦ { carrier := {g : GL n R | g.val.BlockTriangular (GlobalTheory.SmGL.blk (m := m) e)}, mul_mem' := @GlobalTheory.SmGL.parab_obl_1 R inst_h0 α n m inst_h2 inst_h3 inst_h4 e, one_mem' := GlobalTheory.SmGL.parab_obl_2 R (m := m) e, inv_mem' := @GlobalTheory.SmGL.parab_obl_3 R inst_h0 α n m inst_h2 inst_h3 inst_h4 e }
+noncomputable def parab (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α]
+    [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) : Subgroup (GL n R) :=
+  { carrier := {g : GL n R | g.val.BlockTriangular (blk (m := m) e)}
+    mul_mem' := @parab_obl_1 R _ α n m _ _ _ e
+    one_mem' := parab_obl_2 R (m := m) e
+    inv_mem' := @parab_obl_3 R _ α n m _ _ _ e }
 
-@[reducible] noncomputable def GlobalTheory.SmGL.Levi :
-    (R : Type) → [inst_h0 : CommRing R] → {α : Type} → (m : α → Type) → [inst_h2 : (a : α) → Fintype (m a)] → [inst_h3 : (a : α) → DecidableEq (m a)] → Type :=
-  fun (R : Type) {inst_f0 : CommRing R} {α : Type} (m : α → Type) {inst_f1 : (a : α) → Fintype (m a)} {inst_f2 : (a : α) → DecidableEq (m a)} ↦ (a : α) → GL (m a) R
+@[reducible] noncomputable def Levi (R : Type) [CommRing R] {α : Type} (m : α → Type)
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] : Type :=
+  (a : α) → GL (m a) R
 
-theorem GlobalTheory.SmGL.diagBlock_obl_1 :
-    ∀ (R : Type) [inst_h0 : CommRing R] {α n : Type} {m : α → Type} [inst_h2 : LinearOrder α] [inst_h3 : (a : α) → Fintype (m a)] [inst_h4 : (a : α) → DecidableEq (m a)] [inst_h5 : Fintype n] [inst_h6 : DecidableEq n] (e : (a : α) × m a ≃ n) (a : α), Eq (α := Matrix (m a) (m a) R) (Matrix.submatrix (m := n) (n := n) (Units.val (Subtype.val (p := fun (x : GL n R) ↦ Membership.mem (γ := Subgroup (GL n R)) (GlobalTheory.SmGL.parab R (m := m) e) x) (OfNat.ofNat (nat_lit 1)))) (fun (i : m a) ↦ DFunLike.coe (β := fun (x_h7 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) fun (i : m a) ↦ DFunLike.coe (β := fun (x_h8 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) (OfNat.ofNat (nat_lit 1)) := by
-  intro R _ α n m _ _ _ _ _ e a
+/- `Units.val (Subtype.val …)` keeps the original statement's terms: there `Subtype.val` takes
+its type from `Units.val`, not from the subgroup, which `(1 : parab R e).val.val` would not
+reproduce. -/
+theorem diagBlock_obl_1 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α]
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) (a : α) :
+    (Units.val (Subtype.val (p := fun x : GL n R => x ∈ parab R (m := m) e) 1)).submatrix
+        (fun i : m a => e ⟨a, i⟩) (fun i : m a => e ⟨a, i⟩) = (1 : Matrix (m a) (m a) R) := by
   show ((1 : GL n R) : Matrix n n R).submatrix _ _ = 1
   rw [Units.val_one]
   exact Matrix.submatrix_one _ (e.injective.comp sigma_mk_injective)
 
-theorem GlobalTheory.SmGL.diagBlock_obl_2 :
-    ∀ (R : Type) [inst_h0 : CommRing R] {α n : Type} {m : α → Type} [inst_h2 : Fintype α] [inst_h3 : LinearOrder α] [inst_h4 : (a : α) → Fintype (m a)] [inst_h5 : (a : α) → DecidableEq (m a)] [inst_h6 : Fintype n] [inst_h7 : DecidableEq n] (e : (a : α) × m a ≃ n) (a : α) (x y : ↥(GlobalTheory.SmGL.parab R (m := m) e)), ((x * y).val (p := fun (x : GL n R) ↦ Membership.mem (γ := Subgroup (GL n R)) (GlobalTheory.SmGL.parab R (m := m) e) x).val.submatrix (fun (i : m a) ↦ DFunLike.coe (β := fun (x_h8 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) fun (i : m a) ↦ DFunLike.coe (β := fun (x_h9 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) = HMul.hMul (α := Matrix (m a) (m a) R) (x.val (p := fun (x : GL n R) ↦ Membership.mem (γ := Subgroup (GL n R)) (GlobalTheory.SmGL.parab R (m := m) e) x).val.submatrix (fun (i : m a) ↦ DFunLike.coe (β := fun (x_h10 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) fun (i : m a) ↦ DFunLike.coe (β := fun (x_h11 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) (y.val (p := fun (x : GL n R) ↦ Membership.mem (γ := Subgroup (GL n R)) (GlobalTheory.SmGL.parab R (m := m) e) x).val.submatrix (fun (i : m a) ↦ DFunLike.coe (β := fun (x_h12 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) fun (i : m a) ↦ DFunLike.coe (β := fun (x_h13 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) := by
-  intro R _ α n m _ _ _ _ _ _ e a x y
-  have hx : ((x : GL n R) : Matrix n n R).BlockTriangular (GlobalTheory.SmGL.blk (m := m) e) := x.2
-  have hy : ((y : GL n R) : Matrix n n R).BlockTriangular (GlobalTheory.SmGL.blk (m := m) e) := y.2
+theorem diagBlock_obl_2 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) (a : α) (x y : parab R (m := m) e) :
+    (x * y).val.val.submatrix (fun i : m a => e ⟨a, i⟩) (fun i : m a => e ⟨a, i⟩) =
+      x.val.val.submatrix (fun i : m a => e ⟨a, i⟩) (fun i : m a => e ⟨a, i⟩) *
+        y.val.val.submatrix (fun i : m a => e ⟨a, i⟩) (fun i : m a => e ⟨a, i⟩) := by
+  have hx : ((x : GL n R) : Matrix n n R).BlockTriangular (blk (m := m) e) := x.2
+  have hy : ((y : GL n R) : Matrix n n R).BlockTriangular (blk (m := m) e) := y.2
   have key := blockTriangular_mul_submatrix e a _ _ hx hy
   exact key
 
-noncomputable def GlobalTheory.SmGL.diagBlock :
-    (R : Type) → [inst_h0 : CommRing R] → {α n : Type} → {m : α → Type} → [inst_h2 : Fintype α] → [inst_h3 : LinearOrder α] → [inst_h4 : (a : α) → Fintype (m a)] → [inst_h5 : (a : α) → DecidableEq (m a)] → [inst_h6 : Fintype n] → [inst_h7 : DecidableEq n] → (e : (a : α) × m a ≃ n) → (a : α) → ↥(GlobalTheory.SmGL.parab R (m := m) e) →* Matrix (m a) (m a) R :=
-  fun (R : Type) {inst_f3 : CommRing R} {α n : Type} {m : α → Type} {inst_f4 : Fintype α} {inst_f5 : LinearOrder α} {inst_f6 : (a : α) → Fintype (m a)} {inst_f7 : (a : α) → DecidableEq (m a)} {inst_f8 : Fintype n} {inst_f9 : DecidableEq n} (e : (a : α) × m a ≃ n) (a : α) ↦ { toFun := fun (p : ↥(GlobalTheory.SmGL.parab R (m := m) e)) ↦ p.val (p := fun (x : GL n R) ↦ Membership.mem (γ := Subgroup (GL n R)) (GlobalTheory.SmGL.parab R (m := m) e) x).val.submatrix (fun (i : m a) ↦ DFunLike.coe (β := fun (x_h8 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i)) fun (i : m a) ↦ DFunLike.coe (β := fun (x_h9 : (a : α) × m a) ↦ n) e (Sigma.mk (β := fun (a : α) ↦ m a) a i), map_one' := GlobalTheory.SmGL.diagBlock_obl_1 R (m := m) e a, map_mul' := GlobalTheory.SmGL.diagBlock_obl_2 R (m := m) e a }
+/- The value binds the instance arguments as implicit (`{_}`), as the original did: those binders
+become the binders of the auxiliary proof `diagBlock._proof_1`. -/
+noncomputable def diagBlock :
+    (R : Type) → [CommRing R] → {α n : Type} → {m : α → Type} → [Fintype α] → [LinearOrder α] →
+      [∀ a, Fintype (m a)] → [∀ a, DecidableEq (m a)] → [Fintype n] → [DecidableEq n] →
+      (e : (a : α) × m a ≃ n) → (a : α) → parab R (m := m) e →* Matrix (m a) (m a) R :=
+  fun R {_} {_ _} {m} {_ _ _ _ _ _} e a ↦
+    { toFun := fun p => p.val.val.submatrix (fun i : m a => e ⟨a, i⟩) (fun i : m a => e ⟨a, i⟩)
+      map_one' := diagBlock_obl_1 R (m := m) e a
+      map_mul' := diagBlock_obl_2 R (m := m) e a }
 
-noncomputable def GlobalTheory.SmGL.leviProj :
-    (R : Type) → [inst_h0 : CommRing R] → {α n : Type} → {m : α → Type} → [inst_h2 : Fintype α] → [inst_h3 : LinearOrder α] → [inst_h4 : (a : α) → Fintype (m a)] → [inst_h5 : (a : α) → DecidableEq (m a)] → [inst_h6 : Fintype n] → [inst_h7 : DecidableEq n] → (e : (a : α) × m a ≃ n) → ↥(GlobalTheory.SmGL.parab R (m := m) e) →* GlobalTheory.SmGL.Levi R m :=
-  fun (R : Type) {inst_f10 : CommRing R} {α n : Type} {m : α → Type} {inst_f11 : Fintype α} {inst_f12 : LinearOrder α} {inst_f13 : (a : α) → Fintype (m a)} {inst_f14 : (a : α) → DecidableEq (m a)} {inst_f15 : Fintype n} {inst_f16 : DecidableEq n} (e : (a : α) × m a ≃ n) ↦ MonoidHom.pi (f := fun (a : α) ↦ GL (m a) R) fun (a : α) ↦ MonoidHom.toHomUnits (GlobalTheory.SmGL.diagBlock R (m := m) e a)
+noncomputable def leviProj (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) : parab R (m := m) e →* Levi R m :=
+  MonoidHom.pi fun a => (diagBlock R (m := m) e a).toHomUnits
 
-noncomputable def GlobalTheory.SmGL.unipRad :
-    (R : Type) → [inst_h0 : CommRing R] → {α n : Type} → {m : α → Type} → [inst_h2 : Fintype α] → [inst_h3 : LinearOrder α] → [inst_h4 : (a : α) → Fintype (m a)] → [inst_h5 : (a : α) → DecidableEq (m a)] → [inst_h6 : Fintype n] → [inst_h7 : DecidableEq n] → (a : α) × m a ≃ n → Subgroup (GL n R) :=
-  fun (R : Type) {inst_f17 : CommRing R} {α n : Type} {m : α → Type} {inst_f18 : Fintype α} {inst_f19 : LinearOrder α} {inst_f20 : (a : α) → Fintype (m a)} {inst_f21 : (a : α) → DecidableEq (m a)} {inst_f22 : Fintype n} {inst_f23 : DecidableEq n} (e : (a : α) × m a ≃ n) ↦ Subgroup.map (G := ↥(GlobalTheory.SmGL.parab R (m := m) e)) (Subgroup.subtype (GlobalTheory.SmGL.parab R (m := m) e)) (MonoidHom.ker (GlobalTheory.SmGL.leviProj R (m := m) e))
+noncomputable def unipRad (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) : Subgroup (GL n R) :=
+  (leviProj R (m := m) e).ker.map (parab R (m := m) e).subtype
 
-noncomputable def GlobalTheory.SmGL.points :
-    (n : Type) → (_ : n) × Unit ≃ n :=
-  fun (n : Type) ↦ Equiv.sigmaUnique n fun (x_h0 : n) ↦ Unit
+noncomputable def points (n : Type) : (_ : n) × Unit ≃ n :=
+  Equiv.sigmaUnique n fun _ => Unit
 
-noncomputable def GlobalTheory.SmGL.unipB :
-    (R : Type) → [inst_h0 : CommRing R] → (n : Type) → [inst_h1 : Fintype n] → [inst_h2 : DecidableEq n] → [inst_h3 : LinearOrder n] → Subgroup (GL n R) :=
-  fun (R : Type) {inst_f24 : CommRing R} (n : Type) {inst_f25 : Fintype n} {inst_f26 : DecidableEq n} {inst_f27 : LinearOrder n} ↦ GlobalTheory.SmGL.unipRad R (m := fun (a : n) ↦ Unit) (GlobalTheory.SmGL.points n)
+noncomputable def unipB (R : Type) [CommRing R] (n : Type) [Fintype n] [DecidableEq n]
+    [LinearOrder n] : Subgroup (GL n R) :=
+  unipRad R (m := fun _ : n => Unit) (points n)
 
-noncomputable def GlobalTheory.Whittaker.superDiag :
-    {R : Type} → [inst_h0 : CommRing R] → {n : ℕ} → GL (Fin n) R → R :=
-  fun {R : Type} {inst_f28 : CommRing R} {n : ℕ} (g : GL (Fin n) R) ↦ ∑ i : Fin n, ∑ j : Fin n with j.val = i.val + OfNat.ofNat (nat_lit 1), g.val i j
+end GlobalTheory.SmGL
 
-noncomputable def DiscreteGroups.sglob.LConv.IsWhitTest :
-    {k : Type} → [inst_h0 : Field k] → [inst_h1 : TopologicalSpace k] → {m : ℕ} → AddChar k Circle → (GL (Fin m) k → ℂ) → Prop :=
-  fun {k : Type} {inst_f29 : Field k} {inst_f30 : TopologicalSpace k} {m : ℕ} (ψ : AddChar k Circle) (f : GL (Fin m) k → ℂ) ↦ (∀ (u : GL (Fin m) k), Membership.mem (γ := Subgroup (GL (Fin m) k)) (GlobalTheory.SmGL.unipB k (Fin m)) u → ∀ (g : GL (Fin m) k), f (u * g) = Subtype.val (p := fun (x : ℂ) ↦ Membership.mem (γ := Submonoid ℂ) (Submonoid.unitSphere ℂ) x) (DFunLike.coe (β := fun (x_h4 : k) ↦ Circle) ψ (GlobalTheory.Whittaker.superDiag u)) * f g) ∧ IsLocallyConstant f ∧ ∃ (C : Set (GL (Fin m) k)), IsCompact C ∧ ∀ (g : GL (Fin m) k), f g ≠ OfNat.ofNat (nat_lit 0) → ∃ (u : GL (Fin m) k), Membership.mem (γ := Subgroup (GL (Fin m) k)) (GlobalTheory.SmGL.unipB k (Fin m)) u ∧ ∃ c ∈ C, g = u * c
+noncomputable def GlobalTheory.Whittaker.superDiag {R : Type} [CommRing R] {n : ℕ}
+    (g : GL (Fin n) R) : R :=
+  ∑ i : Fin n, ∑ j : Fin n with j.val = i.val + 1, g.val i j
 
-theorem DiscreteGroups.sglob.LConv.IsWhitTest.sub :
-    ∀ {k : Type} [inst_h0 : Field k] [inst_h1 : TopologicalSpace k] {m : ℕ} {ψ : AddChar k Circle} {f f' : GL (Fin m) k → ℂ}, DiscreteGroups.sglob.LConv.IsWhitTest ψ f → DiscreteGroups.sglob.LConv.IsWhitTest ψ f' → DiscreteGroups.sglob.LConv.IsWhitTest (m := m) ψ fun (g : GL (Fin m) k) ↦ f g - f' g := by
-  intro k _ _ m ψ f f' hf hf'
-  unfold DiscreteGroups.sglob.LConv.IsWhitTest at hf hf' ⊢
+namespace DiscreteGroups.sglob.LConv
+
+open GlobalTheory.SmGL GlobalTheory.Whittaker
+
+/- The memberships in `unipB` and `Submonoid.unitSphere ℂ` name their carrier types explicitly,
+as the original statement did; left to unification they are elaborated with different instance
+paths. -/
+noncomputable def IsWhitTest {k : Type} [Field k] [TopologicalSpace k] {m : ℕ}
+    (ψ : AddChar k Circle) (f : GL (Fin m) k → ℂ) : Prop :=
+  (∀ u : GL (Fin m) k, Membership.mem (γ := Subgroup (GL (Fin m) k)) (unipB k (Fin m)) u →
+      ∀ g : GL (Fin m) k,
+        f (u * g) = Subtype.val (p := fun x : ℂ =>
+          Membership.mem (γ := Submonoid ℂ) (Submonoid.unitSphere ℂ) x) (ψ (superDiag u)) * f g) ∧
+    IsLocallyConstant f ∧
+    ∃ C : Set (GL (Fin m) k), IsCompact C ∧
+      ∀ g : GL (Fin m) k, f g ≠ 0 →
+        ∃ u : GL (Fin m) k, Membership.mem (γ := Subgroup (GL (Fin m) k)) (unipB k (Fin m)) u ∧
+          ∃ c ∈ C, g = u * c
+
+theorem IsWhitTest.sub {k : Type} [Field k] [TopologicalSpace k] {m : ℕ} {ψ : AddChar k Circle}
+    {f f' : GL (Fin m) k → ℂ} (hf : IsWhitTest ψ f) (hf' : IsWhitTest ψ f') :
+    IsWhitTest (m := m) ψ fun g => f g - f' g := by
+  unfold IsWhitTest at hf hf' ⊢
   obtain ⟨h1, h2, C, hC, h3⟩ := hf
   obtain ⟨h1', h2', C', hC', h3'⟩ := hf'
   refine ⟨?_, h2.sub h2', C ∪ C', hC.union hC', ?_⟩
@@ -178,5 +222,7 @@ theorem DiscreteGroups.sglob.LConv.IsWhitTest.sub :
       exact ⟨u, hu, c, Set.mem_union_right _ hc, rfl⟩
     · obtain ⟨u, hu, c, hc, rfl⟩ := h3 g hfg
       exact ⟨u, hu, c, Set.mem_union_left _ hc, rfl⟩
+
+end DiscreteGroups.sglob.LConv
 
 end UpperTheory.Reformulated.B.P6.BlockTriangularLevi
