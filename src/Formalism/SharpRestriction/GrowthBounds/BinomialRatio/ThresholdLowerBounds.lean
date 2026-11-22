@@ -22,13 +22,13 @@ theorem error_ratio_le_epsilon {p k N1 La Q c a b' CE1 CE2 : ℝ} (hk : 1 ≤ k)
   have hk0 : 0 < k := by linarith
   have hkne : k ≠ 0 := hk0.ne'
   have hksq : 0 < k ^ 2 := pow_pos hk0 2
-  have hkp : k ≤ p := by nlinarith
+  have hkp : k ≤ p := le_trans (le_self_pow₀ hk (by norm_num)) hp
   have hp0 : 0 < p := by linarith
   have ha : 0 < a := lt_of_lt_of_le (mul_pos hk0 hb) hab
   have hLa0 : 0 ≤ La := by linarith
   have hN10 : 0 ≤ N1 := by linarith
   have hQ0 : 0 ≤ Q := by linarith
-  have hNL : 1 ≤ N1 * La := by nlinarith
+  have hNL : 1 ≤ N1 * La := one_le_mul_of_one_le_of_one_le hN1 hLa
   obtain ⟨A, hA⟩ : ∃ A : ℝ, A = N1 * La / k ^ 2 := ⟨_, rfl⟩
   have hA0 : 0 ≤ A := by rw [hA]; exact div_nonneg (by linarith) hksq.le
   have hAk : A * k ^ 2 = N1 * La := by rw [hA]; field_simp
@@ -40,34 +40,34 @@ theorem error_ratio_le_epsilon {p k N1 La Q c a b' CE1 CE2 : ℝ} (hk : 1 ≤ k)
     exact le_of_mul_le_mul_left h hk0
   have t1 : a / p ^ 2 ≤ a * A := by
     rw [div_le_iff₀ (pow_pos hp0 2)]
-    have hkp2 : k ^ 2 ≤ p ^ 2 := by nlinarith
-    nlinarith [mul_le_mul_of_nonneg_left hkp2 haA]
+    have hkp2 : k ^ 2 ≤ p ^ 2 := pow_le_pow_left₀ hk0.le hkp 2
+    linarith [mul_le_mul_of_nonneg_left hkp2 haA]
   have t2 : b' / p ≤ a * A := by
     rw [div_le_iff₀ hp0]
-    nlinarith [mul_le_mul_of_nonneg_left hkp haA]
+    linarith [mul_le_mul_of_nonneg_left hkp haA]
   have t3 : La * N1 * a / (p * k) ≤ a * A := by
     rw [div_le_iff₀ (mul_pos hp0 hk0)]
     have hkk : k * k ≤ p * k := mul_le_mul_of_nonneg_right hkp hk0.le
-    nlinarith [mul_le_mul_of_nonneg_left hkk haA]
+    linarith [mul_le_mul_of_nonneg_left hkk haA]
   have t4 : La * b' / k ≤ a * A := by
     rw [div_le_iff₀ hk0]
     have h4a : La * (k * b') ≤ La * a := mul_le_mul_of_nonneg_left hab hLa0
     have h4b : La * a * 1 ≤ La * a * N1 := mul_le_mul_of_nonneg_left hN1 (mul_nonneg hLa0 ha.le)
-    have h : k * (La * b') ≤ k * (a * A * k) := by nlinarith
+    have h : k * (La * b') ≤ k * (a * A * k) := by linarith
     exact le_of_mul_le_mul_left h hk0
   have t5 : k ^ 2 * N1 * Q ^ 2 * c ≤ a * A := by
     have h5a : k ^ 3 * Q ^ 2 * c * k ≤ b' * k := mul_le_mul_of_nonneg_right hHc hk0.le
     have h5b : a * 1 ≤ a * La := mul_le_mul_of_nonneg_left hLa ha.le
     have h5c : N1 * (k ^ 3 * Q ^ 2 * c * k) ≤ N1 * (a * La) :=
-      mul_le_mul_of_nonneg_left (by nlinarith) hN10
-    have h : k ^ 2 * (k ^ 2 * N1 * Q ^ 2 * c) ≤ k ^ 2 * (a * A) := by nlinarith
+      mul_le_mul_of_nonneg_left (by linarith) hN10
+    have h : k ^ 2 * (k ^ 2 * N1 * Q ^ 2 * c) ≤ k ^ 2 * (a * A) := by linarith
     exact le_of_mul_le_mul_left h hksq
   have t6 : Q ≤ a * A := by
     have h6a : k * (k ^ 3 * Q) ≤ k * b' := mul_le_mul_of_nonneg_left hHb hk0.le
-    have hk2ge : 1 ≤ k ^ 2 := by nlinarith
+    have hk2ge : 1 ≤ k ^ 2 := one_le_pow₀ hk
     have h6b : k ^ 2 * 1 ≤ k ^ 2 * k ^ 2 := mul_le_mul_of_nonneg_left hk2ge hksq.le
     have h6c : Q * k ^ 2 ≤ Q * (k ^ 2 * k ^ 2) := mul_le_mul_of_nonneg_left (by linarith) hQ0
-    have h : k ^ 2 * Q ≤ k ^ 2 * (a * A) := by nlinarith
+    have h : k ^ 2 * Q ≤ k ^ 2 * (a * A) := by linarith
     exact le_of_mul_le_mul_left h hksq
   rw [← add_div, div_le_iff₀ ha]
   unfold errorTermBound
@@ -85,22 +85,22 @@ theorem chordCoeffCubic_inversionDenom_inv {CE1 CE2 Cc H : ℝ} (hCc : 0 ≤ Cc)
       H ≤ T2 CE1 CE2 Cc H := by
   unfold T2
   have hP : 3 ≤ CE1 + CE2 + 1 := by linarith
-  have hM1 : 1 ≤ (Cc + 1) * H := by nlinarith
-  have hMH : H ≤ (Cc + 1) * H := by nlinarith
-  have hMC : Cc * H ≤ (Cc + 1) * H := by nlinarith
+  have hM1 : 1 ≤ (Cc + 1) * H := one_le_mul_of_one_le_of_one_le (by linarith) hH
+  have hMH : H ≤ (Cc + 1) * H := le_mul_of_one_le_left (by linarith) (by linarith)
+  have hMC : Cc * H ≤ (Cc + 1) * H := mul_le_mul_of_nonneg_right (by linarith) (by linarith)
   have hCH : 0 ≤ Cc * H := mul_nonneg hCc (by linarith)
   have ha : (CE1 + CE2 + 1) * 1 ≤ (CE1 + CE2 + 1) * ((Cc + 1) * H) :=
     mul_le_mul_of_nonneg_left hM1 (by linarith)
   have hb : 3 * ((Cc + 1) * H) ≤ (CE1 + CE2 + 1) * ((Cc + 1) * H) :=
     mul_le_mul_of_nonneg_right hP (by linarith)
-  refine ⟨by nlinarith, by nlinarith, by nlinarith, by nlinarith⟩
+  refine ⟨by linarith, by linarith, by linarith, by linarith⟩
 
 set_option maxHeartbeats 1000000 in
 theorem std_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ} (hCc : 0 ≤ Cc) (hC0 : 1 ≤ C0) (h1 : 1 ≤ CE1) (h2 : 1 ≤ CE2)
     (hH : 1 ≤ H) (t1 : T2 CE1 CE2 Cc H ≤ CYb) (t2 : T2 CE1 CE2 Cc H ≤ Cde) (t3 : T2 CE1 CE2 Cc H ≤ Ck)
     (t4 : T2 CE1 CE2 Cc H ≤ CD) (t5 : T2 CE1 CE2 Cc H ≤ Cb) {X : Loc} (hD : D1num X)
     (hI : HIext C0 CYb Cde Ck CD Cb X) (hc : CBound Cc X) : Std C0 Cde CE1 CE2 H X := by
-  have om : ∀ x y : ℝ, 1 ≤ x → 1 ≤ y → 1 ≤ x * y := fun x y hx hy => by nlinarith
+  have om : ∀ x y : ℝ, 1 ≤ x → 1 ≤ y → 1 ≤ x * y := fun _ _ hx hy => one_le_mul_of_one_le_of_one_le hx hy
   obtain ⟨hT1, hT2, hT3, hT4⟩ := chordCoeffCubic_inversionDenom_inv hCc h1 h2 hH
   unfold D1num at hD
   obtain ⟨hpP, hp5, hn2, hnEv⟩ := hD
@@ -226,7 +226,7 @@ theorem std_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc H : ℝ} (hCc : 0 ≤ Cc) (hC0 : 
     have := mul_le_mul_of_nonneg_left hYb1 hq0
     linarith
 
-  have hk2 : 1 ≤ X.k ^ 2 := by nlinarith
+  have hk2 : 1 ≤ X.k ^ 2 := one_le_pow₀ (by linarith)
   have hkk3 : X.k * 1 ≤ X.k * X.k ^ 2 := mul_le_mul_of_nonneg_left hk2 hk0.le
   have hz : 0 ≤ X.N * Real.logb X.p X.a := mul_nonneg hN0 hlogb
   have hL1 : X.N * Real.logb X.p X.a * X.k ≤ X.N * Real.logb X.p X.a * (X.k * X.k ^ 2) := by
@@ -330,7 +330,7 @@ theorem LaLeK (S : Std C0 Cde CE1 CE2 H X) : X.La C0 ≤ X.k := by
   have hN := S.N2
   have hLa := S.La1
   have h : 2 * X.La C0 ≤ X.N * X.La C0 := mul_le_mul_of_nonneg_right hN (by linarith)
-  nlinarith
+  linarith
 
 theorem kYLab (S : Std C0 Cde CE1 CE2 H X) : X.k * X.Y * X.La C0 * X.b' ≤ X.a := by
   have hk0 : 0 ≤ X.k := by have := k5 S; linarith
@@ -338,7 +338,7 @@ theorem kYLab (S : Std C0 Cde CE1 CE2 H X) : X.k * X.Y * X.La C0 * X.b' ≤ X.a 
   have hLa := S.La1
   have hN := S.N2
   have hlog := S.loga
-  have hYN : 1 ≤ X.Y * X.N := by nlinarith
+  have hYN : 1 ≤ X.Y * X.N := one_le_mul_of_one_le_of_one_le (by linarith) (by linarith)
   have hv : 1 * 1 ≤ X.Y * X.N * Real.log X.a := mul_le_mul hYN hlog zero_le_one (by linarith)
   have hu : 0 ≤ X.k * X.Y * X.La C0 :=
     mul_nonneg (mul_nonneg hk0 (by linarith)) (by linarith)
@@ -346,7 +346,7 @@ theorem kYLab (S : Std C0 Cde CE1 CE2 H X) : X.k * X.Y * X.La C0 * X.b' ≤ X.a 
     mul_le_mul_of_nonneg_left hv hu
   have h2 : X.k * X.Y * X.La C0 ≤ X.a / X.b' := by
     have := S.ab
-    nlinarith
+    linarith
   rw [le_div_iff₀ S.bpos] at h2
   exact h2
 
@@ -355,10 +355,10 @@ theorem kb (S : Std C0 Cde CE1 CE2 H X) : X.k * X.b' ≤ X.a := by
   have hk0 : 0 ≤ X.k := by have := k5 S; linarith
   have hY := S.Y1
   have hLa := S.La1
-  have hYL : 1 ≤ X.Y * X.La C0 := by nlinarith
+  have hYL : 1 ≤ X.Y * X.La C0 := one_le_mul_of_one_le_of_one_le hY hLa
   have hkb : 0 ≤ X.k * X.b' := mul_nonneg hk0 S.bpos.le
   have h' : X.k * X.b' * 1 ≤ X.k * X.b' * (X.Y * X.La C0) := mul_le_mul_of_nonneg_left hYL hkb
-  nlinarith
+  linarith
 
 theorem ba (S : Std C0 Cde CE1 CE2 H X) : X.b' ≤ X.a := by
   have h := kb S
@@ -372,13 +372,13 @@ theorem Hc2 (S : Std C0 Cde CE1 CE2 H X) (hH : 0 ≤ H) : H * (X.k ^ 3 * X.Q ^ 2
   have hN := S.N2
   have hk0 : 0 ≤ X.k := by have := k5 S; linarith
   have hY0 : 0 ≤ X.Y := by have := S.Y1; linarith
-  have hQ2 : 1 ≤ X.Q ^ 2 := by nlinarith
-  have hNQ : 1 ≤ X.N * X.Q ^ 2 := by nlinarith
+  have hQ2 : 1 ≤ X.Q ^ 2 := one_le_pow₀ hQ
+  have hNQ : 1 ≤ X.N * X.Q ^ 2 := one_le_mul_of_one_le_of_one_le (by linarith) hQ2
   have hw : 0 ≤ H * X.k ^ 3 * X.Q ^ 2 * (X.c : ℝ) * X.Y :=
     mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg hH (pow_nonneg hk0 3)) (pow_nonneg (by linarith) 2))
       (Nat.cast_nonneg _)) hY0
   have h' := mul_le_mul_of_nonneg_left hNQ hw
-  nlinarith
+  linarith
 
 theorem Hb1 (S : Std C0 Cde CE1 CE2 H X) (hH : 0 ≤ H) : H * (X.k ^ 3 * X.Q * X.Y) ≤ X.b' := by
   have hS := S.Hb
@@ -387,11 +387,11 @@ theorem Hb1 (S : Std C0 Cde CE1 CE2 H X) (hH : 0 ≤ H) : H * (X.k ^ 3 * X.Q * X
   have hk0 : 0 ≤ X.k := by have := k5 S; linarith
   have hY0 : 0 ≤ X.Y := by have := S.Y1; linarith
   have hQ3 : 1 ≤ X.Q ^ 3 := one_le_pow₀ hQ
-  have hNQ : 1 ≤ X.N * X.Q ^ 3 := by nlinarith
+  have hNQ : 1 ≤ X.N * X.Q ^ 3 := one_le_mul_of_one_le_of_one_le (by linarith) hQ3
   have hw : 0 ≤ H * X.k ^ 3 * X.Q * X.Y :=
     mul_nonneg (mul_nonneg (mul_nonneg hH (pow_nonneg hk0 3)) (by linarith)) hY0
   have h' := mul_le_mul_of_nonneg_left hNQ hw
-  nlinarith
+  linarith
 
 end Std
 
