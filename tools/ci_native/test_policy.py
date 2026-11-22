@@ -18,10 +18,17 @@ class PolicyTransitionTests(unittest.TestCase):
         self.assertEqual(policy['snapshot']['manifest_sha256'],official['dependency_manifest_sha256'])
         self.assertEqual({key:policy['baseline'][key] for key in official['baseline']},official['baseline'])
         self.assertEqual(policy['baseline']['modules'],149396)
-        self.assertEqual(policy['worklist_modules'],99240)
-        self.assertEqual(policy['baseline']['unchanged_modules'],50156)
+        self.assertEqual(policy['worklist_modules'],149211)
+        self.assertEqual(policy['baseline']['unchanged_modules'],5)
         self.assertEqual(policy['worklist_modules']+policy['baseline']['unchanged_modules'],
-                         policy['baseline']['modules'])
+                         policy['candidate_modules'])
+
+    def test_deleted_modules_cannot_be_in_the_explicit_unchanged_scope(self):
+        policy = rpc.proof_policy()
+        names = policy['baseline']['unchanged_module_names']
+        self.assertEqual(len(names), 5)
+        self.assertEqual(names, sorted(set(names)))
+        self.assertEqual(policy['baseline']['modules'] - policy['candidate_modules'], 180)
 
     def test_previous_policy_seal_cannot_reuse_the_new_expansion(self):
         with tempfile.TemporaryDirectory() as temporary:

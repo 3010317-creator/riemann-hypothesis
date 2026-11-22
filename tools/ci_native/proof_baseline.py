@@ -22,6 +22,12 @@ def restore(root, control, worker, incoming=None):
                 header.get('map_sha256') == expected['map_sha256'] and
                 header.get('modules') == len(rows) == expected['modules'], 'baseline scope mismatch')
     affected = rpc.proof_worklist(Path(control) / 'proof-worklist.txt')
+    allowed = expected.get('unchanged_module_names')
+    if allowed is not None:
+        rpc.require(len(allowed) == expected['unchanged_modules'] and
+                    len(set(allowed)) == len(allowed) and not set(allowed).intersection(affected),
+                    'invalid explicit unchanged baseline scope')
+        allowed = set(allowed)
     inputs = rpc.read(Path(control) / 'input-manifest.json')
     # An incoming current-snapshot artifact always takes precedence over a base.
     incoming = set(inputs['modules']) if incoming is None else incoming
@@ -34,7 +40,7 @@ def restore(root, control, worker, incoming=None):
                     all(c in '0123456789abcdef' for c in dep_hash) and
                     len(archive) == 21 and archive.endswith('.ltar') and
                     all(c in '0123456789abcdef' for c in archive[:-5]), 'invalid native baseline entry')
-        if name in affected:
+        if name in affected or (allowed is not None and name not in allowed):
             continue
         unchanged += 1
         if name in incoming:

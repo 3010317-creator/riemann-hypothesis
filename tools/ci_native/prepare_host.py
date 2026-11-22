@@ -30,8 +30,14 @@ def prepare(trusted, candidate, control, state, runner):
     rpc.atomic(request, {'pr_head': lease['snapshot']['git_commit'],
                          'expected': {'candidate_head': lease['snapshot']['git_commit']}})
     paths_file = state / 'donor-paths.json'
+    explicit = baseline.get('unchanged_module_names')
+    filtered_plan = None
+    if explicit is not None:
+        filtered_plan = state / 'donor-baseline-plan.json'
+        rpc.atomic(filtered_plan, {'status':'ready', 'candidate_head':lease['snapshot']['git_commit'],
+                                   'closure':explicit})
     module.prepare(SimpleNamespace(trusted=trusted, candidate=candidate, state=state,
-                                   request=request, output=paths_file))
+                                   request=request, output=paths_file, quick_plan=filtered_plan))
     paths = rpc.read(paths_file)
     environment = module.clean_env()
     environment['ELAN_TOOLCHAIN'] = lease['snapshot']['toolchain']
