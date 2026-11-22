@@ -195,7 +195,7 @@ theorem hol_continuousOn_fderiv {Ω : Set (Fin d → ℂ)} {g : (Fin d → ℂ) 
   rw [h]
   refine continuousOn_finsetSum _ fun k _ => ?_
   have hc : Continuous fun w : F => (ContinuousLinearMap.proj k : (Fin d → ℂ) →L[ℂ] ℂ).smulRight w :=
-    (ContinuousLinearMap.smulRightL ℂ (Fin d → ℂ) F (ContinuousLinearMap.proj k)).continuous
+    (StrongDual.smulRightL ℂ (Fin d → ℂ) F (ContinuousLinearMap.proj k)).continuous
   exact hc.comp_continuousOn (hol_continuousOn_fderiv_apply hΩ hg _)
 
 theorem hol_differentiableOn_fderiv_apply [CompleteSpace F] {Ω : Set (Fin d → ℂ)} {g : (Fin d → ℂ) → F}
@@ -268,7 +268,7 @@ theorem hol_differentiableOn_fderiv [CompleteSpace F] {Ω : Set (Fin d → ℂ)}
     funext x; exact hol_clm_decomp _
   rw [h]
   refine DifferentiableOn.fun_sum fun k _ => ?_
-  exact (ContinuousLinearMap.smulRightL ℂ (Fin d → ℂ) F
+  exact (StrongDual.smulRightL ℂ (Fin d → ℂ) F
     (ContinuousLinearMap.proj k)).differentiable.comp_differentiableOn
       (hol_differentiableOn_fderiv_apply hΩ hg _)
 

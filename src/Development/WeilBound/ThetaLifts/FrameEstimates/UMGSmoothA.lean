@@ -98,10 +98,10 @@ theorem hasFDerivAt_of_partials {V : Type} [NormedAddCommGroup V] [NormedSpace �
         (fun i u => by
           have h := hd i.succ (Fin.cons v.1 u)
           simpa only [Fin.cons_update, Fin.cons_succ] using h) v.2)
-      (((ContinuousLinearMap.smulRightL ℝ ℝ V (ContinuousLinearMap.id ℝ ℝ)).continuous.comp
+      (((StrongDual.smulRightL ℝ ℝ V (ContinuousLinearMap.id ℝ ℝ)).continuous.comp
         ((hc 0).comp hcons)).continuousAt)
       ((continuous_finsetSum Finset.univ fun i _ =>
-        (ContinuousLinearMap.smulRightL ℝ (Fin k → ℝ) V (ContinuousLinearMap.proj i)).continuous.comp
+        (StrongDual.smulRightL ℝ (Fin k → ℝ) V (ContinuousLinearMap.proj i)).continuous.comp
           ((hc i.succ).comp hcons)).continuousAt)
     let e : (Fin (k + 1) → ℝ) →L[ℝ] ℝ × (Fin k → ℝ) :=
       (ContinuousLinearMap.proj 0).prod (ContinuousLinearMap.pi fun i => ContinuousLinearMap.proj (Fin.succ i))
@@ -235,7 +235,7 @@ theorem contDiff_comp_pr [FiniteDimensional ℝ A] (m : ι → G →* A) (L : Se
     rw [Nat.cast_succ, contDiff_succ_iff_hasFDerivAt]
     refine ⟨_, ?_, hasFDerivAt_of_partials k _ _ (fun i => (hD i).continuous) fun i t => ?_⟩
     · exact ContDiff.sum fun i _ =>
-        (ContinuousLinearMap.smulRightL ℝ (Fin k → ℝ) ℂ (ContinuousLinearMap.proj i)).contDiff.comp (hD i)
+        (StrongDual.smulRightL ℝ (Fin k → ℝ) ℂ (ContinuousLinearMap.proj i)).contDiff.comp (hD i)
     · obtain ⟨γ', h1, h2, h3⟩ := hZ' i t
       simp only [h3, ← mul_assoc]
       exact hl f f' (fun j => ⟨(hS _ (hf'S j)).1, hf' j⟩) γ' h1 _ h2 _

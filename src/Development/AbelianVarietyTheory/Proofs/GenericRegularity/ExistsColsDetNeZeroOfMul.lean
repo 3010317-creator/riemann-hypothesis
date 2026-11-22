@@ -78,7 +78,7 @@ theorem eq_cols_mul_inv_minor_mul_rows {Ω : Type} [Field Ω] {n r : ℕ}
       _ ≤ (π.submatrix id κ).rank := by
         conv_lhs => rw [hA]
         exact Matrix.rank_mul_le_right _ _
-  have heq := Submodule.eq_of_le_of_finrank_le hle hr
+  have heq := Submodule.eq_of_le_of_finrank_le hle (by simpa only [Matrix.finrank_range_mulVecLin] using hr)
   have hcol : ∀ j : Fin n, ∃ c : Fin r → Ω, (π.submatrix id κ) *ᵥ c = fun i => π i j := by
     intro j
     have : (fun i => π i j) ∈ LinearMap.range π.mulVecLin :=
@@ -115,7 +115,7 @@ theorem exists_cols_det_ne_zero_of_mul {Ω : Type} [Field Ω] {n r : ℕ}
   obtain ⟨K, a, ha, hspan, hli⟩ := exists_linearIndependent' Ω R.col
   haveI : Fintype K := Fintype.ofInjective a ha
   have hcard : Fintype.card K = r := by
-    rw [← finrank_span_eq_card hli, hspan, ← Matrix.rank_eq_finrank_span_cols, hrR]
+    rw [← finrank_span_eq_card hli, hspan, Matrix.finrank_span_range_col, hrR]
   let e : Fin r ≃ K := (Fintype.equivFinOfCardEq hcard).symm
   refine ⟨a ∘ e, ?_⟩
   have h3 : LinearIndependent Ω (R.submatrix id (a ∘ e)).col := hli.comp e e.injective

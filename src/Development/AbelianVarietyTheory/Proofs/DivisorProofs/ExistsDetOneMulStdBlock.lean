@@ -65,7 +65,7 @@ theorem exists_det_one_mul_stdBlock {K : Type} [Field K] {n r : ℕ} (hrn : r < 
   classical
   have hli : LinearIndependent K y.col := by
     rw [linearIndependent_iff_card_eq_finrank_span, Fintype.card_fin]
-    rw [Matrix.rank_eq_finrank_span_cols] at hy
+    rw [← Matrix.finrank_span_range_col] at hy
     exact hy.symm
   let b := Module.Basis.sumExtend hli
   have hfin : Finite (Fin r ⊕ Module.Basis.sumExtendIndex hli) := Module.Finite.finite_basis b

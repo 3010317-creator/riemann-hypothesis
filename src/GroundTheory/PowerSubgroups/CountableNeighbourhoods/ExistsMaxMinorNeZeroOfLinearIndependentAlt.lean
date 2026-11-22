@@ -84,7 +84,7 @@ theorem exists_maxMinor_ne_zero_of_linearIndependent_alt {R : Type*} [CommRing R
     exact this
   have h2 : LinearIndependent K B'.col := (LinearIndependent.iff_fractionRing R K).mp h1
   have hrank : B'.rank = k := by
-    rw [Matrix.rank_eq_finrank_span_cols, finrank_span_eq_card h2, Fintype.card_fin]
+    rw [← Matrix.finrank_span_range_col, finrank_span_eq_card h2, Fintype.card_fin]
   rw [Matrix.rank_eq_finrank_span_row] at hrank
   obtain ⟨κ, a, ha, hspan, hli⟩ := exists_linearIndependent' K B'.row
   have : Finite κ := Finite.of_injective a ha

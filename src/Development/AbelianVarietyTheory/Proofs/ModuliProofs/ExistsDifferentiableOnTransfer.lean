@@ -138,7 +138,7 @@ theorem exists_differentiableOn_transfer {V Λ : Type} [NormedAddCommGroup V] [N
       DifferentiableOn ℂ (M R) B := by
     intro R hR
     refine DifferentiableOn.fun_sum fun i _ => ?_
-    refine ((ContinuousLinearMap.smulRightL ℂ (Fin g → ℂ) (Fin g → ℂ)
+    refine ((StrongDual.smulRightL ℂ (Fin g → ℂ) (Fin g → ℂ)
       (ContinuousLinearMap.proj i)).differentiable.comp_differentiableOn ?_)
     exact DifferentiableOn.fun_sum fun a _ => (hR a).fun_const_smul _
   have h0 : M Q b₀ = 1 := by

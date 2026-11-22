@@ -201,7 +201,7 @@ def partialFourierDeriv (F : 𝓢(V₁ × (EuclideanSpace ℝ ι), E)) : 𝓢(V�
   SchwartzMap.postcompCLM ((ContinuousLinearMap.compL ℝ (V₁ × (EuclideanSpace ℝ ι)) (V₁ × (EuclideanSpace ℝ ι)) E).flip
       (fstIncl (V₁ := V₁) (ι := ι))) (SchwartzMap.fderivCLM ℝ (V₁ × (EuclideanSpace ℝ ι)) E F) +
     (-(2 * π * I) : ℂ) • SchwartzMap.bilinLeftCLM
-      (ContinuousLinearMap.smulRightL ℝ (V₁ × (EuclideanSpace ℝ ι)) E).flip
+      (StrongDual.smulRightL ℝ (V₁ × (EuclideanSpace ℝ ι)) E).flip
       (sndInnerCLM V₁ ι).hasTemperateGrowth F
 
 theorem partialFourierDeriv_apply (F : 𝓢(V₁ × (EuclideanSpace ℝ ι), E)) (p q : V₁ × (EuclideanSpace ℝ ι)) :

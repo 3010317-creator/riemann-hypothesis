@@ -54,7 +54,7 @@ theorem rank_map_field {K L : Type} [Field K] [Field L] (f : K →+* L) {m n : T
     (A : Matrix m n K) : (A.map f).rank = A.rank := by
   classical
   letI := f.toAlgebra
-  rw [Matrix.rank_eq_finrank_span_cols, Matrix.rank_eq_finrank_span_cols]
+  rw [← Matrix.finrank_span_range_col, ← Matrix.finrank_span_range_col]
   obtain ⟨κ, a, ha, hspan, hli⟩ := exists_linearIndependent' K A.col
   haveI : Finite κ := Finite.of_injective a ha
   letI : Fintype κ := Fintype.ofFinite κ

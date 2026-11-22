@@ -658,7 +658,7 @@ theorem exists_reduced {F : Type} [Field F] {n : ℕ} (Z : Submodule F (Fin n �
   have hrank : A.rank = d := by simpa using hrow.rank_matrix
   have hcols : Submodule.span F (Set.range A.col) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank_eq_finrank_span_cols, hrank]
+    rw [Matrix.finrank_span_range_col, hrank]
     simp
   obtain ⟨s, hs, hspan, hli⟩ := exists_linearIndependent F (Set.range A.col)
   have hsp : ⊤ ≤ Submodule.span F (Set.range (Subtype.val : s → Fin d → F)) := by

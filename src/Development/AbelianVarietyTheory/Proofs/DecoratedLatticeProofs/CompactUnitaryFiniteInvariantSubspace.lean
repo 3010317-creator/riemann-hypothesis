@@ -65,12 +65,12 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 theorem continuous_rankOne_self : Continuous fun w : H => rankOne ℂ w w := by
   have h : (fun w : H => rankOne ℂ w w) =
-      fun w => ContinuousLinearMap.smulRightL ℂ H H (innerSL ℂ w) w := by
+      fun w => StrongDual.smulRightL ℂ H H (innerSL ℂ w) w := by
     funext w
     ext z
     simp [rankOne_apply]
   rw [h]
-  exact (ContinuousLinearMap.smulRightL ℂ H H).continuous₂.comp
+  exact (StrongDual.smulRightL ℂ H H).continuous₂.comp
     ((innerSL ℂ).continuous.prodMk continuous_id)
 
 theorem isCompactOperator_rankOne_self (w : H) : IsCompactOperator (rankOne ℂ w w) := by

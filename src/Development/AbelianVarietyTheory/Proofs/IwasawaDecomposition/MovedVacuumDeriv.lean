@@ -229,7 +229,7 @@ theorem moved_vacuum_deriv : ∀ (V : Type) [NormedAddCommGroup V] [InnerProduct
     rw [← e3]
     have i4 : Integrable fun u =>
         ContinuousLinearMap.toSpanSingleton ℝ (gau u • fderiv ℝ (fun u => ρ u (proj h x)) u (X u)) :=
-      ((ContinuousLinearMap.smulRightL ℝ ℝ B 1).integrable_comp i3)
+      ((StrongDual.smulRightL ℝ ℝ B 1).integrable_comp i3)
     have := (hasFDerivAt_integral_of_dominated_loc_of_lip' (𝕜 := ℝ) (μ := volume)
       (F := fun (t : ℝ) (u : V) => gau u • ρ (a t u) (proj h x)) (x₀ := 0)
       (F' := fun u => ContinuousLinearMap.toSpanSingleton ℝ (gau u • fderiv ℝ (fun u => ρ u (proj h x)) u (X u)))
