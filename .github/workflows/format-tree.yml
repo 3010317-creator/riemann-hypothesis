@@ -1,0 +1,385 @@
+name: Format tree
+
+# Runs the Lean auto-formatter (https://github.com/leanprover/lean4/pull/15218) over src/ on
+# hosted runners, checks every reformatted file, and proposes the files that pass as a draft
+# pull request. Started by hand. See scripts/format/README.md.
+#
+# A pull request that touches this workflow or scripts/format/ runs the same jobs on a sample of
+# files, without the job that pushes.
+
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Branch whose src/ is formatted and that the pull request targets
+        type: string
+        default: main
+      sample:
+        description: Format only this many evenly spaced files (0 formats every file and allows a pull request)
+        type: number
+        default: 0
+      open_pr:
+        description: Push the result to format/<base> and open a draft pull request
+        type: boolean
+        default: true
+  pull_request:
+    paths:
+      - .github/workflows/format-tree.yml
+      - scripts/format/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: format-tree-${{ github.event.pull_request.number || inputs.base || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # The formatter: head of leanprover/lean4#15218. It is not in any Lean release yet.
+  FORMATTER_LEAN_COMMIT: ef4866bea28e1e681b6d14dbf61146f14b9f9c03
+  # Where that Lean is built, relative to the workspace. Cached and restored in place.
+  FORMATTER_LEAN_DIR: lean4/build/release/stage1
+  # A Mathlib built with the Lean nightly that the formatter's commit is based on.
+  FORMATTER_MATHLIB_REF: green-nightly-2026-11-19
+  FORMATTER_MATHLIB_COMMIT: 1845806b42f2fa3589af9d82e6b18cbf73d0798a
+  # Files that are never reformatted, relative to src/.
+  KEEP_UNTOUCHED: Challenge.lean Statements.lean
+  # How many files a pull request to this workflow formats as a self-test.
+  SELF_TEST_SAMPLE: "2000"
+  MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4   # as in checks.yml
+
+jobs:
+  plan:
+    name: Resolve what to format
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      sample: ${{ steps.resolve.outputs.sample }}
+      propose: ${{ steps.resolve.outputs.propose }}
+    steps:
+      - name: Resolve the commit and the sample size
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          EVENT_SHA: ${{ github.sha }}
+          BASE: ${{ inputs.base }}
+          SAMPLE: ${{ inputs.sample }}
+          OPEN_PR: ${{ inputs.open_pr }}
+        run: |
+          if [[ "$EVENT" == pull_request ]]; then
+            sha="$EVENT_SHA"
+            sample="$SELF_TEST_SAMPLE"
+            propose=false
+          else
+            if [[ ! "$BASE" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+              echo "::error::'$BASE' is not a branch name this workflow accepts"
+              exit 1
+            fi
+            sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$BASE" --jq .object.sha)"
+            sample="${SAMPLE:-0}"
+            if [[ "$OPEN_PR" == true && "$sample" == 0 ]]; then propose=true; else propose=false; fi
+          fi
+          {
+            echo "sha=$sha"
+            echo "sample=$sample"
+            echo "propose=$propose"
+          } >> "$GITHUB_OUTPUT"
+          echo "Formatting \`$sha\`, sample $sample (0 means every file), propose: $propose" >> "$GITHUB_STEP_SUMMARY"
+
+  lean:
+    name: Build Lean with the formatter
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Look for a cached build
+        id: cache
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ${{ env.FORMATTER_LEAN_DIR }}/bin
+            ${{ env.FORMATTER_LEAN_DIR }}/lib
+            ${{ env.FORMATTER_LEAN_DIR }}/include
+          key: formatter-lean-${{ runner.os }}-${{ runner.arch }}-${{ env.FORMATTER_LEAN_COMMIT }}-v1
+          lookup-only: true
+      - name: Check out Lean at the formatter's commit
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: leanprover/lean4
+          ref: ${{ env.FORMATTER_LEAN_COMMIT }}
+          path: lean4
+          persist-credentials: false
+      - name: Install build dependencies
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgmp-dev libuv1-dev libssl-dev cmake ccache clang pkgconf
+      - name: Build
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        working-directory: lean4
+        env:
+          CC: clang
+          CXX: clang++
+        run: |
+          # An ordinary source build, as in Lean's doc/make/index.md. It must not set
+          # CHECK_OLEAN_VERSION, see scripts/format/setup-formatter-mathlib.sh.
+          cmake --preset release
+          make -C build/release -j"$(nproc)"
+      - name: Keep what running the formatter needs
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        run: |
+          rm -rf "$FORMATTER_LEAN_DIR/lib/temp"
+          find "$FORMATTER_LEAN_DIR/lib" -name '*.a' -delete
+          du -sh "$FORMATTER_LEAN_DIR/bin" "$FORMATTER_LEAN_DIR/lib" "$FORMATTER_LEAN_DIR/include"
+          "$FORMATTER_LEAN_DIR/bin/lean" --version
+          printf 'import Lean.Fmt\n' > "$RUNNER_TEMP/Probe.lean"
+          "$FORMATTER_LEAN_DIR/bin/lean" "$RUNNER_TEMP/Probe.lean"
+      - name: Save the build
+        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ${{ env.FORMATTER_LEAN_DIR }}/bin
+            ${{ env.FORMATTER_LEAN_DIR }}/lib
+            ${{ env.FORMATTER_LEAN_DIR }}/include
+          key: formatter-lean-${{ runner.os }}-${{ runner.arch }}-${{ env.FORMATTER_LEAN_COMMIT }}-v1
+
+  format:
+    name: Format
+    needs: [plan, lean]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the formatting scripts
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: ci
+          sparse-checkout: scripts/format
+          persist-credentials: false
+      - name: Check out the tree to format
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+          path: tree
+          persist-credentials: false
+      - name: Restore Lean with the formatter
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ${{ env.FORMATTER_LEAN_DIR }}/bin
+            ${{ env.FORMATTER_LEAN_DIR }}/lib
+            ${{ env.FORMATTER_LEAN_DIR }}/include
+          key: formatter-lean-${{ runner.os }}-${{ runner.arch }}-${{ env.FORMATTER_LEAN_COMMIT }}-v1
+          fail-on-cache-miss: true
+      - name: Install elan and the libraries Lean links against
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgmp-dev libuv1-dev libssl-dev
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$FORMATTER_LEAN_DIR/bin/lean" --version
+      - name: Fetch Mathlib for the formatter's Lean
+        run: |
+          bash ci/scripts/format/setup-formatter-mathlib.sh "$PWD/$FORMATTER_LEAN_DIR" "$PWD/formatter-mathlib" \
+            "$FORMATTER_MATHLIB_REF" "$FORMATTER_MATHLIB_COMMIT"
+          df -h /
+      - name: List the files
+        env:
+          SAMPLE: ${{ needs.plan.outputs.sample }}
+        run: |
+          mkdir -p work/formatted
+          python3 ci/scripts/format/list-files.py tree/src "$SAMPLE" > work/files.txt
+          wc -l < work/files.txt
+      - name: Dump the token table on the formatter's side
+        run: |
+          LEAN_PATH="$(cat formatter-mathlib/lean-path.txt)" "$FORMATTER_LEAN_DIR/bin/lean" --tstack=400000 \
+            --run ci/scripts/format/DumpTokens.lean Mathlib > work/tokens-formatter.txt
+          wc -l < work/tokens-formatter.txt
+      - name: Format
+        run: |
+          LEAN_PATH="$(cat formatter-mathlib/lean-path.txt)" python3 ci/scripts/format/run-workers.py \
+            --lean "$FORMATTER_LEAN_DIR/bin/lean" --list work/files.txt --src tree/src --out work/formatted \
+            --run-dir work/format-logs --workers "$(nproc)" --timeout 120
+          cut -f1 work/format-logs/worker-*.tsv | sort | uniq -c
+          awk -F'\t' '$1 == "OK" { print $5 }' work/format-logs/worker-*.tsv | LC_ALL=C sort > work/changed.txt
+      - name: Pack the result
+        if: ${{ always() }}
+        run: tar -C work -cf - . | zstd -T0 -q -o formatted.tar.zst
+      - name: Upload the result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: formatted
+          path: formatted.tar.zst
+          retention-days: 7
+
+  verify:
+    name: Verify
+    needs: [plan, format]
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the formatting scripts
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: ci
+          sparse-checkout: scripts/format
+          persist-credentials: false
+      - name: Check out the tree that was formatted
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+          path: tree
+          persist-credentials: false
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch Mathlib for the project's Lean
+        working-directory: tree
+        run: |
+          lake exe mathlib/cache get
+          {
+            echo "PROJECT_LEAN=$(elan which lean)"
+            echo "PROJECT_LEAN_PATH=$(lake env printenv LEAN_PATH)"
+          } >> "$GITHUB_ENV"
+      - name: Download the formatter's result
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: formatted
+      - name: Unpack it
+        run: |
+          mkdir work
+          zstd -dc formatted.tar.zst | tar -C work -xf -
+          wc -l work/files.txt work/changed.txt
+      - name: Build the token tables
+        run: |
+          LEAN_PATH="$PROJECT_LEAN_PATH" "$PROJECT_LEAN" --tstack=400000 \
+            --run ci/scripts/format/DumpTokens.lean Mathlib > work/tokens-project-toolchain.txt
+          python3 ci/scripts/format/project-tokens.py tree/src work/tokens-project.txt
+          wc -l work/tokens-*.txt
+      - name: Check that no token was split or joined
+        run: |
+          CHECK_JOBS="$(nproc)" python3 ci/scripts/format/split-check.py work/changed.txt tree/src work/formatted \
+            work/split.tsv work/tokens-formatter.txt work/tokens-project-toolchain.txt work/tokens-project.txt
+          cut -f1 work/split.tsv | sort | uniq -c
+      - name: Compare the syntax on the project's toolchain
+        run: |
+          LEAN_PATH="$PROJECT_LEAN_PATH" python3 ci/scripts/format/run-compare.py --lean "$PROJECT_LEAN" \
+            --list work/changed.txt --orig tree/src --fmt work/formatted --run-dir work/compare-logs \
+            --workers "$(nproc)"
+          cut -f1 work/compare-logs/cmp-*.tsv | sort | uniq -c
+      - name: Select the files that passed both checks
+        run: |
+          # shellcheck disable=SC2086
+          python3 ci/scripts/format/select-files.py --list work/files.txt --format-logs work/format-logs \
+            --split work/split.tsv --compare-logs work/compare-logs --out-dir work/select \
+            --keep $KEEP_UNTOUCHED
+          cat work/select/summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Pack the verification result
+        if: ${{ always() }}
+        run: tar -C work -cf - select split.tsv compare-logs | zstd -T0 -q -o verification.tar.zst
+      - name: Upload the verification result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: verification
+          path: verification.tar.zst
+          retention-days: 7
+
+  propose:
+    name: Propose
+    needs: [plan, verify]
+    if: ${{ needs.plan.outputs.propose == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out the formatting scripts
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: ci
+          sparse-checkout: scripts/format
+          persist-credentials: false
+      - name: Check out the tree that was formatted
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+          path: tree
+      - name: Download the formatter's result
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: formatted
+      - name: Download the verification result
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: verification
+      - name: Apply the files that passed both checks
+        run: |
+          mkdir work
+          zstd -dc formatted.tar.zst | tar -C work -xf -
+          zstd -dc verification.tar.zst | tar -C work -xf -
+          python3 ci/scripts/format/apply-formatted.py work/select/pass.txt work/formatted tree/src
+      - name: Commit, push and open the pull request
+        working-directory: tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ inputs.base }}
+          SHA: ${{ needs.plan.outputs.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if git diff --quiet; then
+            echo "Nothing to propose: every file is already formatted or was left as it was." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          branch="format/$BASE"
+          taken="$(wc -l < ../work/select/pass.txt | tr -d ' ')"
+          {
+            echo "Format src/ with the Lean auto-formatter"
+            echo
+            echo "Generated by the Format tree workflow from $SHA with the formatter of"
+            echo "https://github.com/leanprover/lean4/pull/15218 at $FORMATTER_LEAN_COMMIT."
+            echo "$taken files, each checked to parse to the same syntax tree as before on the"
+            echo "project's toolchain and to have no token split or joined. Nothing was compiled."
+          } > ../work/commit-message.txt
+          {
+            echo "Generated by the [Format tree]($RUN_URL) workflow from \`$SHA\` with the formatter of https://github.com/leanprover/lean4/pull/15218 at \`$FORMATTER_LEAN_COMMIT\`."
+            echo
+            echo "Layout only. Each file here parses to the same syntax tree as before on the project's toolchain, and a text comparison finds no token split or joined. **Nothing was compiled.** This pull request was pushed with the workflow token, which does not start other workflows: close and reopen it to run the checks."
+            echo
+            cat ../work/select/summary.md
+            echo
+            echo "The files left as they were, with reasons, are in \`select/excluded.tsv\` of the run's \`verification\` artifact. The branch \`$branch\` belongs to the workflow, which overwrites it on every run."
+          } > ../work/pr-body.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "$branch"
+          git add -A src
+          git commit -q -F ../work/commit-message.txt
+          git push --force origin "HEAD:refs/heads/$branch"
+          title="Format \`src/\` with the Lean auto-formatter"
+          number="$(gh pr list --head "$branch" --base "$BASE" --state open --json number --jq '.[0].number // empty')"
+          if [[ -n "$number" ]]; then
+            gh pr edit "$number" --body-file ../work/pr-body.md
+            echo "Updated pull request #$number from \`$branch\`." >> "$GITHUB_STEP_SUMMARY"
+          elif url="$(gh pr create --draft --base "$BASE" --head "$branch" --title "$title" --body-file ../work/pr-body.md)"; then
+            echo "Opened $url" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Pushed $branch but could not open the pull request. Open it by hand."
+            echo "Pushed \`$branch\`, but could not open the pull request. The repository may not allow Actions to create pull requests; open it by hand from the branch." >> "$GITHUB_STEP_SUMMARY"
+          fi
