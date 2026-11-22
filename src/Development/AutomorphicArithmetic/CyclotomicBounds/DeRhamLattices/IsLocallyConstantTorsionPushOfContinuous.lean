@@ -30,14 +30,13 @@ theorem _root_.UpperTheory.KN.isLocallyConstant_torsion_push_of_continuous :
   have hW : IsOpen W := hopen.preimage (continuous_const.mul continuous_id)
   let U : Set (Fin a → Fin n → LL) := {v | ∀ j m, v j m ∈ W}
   have hU : IsOpen U := by
-    have hUe : U = ⋂ j, ⋂ m, (fun v : Fin a → Fin n → LL => v j m) ⁻¹' W := by
-      ext v; simp [U]
-    rw [hUe]
-    exact isOpen_iInter_of_finite fun j => isOpen_iInter_of_finite fun m =>
-      hW.preimage ((continuous_apply m).comp (continuous_apply j))
+    simp only [U, Set.ofPred_forall]
+    refine isOpen_iInter_of_finite fun j => isOpen_iInter_of_finite fun m => ?_
+    change IsOpen ((fun v : Fin a → Fin n → LL => v j m) ⁻¹' W)
+    exact hW.preimage ((continuous_apply m).comp (continuous_apply j))
   have key : ∀ v ∈ Y, v ∈ U → ∃ y ∈ Y, v = c • y := by
     intro v hvY hvU
-    simp only [U, W, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_range] at hvU
+    simp only [U, W, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_range] at hvU
     choose x hx using hvU
     have hxΛ : Lmap x ∈ Λ := LinearMap.mem_range_self _ _
     have hmul : μ • Lmap x = v := by

@@ -46,13 +46,9 @@ private theorem expU_neg_pi {E : Type} [Field E] [NumberField E] [IsCMField E] (
 private theorem add_eq_zero_of {p q : ℂ} (h : ∀ t : ℝ, Complex.exp (p * t + q * starRingEnd ℂ (t : ℂ)) = 1) : p + q = 0 := by
   have hf : (fun t : ℝ => Complex.exp ((p + q) * t)) = fun _ => 1 := by
     funext t
-    have := h t
-    rw [Complex.conj_ofReal] at this
-    rw [add_mul]; exact this
-  have hd : HasDerivAt (fun t : ℝ => Complex.exp ((p + q) * t)) (Complex.exp ((p + q) * ((0 : ℝ) : ℂ)) * ((p + q) * 1)) 0 := by
-    have h0 : HasDerivAt (fun t : ℝ => (p + q) * (t : ℂ)) ((p + q) * 1) 0 :=
-      (Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).const_mul (p + q)
-    exact h0.cexp
+    simpa [Complex.conj_ofReal, add_mul] using h t
+  have hd := ((Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).const_mul (p + q)).cexp
+  simp only [Complex.ofRealCLM_apply] at hd
   rw [hf] at hd
   have := hd.unique (hasDerivAt_const (0 : ℝ) (1 : ℂ))
   simpa using this
