@@ -46,9 +46,8 @@ import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
-
-set_option stderrAsMessages false
-
+set_option maxHeartbeats 10000000
+set_option synthInstance.maxHeartbeats 200000
 
 section
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N Formalism.BasicNotions Formalism.BasicNotions.Loc GlobalTheory.GalOfCusp Matrix IsLocalRing
@@ -268,7 +267,6 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.bloch_kato_selmer_vanishes_of_
   generalize push f₀ S.r.hom = r at h hR hII hmod ⊢
   obtain ⟨hcc, hηc, -, hlc, -, -, -, hCM, -⟩ := dat_facts D
   obtain ⟨h11, hdet, W, hext, hWc, -, hW, hWd⟩ := typeII_facts hC D hm h hII
-  dbg_trace "main argument"
   have hW' : ∀ g, (W g).val = wOf (r g) := hW
   have hblk0 : ∀ g ∈ D.η.ker, IsBlockSL2Embedding (r g) := by
     intro g hg
@@ -366,7 +364,6 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.bloch_kato_selmer_vanishes_of_
     refine continuous_matrix fun i j => ?_
     fin_cases i <;> fin_cases j <;> first | exact continuous_const | exact continuous_id.matrix_elem 1 1
 
-  dbg_trace "bk_map"
   have bk_map {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] {l : ℕ} [Fact l.Prime]
       {C : Type} [CommRing C] [Algebra ℚ_[l] C]
       {V : Type} [AddCommGroup V] [Module C V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] C V] [TopologicalSpace V]
