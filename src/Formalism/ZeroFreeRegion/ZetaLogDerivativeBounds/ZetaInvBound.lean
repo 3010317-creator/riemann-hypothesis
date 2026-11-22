@@ -1,6 +1,7 @@
 module
 
 public import Formalism.ZeroFreeRegion.SmallHeightLogDeriv
+public import Formalism.ZeroFreeRegion.ZetaLogDerivativeBounds.NormCpowSubLePoint
 
 @[expose] public section
 
@@ -12,9 +13,6 @@ namespace Formalism.ZF
 
 namespace MoebiusInverseZetaBounds
 
-lemma summable_shift {p : ℝ} (hp : p < -1) : Summable (fun n : ℕ => ((n : ℝ) + 1) ^ p) := by
-  have h := (summable_nat_add_iff 1).mpr (Real.summable_nat_rpow.mpr hp)
-  simpa only [Nat.cast_add, Nat.cast_one] using h
 
 lemma rpow_le_integral {x σ : ℝ} (hx : 0 < x) (hσ : 0 < σ) :
     (x + 1) ^ (-σ - 1) ≤ (x ^ (-σ) - (x + 1) ^ (-σ)) / σ := by
