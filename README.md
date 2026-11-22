@@ -6,71 +6,22 @@ A [Comparator](https://github.com/leanprover/comparator) setup and community bui
 claims a proof of the Riemann Hypothesis, and of GRH for Dirichlet L-functions, announced on
 2026-11-20 at <https://alpo.ge/remark.pdf>.
 
-The first commit, `40e56bab`, is the submitted Lean source exactly as published, for Lean
-`v4.33.1`. The source on `main` has changed since then in two ways:
+The first commit, `40e56bab`, is the Lean source exactly as it was published. It has been
+changed since. Pull requests have deleted files the proof doesn't use, shortened proofs, and
+ported it from Lean 4.33.1, which it was written for, to newer releases. The five theorem
+statements are still word for word the published ones, and
+`git diff --stat 40e56bab HEAD -- src` lists everything else. If you want the untouched
+original, check out `40e56bab` or use
+[riemann-hypothesis-original](https://github.com/homeowmorphism/riemann-hypothesis-original).
 
-- **Cleanup.** Merged pull requests delete files the proof does not use and shorten proofs.
-- **Port.** [#66](https://github.com/leanprover-community/riemann-hypothesis/pull/66) moved the
-  project to Lean and Mathlib `v4.36.0`. It adapts proofs throughout the source, converts every
-  file but `Challenge.lean` to Lean's module system and deletes files `Main` does not reach; the
-  pull request has the figures. It also undid part of the earlier cleanup, which
-  [PR66-MERGED-WORK.md](verification/PR66-MERGED-WORK.md) lists.
-
-The port did not touch the statements: `src/Challenge.lean` is byte for byte the file from
-before it, and `src/Statements.lean` differs only in its module header.
-
-`git diff --stat 40e56bab HEAD -- src` shows every change so far, and the
-[notes](verification/NOTES.md#source) have more detail on the cleanup. For the original, check
-out `40e56bab` or use
-[riemann-hypothesis-original](https://github.com/homeowmorphism/riemann-hypothesis-original),
-which keeps the published source frozen.
-
-This repository also adds Comparator files, cache infrastructure and CI:
-
-| File | What it is |
-|---|---|
-| [`src/Challenge.lean`](src/Challenge.lean) | the five theorems, stated in a file that imports only Mathlib |
-| [`comparator.json`](comparator.json) | the Comparator config |
-| [`export-targets.txt`](export-targets.txt) | the declarations to export |
-| [`verification/`](verification/NOTES.md) | our notes, and the results once there are some |
-| [`docs/references.bib`](docs/references.bib) | the works cited in docstrings under `src/` |
-| [`scripts/`](scripts/) | the cache client, the tools that bootstrap and publish caches, and the CI build scripts |
-| [`tools/ci_native/`](tools/ci_native/README.md) | tools that lend a registered runner to a bounded batch of a build, in place of a whole pull request |
-| [`.github/workflows/`](.github/workflows/) | CI, described [below](#ci) |
-
-## Using the build cache
-
-Fetch and restore Mathlib and this project's compiled modules:
-
-```bash
-lake exe cache get
-lake build --no-build
-```
-
-The cache settings are in `lakefile.toml`; no user configuration is needed. The first command
-needs Python 3.11 or newer as `python3`. It fetches both caches anonymously and extracts the
-oleans to `.lake/build`. It prefers a successful CI build matching the current clean source,
-configuration, dependency manifest and toolchain; documentation-only commits can reuse the same
-cache. Otherwise it tries the complete build of the Lean 4.36 port pinned in
-[`scripts/cache-baselines.json`](scripts/cache-baselines.json), which fits a tree whose `src/`,
-`lakefile.toml`, `lake-manifest.json` and `lean-toolchain` are the ones #66 merged. If neither
-fits, the command stops after fetching Mathlib and says that no cache matches; `lake build`
-then compiles the project. The second command checks the default build targets without
-compiling them. Subsequent ordinary builds compile changed modules and their dependents.
-
-The community cache includes outputs from **untrusted pull requests and volunteer machines**.
-Download integrity checks do not verify proofs. Use an independent fresh build when you need
-to trust the result.
-
-The [cache notes](verification/CACHE.md) describe the archive published for the original Lean
-4.33.1 source, the cheaper bootstrap that reuses its proofs, and how to produce and publish
-future caches. [PORTABLE-CACHE.md](verification/PORTABLE-CACHE.md) describes how a finished
-Lean 4.36 build is turned into a cache. For independent verification, follow the clean-build
-instructions below.
+Docstrings under `src/` cite published works; the bibliography is
+[`docs/references.bib`](docs/references.bib).
 
 ## What is claimed
 
-| Theorem in `Main.lean` | Statement |
+`src/Main.lean` proves five theorems:
+
+| Theorem | Statement |
 |---|---|
 | `riemannHypothesis` | Mathlib's `RiemannHypothesis` |
 | `riemannZeta_eq_zero_re` | the same, written out |
@@ -78,74 +29,86 @@ instructions below.
 | `LFunction_eq_zero_re` | every zero of L(χ, s) with 0 < Re s < 1 has Re s = 1/2 |
 | `LFunction_eq_zero_re_of_isPrimitive` | the same, for primitive characters |
 
-## Checking it
+[`src/Challenge.lean`](src/Challenge.lean) states the same five with `sorry` in place of the
+proofs, in a file that imports only Mathlib. Comparator checks that `Main.lean` proves exactly
+those statements, that it uses no axioms other than `propext`, `Quot.sound` and
+`Classical.choice`, and that Lean's kernel and nanoda both accept the proof.
+
+## Getting a build
+
+Compiling the project takes hours on a large machine, so there is a cache of compiled files:
 
 ```bash
-export LEAN_ABORT_ON_PANIC=1   # as Comparator sets it: stop on an internal error, don't continue
-export LAKE_ARTIFACT_CACHE=false   # rebuild the submission even if cache-env.sh was sourced earlier
-export MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4   # Mathlib's current cache server
+lake exe cache get
+lake build --no-build
+```
 
-# 1. Export the challenge. Clean clone at $CLEAN, Lean v4.36.0.
+The first command needs Python 3.11 or newer. It downloads Mathlib's cache and then ours. Ours
+has to match your checkout exactly. It looks for a successful CI build of the same source
+(commits that only change documentation share one) and, failing that, for the baseline build
+pinned in [`scripts/cache-baselines.json`](scripts/cache-baselines.json). If nothing matches,
+it says so and you are left with `lake build`. The second command confirms that there is
+nothing left to compile.
+
+Don't treat the cache as a check of the proof. It contains files built from unreviewed pull
+requests on volunteers' machines, and all the download verifies is that you received what was
+uploaded. If you need to trust the result, build it yourself as described below.
+[CACHE.md](verification/CACHE.md) explains how the cache is made.
+
+## Checking the proof
+
+```bash
+export LEAN_ABORT_ON_PANIC=1        # stop on an internal error, as Comparator does
+export LAKE_ARTIFACT_CACHE=false    # really rebuild, even if cache-env.sh was sourced earlier
+export MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4
+
+# 1. Export the challenge, in a clean clone at $CLEAN.
 cd "$CLEAN"
 lake exe mathlib/cache get
 lake build Challenge
 lake env leanexport Challenge -- $(cat export-targets.txt) > challenge.export
 
-# 2. Build the solution. Second clone, inside a sandbox with no network. Takes hours.
+# 2. Build the solution, in a second clone, inside a sandbox with no network. Takes hours.
 lake exe mathlib/cache get      # before entering the sandbox
-lake build Main         # inside the sandbox
+lake build Main                 # inside the sandbox
 
-# 3. Export the solution. Still inside the sandbox; only solution.export comes out.
+# 3. Export the solution, still inside the sandbox.
 lake env leanexport Main -- $(cat "$CLEAN/export-targets.txt") > solution.export
 
-# 4. Judge. Lean v4.36.0, from an empty directory, with the config from the clean clone.
+# 4. Judge, from an empty directory, with the same Lean release.
 lake comparator --config "$CLEAN/comparator.json" \
   --challenge-from-export "$CLEAN/challenge.export" --solution-from-export solution.export
 ```
 
-What to know before running it:
+Compiling the submission runs its code. That is why the challenge is exported first, in a clone
+where none of the submission has been compiled, and why the build and the second export happen
+in a sandbox that only `solution.export` leaves.
 
-- **One Lean version.** Since
-  [#66](https://github.com/leanprover-community/riemann-hypothesis/pull/66) the project is
-  pinned to Lean `v4.36.0`, the release that judges it, so one toolchain builds, exports and
-  judges. The exporter is `leanexport`, the copy of
-  [lean4export](https://github.com/leanprover/lean4export) that Lean `v4.36.0` ships; nothing
-  has to be built separately.
-- **The published source needs two.** Before #66 the project was pinned to Lean `v4.33.1`,
-  which has neither `lake comparator` nor `leanexport`. To check commit `40e56bab`, or anything
-  else from before the port, build and export with `v4.33.1` and judge with `v4.36.0`, as
-  [the README at `7cce738b`](https://github.com/leanprover-community/riemann-hypothesis/blob/7cce738ba719a32964ca3822d0994f4c6952c7ae/README.md#checking-it)
-  describes.
-- **Challenge first.** Compiling the submission runs its code, so the challenge is exported
-  where none of that code has been compiled. CI builds `Challenge` against Mathlib alone on
-  every push, but does not export it. The sha256 that earlier versions of this README gave for
-  `challenge.export`, `bd484ac9…`, belongs to Lean `v4.33.1` and its Mathlib; no checksum for
-  the port is recorded here yet.
-- **Not `lake exe cache get`.** In this repository that command also downloads prebuilt files
-  for the submission itself, and `lake build Main` then compiles nothing. Steps 1 and 2 use
-  `lake exe mathlib/cache get`, which fetches Mathlib only.
-- **Cost.** Not measured for the port yet. The published source took hours on a large machine,
-  about 100 GB of disk, and a lot of memory for step 4.
+Steps 1 and 2 use `lake exe mathlib/cache get` on purpose. Plain `lake exe cache get` would also
+download our prebuilt copy of the submission, and `lake build Main` would then compile nothing.
 
-The [notes](verification/NOTES.md) have the details: where the source came from, the Lean
-version and its known kernel fixes, the tools, the sandboxes, the test of these steps, and the
-limits of what a passing run shows. They describe the published source on Lean `v4.33.1` and
-have not been updated for the port: the dependency pins, tool versions, smoke test and checker
-results in them are that setup's. No run of the steps above on the port is recorded here yet.
+All four steps use the Lean release in `lean-toolchain`, which comes with both `leanexport` and
+`lake comparator`. The published source was written for Lean 4.33.1, which has neither, so
+checking `40e56bab` itself takes two toolchains.
+[An older version of this README](https://github.com/leanprover-community/riemann-hypothesis/blob/7cce738ba719a32964ca3822d0994f4c6952c7ae/README.md#checking-it)
+has those steps.
+
+We worked these steps out on the published source and don't have a complete run on the current
+source yet. On the published source the build took hours on a large machine and about 100 GB of
+disk, and judging needs a lot of memory. [NOTES.md](verification/NOTES.md) says where the source
+came from, how the tools and sandboxes are set up and what a passing run does and doesn't show,
+but it still describes the Lean 4.33.1 setup.
 
 ## CI
 
-| Workflow | What it does |
-|---|---|
-| [`checks`](.github/workflows/checks.yml) | builds `Challenge` against Mathlib alone on GitHub's runners, on every push and pull request |
-| [`Build PR`](.github/workflows/build-pr.yml) | builds a pull request's merge result in full on a pool of volunteer machines, automatically or on a maintainer's dispatch |
-| [`Publish CI cache`](.github/workflows/publish-ci-cache.yml) | publishes the compiled modules of a finished `Build PR` run; `lake exe cache get` restores only complete, successful builds |
-
-Full builds run on machines that volunteers lend. To lend one, see
-[CI-RUNNERS.md](verification/CI-RUNNERS.md).
+Every push and pull request gets a quick check that `Challenge.lean` compiles against Mathlib
+alone. A full build is too big for GitHub's runners, so pull requests are built on machines
+lent by volunteers, and successful builds go into the cache. If you have a Linux machine with
+plenty of memory and disk to spare, [CI-RUNNERS.md](verification/CI-RUNNERS.md) explains how to
+lend it. The scripts behind all this are in [`scripts/`](scripts/) and
+[`tools/ci_native/`](tools/ci_native/README.md).
 
 ## License
 
 The submission belongs to its author and was published without a license. It is mirrored here
-for verification only: unmodified at commit `40e56bab`, and changed since then as the top of
-this page and the [notes](verification/NOTES.md#source) describe.
+so that it can be checked. Commit `40e56bab` is the unmodified copy.
