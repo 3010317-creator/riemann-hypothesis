@@ -98,8 +98,8 @@ private lemma map_eq_max {R : Type} [CommRing R] {q : Ideal R} {B : Type} [CommR
   have := h.noeth
   apply le_antisymm
   · rw [Ideal.map_le_iff_le_comap, h.comap_eq]
-  · apply Submodule.le_of_le_smul_of_le_jacobson_bot (I := maximalIdeal B)
-      (IsNoetherian.noetherian _) (maximalIdeal_le_jacobson _)
+  · apply Submodule.le_of_le_smul_of_le_jacobson (I := maximalIdeal B)
+      (IsNoetherian.noetherian _) (ringJacobson_eq_maximalIdeal (R := B)).ge
     intro x hx
     obtain ⟨a, s, hs, hsa⟩ := h.dense 2 x
     have hu : IsUnit (algebraMap R B s) := by
@@ -131,8 +131,8 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
     have : (s : R) ∈ (maximalIdeal B).comap (algebraMap R B) := hn
     rwa [h.comap_eq] at this
   let S := Localization.AtPrime q
-  letI : Algebra S B := (IsLocalization.lift (M := q.primeCompl) hu).toAlgebra
-  haveI : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra S B := (IsLocalization.lift (M := q.primeCompl) hu).toAlgebra
+  have : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq fun x =>
     (IsLocalization.lift_eq (M := q.primeCompl) hu x).symm
   have hm : (maximalIdeal S).map (algebraMap S B) = maximalIdeal B := by
     rw [← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_map, ← IsScalarTower.algebraMap_eq,
@@ -141,7 +141,7 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
       b ∈ (maximalIdeal S ^ n • ⊤ : Submodule S B) ↔ b ∈ maximalIdeal B ^ n := by
     intro n b
     rw [Ideal.smul_top_eq_map, Submodule.restrictScalars_mem, Ideal.map_pow, hm]
-  haveI : IsAdicComplete (maximalIdeal S) B :=
+  have : IsAdicComplete (maximalIdeal S) B :=
     { toIsHausdorff := (IsHausdorff.map_algebraMap_iff (S := B)).1 (by rw [hm]; infer_instance)
       toIsPrecomplete := (IsPrecomplete.map_algebraMap_iff (S := B)).1 (by rw [hm]; infer_instance) }
   have hsurj : Function.Surjective
@@ -184,8 +184,8 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
   let e : AdicCompletion (maximalIdeal S) S ≃ₗ[S] B :=
     ((LinearEquiv.ofBijective _ ⟨hinj, hsurj⟩).restrictScalars S).trans
       (AdicCompletion.ofLinearEquiv (maximalIdeal S) B).symm
-  haveI : Module.Flat S B := Module.Flat.of_linearEquiv e.symm
-  haveI : Module.Flat R S := IsLocalization.flat S q.primeCompl
+  have : Module.Flat S B := Module.Flat.of_linearEquiv e.symm
+  have : Module.Flat R S := IsLocalization.flat S q.primeCompl
   exact Module.Flat.trans R S B
 
 private lemma smul_mem_of_dense {L R B W : Type} [CommRing L] [CommRing R] [CommRing B]
@@ -243,8 +243,8 @@ private lemma finite_of_dense {L R B N : Type} [CommRing L] [IsLocalRing L] [Com
     (hspan : Submodule.span B (U : Set N) = ⊤) : Module.Finite L N := by
   obtain ⟨n, f, hf⟩ : ∃ (n : ℕ) (f : (Fin n → L) →ₗ[L] N), LinearMap.range f = U :=
     (Submodule.fg_iff_exists_fin_linearMap L N).1 hfg
-  haveI := precomplete_pi (maximalIdeal L) n
-  haveI : IsHausdorff (maximalIdeal L) N := IsHausdorff.of_map hloc
+  have := precomplete_pi (maximalIdeal L) n
+  have : IsHausdorff (maximalIdeal L) N := IsHausdorff.of_map hloc
   refine Module.Finite.of_surjective f (surjective_of_mkQ_comp_surjective (I := maximalIdeal L) ?_)
   let P : Submodule B N := (maximalIdeal L).map (algebraMap L B) • ⊤
   have hP : ∀ x, x ∈ P ↔ x ∈ (maximalIdeal L • ⊤ : Submodule L N) := by
@@ -262,9 +262,9 @@ private lemma finite_of_dense {L R B N : Type} [CommRing L] [IsLocalRing L] [Com
       rw [Submodule.map_smul''] at this
       exact Submodule.smul_mono le_rfl le_top this
     exact (Submodule.Quotient.mk_eq_zero P).2 this
-  haveI : IsArtinian L (F ⧸ Q) := by
-    letI : Field (L ⧸ maximalIdeal L) := Ideal.Quotient.field _
-    haveI : Module.Finite (L ⧸ maximalIdeal L) (F ⧸ Q) :=
+  have : IsArtinian L (F ⧸ Q) := by
+    let : Field (L ⧸ maximalIdeal L) := Ideal.Quotient.field _
+    have : Module.Finite (L ⧸ maximalIdeal L) (F ⧸ Q) :=
       Module.Finite.of_restrictScalars_finite L _ _
     exact isArtinian_of_surjective_algebraMap (R := L ⧸ maximalIdeal L)
       Ideal.Quotient.mk_surjective
@@ -311,12 +311,10 @@ private lemma flat_tensor {Λ R B M : Type} [CommRing Λ] [CommRing R] [CommRing
       = LinearMap.lTensor B (AlgebraTensorModule.lTensor R M I.subtype)
         (AlgebraTensorModule.assoc Λ R B B M I x) := by
     intro x
-    induction x using TensorProduct.induction_on with
-    | zero => simp
+    induction x using TensorProduct.inductionOn with
     | add x y hx hy => simp only [map_add (f := _), hx, hy]
     | tmul y i =>
-      induction y using TensorProduct.induction_on with
-      | zero => simp
+      induction y using TensorProduct.inductionOn with
       | add x y hx hy => simp only [add_tmul, map_add (f := _), hx, hy]
       | tmul b m => simp
   intro x y hxy
@@ -328,7 +326,7 @@ private lemma free_of_flat {Λ L N : Type} [CommRing Λ] [CommRing L] [IsLocalRi
     [IsNoetherianRing L] [Algebra Λ L] [AddCommGroup N] [Module Λ N] [Module L N]
     [IsScalarTower Λ L N] [Module.Flat Λ N] [Module.Finite L N] (p : Ideal Λ)
     (hp : p.map (algebraMap Λ L) = maximalIdeal L) : Module.Free L N := by
-  haveI : Module.FinitePresentation L N := Module.finitePresentation_of_finite L N
+  have : Module.FinitePresentation L N := Module.finitePresentation_of_finite L N
   apply Module.free_of_maximalIdeal_rTensor_injective
   have hmem : ∀ x : p, algebraMap Λ L x ∈ maximalIdeal L := fun x =>
     hp ▸ Ideal.mem_map_of_mem _ x.2
@@ -366,15 +364,13 @@ private lemma free_of_flat {Λ L N : Type} [CommRing Λ] [CommRing L] [IsLocalRi
         rw [this, smul_tmul]
         exact ih _ _
     intro z
-    induction z using TensorProduct.induction_on with
-    | zero => exact zero_mem _
+    induction z using TensorProduct.inductionOn with
     | add x y hx hy => exact add_mem hx hy
     | tmul x n => exact key x.1 (hp.ge x.2) x.2 n
   have hcomp : ∀ y, TensorProduct.lid L N (LinearMap.rTensor N (maximalIdeal L).subtype (ψ y))
       = TensorProduct.lid Λ N (LinearMap.rTensor N p.subtype y) := by
     intro y
-    induction y using TensorProduct.induction_on with
-    | zero => simp
+    induction y using TensorProduct.inductionOn with
     | add x y hx hy => simp only [map_add (f := _), hx, hy]
     | tmul x n => rw [hψ]; simp
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -387,26 +383,19 @@ private lemma free_of_flat {Λ L N : Type} [CommRing Λ] [CommRing L] [IsLocalRi
       (by rw [h0, map_zero])
   rw [hy, map_zero]
 
-end UpperTheory.Reformulated.B.FlatnessPrecompleteProducts
-
-theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseChange :
-    ∀ (Λ R : Type) [inst : CommRing Λ] [IsNoetherianRing Λ] [inst_2 : CommRing R] [IsNoetherianRing R]
-      [inst_4 : Algebra Λ R] (p : Ideal Λ) (q : Ideal R) (L B : Type) [inst_5 : CommRing L] [inst_6 : IsLocalRing L]
-      [inst_7 : CommRing B] [inst_8 : IsLocalRing B] [inst_9 : Algebra Λ L] [inst_10 : Algebra R B] [inst_11 : Algebra L B]
-      [inst_12 : Algebra Λ B] [IsScalarTower Λ R B] [IsScalarTower Λ L B] (M : Type) [inst_15 : AddCommGroup M]
-      [inst_16 : _root_.Module R M] [inst_17 : _root_.Module Λ M] [IsScalarTower Λ R M] [Module.Finite Λ M]
-      [Module.Flat Λ M],
-      UpperTheory.V.AlgebraTools.IsCplAt Λ p L →
-        UpperTheory.V.AlgebraTools.IsCplAt R q B →
-          Ideal.comap (Algebra.algebraMap Λ R) q = p →
-            Module.Finite L (TensorProduct R B M) ∧ Module.Free L (TensorProduct R B M) := by
-  intro Λ R _ _ _ _ _ p q L B _ _ _ _ _ _ _ _ _ _ M _ _ _ _ _ _ hL hB hpq
+theorem finite_free_baseChange (Λ R : Type) [CommRing Λ] [IsNoetherianRing Λ] [CommRing R]
+    [IsNoetherianRing R] [Algebra Λ R] (p : Ideal Λ) (q : Ideal R) (L B : Type) [CommRing L]
+    [IsLocalRing L] [CommRing B] [IsLocalRing B] [Algebra Λ L] [Algebra R B] [Algebra L B]
+    [Algebra Λ B] [IsScalarTower Λ R B] [IsScalarTower Λ L B] (M : Type) [AddCommGroup M]
+    [Module R M] [Module Λ M] [IsScalarTower Λ R M] [Module.Finite Λ M] [Module.Flat Λ M]
+    (hL : IsCplAt Λ p L) (hB : IsCplAt R q B) (hpq : q.comap (algebraMap Λ R) = p) :
+    Module.Finite L (B ⊗[R] M) ∧ Module.Free L (B ⊗[R] M) := by
   have := hL.noeth
   have := hB.noeth
   have := hL.complete
-  haveI : Module.Finite R M := Module.Finite.of_restrictScalars_finite Λ R M
-  haveI : Module.Flat R B := flat_of_isCplAt hB
-  haveI : Module.Flat Λ (B ⊗[R] M) := flat_tensor
+  have : Module.Finite R M := Module.Finite.of_restrictScalars_finite Λ R M
+  have : Module.Flat R B := flat_of_isCplAt hB
+  have : Module.Flat Λ (B ⊗[R] M) := flat_tensor
   have hloc : (maximalIdeal L).map (algebraMap L B) ≤ maximalIdeal B := by
     rw [← map_eq_max hL, Ideal.map_map, ← IsScalarTower.algebraMap_eq, Ideal.map_le_iff_le_comap,
       IsScalarTower.algebraMap_eq Λ R B, ← Ideal.comap_comap, hB.comap_eq, hpq]
@@ -420,7 +409,7 @@ theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseC
     rw [← hB.comap_eq]
     exact hn
   let φ : M →ₗ[Λ] B ⊗[R] M := (TensorProduct.mk R B M 1).restrictScalars Λ
-  haveI : Module.Finite L (B ⊗[R] M) := by
+  have : Module.Finite L (B ⊗[R] M) := by
     refine finite_of_dense hloc hd (Submodule.span L (Set.range φ)) ?_ ?_ ?_
     · obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := Λ) (M := M)
       rw [← LinearMap.coe_range, LinearMap.range_eq_map, ← hs, Submodule.map_span,
@@ -438,8 +427,7 @@ theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseC
       | smul l x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ _ hx
     · rw [Submodule.span_span_of_tower, eq_top_iff]
       rintro x -
-      induction x using TensorProduct.induction_on with
-      | zero => exact zero_mem _
+      induction x using TensorProduct.inductionOn with
       | add x y hx hy => exact add_mem hx hy
       | tmul b m =>
         have : b ⊗ₜ[R] m = b • φ m := by
@@ -448,3 +436,5 @@ theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseC
         rw [this]
         exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨m, rfl⟩)
   exact ⟨inferInstance, free_of_flat p (map_eq_max hL)⟩
+
+end UpperTheory.Reformulated.B.FlatnessPrecompleteProducts
