@@ -56,7 +56,7 @@ theorem desPol_alt : _root_.GlobalTheory.BigTop.Fun.DescentPolynomialCondition :
         rw [hp]; exact mul_le_mul_of_nonneg_right hXA (by positivity)
     _ = X ^ ((16 * (T + 9) + 1 : ℕ) : ℝ) := by rw [Real.rpow_natCast, pow_succ, mul_comm]
     _ ≤ X ^ CH := by
-        refine rpow_mono hX1 ?_
+        refine Real.rpow_le_rpow_of_exponent_le hX1 ?_
         rw [hTdef] at *
         push_cast
         linarith

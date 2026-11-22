@@ -54,21 +54,6 @@ def stalkEquiv {Y : Scheme.{0}} [IsIntegral Y] (w : Y) : Y.presheaf.stalk w ≃+
 theorem stalkEquiv_apply {Y : Scheme.{0}} [IsIntegral Y] (w : Y) (a : Y.presheaf.stalk w) :
     ((stalkEquiv w a : locRing w) : Y.functionField) = algebraMap _ Y.functionField a := rfl
 
-theorem map_maximalIdeal_equiv {R R' : Type*} [CommRing R] [CommRing R'] [IsLocalRing R]
-    [IsLocalRing R'] (φ : R ≃+* R') :
-    (IsLocalRing.maximalIdeal R).map φ = IsLocalRing.maximalIdeal R' := by
-  ext a
-  rw [Ideal.mem_map_of_equiv, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-  constructor
-  · rintro ⟨b, hb, rfl⟩ h
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hb
-    exact hb ((isUnit_map_iff φ b).1 h)
-  · intro ha
-    refine ⟨φ.symm a, ?_, by simp⟩
-    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-    intro h
-    exact ha (by simpa using h.map φ)
-
 end GlobalTheory.FieldPair.AdjUp
 
 
@@ -132,7 +117,7 @@ theorem GlobalTheory.FieldPair.mult_lt_of_adjKlt : ∀ (X : Scheme.{0}) [IsInteg
       rw [Ideal.map_span]; simp [Set.image_insert_eq]
     rw [h1, hspan]
     haveI := hQ.isLocalRing
-    exact map_maximalIdeal_equiv _
+    exact IsLocalRing.map_ringEquiv_maximalIdeal _
   · exact (ringKrullDim_eq_of_ringEquiv (stalkEquiv w')).symm.trans hdim
   · intro P hP h1 h2
     obtain ⟨P₀, rfl⟩ := (placeEquiv (s ≫ p)).surjective P

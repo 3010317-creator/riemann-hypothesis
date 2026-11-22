@@ -69,8 +69,6 @@ namespace GlobalTheory.BigTop.Fun.PolBound
 
 open Formalism.BasicNotions Formalism.MainNotions NumberField
 
-theorem rpow_mono {x a b : ℝ} (hx : 1 ≤ x) (h : a ≤ b) : x ^ a ≤ x ^ b := Real.rpow_le_rpow_of_exponent_le hx h
-
 theorem factors_le {D : D7} (L : SizeData₂ D) (hS : SizesAt L) (T : ℕ) (hT : L.Ct + 1 ≤ T) :
     (D.R.f : ℝ) ≤ L.sc.x ^ (T + 9) ∧ (D.R.m : ℝ) ≤ L.sc.x ^ (T + 9) ∧ (D.R.k : ℝ) ≤ L.sc.x ^ (T + 9) ∧
       (D.R.t : ℝ) ≤ L.sc.x ^ (T + 9) ∧ Real.log L.sc.b ≤ L.sc.x ^ (T + 9) ∧ 0 ≤ Real.log L.sc.b ∧
@@ -85,7 +83,7 @@ theorem factors_le {D : D7} (L : SizeData₂ D) (hS : SizesAt L) (T : ℕ) (hT :
   have hth : szTh L = L.sc.eps / 100 := rfl
   have hpow : ∀ j : ℕ, j ≤ T + 9 → x ^ j ≤ x ^ (T + 9) := fun j hj => pow_le_pow_right₀ hx1 hj
   have hrp : ∀ (a : ℝ) (j : ℕ), a ≤ j → x ^ a ≤ x ^ j := fun a j h => by
-    rw [← Real.rpow_natCast]; exact rpow_mono hx1 h
+    rw [← Real.rpow_natCast]; exact Real.rpow_le_rpow_of_exponent_le hx1 h
 
   have hLd : L.sc.L = x ^ L.sc.eps := by rw [hxdef]; rfl
   have hlb : Real.log L.sc.b = x ^ L.sc.eps := by

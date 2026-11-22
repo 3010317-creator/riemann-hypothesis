@@ -40,9 +40,6 @@ theorem iterated_sub {Z X : Type*} [TopologicalSpace Z] [MeasurableSpace Z] [Ope
   rw [← integral_sub j1 j2]
   exact integral_congr_ae (Eventually.of_forall fun x => integral_sub (i1 x) (i2 x))
 
-theorem firstCountable_of_second (X : Type*) [TopologicalSpace X] [SecondCountableTopology X] :
-    FirstCountableTopology X := inferInstance
-
 theorem pc_sub : PcBound → ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : Maps D hn) (m : Meas D ρ p)
     (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ (b₀ : HermE D ρ) (F F' : G D n → ℂ), Continuous F →
     LeftInv (GF D n) F → Continuous F' → LeftInv (GF D n) F' → ∀ (y : Mx D ρ p) (g : G D n),
@@ -53,7 +50,7 @@ theorem pc_sub : PcBound → ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : 
   haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
   haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
   haveI : SecondCountableTopology (Mx D ρ p) := (GlobalTheory.MixModel.lattice_Mx D ρ p).2.2.1
-  haveI : FirstCountableTopology (Mx D ρ p) := firstCountable_of_second _
+  haveI : FirstCountableTopology (Mx D ρ p) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   haveI h1 : IsFiniteMeasure (m.lz.restrict m.𝓖) :=
     ⟨by rw [Measure.restrict_apply_univ, m.hz.2.2]; exact ENNReal.one_lt_top⟩
   haveI h2 : IsFiniteMeasure (m.μ.restrict m.𝓕) :=

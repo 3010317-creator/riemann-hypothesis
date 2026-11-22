@@ -185,20 +185,9 @@ theorem isIw_of_pres {m : Matrix (Fin n) (Fin n) L}
       omega
     simpa [Matrix.col, hi] using h1
 
-theorem stab_iff {G X : Type*} [Group G] [MulAction G X] (f : G) (S : Set X) :
-    f ∈ MulAction.stabilizer G S ↔ ∀ x, f • x ∈ S ↔ x ∈ S := by
-  rw [MulAction.mem_stabilizer_iff]
-  constructor
-  · intro h x
-    conv_lhs => rw [← h]
-    exact Set.smul_mem_smul_set_iff
-  · intro h
-    ext y
-    rw [Set.mem_smul_set_iff_inv_smul_mem, ← h, smul_inv_smul]
-
 theorem mem_IwGL_iff_pres {g : GL (Fin n) L} : g ∈ IwGL L n ↔
     ∀ k : Fin (n + 1), ∀ x, (g : Matrix (Fin n) (Fin n) L) *ᵥ x ∈ latK L n k ↔ x ∈ latK L n k := by
-  simp only [IwGL, Subgroup.mem_iInf, Subgroup.mem_comap, stab_iff]
+  simp only [IwGL, Subgroup.mem_iInf, Subgroup.mem_comap, MulAction.mem_stabilizer_set]
   exact Iff.rfl
 
 theorem mem_IwGL_iff_isIw {g : GL (Fin n) L} : g ∈ IwGL L n ↔
