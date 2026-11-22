@@ -340,19 +340,25 @@ theorem levelaf_conj_integral (O : Subring L) (g : GL n L) (c : O)
     simpa only [RingHom.mapMatrix_apply, Matrix.map_apply] using congrFun (congrFun hm a) b
   choose e he using fun a b => Ideal.mem_span_singleton'.1 (hent a b)
   let E : Matrix n n O := Matrix.of e
+  have hL : ∀ a b, (((h : Matrix n n O) a b : O) : L) =
+      (1 : Matrix n n L) a b + (c : L) * (c : L) * ((e a b : O) : L) := by
+    intro a b
+    have h1 := he a b
+    rw [Matrix.one_apply] at h1 ⊢
+    split_ifs at h1 ⊢ with hab
+    · have := congrArg Subtype.val h1
+      push_cast at this
+      linear_combination -this
+    · have := congrArg Subtype.val h1
+      push_cast at this
+      linear_combination -this
   have hkey : ((bc (n := n) O.subtype h : GL n L) : Matrix n n L) =
       1 + ((c : L) * (c : L)) • RingHom.mapMatrix (m := n) O.subtype E := by
     ext a b
     simp only [bc, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
       RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul,
       E, Matrix.of_apply, Subring.coe_subtype]
-    have h1 := he a b
-    rw [Matrix.one_apply] at h1 ⊢
-    split_ifs at h1 ⊢ with hab
-    all_goals
-      have := congrArg Subtype.val h1
-      push_cast at this
-      linear_combination -this
+    exact hL a b
   have hcalc : ((g⁻¹ * bc (n := n) O.subtype h * g : GL n L) : Matrix n n L) =
       1 + ((c : L) • ((g⁻¹ : GL n L) : Matrix n n L)) * RingHom.mapMatrix (m := n) O.subtype E *
         ((c : L) • (g : Matrix n n L)) := by
