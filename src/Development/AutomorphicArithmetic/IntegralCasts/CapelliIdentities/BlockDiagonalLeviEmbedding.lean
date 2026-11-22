@@ -50,204 +50,127 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 open scoped Classical
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.blk :
-    {α n : Type} → {m : α → Type} → (a : α) × m a ≃ n → n → α :=
-    fun {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) (i : n) ↦ ((e.symm : n → (a : α) × m a) i).fst
+namespace UpperTheory.Reformulated.B.Qf33
 
-theorem UpperTheory.Reformulated.B.Qf33.aux2 :
-    ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : LinearOrder α] [inst_2 : Fintype n]
-      [inst_3 : DecidableEq n] (e : (a : α) × m a ≃ n) {x y : GL n R},
-      x ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} →
-        y ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} →
-          x * y ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} := by
-  intro R _ α n m _ _ _ e x y hx hy
+noncomputable def blk {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) (i : n) : α :=
+  (e.symm i).1
+
+theorem aux2 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) {x y : GL n R}
+    (hx : x ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)})
+    (hy : y ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)}) :
+    x * y ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)} := by
   exact Matrix.BlockTriangular.mul hx hy
 
-theorem UpperTheory.Reformulated.B.Qf33.aux3 :
-    ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : LinearOrder α] [inst_2 : Fintype n]
-      [inst_3 : DecidableEq n] (e : (a : α) × m a ≃ n),
-      (1 : GL n R) ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} := by
-  intro R _ α n m _ _ _ e
+theorem aux3 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) :
+    (1 : GL n R) ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)} := by
   exact Matrix.blockTriangular_one
 
-theorem UpperTheory.Reformulated.B.Qf33.aux4 :
-    ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : LinearOrder α] [inst_2 : Fintype n]
-      [inst_3 : DecidableEq n] (e : (a : α) × m a ≃ n) {x : GL n R},
-      x ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} →
-        x⁻¹ ∈ {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)} := by
-  intro R _ α n m _ _ _ e x hx
+theorem aux4 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α] [Fintype n]
+    [DecidableEq n] (e : (a : α) × m a ≃ n) {x : GL n R}
+    (hx : x ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)}) :
+    x⁻¹ ∈ {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)} := by
   have h : ((x⁻¹ : GL n R) : Matrix n n R) = (x : Matrix n n R)⁻¹ := Matrix.coe_units_inv x
   change ((x⁻¹ : GL n R) : Matrix n n R).BlockTriangular _
   rw [h]
-  letI : Invertible (x : Matrix n n R) := x.invertible
+  let : Invertible (x : Matrix n n R) := x.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.parab :
-    (R : Type) →
-      [inst : CommRing R] →
-        {α n : Type} →
-          {m : α → Type} →
-            [LinearOrder α] → [inst_2 : Fintype n] → [inst_3 : DecidableEq n] → (a : α) × m a ≃ n → Subgroup (GL n R) :=
-    fun (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : LinearOrder α] [inst_2 : Fintype n]
-        [inst_3 : DecidableEq n] (e : (a : α) × m a ≃ n) ↦
-      { carrier := {g : GL n R | (↑g : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e)},
-        mul_mem' := @UpperTheory.Reformulated.B.Qf33.aux2 R inst α n m inst_1 inst_2 inst_3 e, one_mem' := UpperTheory.Reformulated.B.Qf33.aux3 R e,
-        inv_mem' := @UpperTheory.Reformulated.B.Qf33.aux4 R inst α n m inst_1 inst_2 inst_3 e : Subgroup (GL n R) }
+noncomputable def parab (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α]
+    [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) : Subgroup (GL n R) :=
+  { carrier := {g : GL n R | (g : Matrix n n R).BlockTriangular (blk e)}
+    mul_mem' := @aux2 R _ α n m _ _ _ e
+    one_mem' := aux3 R e
+    inv_mem' := @aux4 R _ α n m _ _ _ e : Subgroup (GL n R) }
 
-@[reducible] noncomputable def UpperTheory.Reformulated.B.Qf33.Levi :
-    (R : Type) →
-      [CommRing R] → {α : Type} → (m : α → Type) → [(a : α) → Fintype (m a)] → [(a : α) → DecidableEq (m a)] → Type :=
-    fun (R : Type) [CommRing R] {α : Type} (m : α → Type) [(a : α) → Fintype (m a)] [(a : α) → DecidableEq (m a)] ↦
-      (a : α) → GL (m a) R
+@[reducible] noncomputable def Levi (R : Type) [CommRing R] {α : Type} (m : α → Type)
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] : Type :=
+  (a : α) → GL (m a) R
 
-theorem UpperTheory.Reformulated.B.Qf33.aux7 :
-    ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : LinearOrder α] [inst_2 : (a : α) → Fintype (m a)]
-      [inst_3 : (a : α) → DecidableEq (m a)] [inst_4 : Fintype n] [inst_5 : DecidableEq n] (e : (a : α) × m a ≃ n) (a : α),
-      ((↑(↑(1 : ↥(UpperTheory.Reformulated.B.Qf33.parab R e)) : GL n R) : Matrix n n R).submatrix
-          (fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a)) fun (i : m a) ↦
-          (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a)) =
-        (1 : Matrix (m a) (m a) R) := by
-  intro R _ α n m _ _ _ _ _ e a
+theorem aux7 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [LinearOrder α]
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) (a : α) :
+    (((1 : parab R e) : GL n R) : Matrix n n R).submatrix (fun i : m a ↦ e ⟨a, i⟩)
+        (fun i : m a ↦ e ⟨a, i⟩) = (1 : Matrix (m a) (m a) R) := by
   refine Matrix.submatrix_one _ ?_
   intro i j h
   exact sigma_mk_injective (e.injective h)
 
-theorem UpperTheory.Reformulated.B.Qf33.aux8 :
-    ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type} [Fintype α] [inst_2 : LinearOrder α]
-      [inst_3 : (a : α) → Fintype (m a)] [inst_4 : (a : α) → DecidableEq (m a)] [inst_5 : Fintype n]
-      [inst_6 : DecidableEq n] (e : (a : α) × m a ≃ n) (a : α) (x y : ↥(UpperTheory.Reformulated.B.Qf33.parab R e)),
-      ((↑(↑(x * y) : GL n R) : Matrix n n R).submatrix (fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a))
-          fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a)) =
-        ((↑(↑x : GL n R) : Matrix n n R).submatrix (fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a))
-            fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a)) *
-          (↑(↑y : GL n R) : Matrix n n R).submatrix (fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a))
-            fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a) := by
-  intro R _ α n m _ _ _ _ _ _ e a x y
+theorem aux8 (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α]
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) (a : α) (x y : parab R e) :
+    (((x * y : parab R e) : GL n R) : Matrix n n R).submatrix (fun i : m a ↦ e ⟨a, i⟩)
+        (fun i : m a ↦ e ⟨a, i⟩) =
+      ((x : GL n R) : Matrix n n R).submatrix (fun i : m a ↦ e ⟨a, i⟩) (fun i : m a ↦ e ⟨a, i⟩) *
+        ((y : GL n R) : Matrix n n R).submatrix (fun i : m a ↦ e ⟨a, i⟩)
+          (fun i : m a ↦ e ⟨a, i⟩) := by
   ext i j
-  have hx : (↑(↑x : GL n R) : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e) := x.2
-  have hy : (↑(↑y : GL n R) : Matrix n n R).BlockTriangular (UpperTheory.Reformulated.B.Qf33.blk e) := y.2
+  have hx : ((x : GL n R) : Matrix n n R).BlockTriangular (blk e) := x.2
+  have hy : ((y : GL n R) : Matrix n n R).BlockTriangular (blk e) := y.2
   simp only [Subgroup.coe_mul, Units.val_mul, Matrix.submatrix_apply, Matrix.mul_apply]
   rw [← e.sum_comp, Fintype.sum_sigma, Finset.sum_eq_single a]
   · intro b _ hb
     refine Finset.sum_eq_zero fun k _ ↦ ?_
     rcases lt_or_gt_of_ne hb with h | h
-    · rw [hx (by simpa [UpperTheory.Reformulated.B.Qf33.blk] using h), zero_mul]
-    · rw [hy (i := e ⟨b, k⟩) (by simpa [UpperTheory.Reformulated.B.Qf33.blk] using h), mul_zero]
+    · rw [hx (by simpa [blk] using h), zero_mul]
+    · rw [hy (i := e ⟨b, k⟩) (by simpa [blk] using h), mul_zero]
   · intro h
     exact absurd (Finset.mem_univ a) h
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.diagBlock :
-    (R : Type) →
-      [inst : CommRing R] →
-        {α n : Type} →
-          {m : α → Type} →
-            [Fintype α] →
-              [inst_2 : LinearOrder α] →
-                [inst_3 : (a : α) → Fintype (m a)] →
-                  [inst_4 : (a : α) → DecidableEq (m a)] →
-                    [inst_5 : Fintype n] →
-                      [inst_6 : DecidableEq n] →
-                        (e : (a : α) × m a ≃ n) → (a : α) → ↥(UpperTheory.Reformulated.B.Qf33.parab R e) →* Matrix (m a) (m a) R :=
-    fun (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α] [(a : α) → Fintype (m a)]
-        [(a : α) → DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) (a : α) ↦
-      {
-        toFun := fun (p : ↥(UpperTheory.Reformulated.B.Qf33.parab R e)) ↦
-          (↑(↑p : GL n R) : Matrix n n R).submatrix (fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a))
-            fun (i : m a) ↦ (e : (a : α) × m a → n) (⟨a, i⟩ : (a : α) × m a),
-        map_one' := UpperTheory.Reformulated.B.Qf33.aux7 R e a, map_mul' := UpperTheory.Reformulated.B.Qf33.aux8 R e a :
-        ↥(UpperTheory.Reformulated.B.Qf33.parab R e) →* Matrix (m a) (m a) R }
+noncomputable def diagBlock (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) (a : α) : parab R e →* Matrix (m a) (m a) R :=
+  { toFun := fun p : parab R e ↦
+      ((p : GL n R) : Matrix n n R).submatrix (fun i : m a ↦ e ⟨a, i⟩) (fun i : m a ↦ e ⟨a, i⟩)
+    map_one' := aux7 R e a
+    map_mul' := aux8 R e a : parab R e →* Matrix (m a) (m a) R }
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.leviProj :
-    (R : Type) →
-      [inst : CommRing R] →
-        {α n : Type} →
-          {m : α → Type} →
-            [Fintype α] →
-              [inst_2 : LinearOrder α] →
-                [inst_3 : (a : α) → Fintype (m a)] →
-                  [inst_4 : (a : α) → DecidableEq (m a)] →
-                    [inst_5 : Fintype n] →
-                      [inst_6 : DecidableEq n] →
-                        (e : (a : α) × m a ≃ n) → ↥(UpperTheory.Reformulated.B.Qf33.parab R e) →* UpperTheory.Reformulated.B.Qf33.Levi R m :=
-    fun (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α] [(a : α) → Fintype (m a)]
-        [(a : α) → DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) ↦
-      MonoidHom.pi fun (a : α) ↦ (UpperTheory.Reformulated.B.Qf33.diagBlock R e a).toHomUnits
+noncomputable def leviProj (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) : parab R e →* Levi R m :=
+  MonoidHom.pi fun a : α ↦ (diagBlock R e a).toHomUnits
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.unipRad :
-    (R : Type) →
-      [inst : CommRing R] →
-        {α n : Type} →
-          {m : α → Type} →
-            [Fintype α] →
-              [LinearOrder α] →
-                [(a : α) → Fintype (m a)] →
-                  [(a : α) → DecidableEq (m a)] →
-                    [inst_5 : Fintype n] → [inst_6 : DecidableEq n] → (a : α) × m a ≃ n → Subgroup (GL n R) :=
-    fun (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α] [(a : α) → Fintype (m a)]
-        [(a : α) → DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) ↦
-      Subgroup.map (UpperTheory.Reformulated.B.Qf33.parab R e).subtype (UpperTheory.Reformulated.B.Qf33.leviProj R e).ker
+noncomputable def unipRad (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) : Subgroup (GL n R) :=
+  Subgroup.map (parab R e).subtype (leviProj R e).ker
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.opp :
-    {α n : Type} → {m : α → Type} → (a : α) × m a ≃ n → (a : αᵒᵈ) × m ((OrderDual.ofDual : αᵒᵈ → α) a) ≃ n :=
-    fun {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) ↦ e
+noncomputable def opp {α n : Type} {m : α → Type} (e : (a : α) × m a ≃ n) :
+    (a : αᵒᵈ) × m (OrderDual.ofDual a) ≃ n :=
+  e
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.unipRadLower :
-    (R : Type) →
-      [inst : CommRing R] →
-        {α n : Type} →
-          {m : α → Type} →
-            [Fintype α] →
-              [LinearOrder α] →
-                [(a : α) → Fintype (m a)] →
-                  [(a : α) → DecidableEq (m a)] →
-                    [inst_5 : Fintype n] → [inst_6 : DecidableEq n] → (a : α) × m a ≃ n → Subgroup (GL n R) :=
-    fun (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α] [(a : α) → Fintype (m a)]
-        [(a : α) → DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (a : α) × m a ≃ n) ↦
-      UpperTheory.Reformulated.B.Qf33.unipRad R (UpperTheory.Reformulated.B.Qf33.opp e)
+noncomputable def unipRadLower (R : Type) [CommRing R] {α n : Type} {m : α → Type} [Fintype α]
+    [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    (e : (a : α) × m a ≃ n) : Subgroup (GL n R) :=
+  unipRad R (opp e)
 
-theorem UpperTheory.Reformulated.B.Qf33.zero_contDiffOn_supported :
-    ∀ (R : Type) [inst : CommRing R] {n : Type} [inst_1 : Fintype n] [inst_2 : DecidableEq n] {α : Type} {m : α → Type}
-      [inst_3 : (a : α) → Fintype (m a)] [inst_4 : (a : α) → DecidableEq (m a)] (e : (a : α) × m a ≃ n),
-      (Matrix.reindex e e : Matrix ((a : α) × m a) ((a : α) × m a) R → Matrix n n R)
-          (Matrix.blockDiagonal' fun (a : α) ↦ (↑((1 : UpperTheory.Reformulated.B.Qf33.Levi R m) a) : Matrix (m a) (m a) R)) =
-        (1 : Matrix n n R) := by
-  intro R _ n _ _ α m _ _ e
-  have h : (fun (a : α) ↦ (↑((1 : UpperTheory.Reformulated.B.Qf33.Levi R m) a) : Matrix (m a) (m a) R)) = 1 := rfl
+theorem zero_contDiffOn_supported (R : Type) [CommRing R] {n : Type} [Fintype n] [DecidableEq n]
+    {α : Type} {m : α → Type} [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)]
+    (e : (a : α) × m a ≃ n) :
+    Matrix.reindex e e (Matrix.blockDiagonal' fun a ↦ ((1 : Levi R m) a : Matrix (m a) (m a) R)) =
+      (1 : Matrix n n R) := by
+  have h : (fun (a : α) ↦ ((1 : Levi R m) a : Matrix (m a) (m a) R)) = 1 := rfl
   rw [h, Matrix.blockDiagonal'_one, Matrix.reindex_apply, Matrix.submatrix_one_equiv]
 
-theorem UpperTheory.Reformulated.B.Qf33.sign_action_map_comm :
-    ∀ (R : Type) [inst : CommRing R] {n : Type} [inst_1 : Fintype n] [inst_2 : DecidableEq n] {α : Type} {m : α → Type}
-      [Fintype α] [inst_4 : (a : α) → Fintype (m a)] [inst_5 : (a : α) → DecidableEq (m a)] (e : (a : α) × m a ≃ n)
-      (g h : UpperTheory.Reformulated.B.Qf33.Levi R m),
-      (Matrix.reindex e e : Matrix ((a : α) × m a) ((a : α) × m a) R → Matrix n n R)
-          (Matrix.blockDiagonal' fun (a : α) ↦ (↑((g * h) a) : Matrix (m a) (m a) R)) =
-        (Matrix.reindex e e : Matrix ((a : α) × m a) ((a : α) × m a) R → Matrix n n R)
-            (Matrix.blockDiagonal' fun (a : α) ↦ (↑(g a) : Matrix (m a) (m a) R)) *
-          (Matrix.reindex e e : Matrix ((a : α) × m a) ((a : α) × m a) R → Matrix n n R)
-            (Matrix.blockDiagonal' fun (a : α) ↦ (↑(h a) : Matrix (m a) (m a) R)) := by
-  intro R _ n _ _ α m _ _ _ e g h
+theorem sign_action_map_comm (R : Type) [CommRing R] {n : Type} [Fintype n] [DecidableEq n]
+    {α : Type} {m : α → Type} [Fintype α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)]
+    (e : (a : α) × m a ≃ n) (g h : Levi R m) :
+    Matrix.reindex e e (Matrix.blockDiagonal' fun a ↦ ((g * h) a : Matrix (m a) (m a) R)) =
+      Matrix.reindex e e (Matrix.blockDiagonal' fun a ↦ (g a : Matrix (m a) (m a) R)) *
+        Matrix.reindex e e (Matrix.blockDiagonal' fun a ↦ (h a : Matrix (m a) (m a) R)) := by
   simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv, Pi.mul_apply, Units.val_mul]
   rw [← Matrix.blockDiagonal'_mul]
 
-noncomputable def UpperTheory.Reformulated.B.Qf33.leviEmb :
-    (R : Type) →
-      [inst : CommRing R] →
-        {n : Type} →
-          [inst_1 : Fintype n] →
-            [inst_2 : DecidableEq n] →
-              {α : Type} →
-                {m : α → Type} →
-                  [Fintype α] →
-                    [inst_4 : (a : α) → Fintype (m a)] →
-                      [inst_5 : (a : α) → DecidableEq (m a)] → (a : α) × m a ≃ n → UpperTheory.Reformulated.B.Qf33.Levi R m →* GL n R :=
-    fun (R : Type) [CommRing R] {n : Type} [Fintype n] [DecidableEq n] {α : Type} {m : α → Type} [Fintype α]
-        [(a : α) → Fintype (m a)] [(a : α) → DecidableEq (m a)] (e : (a : α) × m a ≃ n) ↦
-      {
-          toFun := fun (g : UpperTheory.Reformulated.B.Qf33.Levi R m) ↦
-            (Matrix.reindex e e : Matrix ((a : α) × m a) ((a : α) × m a) R → Matrix n n R)
-              (Matrix.blockDiagonal' fun (a : α) ↦ (↑(g a) : Matrix (m a) (m a) R)),
-          map_one' := UpperTheory.Reformulated.B.Qf33.zero_contDiffOn_supported R e, map_mul' := UpperTheory.Reformulated.B.Qf33.sign_action_map_comm R e :
-          UpperTheory.Reformulated.B.Qf33.Levi R m →* Matrix n n R }.toHomUnits
+noncomputable def leviEmb (R : Type) [CommRing R] {n : Type} [Fintype n] [DecidableEq n] {α : Type}
+    {m : α → Type} [Fintype α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)]
+    (e : (a : α) × m a ≃ n) : Levi R m →* GL n R :=
+  { toFun := fun g : Levi R m ↦
+      Matrix.reindex e e (Matrix.blockDiagonal' fun a ↦ (g a : Matrix (m a) (m a) R))
+    map_one' := zero_contDiffOn_supported R e
+    map_mul' := sign_action_map_comm R e : Levi R m →* Matrix n n R }.toHomUnits
+
+end UpperTheory.Reformulated.B.Qf33
 
 private theorem rad_spec {R : Type} [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α]
     [(a : α) → Fintype (m a)] [(a : α) → DecidableEq (m a)] [Fintype n] [DecidableEq n]
@@ -282,29 +205,28 @@ private theorem eq_one_of_blocks {R : Type} [CommRing R] {α n : Type} {m : α �
     rw [h1]
     simp [Matrix.one_apply]
   · rw [h0 _ _ (by simpa [UpperTheory.Reformulated.B.Qf33.blk] using hab)]
-    simp [Matrix.one_apply, hab]
+    simp [hab]
 
-theorem UpperTheory.Reformulated.B.Qf33.uniq :
-    ∀ {R : Type} [inst : CommRing R] {α n : Type} {m : α → Type} [inst_1 : Fintype α] [inst_2 : LinearOrder α]
-      [inst_3 : (a : α) → Fintype (m a)] [inst_4 : (a : α) → DecidableEq (m a)] [inst_5 : Fintype n]
-      [inst_6 : DecidableEq n] {e : (a : α) × m a ≃ n},
-      ∀ a ∈ UpperTheory.Reformulated.B.Qf33.unipRadLower R e,
-        ∀ a' ∈ UpperTheory.Reformulated.B.Qf33.unipRadLower R e,
-          ∀ b ∈ (UpperTheory.Reformulated.B.Qf33.leviEmb R e).range,
-            ∀ b' ∈ (UpperTheory.Reformulated.B.Qf33.leviEmb R e).range,
-              ∀ c ∈ UpperTheory.Reformulated.B.Qf33.unipRad R e,
-                ∀ c' ∈ UpperTheory.Reformulated.B.Qf33.unipRad R e, a * b * c = a' * b' * c' → a = a' ∧ b = b' ∧ c = c' := by
-  intro R _ α n m _ _ _ _ _ _ e a ha a' ha' b hb b' hb' c hc c' hc' h
+namespace UpperTheory.Reformulated.B.Qf33
+
+theorem uniq {R : Type} [CommRing R] {α n : Type} {m : α → Type} [Fintype α] [LinearOrder α]
+    [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n]
+    {e : (a : α) × m a ≃ n} :
+    ∀ a ∈ unipRadLower R e, ∀ a' ∈ unipRadLower R e,
+      ∀ b ∈ (leviEmb R e).range, ∀ b' ∈ (leviEmb R e).range,
+        ∀ c ∈ unipRad R e, ∀ c' ∈ unipRad R e,
+          a * b * c = a' * b' * c' → a = a' ∧ b = b' ∧ c = c' := by
+  intro a ha a' ha' b hb b' hb' c hc c' hc' h
   have h1 : a'⁻¹ * a = b' * c' * (b * c)⁻¹ := by
     rw [inv_mul_eq_iff_eq_mul, ← mul_assoc, eq_mul_inv_iff_mul_eq, ← mul_assoc, ← mul_assoc, h]
-  have hP : ∀ x ∈ (UpperTheory.Reformulated.B.Qf33.leviEmb R e).range, x ∈ UpperTheory.Reformulated.B.Qf33.parab R e :=
+  have hP : ∀ x ∈ (leviEmb R e).range, x ∈ parab R e :=
     fun x hx i j hij ↦ levi_off e hx hij.ne'
-  have hU : ∀ x ∈ UpperTheory.Reformulated.B.Qf33.unipRad R e, x ∈ UpperTheory.Reformulated.B.Qf33.parab R e :=
+  have hU : ∀ x ∈ unipRad R e, x ∈ parab R e :=
     fun x hx ↦ (rad_spec e hx).1
-  have h2 : a'⁻¹ * a ∈ UpperTheory.Reformulated.B.Qf33.parab R e := by
+  have h2 : a'⁻¹ * a ∈ parab R e := by
     rw [h1]
     exact mul_mem (mul_mem (hP _ hb') (hU _ hc')) (inv_mem (mul_mem (hP _ hb) (hU _ hc)))
-  have h3 : a'⁻¹ * a ∈ UpperTheory.Reformulated.B.Qf33.unipRad R (UpperTheory.Reformulated.B.Qf33.opp e) := mul_mem (inv_mem ha') ha
+  have h3 : a'⁻¹ * a ∈ unipRad R (opp e) := mul_mem (inv_mem ha') ha
   have h4 : a'⁻¹ * a = 1 := by
     obtain ⟨ht, hd⟩ := rad_spec _ h3
     refine eq_one_of_blocks e (fun i j hij ↦ ?_) hd
@@ -325,3 +247,5 @@ theorem UpperTheory.Reformulated.B.Qf33.uniq :
   have hbb : b = b' := (inv_mul_eq_one.mp h7).symm
   subst hbb
   exact ⟨rfl, rfl, mul_left_cancel h5⟩
+
+end UpperTheory.Reformulated.B.Qf33
