@@ -28,9 +28,11 @@ class FreshLeaseTests(unittest.TestCase):
             self.assertEqual((old / 'response-0.json').read_bytes(), prior)
 
     def test_two_workflow_leases_select_distinct_inputs_and_upload_paths(self):
-        import yaml
-        workflow = yaml.safe_load((Path(__file__).parents[2] / '.github/workflows/build-pr.yml').read_text())
-        job = workflow['jobs']['proof_worker']
+        text = (Path(__file__).parents[2] / '.github/workflows/build-pr.yml').read_text()
+        worker = text.split('  proof_worker:\n', 1)[1]
+        environment = dict(line.strip().split(': ', 1) for line in worker.splitlines()
+                           if line.startswith('      PROOF_'))
+        job = {'env': environment}
         with tempfile.TemporaryDirectory() as temp:
             workspace = Path(temp)
             def resolved(template, run, attempt, lease):
@@ -46,8 +48,7 @@ class FreshLeaseTests(unittest.TestCase):
             (first / 'seed/conflicting.trace').write_text('old trace')
             second.mkdir(parents=True)
             self.assertFalse(any(second.iterdir()))
-            upload = next(step['with']['path'] for step in job['steps']
-                          if step.get('uses', '').startswith('actions/upload-artifact@'))
+            upload = worker.split('actions/upload-artifact@', 1)[1].split('          path: ', 1)[1].splitlines()[0]
             self.assertEqual(upload, '${{ env.PROOF_OUTPUT_ROOT }}/returned')
             self.assertFalse((second / 'returned/response-0.json').exists())
             self.assertEqual((first / 'returned/response-0.json').read_text(), 'old response')
