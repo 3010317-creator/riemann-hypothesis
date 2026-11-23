@@ -81,14 +81,14 @@ theorem BlockResolutionMixedBridge.proof : BlockResolutionMixedBridge.Statement 
   have hex : ∃ Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (D + 1) → ℂ),
       IsGoodProj (mCoordIdeal d.y) Ψ :=
     goodProjExists K ι (mCoordIdeal d.y) D d.arith
-  set B : HermLine ι := A₁.tensor d.A.inv with hBdef
+  set B : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι :=A₁.tensor d.A.inv with hBdef
   have hB0 : B.a = 0 := by
     funext k
-    simp [B, HermLine.tensor, HermLine.inv, hdeg, d.deg]
+    simp [B, HermLine.tensor, ReciprocityTheory.ChartRestriction.G.Geo.HermLine.inv, hdeg, d.deg]
   have hgl : (fun z => Real.log (A₁.h z / d.A.h z)) = logNorm B.inv 1 := by
     funext z
     rw [logNorm_inv_one]
-    simp only [B, HermLine.tensor, HermLine.inv, div_eq_mul_inv]
+    simp only [B, HermLine.tensor, ReciprocityTheory.ChartRestriction.G.Geo.HermLine.inv, div_eq_mul_inv]
   have hBs : IsSmoothHerm B.inv :=
     isSmoothHerm_inv (isSmoothHerm_tensor hA₁ (isSmoothHerm_inv d.semipos.1))
   have hsec : IsSectionOn (mCoordIdeal d.y) B.inv 1 := isSectionOn_inv_one d.arith.2.1.1 hB0
@@ -125,14 +125,16 @@ theorem ResolutionMixedBridge.proof : ResolutionMixedBridge.Statement := by
   have hex : ∃ Ψ : (((k : Unit) → GlobalTheory κ k) → ℂ) →ₗ[ℂ] (Fin (D + 1) → ℂ),
       IsGoodProj (coordIdeal ℤ d.x) Ψ :=
     goodProjExists Unit (GlobalTheory κ) (coordIdeal ℤ d.x) D d.arith
-  set B : HermLine (GlobalTheory κ) := (HermLine.ofCone m₁).tensor (HermLine.ofCone d.m).inv with hBdef
+  set B : ReciprocityTheory.ChartRestriction.G.Geo.HermLine (GlobalTheory κ) :=
+    (HermLine.ofCone m₁).tensor (HermLine.ofCone d.m).inv with hBdef
   have hB0 : B.a = 0 := by
     funext k
-    simp [B, HermLine.tensor, HermLine.inv, HermLine.ofCone]
+    simp [B, HermLine.tensor, ReciprocityTheory.ChartRestriction.G.Geo.HermLine.inv, HermLine.ofCone]
   have hgl : logRatio d.m m₁ = logNorm B.inv 1 := by
     funext z
     rw [logNorm_inv_one]
-    simp only [B, HermLine.tensor, HermLine.inv, HermLine.ofCone, logRatio, div_eq_mul_inv]
+    simp only [B, HermLine.tensor, ReciprocityTheory.ChartRestriction.G.Geo.HermLine.inv, HermLine.ofCone, logRatio,
+      div_eq_mul_inv]
   have hBs : IsSmoothHerm B.inv :=
     isSmoothHerm_inv (isSmoothHerm_tensor (gbamix_smoothHerm_ofCone hm₁)
       (isSmoothHerm_inv (gbamix_smoothHerm_ofCone d.smooth)))
