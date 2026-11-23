@@ -149,7 +149,7 @@ private theorem eigBoxL_lemma {G Q Y X : Type} [Group G] [AddCommGroup Y] [Modul
   · haveI := Fintype.ofFinite Q
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
 
-    simp [LinearMap.sum_apply, map_sum, h]
+    simp only [LinearMap.sum_apply, map_sum, h]
   · haveI : Infinite Q := not_finite_iff_infinite.mp hQ
     rw [finsum_of_infinite_support, finsum_of_infinite_support]
     · simp
@@ -224,7 +224,7 @@ private theorem eigBoxL_lemma_5 {G H Y X : Type} [Group G] [Group H] [AddCommGro
   refine ⟨⟨fun k i => ?_, fun k hk i => ?_⟩, fun i _ => ?_⟩
   · conv_rhs => rw [← h1 k i]
 
-    simp [map_sum, hg]
+    simp only [map_sum, map_smul, hg]
   · rw [← hg, h2 k hk i]
   · have := h3 i (Set.mem_univ _)
     simp only [ePart, LinearMap.mem_ker, LinearMap.sub_apply, Module.End.natCast_apply] at this ⊢
@@ -246,7 +246,7 @@ private theorem eigBoxL_lemma_6 {G H Y X : Type} [Group G] [Group H] [AddCommGro
   refine ⟨⟨fun k i => hgi ?_, fun k hk i => hgi ?_⟩, fun i _ => ?_⟩
   · rw [← h1 k i]
 
-    simp [map_sum, hg]
+    simp only [map_sum, map_smul, hg]
   · rw [hg, h2 k hk i]
   · have := h3 i (Set.mem_univ _)
     simp only [ePart, LinearMap.mem_ker, LinearMap.sub_apply, Module.End.natCast_apply] at this ⊢
@@ -369,8 +369,10 @@ theorem eigBoxL {L : Type} [Field L] [NumberField L] {n : ℕ} {V : Type} [Finty
     funext i
     rw [hpr, hpr]
     exact hf (by rw [← hΦ, ← hΦ, h])
-  have hMi : Function.Injective M :=
-    TensorProduct.map_injective_of_flat_flat _ _ A.injective_subtype B.injective_subtype
+  have hMi : Function.Injective M := by
+    haveI : Module.Flat ℂ A := Module.Flat.of_free
+    haveI : Module.Flat ℂ B := Module.Flat.of_free
+    exact TensorProduct.map_injective_of_flat_flat _ _ A.injective_subtype B.injective_subtype
   have hP : ((invT K₁ K₂ τ₀ (π.comp (MonoidHom.inr _ _)) ⊓ Submodule.pi Set.univ fun _ =>
         ePart ((π.comp (MonoidHom.inr _ _)).comp (MonoidHom.inr G H)) a N) ⊓ Submodule.pi Set.univ fun _ =>
       LinearMap.range f ⊓ eigL S (π.comp (MonoidHom.inl _ _)) b φ μ) = LinearMap.range (Φ ∘ₗ M) := by
@@ -402,7 +404,7 @@ theorem eigBoxL {L : Type} [Field L] [NumberField L] {n : ℕ} {V : Type} [Finty
             ∑ i, sl (l ∘ₗ LinearMap.single ℂ (fun _ : Fin m => W') i) (LinearMap.lTensor W (LinearMap.proj i) t') := by
           intro t'
           induction t' using TensorProduct.induction_on with
-          | zero => simp
+          | zero => simp only [map_zero, Finset.sum_const_zero]
           | tmul w F =>
             simp only [sl_tmul, LinearMap.lTensor_tmul, LinearMap.coe_comp, Function.comp_apply,
               LinearMap.coe_proj, Function.eval, LinearMap.coe_single]
