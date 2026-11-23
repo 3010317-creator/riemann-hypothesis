@@ -392,8 +392,10 @@ private theorem gk_case [IsTopologicalRing E] (hP : LocalPublishedTheorems) (K :
       rw [← (isCrField K _).2.2]
       refine (z1fUnr hP _ hφ (1 : Representation ℚ_[l] ↥(GK K) E) continuous_snd (fun _ _ => rfl) _
         ⟨hd.smul continuous_const, fun s s' => ?_⟩).2 fun s hs => ?_
-      · simp [hadd, add_smul]
-      · simp [hI s hs]
+      · change d (s * s') • b i = d s • b i + (1 : Representation ℚ_[l] ↥(GK K) E) s (d s' • b i)
+        simp [hadd, add_smul]
+      · change d s • b i = 0
+        simp [hI s hs]
     obtain ⟨f, hf, h⟩ := hD.1 hκ' _ hz
     refine ⟨f, hf, fun s s' => ?_⟩
     have h1 : (cycLL ((PP l).PD K) ℚ_[l] s : ℚ_[l]) * f s' - f (s * s') + f s =
