@@ -33,7 +33,9 @@ def imports(path):
         for raw_line in source:
             cleaned = []; i = 0
             while i < len(raw_line):
-                if raw_line.startswith('/-', i): depth += 1; i += 2
+                if raw_line.startswith('/-', i):
+                    if not depth: cleaned.append(' ')
+                    depth += 1; i += 2
                 elif depth and raw_line.startswith('-/', i): depth -= 1; i += 2
                 elif not depth and raw_line.startswith('--', i): break
                 elif depth: i += 1
