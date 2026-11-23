@@ -150,7 +150,9 @@ private theorem full_chars [CharZero k] {n : ℕ} {V : Type} [AddCommGroup V] [M
   obtain ⟨hρ, hq⟩ := (UpperTheory.Gal.LocD.ofSupport_holds k n V ρ ξ hξ).1 hs
   let y : Fin n → IrrGL (k := k) := fun i => IrrGL.ofChar (ξ i) (hξ i)
   have hy : ∀ i, (y i).IsCusp := fun i => IrrGL.isCusp_ofChar _ _
-  have hd : ∑ i, (y i).1 = n := by simp [y, IrrGL.ofChar]
+  have hd : ∑ i, (y i).1 = n := by
+    show ∑ _i : Fin n, 1 = n
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one]
   have hmem : ∀ i, y i ∈ GlobalTheory.RoadU.chars ξ hξ := fun i => Multiset.mem_map_of_mem _ (Finset.mem_univ i)
   have hnl : ∀ i j, ¬ (Segment.single (y i) (hy i)).Linked (Segment.single (y j) (hy j)) := fun i j =>
     GlobalTheory.CompanionTheory.BZPair.not_linked_single (hy i) (hy j) (hu _ (hmem j) _ (hmem i)) (hu _ (hmem i) _ (hmem j))
@@ -216,6 +218,8 @@ private theorem eq_one_of_unr {n : ℕ} (c : Fin n → Weil h →* ℂˣ) (hc : 
   generalize sumList (List.ofFn fun i => WD.lpOfChar h (c i) (hc i)) = x at hu h2
   obtain ⟨m, b, rfl⟩ := x.exists_rep
   rw [WD.unr_mk] at hu
+  have : Module.Free ℂ (Fin m → ℂ) := Module.Free.of_basis (Pi.basisFun ℂ (Fin m))
+  have : Module.Finite ℂ (Fin m → ℂ) := Module.Finite.of_basis (Pi.basisFun ℂ (Fin m))
   rw [WD.charPol_mk, hu.2 t, ← Module.End.hasEigenvalue_iff_isRoot_charpoly] at h2
   obtain ⟨v, hv⟩ := h2.exists_hasEigenvector
   have h3 := hv.apply_eq_smul
