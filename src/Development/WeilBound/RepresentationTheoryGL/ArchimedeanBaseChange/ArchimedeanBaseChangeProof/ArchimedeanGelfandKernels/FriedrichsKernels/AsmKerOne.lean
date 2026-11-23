@@ -1981,7 +1981,7 @@ open PositivityTheory.RgBcC
 theorem calcSteps : CalcSteps :=
   ⟨GlobalTheory.T.absolute_fourier_coefficients, _root_.GlobalTheory.CompanionTheory.FcCut.absCut, _root_.GlobalTheory.CompanionTheory.WaveCurve.fcurve, GlobalTheory.CompanionTheory.WaveFc.wvAlg, _root_.GlobalTheory.CompanionTheory.FcCls.clsFacts, _root_.GlobalTheory.CompanionTheory.SobOpsPf.sobOps, _root_.GlobalTheory.CompanionTheory.CptSobProof.cptSob,
     _root_.GlobalTheory.CompanionTheory.SecBd.secBound_main, _root_.GlobalTheory.CompanionTheory.PresSobA.presSob, _root_.GlobalTheory.CompanionTheory.FcConcT.concT, _root_.GlobalTheory.CompanionTheory.CurveJ.curveJoint, _root_.GlobalTheory.CompanionTheory.FriedrichsFc.friedrichs, _root_.GlobalTheory.CompanionTheory.Casimir.omFormula, _root_.GlobalTheory.CompanionTheory.FcCalc.Ibp.ibpSob,
-    GlobalTheory.T.dense_domain_facts⟩
+    _root_.GlobalTheory.CompanionTheory.DenseCpt.denseD⟩
 
 theorem asmCpt : AsmCpt :=
   _root_.GlobalTheory.CompanionTheory.WaveFc.Asm.asm1 GlobalTheory.T.absolute_fourier_coefficients _root_.GlobalTheory.CompanionTheory.FcCut.absCut _root_.GlobalTheory.CompanionTheory.WaveCurve.fcurve GlobalTheory.CompanionTheory.WaveFc.wvAlg _root_.GlobalTheory.CompanionTheory.FcCls.clsFacts _root_.GlobalTheory.CompanionTheory.SobOpsPf.sobOps _root_.GlobalTheory.CompanionTheory.CptSobProof.cptSob
