@@ -1736,7 +1736,7 @@ end LateralTheory.EtaleFoundations.ExDeg
 open LateralTheory.EtaleFoundations.ExDeg in
 theorem LateralTheory.EtaleFoundations.twpair_tens_univ_exdeg_of : LateralTheory.EtaleFoundations.twpair_tens_univ_exdeg := by
   intro R _ I J K τ hτ I' J' K' ν f g w
-  refine ⟨phi τ hτ ν f g w, ?_⟩
+  refine ⟨LateralTheory.EtaleFoundations.ExDeg.phi τ hτ ν f g w, ?_⟩
   intro U s t h a b
   classical
   have hx : τ.lift U w (DirectSum.lof (ULift.{1} R) _ _ ⟨(s, t), h⟩ (a ⊗ₜ b)) =
