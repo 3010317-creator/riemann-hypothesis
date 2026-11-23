@@ -202,10 +202,6 @@ lemma etale_sheaf_sections_map_comp_hom {R : Type} [CommRing R] {F G H : Shv R} 
 lemma etale_sheaf_sections_map_zero_hom {R : Type} [CommRing R] {F G : Shv R} {U : Scheme.{0}} (x : Sec F U) :
     Sec.map (0 : F ⟶ G) x = 0 := rfl
 
-lemma sec_map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.map φ (Sec.res g x) = Sec.res g (Sec.map φ x) := by
-  simpa [Sec.map, Sec.res] using (NatTrans.naturality_apply φ.hom g.op x).symm
-
 lemma kernel_sec {R : Type} [CommRing R] {F G : Shv R} (g : F ⟶ G) (U : Scheme.{0}) :
     Function.Injective (fun k : Sec (kernel g) U => Sec.map (kernel.ι g) k) ∧
     ∀ b : Sec F U, Sec.map g b = 0 → ∃ k, Sec.map (kernel.ι g) k = b := by
