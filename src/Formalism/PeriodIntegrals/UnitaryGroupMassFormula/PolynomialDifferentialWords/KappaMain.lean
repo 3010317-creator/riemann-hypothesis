@@ -132,7 +132,7 @@ theorem symbolMapMulRight : KappaRight := by
   intro K _ _ k d a b A
   apply pol_ext
   intro m g
-  rw [coeff_kappa, mul_apply_eq_comp, Ed_mono, map_smul, Submodule.coe_smul, coeff_smul, coeff_X_mul']
+  rw [coeff_kappa, mul_apply_eq_comp, Ed_mono, map_smul, Submodule.coe_smul, MvPolynomial.coeff_smul, coeff_X_mul']
   by_cases hb : g b = 0
   · rw [ite_eq_right (by simp [hb])]
     simp [hb]
@@ -195,7 +195,7 @@ theorem symbolMapOne : KappaId := by
   intro K _ _ k d
   apply pol_ext
   intro m g
-  rw [coeff_kappa, one_apply_eq_self, mono_val, coeff_smul, smul_eq_mul, coeff_sumElim_tt_pow]
+  rw [coeff_kappa, one_apply_eq_self, mono_val, MvPolynomial.coeff_smul, smul_eq_mul, coeff_sumElim_tt_pow]
   by_cases h : m = g ∧ g.degree = d
   · obtain ⟨hmg, hd⟩ := h
     rw [ite_eq_left hd, ite_eq_left ⟨hmg, hd⟩, coeff_monomial, ite_eq_left hmg.symm, mul_one]

@@ -244,7 +244,7 @@ theorem evaluation_at_one : EvalOne := by
     intro e
     rw [evA_fock_right, evA_fock_right, Finset.mul_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
-    rw [coeff_smul, smul_eq_mul]; ring
+    rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
   have hFne : Formalism.REAL.fockF (Formalism.GradedWeylDivisibility.hw ℂ (le_refl N) ν) (Formalism.GradedWeylDivisibility.hw ℂ (le_refl N) ν) ≠ 0 := by
     have h := (Formalism.GradedWeylDivisibility.fockPos (Fin N × Fin N) _ (Formalism.GradedWeylDivisibility.hwNe ℂ N N le_rfl ν)).1
     intro h0; rw [h0] at h; simp at h

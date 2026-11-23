@@ -146,7 +146,7 @@ theorem qn_lowerTriIntegral : LowerTriIntegral := by
       intro e he
       obtain ⟨w, hw⟩ := hint e he
       refine ⟨w - z * (b mi).coeff e, ?_⟩
-      rw [hQ1, coeff_sub, coeff_smul, hw, hlcQ, hBmap, coeff_map]
+      rw [hQ1, MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, hw, hlcQ, hBmap, coeff_map]
       push_cast
       simp [smul_eq_mul]
     have hfinal : ∀ Q1' : MvPolynomial (Fin r × Fin n) ℤ, Q1 = intQ r n Q1' →

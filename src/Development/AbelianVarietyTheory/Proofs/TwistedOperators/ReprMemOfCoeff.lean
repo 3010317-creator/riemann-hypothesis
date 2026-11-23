@@ -72,7 +72,7 @@ theorem coeff_mem_of_repr {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → Forma
   rw [val_eq_sum_repr, coeff_sum, ← RingHom.coe_fieldRange]
   refine Subfield.sum_mem _ fun a _ => ?_
   obtain ⟨P, hP⟩ := bVVfun_int ℂ lam a
-  rw [coeff_smul, hP, coeff_map, smul_eq_mul]
+  rw [MvPolynomial.coeff_smul, hP, coeff_map, smul_eq_mul]
   obtain ⟨x, hx⟩ := h a
   exact ⟨x * P.coeff m, by simp [hx]⟩
 
@@ -104,7 +104,7 @@ theorem repr_mem_of_coeff {ι : Type} [Fintype ι] {n : ℕ} (lam : ι → Forma
         rw [Subfield.smul_def, smul_eq_mul, mul_comm]
       rw [this, map_smul, Subfield.smul_def, smul_eq_mul, mul_comm]
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
-    simp only [coeff_smul, smul_eq_mul, sub_mul, Finset.sum_sub_distrib]
+    simp only [MvPolynomial.coeff_smul, smul_eq_mul, sub_mul, Finset.sum_sub_distrib]
     rw [← e1, ← e3, e2, sub_self]
   have hz := Fintype.linearIndependent_iff.1 (bVVfun_spec ℂ lam).1 _ key a
   rw [sub_eq_zero] at hz

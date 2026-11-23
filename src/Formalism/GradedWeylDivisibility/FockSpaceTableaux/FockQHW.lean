@@ -86,7 +86,7 @@ theorem fock_space_highest_weight : FockQHW := by
     unfold fockQ
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
-    rw [coeff_smul, smul_eq_mul]
+    rw [MvPolynomial.coeff_smul, smul_eq_mul]
     ring
   have hcolF : IsWeightedHomogeneous (colW r n) F ν :=
     (mem_weightedHomogeneousSubmodule _ _ _ _).mp (Submodule.mem_inf.mp hF).1
@@ -106,7 +106,7 @@ theorem fock_space_highest_weight : FockQHW := by
   have hcoef : AddMonoidAlgebra.coeff F (lhwline_mnu hn ν) = c * AddMonoidAlgebra.coeff (hw ℚ hn ν) (lhwline_mnu hn ν) := by
     have e : AddMonoidAlgebra.coeff F (lhwline_mnu hn ν) = AddMonoidAlgebra.coeff G (lhwline_mnu hn ν) := by
       rw [hGdef, coeff_weightedHomogeneousComponent, if_pos (hHW (mem_support_iff.mp hDmem))]
-    rw [e, hc, coeff_smul, smul_eq_mul]
+    rw [e, hc, MvPolynomial.coeff_smul, smul_eq_mul]
   have hevF : eval (idFrame ℚ r n) F = c := by
     rw [eF, hcoef, mul_assoc, ← eH, hev1, mul_one]
   rw [h1, h2, hevF]

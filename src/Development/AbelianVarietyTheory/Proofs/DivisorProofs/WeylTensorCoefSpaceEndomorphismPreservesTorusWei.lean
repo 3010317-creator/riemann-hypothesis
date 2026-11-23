@@ -91,7 +91,7 @@ theorem coeff_actP_diag {K ι : Type} [Field K] [Fintype ι] {n : ℕ} (lam : ι
     · intro b _ hb
       simp [Matrix.diagonal_apply_ne _ (Ne.symm hb)]
     · simp
-  rw [actP, LinearMap.smul_apply, AlgHom.toLinearMap_apply, coeff_smul, smul_eq_mul, h,
+  rw [actP, LinearMap.smul_apply, AlgHom.toLinearMap_apply, MvPolynomial.coeff_smul, smul_eq_mul, h,
     coeff_aeval_scale]
 
 theorem detTwK_ne_zero {K ι : Type} [Field K] [Fintype ι] {n : ℕ} (lam : ι → DomWeight n)
@@ -130,7 +130,7 @@ theorem weight_preserved (K : Type) [Field K] [CharZero K] {ι : Type} [Fintype 
   have h1 : rhoK lam h v = (detTwK lam h * 2 ^ (lam τ0).natW a0) • v := by
     apply Subtype.ext
     ext m'
-    rw [hco, Submodule.coe_smul, coeff_smul, smul_eq_mul, mul_assoc]
+    rw [hco, Submodule.coe_smul, MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc]
     by_cases hm' : m' ∈ (v : Pol K ι n).support
     · rw [hv m' hm']
     · rw [notMem_support_iff.mp hm']
@@ -138,7 +138,7 @@ theorem weight_preserved (K : Type) [Field K] [CharZero K] {ι : Type} [Fintype 
   have h2 := hg h v
   rw [h1, map_smul] at h2
   have h3 := congrArg (fun w : VV K lam => AddMonoidAlgebra.coeff (w : Pol K ι n) m) h2
-  simp only [hco, Submodule.coe_smul, coeff_smul, smul_eq_mul, mul_assoc] at h3
+  simp only [hco, Submodule.coe_smul, MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc] at h3
   have h4 := mul_right_cancel₀ (mem_support_iff.mp hm) (mul_left_cancel₀ (detTwK_ne_zero lam h) h3)
   have h5 : (2 : ℕ) ^ (lam τ0).natW a0 = 2 ^ (∑ s : Fin n, m (τ0, a0, s)) := by
     exact_mod_cast h4

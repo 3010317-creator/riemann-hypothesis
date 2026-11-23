@@ -141,7 +141,7 @@ theorem coeff_rowOp_self (i : Fin n) (m : Fin n × Fin n →₀ ℕ) (f : Poly n
 theorem rowWt_eq_of_eigen {h : Poly n} {c : Fin n → ℂ} (hc : ∀ a, rowOp a a h = c a • h)
     {m : Fin n × Fin n →₀ ℕ} (hm : m ∈ h.support) (a : Fin n) : (rowWt m a : ℂ) = c a := by
   have := congrArg (AddMonoidAlgebra.coeff · m) (hc a)
-  rw [coeff_rowOp_self, coeff_smul, smul_eq_mul] at this
+  rw [coeff_rowOp_self, MvPolynomial.coeff_smul, smul_eq_mul] at this
   exact mul_right_cancel₀ (MvPolynomial.mem_support_iff.1 hm) this
 
 noncomputable def wtProj (μ : Fin n → ℕ) : Module.End ℂ (Poly n) where
@@ -158,8 +158,8 @@ noncomputable def wtProj (μ : Fin n → ℕ) : Module.End ℂ (Poly n) where
   map_smul' c f := by
     classical
     ext m
-    simp only [coeff_sum, coeff_monomial, coeff_smul, smul_eq_mul, RingHom.id_apply]
-    simp only [Finset.sum_ite_eq', Finset.mem_filter, MvPolynomial.mem_support_iff, coeff_smul,
+    simp only [coeff_sum, coeff_monomial, MvPolynomial.coeff_smul, smul_eq_mul, RingHom.id_apply]
+    simp only [Finset.sum_ite_eq', Finset.mem_filter, MvPolynomial.mem_support_iff, MvPolynomial.coeff_smul,
       smul_eq_mul]
     by_cases hm : rowWt m = μ <;> simp only [hm, and_true, and_false, if_false]
     · by_cases h1 : AddMonoidAlgebra.coeff f m = 0 <;> by_cases h2 : c * AddMonoidAlgebra.coeff f m = 0 <;> simp_all
@@ -210,7 +210,7 @@ theorem wtProj_wtProj (μ ν : Fin n → ℕ) (f : Poly n) :
 theorem rowOp_self_of_wtProj (μ : Fin n → ℕ) (v : Poly n) (i : Fin n) (h : wtProj μ v = v) :
     rowOp i i v = (μ i : ℂ) • v := by
   ext m
-  rw [coeff_rowOp_self, coeff_smul, smul_eq_mul]
+  rw [coeff_rowOp_self, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hm : m ∈ v.support
   · rw [(wtProj_eq_self_iff μ v).1 h m hm]
   · rw [MvPolynomial.notMem_support_iff.1 hm]; simp

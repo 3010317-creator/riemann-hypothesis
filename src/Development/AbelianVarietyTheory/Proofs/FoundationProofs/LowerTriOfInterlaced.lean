@@ -200,7 +200,7 @@ theorem component_eq_smul_hw {R : Type} [CommRing R] [IsDomain R] (hn : n ≤ r)
     (colSums R r n ν G hGm _ hd) (hGw (mem_support_iff.mp hd))
   rw [he, mem_support_iff] at hd
   apply hd
-  rw [hGdef, coeff_sub, coeff_weightedHomogeneousComponent, if_pos (weight_rowW_diagExp ν), coeff_smul,
+  rw [hGdef, MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent, if_pos (weight_rowW_diagExp ν), MvPolynomial.coeff_smul,
     ← eval_idFrame_eq_coeff (colSums R r n ν F hF), ← eval_idFrame_eq_coeff (colSums R r n ν _ hH),
     eval_idFrame_hw]
   simp
@@ -214,7 +214,7 @@ theorem fockQ_hw : Formalism.GradedWeylDivisibility.FockQHW := by
   refine Finset.sum_congr rfl fun m hm => ?_
   have hw' := hwRowWeight ℚ r n hn ν hν (mem_support_iff.mp hm)
   have h2 := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [coeff_weightedHomogeneousComponent, if_pos hw', coeff_smul, smul_eq_mul] at h2
+  rw [coeff_weightedHomogeneousComponent, if_pos hw', MvPolynomial.coeff_smul, smul_eq_mul] at h2
   rw [h2]
   ring
 

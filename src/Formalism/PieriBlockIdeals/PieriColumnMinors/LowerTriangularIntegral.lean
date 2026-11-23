@@ -126,7 +126,7 @@ theorem lower_triangular_integral : LowerTriIntegral := by
       intro e he
       obtain ⟨z, hz'⟩ := hz e he
       refine ⟨z - c * AddMonoidAlgebra.coeff (bideterminant ℤ sz hsz I) e, ?_⟩
-      rw [coeff_sub, coeff_smul, hz', hlc, hbmap, lre_intQ_apply, coeff_map]
+      rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, hz', hlc, hbmap, lre_intQ_apply, coeff_map]
       simp
     have hfin : ∃ Q'' : MvPolynomial (Fin r × Fin n) ℤ,
         f - (colLex r n).leadingCoeff f • bideterminant ℚ sz hsz I = intQ r n Q'' := by

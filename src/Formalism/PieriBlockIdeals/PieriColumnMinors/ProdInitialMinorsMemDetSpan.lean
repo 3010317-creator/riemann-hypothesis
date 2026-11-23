@@ -295,7 +295,7 @@ theorem la_coeff_binLat {n : ℕ} (s : Fin n) (d : ℕ) (f : MvPolynomial (Fin 2
   induction hf using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨p', q', hpq, rfl⟩ := hx
-    rw [la_xy_eq, ← nsmul_eq_mul, coeff_smul, coeff_monomial]
+    rw [la_xy_eq, ← nsmul_eq_mul, MvPolynomial.coeff_smul, coeff_monomial]
     split_ifs with h
     · obtain ⟨rfl, rfl⟩ := la_mono_inj s h
       simp
@@ -305,7 +305,7 @@ theorem la_coeff_binLat {n : ℕ} (s : Fin n) (d : ℕ) (f : MvPolynomial (Fin 2
     rw [MvPolynomial.coeff_add]
     exact dvd_add hx hy
   | smul a x _ hx =>
-    rw [coeff_smul, smul_eq_mul]
+    rw [MvPolynomial.coeff_smul, smul_eq_mul]
     exact Dvd.dvd.mul_left hx a
 
 theorem la_arith (l d : ℕ) (hl : l.Prime) :
@@ -378,7 +378,7 @@ theorem la_core {n : ℕ} (s : Fin n) (d : ℕ) (g : MvPolynomial (Fin 2 × Fin 
       apply mul_left_cancel₀ hg
       rw [hgz, mul_smul_comm]
     have hc := la_coeff_binLat s d z hz (d - i) i
-    rw [hz', la_xy_eq, coeff_smul, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one,
+    rw [hz', la_xy_eq, MvPolynomial.coeff_smul, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one,
       show d - i + i = d by omega] at hc
     exact_mod_cast hc
   · intro he

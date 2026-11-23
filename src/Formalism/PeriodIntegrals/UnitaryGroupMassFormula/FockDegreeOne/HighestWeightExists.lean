@@ -91,7 +91,7 @@ theorem exists_wtvec {p q r s : ℕ} (U : Submodule ℂ (Pol p q r s))
       have hcoeff : ∀ β, AddMonoidAlgebra.coeff (fockAct1 p q r s (Eab c c) u - ((wtv β₁ c : ℚ) : ℂ) • u) β =
           (((wtv β c : ℚ) : ℂ) - ((wtv β₁ c : ℚ) : ℂ)) * AddMonoidAlgebra.coeff u β := by
         intro β
-        rw [coeff_sub, coeff_Ecc, coeff_smul, smul_eq_mul]
+        rw [MvPolynomial.coeff_sub, coeff_Ecc, MvPolynomial.coeff_smul, smul_eq_mul]
         ring
       have hsub : (fockAct1 p q r s (Eab c c) u - ((wtv β₁ c : ℚ) : ℂ) • u).support ⊆ u.support := by
         intro β hβ

@@ -152,7 +152,7 @@ theorem smul_mem_integralPart {W : Submodule K (MvPolynomial σ K)} (c : 𝓞 K)
     {P : MvPolynomial σ K} (hP : P ∈ integralPart W) : c • P ∈ integralPart W :=
   ⟨W.smul_mem (c : K) hP.1, fun α => by
     change IsIntegral ℤ (AddMonoidAlgebra.coeff ((c : K) • P) α)
-    rw [coeff_smul, smul_eq_mul]
+    rw [MvPolynomial.coeff_smul, smul_eq_mul]
     exact c.isIntegral_coe.mul (hP.2 α)⟩
 
 theorem span_ringOfIntegers_basis_integralPart {W : Submodule K (MvPolynomial σ K)} {ι : Type*}
@@ -241,7 +241,7 @@ theorem exists_basis_integralPart_sum_l2Norm_sq_le {κ : Type*}
     have h1 : ∀ s : K →+* ℂ, l2Norm (map s (v p)) ≤ A * B := fun s => by
       have : map s (v p) = s (ω p.1) • map s (p.2 : MvPolynomial σ K) := by
         ext α
-        rw [coeff_smul, coeff_map, coeff_map, smul_eq_mul, ← map_mul]
+        rw [MvPolynomial.coeff_smul, coeff_map, coeff_map, smul_eq_mul, ← map_mul]
         rfl
       rw [this, vectorL2Norm_const_mul]
       exact mul_le_mul (hA s _) (hB _ p.2.2 s) (l2Norm_nonneg _) ((norm_nonneg _).trans (hA s p.1))

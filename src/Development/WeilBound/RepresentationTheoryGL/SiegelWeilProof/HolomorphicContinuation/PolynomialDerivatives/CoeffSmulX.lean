@@ -186,7 +186,7 @@ theorem symW_step (u : (Fin m × Fin n × Bool) ⊕ (Fin m × Fin n × Bool) →
 
 theorem coeff_smul_X {τ : Type} [DecidableEq τ] (c : ℂ) (w0 u : τ) :
     (c • X w0 : MvPolynomial τ ℂ).coeff (Finsupp.single u 1) = if w0 = u then c else 0 := by
-  rw [coeff_smul, coeff_X']
+  rw [MvPolynomial.coeff_smul, coeff_X']
   by_cases h : w0 = u
   · subst h; simp
   · rw [if_neg (fun e => h ((Finsupp.single_left_inj one_ne_zero).mp e)), if_neg h]; simp
@@ -214,7 +214,7 @@ theorem symK_tr (ε : Fin m → Bool) (i j : Fin n) (v u) :
     (symK ε j i (X u : Sym m n)).coeff (Finsupp.single v 1) = star ((symK ε i j (X v : Sym m n)).coeff (Finsupp.single u 1)) := by
   rcases v with ⟨a, i', b⟩ | ⟨a, i', b⟩ <;> rcases u with ⟨a', i'', b'⟩ | ⟨a', i'', b'⟩ <;>
     simp only [symK, mkDerivation_X, Sum.elim_inl, Sum.elim_inr] <;>
-    split_ifs <;> simp_all [coeff_X', Finsupp.single_left_inj, coeff_neg] <;> aesop
+    split_ifs <;> simp_all [coeff_X', Finsupp.single_left_inj, MvPolynomial.coeff_neg] <;> aesop
 
 end CoreC
 

@@ -272,7 +272,7 @@ theorem coeff_graphLift_i2comp {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ →
     have hnh : IsMultiHomog (n • h) (baseDeg δ (i2bdeg m)) := by
       rw [isMultiHomog_iff_coeff] at hh ⊢
       intro m' hm'
-      rw [coeff_smul] at hm'
+      rw [MvPolynomial.coeff_smul] at hm'
       exact hh m' fun h0 => hm' (by rw [h0, smul_zero])
     rw [i2comp_of_homog hm, em, coeff_monomial]
     by_cases hd : i2bdeg m = c

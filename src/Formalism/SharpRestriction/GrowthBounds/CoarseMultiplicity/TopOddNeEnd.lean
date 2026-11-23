@@ -86,7 +86,7 @@ theorem eigAt : EigAt := by
 
   rw [coeff_sum, map_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun ν _ => ?_
-  rw [coeff_smul, eig_one, Algebra.smul_def, map_mul, map_natCast]
+  rw [MvPolynomial.coeff_smul, eig_one, Algebra.smul_def, map_mul, map_natCast]
   ring
 
 theorem fock_monoMap {K : Type} [Field K] {σ τ : Type} (f : MvPolynomial σ K →ₗ[K] MvPolynomial τ K)

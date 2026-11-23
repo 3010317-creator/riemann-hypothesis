@@ -270,7 +270,7 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
       exact hb (sigma_mk_injective h).symm
   ext m
   rw [linForm_apply, coeff_sum]
-  simp only [coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
+  simp only [MvPolynomial.coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
   by_cases hm : m ∈ f.support
   · obtain ⟨q, rfl⟩ := hsupp m hm
     rw [Finset.sum_eq_single q]

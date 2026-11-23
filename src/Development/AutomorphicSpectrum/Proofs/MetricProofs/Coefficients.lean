@@ -99,10 +99,10 @@ theorem coefficients : Coefficients := by
       have hco : ∀ m, |(formPoly (D + 1) (Re.limNum II) - formPoly (D + 1) (Re'.limNum II)).coeff m| ≤
           ((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) * (C₂' * ∑ p ∈ T, α p * Real.log p) :=
         fun m => by
-          rw [coeff_sub]
+          rw [MvPolynomial.coeff_sub]
           exact (formPoly_sub_bound _ _ _ _ _ hlim).1 m
       intro m
-      rw [hPB, hPB, ← coeff_sub, ← map_sub]
+      rw [hPB, hPB, ← MvPolynomial.coeff_sub, ← map_sub]
       calc _ ≤ Cst * (((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) *
             (C₂' * ∑ p ∈ T, α p * Real.log p)) := (hWS _ _ hhom).2 hco m
         _ = _ := by ring
@@ -113,10 +113,10 @@ theorem coefficients : Coefficients := by
           formPoly (D + 1) (fun w => Re'.limNum II (some ∘ w))).coeff m| ≤
           ((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) * (C₂' * ∑ p ∈ T, α p * Real.log p) :=
         fun m => by
-          rw [coeff_sub]
+          rw [MvPolynomial.coeff_sub]
           exact ((formPoly_sub_bound _ _ _ _ _ fun w => hlim (some ∘ w)).1 m).trans hcard
       intro m
-      rw [hPBwt, hPBwt, ← coeff_sub, ← map_sub]
+      rw [hPBwt, hPBwt, ← MvPolynomial.coeff_sub, ← map_sub]
       calc _ ≤ Cst * (((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) *
             (C₂' * ∑ p ∈ T, α p * Real.log p)) := (hW _ _ hhom).2 hco m
         _ = _ := by ring

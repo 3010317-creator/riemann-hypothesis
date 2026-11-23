@@ -104,7 +104,7 @@ theorem coeff_rhoVr_mem_range : ∀ {ι : Type} [Fintype ι] {n : ℕ} {E : Type
   have htr : Formalism.L2.DIV.trAct (invTrK (embGL emb γE)) (v : Formalism.L2.DIV.Pol ℂ ι n) ∈ R₀ :=
     hblock _ (fun τ a b => hent τ b a) _ ((memR _).2 hv)
   show AddMonoidAlgebra.coeff (Formalism.L2.DIV.actP lam (invTrK (embGL emb γE)) (v : Formalism.L2.DIV.Pol ℂ ι n)) m ∈ A
-  rw [Formalism.L2.DIV.actP, LinearMap.smul_apply, coeff_smul, smul_eq_mul]
+  rw [Formalism.L2.DIV.actP, LinearMap.smul_apply, MvPolynomial.coeff_smul, smul_eq_mul]
   exact mul_mem hdt ((memR _).1 htr m)
 
 end GlobalTheory.RowRho

@@ -384,7 +384,7 @@ theorem fockDetect_of (h3 : PI.HwIrred) (hD : EqvDiv) : FockDetect := by
               ((∏ k ∈ m.support, (m k).factorial : ℕ) : ℂ) := by
           rw [Finset.mul_sum]
           refine Finset.sum_congr rfl fun m _ => ?_
-          simp only [coeff_smul, smul_eq_mul, star_mul']
+          simp only [MvPolynomial.coeff_smul, smul_eq_mul, star_mul']
           ring
         rw [this, ha, mul_zero] }
   have hSP : Submodule.span ℂ S ≤ P := by

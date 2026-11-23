@@ -105,7 +105,7 @@ theorem comp_lift (e e' : ℕ) (P : MvPolynomial σ R) (hP : ∀ m, AddMonoidAlg
 
 theorem comp_sub (e : ℕ) (Q₁ Q₂ : MvPolynomial σ (reesAlgebra I)) :
     comp e (Q₁ - Q₂) = comp e Q₁ - comp e Q₂ := by
-  ext m; rw [coeff_sub, coeff_comp, coeff_comp, coeff_comp, coeff_sub]
+  ext m; rw [MvPolynomial.coeff_sub, coeff_comp, coeff_comp, coeff_comp, MvPolynomial.coeff_sub]
   exact Polynomial.coeff_sub _ _ _
 
 theorem comp_X_pow_mul (e : ℕ) (k : σ) (L : ℕ) (Q : MvPolynomial σ (reesAlgebra I)) :

@@ -154,7 +154,7 @@ theorem coefficient_space_support (K : Type) [Field K] (lam : ι → DomWeight n
     · exact hx m h
   | smul c x _ hx =>
     intro m hm
-    rw [coeff_smul] at hm
+    rw [MvPolynomial.coeff_smul] at hm
     exact hx m (fun h => hm (by rw [h, smul_zero]))
 
 variable {K : Type} [Field K]

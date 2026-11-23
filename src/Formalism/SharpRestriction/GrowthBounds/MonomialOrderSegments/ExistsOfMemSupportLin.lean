@@ -81,7 +81,7 @@ theorem exists_of_mem_support_lin {σ τ : Type} (T : MvPolynomial σ K →ₗ[K
   refine Finset.sum_eq_zero fun ζ hζ => ?_
   have hz := hc ζ hζ
   rw [mem_support_iff, not_not] at hz
-  rw [coeff_smul, hz, smul_zero]
+  rw [MvPolynomial.coeff_smul, hz, smul_zero]
 
 namespace TwistData
 
@@ -267,7 +267,7 @@ theorem inv_step [CharZero K] {v : AddValuation K (WithTop ℚ)} {p : ℕ} (hSeg
     rw [lin_eq_sum Th Z, coeff_sum]
     apply AddValuation.map_le_sum
     intro ζ hζ
-    rw [coeff_smul, smul_eq_mul, AddValuation.map_mul]
+    rw [MvPolynomial.coeff_smul, smul_eq_mul, AddValuation.map_mul]
     exact add_nonneg (hInt ζ) (tI ζ (hpre ζ hζ) α)
 
   · rw [lin_eq_sum Th Z, map_sum, ← hph, D.ph_lin_sum p Z]
@@ -355,7 +355,7 @@ theorem integral_Sp (v : AddValuation K (WithTop ℚ)) (p : ℕ) {Z : MvPolynomi
   rw [Sp, lsup_apply, coeff_sum]
   apply AddValuation.map_le_sum
   intro ζ _
-  rw [coeff_smul, coeff_monomial]
+  rw [MvPolynomial.coeff_smul, coeff_monomial]
   split_ifs
   · rw [smul_eq_mul, mul_one]
     exact hZ ζ

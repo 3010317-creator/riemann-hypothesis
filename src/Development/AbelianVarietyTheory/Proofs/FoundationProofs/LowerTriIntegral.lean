@@ -122,7 +122,7 @@ theorem lowerTriIntegral : Formalism.GradedWeylDivisibility.LowerTriIntegral := 
       refine ih _ (hd ▸ hlt) f' hf'mem rfl fun e he => ?_
       obtain ⟨w, hw⟩ := hz e he
       refine ⟨w - AddMonoidAlgebra.coeff (z • bideterminant ℤ sz hsz I) e, ?_⟩
-      rw [hf', hb, coeff_sub, hw, intQ_apply, coeff_map]
+      rw [hf', hb, MvPolynomial.coeff_sub, hw, intQ_apply, coeff_map]
       simp only [Int.cast_sub, eq_intCast]
     obtain ⟨Q', hQ'⟩ := hQ
     exact ⟨Q' + z • bideterminant ℤ sz hsz I, by rw [map_add (f := _), ← hQ']; exact hdecomp⟩

@@ -171,7 +171,7 @@ theorem formAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cm Cc : ℝ}
       obtain ⟨c1, e1⟩ := hσ1I mm
       obtain ⟨c2, e2⟩ := hPc mm
       refine ⟨c1 + w ^ X.c * c2, ?_⟩
-      rw [map_add (f := _), ← e1, ← e2, coeff_sub]
+      rw [map_add (f := _), ← e1, ← e2, MvPolynomial.coeff_sub]
       ring
     obtain ⟨y1, hy1⟩ := h4 X.p O hS.1.prime (dvrOfStd hS) w X.n' X.m X.TT X.aT X.bT (P - σ₁)
       (Submodule.sub_mem _ hP hσ1P) σ₂ X.c hPc hσ2I

@@ -93,7 +93,7 @@ theorem mem_valuationSubring_of_indep {K σ ι : Type} [Field K] [Fintype ι] (A
 
       rw [map_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
-      rw [map_mul, map_intCast, coeff_smul, coeff_map]
+      rw [map_mul, map_intCast, MvPolynomial.coeff_smul, coeff_map]
       simp only [a, ValuationSubring.coe_subtype, smul_eq_mul, eq_intCast]
       ring
     rw [e2, map_div₀, div_lt_one₀ hv0]

@@ -233,7 +233,7 @@ theorem OtherFactorFormula.proof (hA : LemmaA.Statement) (hB : LemmaB.Statement)
         (pow_ne_zero _ (mul_ne_zero hfR hκ0)))) hκ0
     refine ⟨K⁻¹ • S', ?_, ?_⟩
     · rw [map_smul, hPS, smul_smul, inv_mul_cancel₀ hK0, one_smul]
-    · rw [restTerm, hI, coeff_smul, smul_eq_mul]
+    · rw [restTerm, hI, MvPolynomial.coeff_smul, smul_eq_mul]
       rw [hK, hmult]
       have hden : ((r * a + k).factorial : ℚ) * ((r * a - (k - 1)).factorial : ℚ) *
           ((r * a).factorial : ℚ) ^ (f - 2) ≠ 0 := by positivity

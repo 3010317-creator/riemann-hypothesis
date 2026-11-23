@@ -225,7 +225,7 @@ theorem coeff_colAct_diagonal (t : Fin N → R) (f : Pol N R) (m : Fin N × Fin 
     ring
   induction f using MvPolynomial.induction_on' with
   | monomial u a =>
-    rw [h2, coeff_smul, coeff_monomial]
+    rw [h2, MvPolynomial.coeff_smul, coeff_monomial]
     split_ifs with h
     · subst h; simp
     · simp
@@ -244,7 +244,7 @@ theorem mem_nabla_iff [IsDomain R] [Infinite R] {la : Fin N → ℕ} {f : Pol N 
       intro t
       by_cases ht : ∀ s, t s ≠ 0
       · have h2 := congrArg (AddMonoidAlgebra.coeff · m) (h (Matrix.diagonal t) (Matrix.blockTriangular_diagonal t) (by simpa using ht))
-        rw [coeff_colAct_diagonal, coeff_smul, smul_eq_mul] at h2
+        rw [coeff_colAct_diagonal, MvPolynomial.coeff_smul, smul_eq_mul] at h2
         have h3 := mul_right_cancel₀ hm h2
         simp only [pow_succ, Finset.prod_mul_distrib, h3, diagChar, Matrix.diagonal_apply_eq]
       · push Not at ht

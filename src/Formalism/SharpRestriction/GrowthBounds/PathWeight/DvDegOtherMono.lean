@@ -147,7 +147,7 @@ theorem dv_detA_hom (A : Fin r → ι) : letterDeterminant R A ∈ Pol R r (dv_e
   apply h1
   intro h0
   apply hm
-  rw [coeff_smul, h0, smul_zero]
+  rw [MvPolynomial.coeff_smul, h0, smul_zero]
 
 end Det
 

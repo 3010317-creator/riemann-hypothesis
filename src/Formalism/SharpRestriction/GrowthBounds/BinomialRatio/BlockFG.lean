@@ -93,7 +93,7 @@ theorem bb_coeff {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
   | smul o x _ hx =>
     obtain ⟨a, ha⟩ := hx
     refine ⟨o * a, ?_⟩
-    rw [coeff_smul, Algebra.smul_def, map_mul, ← ha]
+    rw [MvPolynomial.coeff_smul, Algebra.smul_def, map_mul, ← ha]
     ring
 
 theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ : Type} (sp : ℕ)
@@ -112,7 +112,7 @@ theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
       exact h
     rw [this, coeff_sum]
     refine Finset.sum_eq_zero fun k _ => ?_
-    rw [coeff_smul]
+    rw [MvPolynomial.coeff_smul]
     have : μ ∉ ((bV k : V) : MvPolynomial σ (KK O)).support := fun h =>
       hμ (Finset.mem_biUnion.2 ⟨k, Finset.mem_univ _, h⟩)
     rw [MvPolynomial.notMem_support_iff.1 this, smul_zero]

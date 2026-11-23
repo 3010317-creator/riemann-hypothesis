@@ -106,7 +106,7 @@ theorem localIntegrality : ∀ (K : Type) [Field K] [NumberField K] [StarRing K]
       exact hs' (this ▸ w.asIdeal.zero_mem)
     have hco : (s : K) * AddMonoidAlgebra.coeff F mo = ((AddMonoidAlgebra.coeff Q mo : 𝓞 K) : K) := by
       have h1 := congrArg (AddMonoidAlgebra.coeff · mo) hQ
-      rw [coeff_smul] at h1
+      rw [MvPolynomial.coeff_smul] at h1
       have h2 : AddMonoidAlgebra.coeff (toK K _ Q) mo = ((AddMonoidAlgebra.coeff Q mo : 𝓞 K) : K) := coeff_map _ _ _
       rw [← h2, h1, Algebra.smul_def]
     have h3 := ValuationRepresentative.vw_int_nonneg w (AddMonoidAlgebra.coeff Q mo)

@@ -128,7 +128,7 @@ theorem lam_li_fixed (g : Fin J → σ → τ) (e : Fin J → σ → ℕ) (l : �
       rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h1
       rw [← h1]
       refine Finset.sum_congr rfl fun a _ => ?_
-      rw [coeff_smul, lam_coeff g e l S hinj (fun j => u j (a j)) (fun j => hS j (a j)) s hs, smul_eq_mul]
+      rw [MvPolynomial.coeff_smul, lam_coeff g e l S hinj (fun j => u j (a j)) (fun j => hS j (a j)) s hs, smul_eq_mul]
     · push Not at hs
       obtain ⟨j0, hj0⟩ := hs
       refine Finset.sum_eq_zero fun a _ => ?_

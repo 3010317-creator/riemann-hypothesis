@@ -191,7 +191,7 @@ theorem monomial_mem_weightSpace_glOperators (mm : Fin N × Fin k →₀ ℕ) (c
   intro a
   rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero]
   ext m2
-  rw [coeff_Eaa, coeff_smul, smul_eq_mul, coeff_monomial]
+  rw [coeff_Eaa, MvPolynomial.coeff_smul, smul_eq_mul, coeff_monomial]
   split_ifs with h
   · rw [h]
   · simp

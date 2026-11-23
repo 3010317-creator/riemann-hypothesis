@@ -170,7 +170,7 @@ theorem sw_coeff_euler (R : Type) [CommRing R] {r n : ℕ} (a : Fin r) (f : MvPo
     AddMonoidAlgebra.coeff (rowDiv R a a 1 f) m = ((Finsupp.weight (lgraded_wa a) m : ℕ) : R) * AddMonoidAlgebra.coeff f m := by
   induction f using MvPolynomial.induction_on' with
   | monomial u c =>
-    rw [sw_euler_monomial, coeff_smul, coeff_monomial, smul_eq_mul]
+    rw [sw_euler_monomial, MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · subst h; rfl
     · simp
@@ -199,7 +199,7 @@ theorem sw_euler (R : Type) [CommRing R] {r n : ℕ} (a : Fin r) (μ : Fin r →
     Dop R a a f = (μ a : R) • f := by
   rw [sw_Dop_self]
   ext m
-  rw [sw_coeff_euler, coeff_smul, smul_eq_mul]
+  rw [sw_coeff_euler, MvPolynomial.coeff_smul, smul_eq_mul]
   by_cases hm : AddMonoidAlgebra.coeff f m = 0
   · rw [hm, mul_zero, mul_zero]
   · rw [← lgraded_weight_rowW, hf hm]

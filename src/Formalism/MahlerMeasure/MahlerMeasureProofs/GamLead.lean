@@ -110,7 +110,7 @@ theorem fk_add_left (F F' G : MvPolynomial σ K) : fk (F + F') G = fk F G + fk F
 
 theorem fk_smul_left (c : K) (F G : MvPolynomial σ K) : fk (c • F) G = c * fk F G := by
   rw [fk_eq_sum (c • F) G F.support support_smul, fk, Finset.mul_sum]
-  exact Finset.sum_congr rfl (fun m _ => by rw [coeff_smul, smul_eq_mul]; ring)
+  exact Finset.sum_congr rfl (fun m _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring)
 
 theorem fk_zero_left (G : MvPolynomial σ K) : fk 0 G = 0 := by simp [fk]
 
