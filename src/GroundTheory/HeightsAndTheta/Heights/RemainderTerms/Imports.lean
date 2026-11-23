@@ -190,9 +190,7 @@ open MvPolynomial Finset Comb
 
 noncomputable section
 
-theorem symmetricGroupCharacter_eq_cf {m : ℕ} (lam : Fin m → ℕ) (rho : List ℕ) :
-    symmetricGroupCharacter lam rho =
-      cf (fun i => lam i + stair m i) (alternantPsum m rho) := rfl
+-- `symmetricGroupCharacter_eq_cf` is provided by `PCharacterBound` (imported).
 
 theorem CharacterAtIdentity.proof (h1 : CombTableEqWords.Statement)
     (h2 : CombCfAtStair.Statement) : CharacterAtIdentity.Statement := by
