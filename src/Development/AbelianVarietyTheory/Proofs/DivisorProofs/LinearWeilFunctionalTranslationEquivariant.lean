@@ -1,11 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPairOfIsTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlCharacterFactorsThroughDetOfTwoNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryDeterminedBySplitImageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryGroupSurjectsGeneralLinearRightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,22 +209,5 @@ theorem core (hT : IsTriple B G X om om') (v : Pl (F := F)) (t : E →ₐ[F] Fv 
     show GlobalTheory.SplitFlip.apow _ _ * GlobalTheory.SplitFlip.apow _ _ = 1
     rw [← GlobalTheory.SplitFlip.apow_add, show (a : ℂ) / 2 + -(a : ℂ) / 2 = 0 by ring, GlobalTheory.SplitFlip.apow_zero]
   rw [mul_one, mul_assoc (χ _ : ℂ), hv, mul_one]
-
-end GlobalTheory.LocalUnitSubgroupClosure
-
-namespace GlobalTheory.LocalUnitSubgroupClosure
-
-theorem linear_weil_functional_character_weight_zero : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
-    (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →
-    ∀ v, X.Good v →
-    ∀ (t : E →ₐ[F] Fv F v) (ι : ((Fin a × Fin (a + a') → Fv F v) → ℂ) →ₗ[ℂ] (Matrix (Fin a) (Fin (a + a')) (Fv F v) → ℂ)), G.M.IsLinW B.ψ t 1 1 ι → (∀ h ∈ UAt σ G.W (evFin F v), ∃ c : ℂ, ∀ φ ∈ SB (Fin a × Fin (a + a') → Fv F v), ∀ φ₁ ∈ SB (Fin a × Fin (a + a') → Fv F v),
-      Acts (evFin F v) (om (1, h)) φ φ₁ → ∀ Y, ι φ₁ Y = c * ι φ (Y * (((mat h).map (piW t))⁻¹)ᵀ)) →
-    ∃ β₀ : (Fv F v)ˣ →* ℂˣ, (∀ h ∈ UAt σ G.W (evFin F v), ∃ h' : GL (Fin (a + a')) (Fv F v), (mat h).map (piW t) = h'.1 ∧
-      ∀ φ ∈ SB (Fin a × Fin (a + a') → Fv F v), ∀ φ₁ ∈ SB (Fin a × Fin (a + a') → Fv F v), Acts (evFin F v) (om (1, h)) φ φ₁ → ι φ₁ = GlobalTheory.SplitFlip.omA 1 β₀ 1 h' (ι φ)) := by
-  intro hPr F E _ _ _ _ _ σ B a a' G X om om' hT v hv t ι _ hS
-  have hEx := (GlobalTheory.T.theta_action_exists hPr F E σ B a (a + a') G.V G.W G.M X.β (X.β / X.α) om _ _ _ _
-    (GlobalTheory.ThK.Check.isPair_of_isTriple hT).1 v).1 1 (one_mem_UAt _ _)
-  exact core hT v t ι hEx (GlobalTheory.T.local_unitary_group_surjects_general_linear_right hPr F E σ B a a' G X om om' hT v hv t)
-    (GlobalTheory.T.local_unitary_determined_by_split_image F E σ B a a' G X om om' hT v hv t) hS
 
 end GlobalTheory.LocalUnitSubgroupClosure

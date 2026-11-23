@@ -1,12 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AugmentationSubmoduleFirstFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AugmentationSubmoduleSecondFactorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterAtUniformizerNotRootOfUnityStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatLocalApproximationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSpaceStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,36 +78,5 @@ theorem factor_of {V P : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup P] 
   have : (q.quotKerEquivOfSurjective hs).symm (p φ) = Submodule.Quotient.mk ⟨φ, hφ⟩ := by
     rw [LinearEquiv.symm_apply_eq]; rfl
   simp [this]
-
-theorem kCoinv (hP : GlobalTheory.FunPr.Hypotheses₂) : GlobalTheory.ThK.KCoinv := by
-  intro F E _ _ _ _ _ σ B a a' G X om om' R Rf hm
-  have ht := hm.triple
-  have hf := hm.fin
-  refine ⟨fun v hv => ?_, GlobalTheory.T.weil_representation_preserves_space hP F E σ B a a' G X om om' ht⟩
-  haveI := hf.nontriv v
-  have hnr := GlobalTheory.T.character_at_uniformizer_not_root_of_unity F E σ B a a' G X om om' ht v hv
-  have k1 : ∀ φ ∈ SB _, Rf.p v φ = 0 ↔ φ ∈ augAt om v :=
-    ker_eq_of _ _ _ (hf.inv v) (hf.onto v) <|
-      GlobalTheory.T.augmentation_submodule_first_factor hP F E σ B a a' G X om om' ht v hv hnr _ (le_inf (augAt_le_SB om v) (hf.inv v)) inf_le_left
-        fun h hh φ hφ φ₁ hφ₁ hact => ⟨hφ₁, by
-          have := hf.equiv v h hh φ hφ.1 0 (zero_mem _) φ₁ hφ₁ 0 (zero_mem _) hact (acts_zero _ _)
-            (by rw [map_zero]; exact hφ.2)
-          rw [map_zero] at this; exact this⟩
-  have k2 : ∀ φ ∈ SB _, Rf.p' v φ = 0 ↔ φ ∈ augAt om' v :=
-    ker_eq_of _ _ _ (hf.inv' v) (hf.onto' v) <|
-      GlobalTheory.T.augmentation_submodule_second_factor hP F E σ B a a' G X om om' ht v hv hnr _ (le_inf (augAt_le_SB om' v) (hf.inv' v)) inf_le_left
-        fun h hh φ hφ φ₁ hφ₁ hact => ⟨hφ₁, by
-          have := hf.equiv v h hh 0 (zero_mem _) φ hφ.1 0 (zero_mem _) φ₁ hφ₁ (acts_zero _ _) hact
-            (by rw [map_zero]; exact hφ.2.symm)
-          rw [map_zero] at this; exact this.symm⟩
-  refine ⟨k1, k2, fun t ξ => ?_, fun l hl => ?_⟩
-  · have : ξ ∈ (SB _).map (Rf.p' v) := hf.onto' v ▸ Submodule.mem_top
-    obtain ⟨φ, hφ, rfl⟩ := this
-    obtain ⟨φ₀, h₀, hd⟩ := GlobalTheory.T.schwartz_bruhat_local_approximation hP F E σ B a a' G X om om' ht v hv hnr t φ hφ
-    refine ⟨φ₀, h₀, ?_⟩
-    have := hf.inv' v hd
-    rw [LinearMap.mem_ker, map_sub, sub_eq_zero] at this
-    exact this.symm
-  · exact factor_of _ _ _ (hf.onto' v) fun φ hφ h0 => hl ((k2 φ hφ).1 h0)
 
 end GlobalTheory.KCoinvGood

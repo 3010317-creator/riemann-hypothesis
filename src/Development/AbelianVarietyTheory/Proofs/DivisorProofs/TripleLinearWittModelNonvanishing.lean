@@ -1,6 +1,5 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddCharNegEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterTrivialMatrixLatticeOpenCompactBasisStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
@@ -253,88 +252,5 @@ theorem ip_cosets {T : Type} [TopologicalSpace T] [MeasurableSpace T] [OpensMeas
     rcases mul_eq_zero.mp e2 with h3 | h3
     · exact absurd (sub_eq_zero.mp h3) hl2
     · exact h3
-
-end GlobalTheory.LinearModelL2
-
-namespace GlobalTheory.LinearModelL2
-
-open GlobalTheory.LinSchur
-open scoped GlobalTheory.VacAny GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-
-theorem linIso_lintegral_eq : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E)
-    (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W) (om' : Rep σ G.V' G.W), IsTriple B G X om om' →
-    ∀ v, X.Good v → ∀ (t : E →ₐ[F] Fv F v)
-    (ι : ((Fin a × Fin (a + a') → Fv F v) → ℂ) →ₗ[ℂ] (Matrix (Fin a) (Fin (a + a')) (Fv F v) → ℂ)), G.M.IsLinW B.ψ t 1 1 ι →
-    ∀ φ ∈ SB (Fin a × Fin (a + a') → Fv F v), ∀ φ₁ ∈ SB (Fin a × Fin (a + a') → Fv F v),
-    (∀ μ : @Measure (Fin a × Fin (a + a') → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-      ∫⁻ x, ‖φ₁ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
-    ∀ ν : @Measure (Matrix (Fin a) (Fin (a + a')) (Fv F v)) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν →
-      ∫⁻ Y, ‖ι φ₁ Y‖ₑ ^ 2 ∂ν = ∫⁻ Y, ‖ι φ Y‖ₑ ^ 2 ∂ν := by
-  intro hP F E _ _ _ _ _ σ B a a' G X om om' hTr v hv t ι hι φ hφ φ₁ hφ₁ hnorm ν hν
-  letI : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
-  letI : MeasurableSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
-    inferInstanceAs (LocallyCompactSpace (Fin a → Fin (a + a') → Fv F v))
-  haveI := hν
-  let μ : Measure (Fin a × Fin (a + a') → Fv F v) := Measure.addHaar
-  have hμ : μ.IsAddHaarMeasure := inferInstance
-  obtain ⟨hψc, hψ1, wT, wM, hA⟩ := GlobalTheory.UnitWShape.heisW B G X om om' hTr v t 1 id (fun f hf => hf)
-    (fun γ _ f _ => by simp [actAB, mat])
-  obtain ⟨hT0, hM0, -, -⟩ := hA ι hι
-  have hbij := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model.IsLin.bij hι
-  have hmaps := hbij.mapsTo
-  have hsb : ∀ w, ∀ f ∈ SB (Fin a × Fin (a + a') → Fv F v), schr (GlobalTheory.LatVac.psiAt B.ψ v) w f ∈ SB _ :=
-    fun w f hf => GlobalTheory.SchrSB.schr_mem_SB B.ψ hTr.base.std.1 v w f hf
-  have hU : ∀ w f f', ip μ (schr (GlobalTheory.LatVac.psiAt B.ψ v) w f) (schr (GlobalTheory.LatVac.psiAt B.ψ v) w f') = ip μ f f' :=
-    fun w f f' => GlobalTheory.schr_unitary (GlobalTheory.LatVac.psiAt B.ψ v) hψc μ hμ w f f'
-  obtain ⟨hLoc, hBasis⟩ := GlobalTheory.T.characterTrivialMatrixLattice_open_compact_basis a (a + a') (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψ1
-  have hB' : ∀ W ∈ 𝓝 (0 : Matrix (Fin a) (Fin (a + a')) (Fv F v)), ∃ i : {s : Fv F v // s ≠ 0},
-      (latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') i.1 : Set _) ⊆ W := fun W hW => by
-    obtain ⟨s, hs, h⟩ := hBasis W hW
-    exact ⟨⟨s, hs⟩, h⟩
-  obtain ⟨⟨s1, hs1⟩, hper1⟩ := GlobalTheory.T.exists_openSubgroup_periodic (fun s : {s : Fv F v // s ≠ 0} => latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s.1)
-    (fun s => (hLoc s.1 s.2).1) hB' (ι φ) (hmaps hφ)
-  obtain ⟨⟨s2, hs2⟩, hper2⟩ := GlobalTheory.T.exists_openSubgroup_periodic (fun s : {s : Fv F v // s ≠ 0} => latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s.1)
-    (fun s => (hLoc s.1 s.2).1) hB' (ι φ₁) (hmaps hφ₁)
-  obtain ⟨s, hs, hsub⟩ := hBasis ((latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s1 : Set _) ∩ latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s2)
-    (Filter.inter_mem ((hLoc s1 hs1).1.mem_nhds (zero_mem _)) ((hLoc s2 hs2).1.mem_nhds (zero_mem _)))
-  set L := latt (GlobalTheory.LatVac.psiAt B.ψ v) a (a + a') s with hLdef
-  obtain ⟨Fa, hFa⟩ := GlobalTheory.T.exists_finset_eq_sum_addCosetIndicator L (hLoc s hs).1 (ι φ) (hmaps hφ) (fun Y C hC => hper1 Y C (hsub hC).1)
-  obtain ⟨Fb, hFb⟩ := GlobalTheory.T.exists_finset_eq_sum_addCosetIndicator L (hLoc s hs).1 (ι φ₁) (hmaps hφ₁) (fun Y C hC => hper2 Y C (hsub hC).2)
-  have hcm : ∀ y, cind L y ∈ SB (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
-    fun y => cind_mem (hLoc s hs).1 (hLoc s hs).2 y
-  obtain ⟨x0, hx0, hιx0⟩ := hbij.surjOn (hcm 0)
-  have hPD := ip_cosets μ (GlobalTheory.LatVac.psiAt B.ψ v) hψc ι hbij.injOn
-    (fun C => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT C)) (fun l => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wM l))
-    (fun C f hf => ⟨hsb _ f hf, hT0 C f hf⟩) (fun l f hf => ⟨hsb _ f hf, hM0 l f hf⟩)
-    (fun C => hU _) (fun l => hU _) s x0 hx0 hιx0
-  have hιxs : ∀ y, ι (schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) = cind L y := fun y => by
-    rw [hT0 _ x0 hx0, hιx0]
-    exact cind_translate L y
-  have eA := expand μ ι hbij.injOn L (fun y => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) (fun y => hsb _ x0 hx0) hιxs
-    (ip μ x0 x0) hPD φ hφ (ι φ) rfl Fa hFa
-  have eB := expand μ ι hbij.injOn L (fun y => schr (GlobalTheory.LatVac.psiAt B.ψ v) (wT (-y)) x0) (fun y => hsb _ x0 hx0) hιxs
-    (ip μ x0 x0) hPD φ₁ hφ₁ (ι φ₁) rfl Fb hFb
-  have eA' := expand ν LinearMap.id (fun _ _ _ _ h => h) L (cind L) hcm (fun y => rfl)
-    (ip ν (cind L 0) (cind L 0)) (ip_cind ν L) (ι φ) (hmaps hφ) (ι φ) rfl Fa hFa
-  have eB' := expand ν LinearMap.id (fun _ _ _ _ h => h) L (cind L) hcm (fun y => rfl)
-    (ip ν (cind L 0) (cind L 0)) (ip_cind ν L) (ι φ₁) (hmaps hφ₁) (ι φ₁) rfl Fb hFb
-  have hipD : ip μ φ₁ φ₁ = ip μ φ φ := by
-    rw [(ip_self μ hφ₁).1, (ip_self μ hφ).1, hnorm μ hμ]
-  have hne : x0 ≠ 0 := fun h => by
-    have e := congrFun hιx0 0
-    rw [h, map_zero] at e
-    simp [cind] at e
-  have hc0 : ip μ x0 x0 ≠ 0 := by
-    rw [(ip_self μ hx0).1]
-    exact_mod_cast (ENNReal.toReal_pos (lintegral_ne_zero μ hx0 hne) (ip_self μ hx0).2).ne'
-  rw [eA, eB] at hipD
-  have hK := mul_right_cancel₀ hc0 hipD
-  have hQ : ip ν (ι φ₁) (ι φ₁) = ip ν (ι φ) (ι φ) := by rw [eA', eB', hK]
-  rw [(ip_self ν (hmaps hφ₁)).1, (ip_self ν (hmaps hφ)).1] at hQ
-  have hR := Complex.ofReal_injective hQ
-  exact (ENNReal.toReal_eq_toReal_iff' (ip_self ν (hmaps hφ₁)).2 (ip_self ν (hmaps hφ)).2).mp hR
 
 end GlobalTheory.LinearModelL2

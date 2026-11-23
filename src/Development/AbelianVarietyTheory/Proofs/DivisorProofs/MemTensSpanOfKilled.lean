@@ -12,6 +12,8 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlBlockFiniteDimMod
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestDegreeComponentInvariant
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinFirst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelReal
+public import Mathlib.RingTheory.MvPolynomial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockToSchwartzIntertwinesMetaplecticQuadratic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

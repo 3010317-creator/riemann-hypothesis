@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomMapApply
-import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockPureTensorIsometryMovedOrthonormal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +44,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfIsStd
 
 @[expose] public section

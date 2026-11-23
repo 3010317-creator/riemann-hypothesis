@@ -1,6 +1,5 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlCharacterFactorsThroughDetOfTwoNeZero
@@ -142,47 +141,3 @@ theorem mulLaw : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
 
 end GlobalTheory.DblScalDet
 
-
-open GlobalTheory.DblScalDet in
-theorem GlobalTheory.DblScal.scalar_factors_through_det : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n d : ℕ)
-    (X : Spc F E n) (W : Spc F E d) (M : Model σ X W) (χX χW : Chr F E) (om : Rep σ X W) (r s r' s' : ℕ), IsPair B M χX χW om r s r' s' →
-    ∀ (v : Pl (F := F)) (t : E →ₐ[F] Fv F v) (b : GL (Fin n) (Fv F v)) (c : GL (Fin d) (Fv F v))
-      (dd : GlobalTheory.DblScal.DblCo σ X W) (omd : GlobalTheory.DblScal.DblRep σ (n := n) W),
-      IsUSplitting (adeleClass F) B.ψ dd (actB (cA σ)) omd → GlobalTheory.DblScal.LocOps omd v →
-      ∀ ιd, GlobalTheory.DblScal.IsLinD B.ψ dd t b c ιd → ∀ cd, GlobalTheory.DblScal.IsShapeD omd t c ιd cd →
-      ∃ χd : (Fv F v)ˣ → ℂ, ∀ p ∈ GlobalTheory.DblScal.UDAt σ W.J (evFin F v),
-        cd p = χd (GlobalTheory.SplitFlip.gdet (GlobalTheory.DblScal.locMatD t c p)) := by
-  intro _ F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP v t b c dd omd hS hL ιd hI cd hD
-  obtain ⟨h1, hmul⟩ := mulLaw F E σ B.ψ n d X W v t b c dd omd hS hL ιd hI cd hD
-  have hJ : W.J.det ≠ 0 := det_ne_zero_of_skew hP.skew
-  have hinj := GlobalTheory.T.local_matrix_map_injective F E σ hP.base.cm d W.J hJ v t c
-  have hsurj := GlobalTheory.T.local_matrix_map_surjective F E σ hP.base.cm d W.J hJ hP.skew.skew v t c
-  have hex : ∀ A : GL (Fin d ⊕ Fin d) (Fv F v), ∃ p ∈ GlobalTheory.DblScal.UDAt σ W.J (evFin F v), GlobalTheory.DblScal.locMatD t c p = A :=
-    fun A => hsurj (Set.mem_univ A)
-  choose sec hsU hs using hex
-  have hsm : ∀ A A', sec (A * A') = sec A * sec A' := fun A A' =>
-    hinj (hsU _) (udat_mul (hsU A) (hsU A')) (by rw [hs, map_mul, hs, hs])
-  have hs1 : sec 1 = 1 := hinj (hsU 1) udat_one (by rw [hs, map_one])
-  let f : GL (Fin d ⊕ Fin d) (Fv F v) →* ℂˣ :=
-    { toFun := fun A => ⟨cd (sec A), cd (sec A⁻¹),
-        by rw [← hmul _ (hsU _) _ (hsU _), ← hsm, mul_inv_cancel, hs1, h1],
-        by rw [← hmul _ (hsU _) _ (hsU _), ← hsm, inv_mul_cancel, hs1, h1]⟩
-      map_one' := Units.ext (by simp only [hs1, h1, Units.val_one])
-      map_mul' := fun A A' => Units.ext (by simp only [Units.val_mul]; rw [hsm, hmul _ (hsU _) _ (hsU _)]) }
-  let e : Fin d ⊕ Fin d ≃ Fin (d + d) := finSumFinEquiv
-  let rr : GL (Fin (d + d)) (Fv F v) →* GL (Fin d ⊕ Fin d) (Fv F v) :=
-    Units.map (Matrix.reindexAlgEquiv (Fv F v) (Fv F v) e.symm).toMonoidHom
-  have h2 : (2 : Fv F v) ≠ 0 := fun h => two_ne_zero (α := F) ((algebraMap F (Fv F v)).injective (by rw [map_ofNat, h, map_zero]))
-  obtain ⟨χ, hχ⟩ := GlobalTheory.ghom_factors_through_det (k := Fv F v) h2 (f.comp rr)
-  refine ⟨fun x => (χ x : ℂ), fun p hp => ?_⟩
-  have hp' : sec (GlobalTheory.DblScal.locMatD t c p) = p := hinj (hsU _) hp (hs _)
-  set A := GlobalTheory.DblScal.locMatD t c p
-  let A' : GL (Fin (d + d)) (Fv F v) := Units.map (Matrix.reindexAlgEquiv (Fv F v) (Fv F v) e).toMonoidHom A
-  have hA : rr A' = A := Units.ext (by ext i j; simp [rr, A'])
-  have hdet : Matrix.GeneralLinearGroup.det A' = GlobalTheory.SplitFlip.gdet A :=
-    Units.ext (by simp [A', GlobalTheory.SplitFlip.gdet, Matrix.det_reindex_self])
-  have hf := hχ A'
-  rw [MonoidHom.comp_apply, hA, hdet] at hf
-  calc cd p = cd (sec A) := by rw [hp']
-    _ = ((f A : ℂˣ) : ℂ) := rfl
-    _ = _ := by rw [hf]

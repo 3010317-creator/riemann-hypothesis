@@ -5,6 +5,7 @@ public import Mathlib.RingTheory.PiTensorProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanPolynomialTensorWeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactOneParameterLinesOfLieLines
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelReal
+public import Mathlib.RingTheory.MvPolynomial
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield

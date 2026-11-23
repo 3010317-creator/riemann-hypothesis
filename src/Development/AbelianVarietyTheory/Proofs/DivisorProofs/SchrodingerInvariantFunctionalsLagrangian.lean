@@ -1,6 +1,5 @@
 module
 
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicStoneVonNeumannLagrangianUniqueness
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterInvariantAdelicFormEqMulEvalZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenSeparating
@@ -173,65 +172,5 @@ theorem eval_mem_adm {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
     BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     SchwartzMap.toBoundedContinuousFunction_apply, smul_eq_mul]
   ring
-
-end GlobalTheory.SvNLinear
-
-namespace GlobalTheory.SvNLinear
-
-open GlobalTheory.AdelicSvN
-
-theorem main : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsStd ψ → ∀ (κ : Type) [Fintype κ]
-    (L : Submodule F ((κ → F) × (κ → F))), (∀ a ∈ L, ∀ b ∈ L, a.1 ⬝ᵥ b.2 = b.1 ⬝ᵥ a.2) →
-    Module.finrank F L = Fintype.card κ → ∀ (l₁ l₂ : ((κ → AF F) → ℂ) →ₗ[ℂ] ℂ),
-    (∀ (t : AF F), ∀ w ∈ L, ∀ φ ∈ schA F κ,
-      l₁ (schr ψ (t • ((fun i => algebraMap F (AF F) (w.1 i)), (fun i => algebraMap F (AF F) (w.2 i)))) φ) = l₁ φ) →
-    (∀ (t : AF F), ∀ w ∈ L, ∀ φ ∈ schA F κ,
-      l₂ (schr ψ (t • ((fun i => algebraMap F (AF F) (w.1 i)), (fun i => algebraMap F (AF F) (w.2 i)))) φ) = l₂ φ) →
-    (∃ φ ∈ schA F κ, l₂ φ ≠ 0) → ∃ c : ℂ, ∀ φ ∈ schA F κ, l₁ φ = c * l₂ φ := by
-  intro _ F _ _ ψ hψ κ _ L hL hdim l₁ l₂ hi₁ hi₂ ⟨φ₀, hφ₀, hne⟩
-  classical
-  obtain ⟨g, hg, hgL⟩ := GlobalTheory.T.exists_symplecticBlockGenerators_lagrangian_normal_form F κ L hL hdim
-  obtain ⟨S, hS, hSs, hSa, hSi⟩ := realised_of_mem_closure ψ hψ hg
-
-  have hlin : ∀ (a b : ℂ), ∀ φ ∈ schA F κ, ∀ φ' ∈ schA F κ, S (a • φ + b • φ') = a • S φ + b • S φ' := by
-    intro a b φ hφ φ' hφ'
-    funext x
-    obtain ⟨l', _, e⟩ := hSa _ (eval_mem_adm x)
-    have hm : a • φ + b • φ' ∈ schA F κ := add_mem (Submodule.smul_mem _ a hφ) (Submodule.smul_mem _ b hφ')
-    have e1 := e _ hm
-    have e2 := e φ hφ
-    have e3 := e φ' hφ'
-    simp only [LinearMap.proj_apply] at e1 e2 e3
-    rw [← e1, map_add (f := _), map_smul, map_smul, e2, e3]
-    rfl
-  have key : ∀ l : ((κ → AF F) → ℂ) →ₗ[ℂ] ℂ, (∀ (t : AF F), ∀ w ∈ L, ∀ φ ∈ schA F κ,
-      l (schr ψ (t • ((fun i => algebraMap F (AF F) (w.1 i)), (fun i => algebraMap F (AF F) (w.2 i)))) φ) = l φ) →
-      ∃ c : ℂ, ∀ φ ∈ schA F κ, l (S φ) = c * φ 0 := by
-    intro l hi
-    let f : schA F κ →ₗ[ℂ] ℂ :=
-      { toFun := fun φ => l (S φ.1)
-        map_add' := fun φ φ' => by
-          have := hlin 1 1 φ.1 φ.2 φ'.1 φ'.2
-          simp only [one_smul] at this
-          simp only [Submodule.coe_add, this, map_add (f := _)]
-        map_smul' := fun s φ => by
-          have := hlin s 0 φ.1 φ.2 0 (Submodule.zero_mem _)
-          simp only [zero_smul, add_zero] at this
-          simp only [Submodule.coe_smul, this, map_smul, RingHom.id_apply, smul_eq_mul] }
-    obtain ⟨l', hl'⟩ := LinearMap.exists_extend f
-    have e : ∀ φ (hφ : φ ∈ schA F κ), l' φ = l (S φ) := fun φ hφ => LinearMap.congr_fun hl' ⟨φ, hφ⟩
-    obtain ⟨c, hc⟩ := charInv F ψ hψ κ l' (fun y φ hφ => by
-      have hm : (fun x => ψ (x ⬝ᵥ y) * φ x) = schr ψ (0, y) φ := by funext x; simp [schr]
-      rw [hm, e _ (GlobalTheory.HeisSchA.schr_mem_schA ψ hψ _ φ hφ), e φ hφ, hSi _ φ hφ, act_zero_eq_sum]
-      exact inv_sum ψ hψ L hL l hi Finset.univ y _ (fun j => hgL _) _ (hS φ hφ))
-    exact ⟨c, fun φ hφ => (e φ hφ).symm.trans (hc φ hφ)⟩
-  obtain ⟨c₁, h₁⟩ := key l₁ hi₁
-  obtain ⟨c₂, h₂⟩ := key l₂ hi₂
-  obtain ⟨ψ₀, hψ₀, rfl⟩ := hSs φ₀ hφ₀
-  have hc₂ : c₂ ≠ 0 := fun h => hne (by rw [h₂ ψ₀ hψ₀, h, zero_mul])
-  refine ⟨c₁ / c₂, fun φ hφ => ?_⟩
-  obtain ⟨φ', hφ', rfl⟩ := hSs φ hφ
-  rw [h₁ φ' hφ', h₂ φ' hφ']
-  field_simp
 
 end GlobalTheory.SvNLinear
