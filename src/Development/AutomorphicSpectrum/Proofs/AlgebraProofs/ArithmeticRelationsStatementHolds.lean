@@ -576,7 +576,7 @@ theorem PositivityTheory.Xgn.t_flatten_lines : ∀ (O : Type) [CommRing O] [IsDo
   refine ⟨I, inferInstance, inferInstance, fun j => Fin (M j), fun _ => inferInstance, z, ?_, ?_⟩
   · have hmodJ := PositivityTheory.Xgn.t_join_model O Ω K ι x d 0 hmod I (fun j => Fin (M j)) z hnz
       Fin.elim0 algebraicIndependent_empty_type (fun i => Fin.elim0 i) ?_
-    · simpa using hmodJ
+    · convert hmodJ
     · intro w _
       have hw : w ∈ fnField O x := by
         rw [hfn]
