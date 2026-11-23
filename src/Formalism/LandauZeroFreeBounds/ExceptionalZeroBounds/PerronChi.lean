@@ -238,28 +238,12 @@ section
 variable {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
 
 lemma summatory_eq_sum_range {a : ℕ → ℝ} (ha0 : a 0 = 0) {N : ℕ} {x : ℝ} (hx : x < N) :
-    Formalism.Sa a x = ∑ n ∈ Finset.range N, a n * Formalism.mxS n x := by
-  rw [Formalism.Sa_eq_tsum _ ha0]
-  refine tsum_eq_sum (fun n hn => ?_)
-  rw [Finset.mem_range, not_lt] at hn
-  have hxn : x < n := lt_of_lt_of_le hx (by exact_mod_cast hn)
-  refine Formalism.a_mxS_eq_zero _ ha0 x n ?_
-  rw [Finset.mem_Icc]
-  rintro ⟨h1, h2⟩
-  have hx1 : 1 ≤ x := Nat.floor_pos.mp (by omega)
-  have : (n : ℝ) ≤ x := (Nat.cast_le.mpr h2).trans (Nat.floor_le (by linarith))
-  linarith
+    Formalism.Sa a x = ∑ n ∈ Finset.range N, a n * Formalism.mxS n x :=
+  Formalism.Sa_eq_sum_range a ha0 hx
 
 lemma summatory_function_continuousAt {a : ℕ → ℝ} (ha0 : a 0 = 0) (y : ℝ) :
-    ContinuousAt (fun x => (Formalism.Sa a x : ℂ)) y := by
-  obtain ⟨N, hN⟩ := exists_nat_gt y
-  have hev : (fun x => ((∑ n ∈ Finset.range N, a n * Formalism.mxS n x : ℝ) : ℂ)) =ᶠ[𝓝 y]
-      (fun x => (Formalism.Sa a x : ℂ)) := by
-    filter_upwards [eventually_lt_nhds hN] with x hx
-    rw [summatory_eq_sum_range ha0 hx]
-  refine ContinuousAt.congr ?_ hev
-  exact (Complex.continuous_ofReal.comp (continuous_finsetSum _
-    (fun n _ => continuous_const.mul (Formalism.ZF.perron_continuous_mxS n)))).continuousAt
+    ContinuousAt (fun x => (Formalism.Sa a x : ℂ)) y :=
+  (Complex.continuous_ofReal.comp (Formalism.Sa_continuous a ha0)).continuousAt
 
 lemma chebyshev_character_continuousAt (y : ℝ) : ContinuousAt (fun x => Schi χ x) y := by
   have h : (fun x => Schi χ x) =

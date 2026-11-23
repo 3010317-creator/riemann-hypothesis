@@ -54,6 +54,10 @@ noncomputable section
 
 namespace Formalism
 
+lemma continuous_mxS (n : ℕ) : Continuous (mxS n) := by
+  show Continuous (fun x : ℝ => max (x / n - 1) 0)
+  exact ((continuous_id.div_const _).sub continuous_const).max continuous_const
+
 section
 variable (a : ℕ → ℝ)
 
@@ -107,6 +111,29 @@ lemma Sa_eq_tsum (ha0 : a 0 = 0) (x : ℝ) : Sa a x = ∑' n, a n * mxS n x := b
     linarith
   unfold mxS
   rw [max_eq_left hnn]
+
+lemma Sa_eq_sum_range (ha0 : a 0 = 0) {N : ℕ} {x : ℝ} (hx : x < N) :
+    Sa a x = ∑ n ∈ Finset.range N, a n * mxS n x := by
+  rw [Sa_eq_tsum _ ha0]
+  refine tsum_eq_sum (fun n hn => ?_)
+  rw [Finset.mem_range, not_lt] at hn
+  have hxn : x < n := lt_of_lt_of_le hx (by exact_mod_cast hn)
+  refine a_mxS_eq_zero _ ha0 x n ?_
+  rw [Finset.mem_Icc]
+  rintro ⟨h1, h2⟩
+  have hx1 : 1 ≤ x := Nat.floor_pos.mp (by omega)
+  have : (n : ℝ) ≤ x := (Nat.cast_le.mpr h2).trans (Nat.floor_le (by linarith))
+  linarith
+
+lemma Sa_continuous (ha0 : a 0 = 0) : Continuous (Sa a) := by
+  rw [continuous_iff_continuousAt]
+  intro y
+  obtain ⟨N, hN⟩ := exists_nat_gt y
+  have hev : (fun x => ∑ n ∈ Finset.range N, a n * mxS n x) =ᶠ[𝓝 y] Sa a := by
+    filter_upwards [eventually_lt_nhds hN] with x hx
+    rw [Sa_eq_sum_range a ha0 hx]
+  refine ContinuousAt.congr ?_ hev
+  exact (continuous_finsetSum _ fun n _ => continuous_const.mul (continuous_mxS n)).continuousAt
 
 lemma summable_a_mxS (ha0 : a 0 = 0) (x : ℝ) : Summable (fun n => a n * mxS n x) :=
   summable_of_ne_finset_zero (s := Finset.Icc 1 ⌊x⌋₊) (fun n hn => a_mxS_eq_zero a ha0 x n hn)
