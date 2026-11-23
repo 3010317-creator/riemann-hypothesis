@@ -1218,10 +1218,7 @@ open Formalism.IndefR.Eqv (psiT thetaC eq_thetaC)
 
 variable {D : D7} {n : ℕ}
 
-theorem reidx_mul (a b : M2 n) : reidx (a * b) = reidx a * reidx b := by
-  simp only [reidx, Matrix.submatrix_mul_equiv]
-
-theorem reidx_one : reidx (1 : M2 n) = 1 := Matrix.submatrix_one_equiv _
+-- `reidx_mul` and `reidx_one` are provided by `ValZeroOfTens` (same namespace).
 
 theorem reidx_conjTranspose (a : M2 n) : reidx aᴴ = (reidx a)ᴴ := by
   simp only [reidx, Matrix.conjTranspose_submatrix]
