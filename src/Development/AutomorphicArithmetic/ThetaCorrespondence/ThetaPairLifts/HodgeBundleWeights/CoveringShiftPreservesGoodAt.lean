@@ -728,7 +728,9 @@ open GlobalTheory.LamT (CMPt)
 
 namespace GlobalTheory.FieldPolyZ
 
-open GlobalTheory.CM GlobalTheory.Frames GlobalTheory.LamT Formalism.L2.LamCM GlobalTheory.LamT.FieldPoly
+open GlobalTheory.CM GlobalTheory.Frames Formalism.L2.LamCM GlobalTheory.LamT.FieldPoly
+open GlobalTheory.LamT hiding blockDetPoly evalFr_blockDetPoly evalFr_map_blockDetPoly
+  exists_eq_prod_blockDetPoly_pow_mul
 
 theorem exists_isHomogeneous_secZ_genFix : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H)
