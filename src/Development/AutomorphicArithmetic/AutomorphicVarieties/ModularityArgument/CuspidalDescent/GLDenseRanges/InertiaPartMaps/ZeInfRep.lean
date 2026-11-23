@@ -89,16 +89,16 @@ private theorem zd_dec (D : J → Submodule ℂ M) {F : M} (h : F ∈ ⨆ i, D i
   classical
   induction h using Submodule.iSup_induction' with
   | mem i y hy =>
-    refine ⟨Pi.single i y, fun j => ?_, by simp⟩
+    refine ⟨Pi.single i y, fun j => ?_, by rw [Finset.sum_pi_single', if_pos (Finset.mem_univ i)]⟩
     by_cases hj : j = i
     · subst hj
-      simpa using hy
-    · simp [Pi.single_eq_of_ne hj]
-  | zero => exact ⟨0, fun _ => zero_mem _, by simp⟩
+      rw [Pi.single_eq_same]; exact hy
+    · rw [Pi.single_eq_of_ne hj]; exact zero_mem _
+  | zero => exact ⟨0, fun _ => zero_mem _, Finset.sum_eq_zero fun _ _ => rfl⟩
   | add y z _ _ hy hz =>
     obtain ⟨a, ha, rfl⟩ := hy
     obtain ⟨b, hb, rfl⟩ := hz
-    exact ⟨a + b, fun i => add_mem (ha i) (hb i), by simp [Finset.sum_add_distrib]⟩
+    exact ⟨a + b, fun i => add_mem (ha i) (hb i), Finset.sum_add_distrib⟩
 
 private theorem zd_pow (T : Module.End ℂ M) (a : ℂ) (Y : Submodule ℂ M) (h : ∀ y ∈ Y, T y ∈ Y) (k : ℕ) :
     ∀ y ∈ Y, ((T - a • 1) ^ k) y ∈ Y := by
@@ -127,7 +127,8 @@ private theorem zd_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
     intro s
     induction s using Finset.induction_on with
     | empty =>
-      have h0 : (⨆ i ∈ (∅ : Finset J), E i) = ⊥ := by simp
+      have h0 : (⨆ i ∈ (∅ : Finset J), E i) = ⊥ :=
+        iSup_eq_bot.2 fun i => iSup_eq_bot.2 fun h => absurd h (Finset.notMem_empty i)
       rw [h0]
       simp
     | insert a s ha ih =>
@@ -135,12 +136,13 @@ private theorem zd_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
       haveI : FiniteDimensional ℂ ↥(E a) := Submodule.finiteDimensional_of_le (hZ a)
       haveI : FiniteDimensional ℂ ↥(⨆ i ∈ s, E i) := Submodule.finiteDimensional_of_le hs
       have hd : Disjoint (E a) (⨆ i ∈ s, E i) := by
-        simpa using hE.disjoint_biSup (y := (s : Set J)) (by simpa using ha)
+        exact hE.disjoint_biSup (y := (s : Set J)) (Finset.mem_coe.not.2 ha)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (E a) (⨆ i ∈ s, E i)
       rw [hd.eq_bot, finrank_bot, add_zero, ih] at h
       rw [Finset.iSup_insert, Finset.sum_insert ha]
       exact h
-  have h1 : (⨆ i ∈ (Finset.univ : Finset J), E i) = ⨆ i, E i := by simp
+  have h1 : (⨆ i ∈ (Finset.univ : Finset J), E i) = ⨆ i, E i :=
+    iSup_congr fun i => iSup_pos (Finset.mem_univ i)
   rw [← h1]
   exact key Finset.univ
 
@@ -192,10 +194,10 @@ private theorem zd_pi {I : Type} [Fintype I] [DecidableEq I] {G : I → Type} [�
     ∀ g, ∀ y ∈ Y, π g y ∈ Y := by
   let S : Subgroup (∀ j, G j) :=
     { carrier := {g | (∀ y ∈ Y, π g y ∈ Y) ∧ ∀ y ∈ Y, π g⁻¹ y ∈ Y}
-      one_mem' := by simp
+      one_mem' := ⟨fun y hy => by rw [map_one]; exact hy, fun y hy => by rw [inv_one, map_one]; exact hy⟩
       mul_mem' := fun {a b} ha hb => ⟨fun y hy => by rw [map_mul]; exact ha.1 _ (hb.1 y hy),
         fun y hy => by rw [mul_inv_rev, map_mul]; exact hb.2 _ (ha.2 y hy)⟩
-      inv_mem' := fun {a} ha => ⟨ha.2, by simpa using ha.1⟩ }
+      inv_mem' := fun {a} ha => ⟨ha.2, fun y hy => by rw [inv_inv]; exact ha.1 y hy⟩ }
   intro g
   have : g ∈ S := Subgroup.pi_mem_of_mulSingle_mem g fun j => ⟨h j _, by rw [← Pi.mulSingle_inv]; exact h j _⟩
   exact this.1
