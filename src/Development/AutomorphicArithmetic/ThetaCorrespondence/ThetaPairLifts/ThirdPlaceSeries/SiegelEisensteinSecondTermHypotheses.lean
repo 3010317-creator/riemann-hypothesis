@@ -210,7 +210,7 @@ open scoped BigOperators
 namespace GlobalTheory.NormSum
 
 theorem intSt_and_archSt : IntSt ∧ ArchSt :=
-  ⟨GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses _root_.GlobalTheory.NormSum.inp_all, _root_.GlobalTheory.ArchTop.archSt_of_inp GlobalTheory.T.cmThetaNormBoundHypotheses_satisfied⟩
+  ⟨GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses _root_.GlobalTheory.NormSum.inp_all, _root_.GlobalTheory.ArchTop.archSt_of_inp _root_.GlobalTheory.NormSum.inp_all⟩
 
 end GlobalTheory.NormSum
 end -- clump:auto
@@ -436,7 +436,7 @@ theorem prod_localIdele_comp (z : ∀ v : HeightOneSpectrum (𝓞 L), (v.adicCom
       if w ∈ F then ((z w : (w.adicCompletion L)ˣ) : w.adicCompletion L) else 1 := by
   classical
   induction F using Finset.induction_on with
-  | empty => exact ⟨rfl, fun w => by simp; rfl⟩
+  | empty => exact ⟨rfl, fun w => by simp⟩
   | insert a F ha ih =>
     rw [Finset.prod_insert ha, Units.val_mul]
     have e1 : ∀ x y : AdeleRing (𝓞 L) L, (x * y).1 = x.1 * y.1 := fun _ _ => rfl
