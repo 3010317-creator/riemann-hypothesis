@@ -371,11 +371,12 @@ section Local
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-attribute [-instance] Formalism.DoubleCosetMeasures.instMeasMat in
+attribute [-instance] Formalism.DoubleCosetMeasures.instMeasMat Matrix.instMeasurableSpace in
 theorem vol_mul_relIndex [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype n] [DecidableEq n] (J : Subgroup (GL n k))
     (ho : IsOpen (J : Set (GL n k))) (hle : J ≤ KO k n) :
     (haarVol (KO k n)).real (J.map invT : Subgroup _) * (J.relIndex (KO k n) : ℝ) = 1 := by
   obtain ⟨ho', hle'⟩ := isOpen_map_invT ho hle
+  haveI : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
   have hK : (KO k n).map invT = KO k n := by
     refine le_antisymm ?_ fun g hg => ⟨invT g, invT_mem_KO hg, GlobalTheory.SplitFlip.invT_invT g⟩
     rintro _ ⟨g, hg, rfl⟩
