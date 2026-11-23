@@ -549,7 +549,7 @@ private theorem evT_sum {n : ℕ} (θ : Wt n) (c : FR n) :
     evT θ c = ∑ μ ∈ c.coeff.support, cf c μ * evT θ (ex μ) := by
   simp only [evT, ex, AddMonoidAlgebra.lift_single, one_smul]
   rw [AddMonoidAlgebra.lift_apply]
-  simp only [Finsupp.sum, cf, smul_eq_mul]
+  simp only [Finsupp.sum, UpperTheory.RealTr.cf, smul_eq_mul]
 
 theorem UpperTheory.RealTr.chEv :
     ∀ (n : ℕ) (N : Type) [NormedAddCommGroup N] [InnerProductSpace ℂ N] [FiniteDimensional ℂ N] (σ : UK n →* (N →ₗ[ℂ] N))
