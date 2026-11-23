@@ -1644,6 +1644,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.universal_diagonal_of_triangular_point
       ∀ r : Γ →* GG (m := 3) (R := A), F.IsPt g₁ r → Upper F.η r ∨ Lower F.η r) →
       Module.Finite O (wpart O u 0) := by
   intro O _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hOk hCl g₁ hg₁ R _ _ _ u hu htri
+  haveI : IsLocalRing R := UpperTheory.V.Alg.IsCO.toIsLocalRing O (R := R)
   obtain ⟨W, hW, -⟩ := exists_adapted F hOk g₁ hg₁ u hu
   rw [← hW.part 0]
   have key : ∀ {A : Type} [CommRing A] [Algebra O A] (f : R →ₐ[O] A) (g : Γ) (a b : Fin 3),
@@ -1660,9 +1661,11 @@ theorem UpperTheory.V.UnitaryThreeInertia.universal_diagonal_of_triangular_point
     rw [h2]
     simpa using h1
   · intro A _ _ _ f hf hA
-    letI iLA : IsLocalRing A := inferInstance
-    haveI iDA : IsDomain A := inferInstance
-    haveI iNA : IsNoetherianRing A := inferInstance
+    haveI iDVR : IsDiscreteValuationRing A := IsCD.toIsDiscreteValuationRing (O := O)
+    letI iLA : IsLocalRing A := iDVR.toIsLocalRing
+    haveI iDA : IsDomain A := IsCD.toIsDomain (O := O)
+    haveI iNA : IsNoetherianRing A :=
+      @PrincipalIdealRing.isNoetherianRing A _ iDVR.toIsPrincipalIdealRing
     haveI : IsLocalHom (algebraMap O A) := IsCD.isLocalHom
     haveI := hf
     have hpt : F.IsPt g₁ (push f u) := isPt_push F f g₁ u hu.pt
