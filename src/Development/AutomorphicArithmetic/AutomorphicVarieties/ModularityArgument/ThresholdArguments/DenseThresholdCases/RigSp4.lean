@@ -541,16 +541,20 @@ private theorem ne_top {k Ω : Type} [Field k] [NumberField k] [Field Ω] [Algeb
   have h1 := (h x).2 hx
   rw [valuation_lt_one_iff'] at h1
   have h2 := h1.2.resolve_right fun h' => h' (ValuationSubring.mem_top _)
-  simpa using h2
+  rw [Ideal.mem_bot]
+  exact RingOfIntegers.coe_eq_zero_iff.1 ((map_eq_zero_iff _ (algebraMap k Ω).injective).1 h2)
 
 private theorem val_nat {k Ω : Type} [Field k] [NumberField k] [Field Ω] [Algebra k Ω] {A : ValuationSubring Ω}
     {v : W.Plc k} (h : IsPlaceOver A v) (q : ℕ) : A.valuation (q : Ω) < 1 ↔ (q : 𝓞 k) ∈ v.asIdeal := by
-  simpa using h (q : 𝓞 k)
+  have h' := h (q : 𝓞 k)
+  rwa [show ((q : 𝓞 k) : k) = q from map_natCast (algebraMap (𝓞 k) k) q, map_natCast] at h'
 
 private theorem fin_nat {k : Type} [Field k] [NumberField k] {q : ℕ} (hq : q ≠ 0) :
     {v : W.Plc k | (q : 𝓞 k) ∈ v.asIdeal}.Finite := by
-  have h := Ideal.finite_factors (I := Ideal.span {(q : 𝓞 k)}) (by simpa using hq)
-  simpa [Ideal.dvd_span_singleton] using h
+  have hne : Ideal.span {(q : 𝓞 k)} ≠ 0 := by
+    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+    exact_mod_cast hq
+  exact (Ideal.finite_factors hne).subset fun v hv => Ideal.dvd_span_singleton.2 hv
 
 private theorem eq_of_mem {k : Type} [Field k] [NumberField k] {v : W.Plc k} {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     (h1 : (p : 𝓞 k) ∈ v.asIdeal) (h2 : (q : 𝓞 k) ∈ v.asIdeal) : p = q := by
@@ -768,7 +772,7 @@ theorem UpperTheory.V.Ws.nonempty_link_of_fit_deep_unramified :
            κ := X.κ, β := X.β, t := X.t, κ_cont := X.κ_cont, β_cont := X.β_cont, t_cont := X.t_cont, β_t := X.β_t,
            β_red := X.β_red, conj := fun g g' e => X.conj σ hσ g g' (hc g g' e), t_unr := X.t_unr,
            unr := fun A v hA hv g hg =>
-             ⟨X.unr A (Y.away A v hA hv) hg, (((barFacts hG).2.2 A (Y.away A v hA hv) _ ⟨hg.1, hg.2⟩)).2⟩
+             ⟨X.unr A (Y.away A v hA hv) hg, (((Lk.barFacts hG).2.2 A (Y.away A v hA hv) _ ⟨hg.1, hg.2⟩)).2⟩
            tame := X.tame
            mu := fun v g hg => by
              obtain ⟨a, ha⟩ := (prFacts l T.L Ω Y.s V).2.2.2 v g hg
