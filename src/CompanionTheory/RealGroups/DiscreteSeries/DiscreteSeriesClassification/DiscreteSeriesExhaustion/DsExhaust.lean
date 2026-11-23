@@ -458,7 +458,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.RgSteps
 
-open CompanionTheory.RgExh
+open _root_.CompanionTheory.RgExh
 open Formalism.REAL (IsWeight)
 open CompanionTheory.D.LK (LocFin)
 
@@ -573,7 +573,7 @@ open Finset
 
 namespace GlobalTheory.CompanionTheory.RgExhFin
 
-open CompanionTheory.RgExh CompanionTheory.RgExh.Fin
+open _root_.CompanionTheory.RgExh _root_.CompanionTheory.RgExh.Fin
 open Formalism.REAL (GlRel IsUnitary KHighest IsWeight)
 open CompanionTheory.D.LK (IsKMod LocFin IsMin)
 
@@ -727,7 +727,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.RgIso
 
-open CompanionTheory.RgExh
+open _root_.CompanionTheory.RgExh
 open Formalism.REAL (GlRel qdet qminor Tm KHighest IsWeight)
 open CompanionTheory.D.LK (LocFin IsMin)
 open CompanionTheory.D.DSIC (KStab)
@@ -905,7 +905,7 @@ noncomputable section
 namespace GlobalTheory.CompanionTheory.DSData
 
 open Formalism.REAL (KHighest)
-open CompanionTheory.RgExh CompanionTheory.RgExh.Fin
+open _root_.CompanionTheory.RgExh _root_.CompanionTheory.RgExh.Fin
 
 variable {n : ℕ}
 
@@ -1083,7 +1083,7 @@ section -- clump:auto
 
 namespace GlobalTheory.CompanionTheory.RgPath
 
-open CompanionTheory.RgExh
+open _root_.CompanionTheory.RgExh
 
 theorem pathEnd_eq_add_nat {n : ℕ} (ss : List (_root_.Fin n)) :
     ∀ χ : _root_.Fin n → ℂ, ∃ m : _root_.Fin n → ℕ, pathEnd χ ss = χ + (fun a => (m a : ℂ)) ∧
@@ -1136,7 +1136,7 @@ namespace GlobalTheory.CompanionTheory.RgStart
 
 open Formalism.REAL (GlRel KHighest IsWeight qdet)
 open CompanionTheory.D.LK (IsKMod)
-open CompanionTheory.RgExh
+open _root_.CompanionTheory.RgExh
 
 theorem monic_eval_capP : ∀ (n : ℕ) (p : ℂ[X]), p.Monic → p.natDegree = n →
     ∃ χ : Fin n → ℂ, ∀ Y : ℂ, p.eval Y = Formalism.QuantumDeterminants.capP χ Y := by
@@ -1337,7 +1337,7 @@ open Finset
 
 namespace GlobalTheory.CompanionTheory.AdjointSignNormality
 
-open CompanionTheory.RgExh CompanionTheory.RgExh.Fin ReciprocityTheory.ChartRestriction.DS
+open _root_.CompanionTheory.RgExh _root_.CompanionTheory.RgExh.Fin ReciprocityTheory.ChartRestriction.DS
 open Formalism.REAL (GlRel qdet)
 
 variable {n : ℕ} {M : Type} [NormedAddCommGroup M] [InnerProductSpace ℂ M]
@@ -1483,7 +1483,7 @@ section -- clump:auto
 
 namespace GlobalTheory.CompanionTheory.RgExhFin
 
-open CompanionTheory.RgExh
+open _root_.CompanionTheory.RgExh
 
 private theorem simplePath_cons_iff {n : ℕ} (χ : Fin n → ℂ) (a : Fin n) (l : List (Fin n)) :
     SimplePath χ (a :: l) ↔ (∀ r, r ≠ a → χ r ≠ χ a) ∧ SimplePath (χ + Pi.single a 1) l :=
@@ -1615,7 +1615,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.RgExhFin
 
-open CompanionTheory.RgExh ReciprocityTheory.ChartRestriction.DS
+open _root_.CompanionTheory.RgExh ReciprocityTheory.ChartRestriction.DS
 open Formalism.REAL (GlRel IsUnitary)
 
 theorem unitarizable_of_separating_smooth_l2_maps :
