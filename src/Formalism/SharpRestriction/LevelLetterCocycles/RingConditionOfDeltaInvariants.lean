@@ -527,26 +527,12 @@ theorem mem_smul_top_pi (k : ℕ) (x : Fin k → R) :
     exact sum_mem fun i _ => Submodule.smul_mem_smul (hx i) Submodule.mem_top
 
 theorem precomplete_pi [IsPrecomplete J R] (k : ℕ) : IsPrecomplete J (Fin k → R) := by
-  have key : ∀ (m : ℕ) (y : Fin k → R), y ∈ (J ^ m • ⊤ : Submodule R (Fin k → R)) ↔
-      ∀ i, y i ∈ (J ^ m • ⊤ : Submodule R R) := by
-    intro m y
-    rw [mem_smul_top_pi]
-    simp only [Ideal.smul_eq_mul, Ideal.mul_top]
-  refine ⟨fun f hf => ?_⟩
-  have hfi : ∀ i, ∃ L : R, ∀ n, f n i ≡ L [SMOD (J ^ n • ⊤ : Submodule R R)] := by
-    intro i
-    refine IsPrecomplete.prec' (I := J) (fun m => f m i) (fun {m n} hmn => ?_)
-    have h1 := hf hmn
-    rw [SModEq.sub_mem, key] at h1
-    rw [SModEq.sub_mem]
-    exact h1 i
-  choose L hL using hfi
-  refine ⟨L, fun n => ?_⟩
-  rw [SModEq.sub_mem, key]
-  intro i
-  have h2 := hL i n
-  rw [SModEq.sub_mem] at h2
-  exact h2
+  apply AdicCompletion.of_surjective_iff.mp
+  intro x
+  choose y hy using fun i => AdicCompletion.of_surjective J R ((AdicCompletion.piEquivFin J k) x i)
+  refine ⟨y, (AdicCompletion.piEquivFin J k).injective ?_⟩
+  funext i
+  simpa [AdicCompletion.pi, AdicCompletion.map_of] using hy i
 
 theorem precomplete_of_surj {M N : Type} [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
     (f : M →ₗ[R] N) (hf : Function.Surjective f) [IsPrecomplete J M] : IsPrecomplete J N := by
