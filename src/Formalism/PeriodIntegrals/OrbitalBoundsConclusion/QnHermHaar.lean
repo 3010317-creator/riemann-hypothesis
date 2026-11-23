@@ -718,7 +718,7 @@ section -- clump:auto
 theorem qnHermHaar : Formalism.FourierDecayAlt.Q.HermHaar :=
   PI.QnHermHaar.qnHermHaar_of_alg PI.QnHermHaar.hermitian_algebra_generation qnRdSkew quantum_minor_star
     (PI.contractionsCovariant_iff.2
-      ⟨covariant_det_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHatW.qnCovHat_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHat2W.qnCovHat2_of_lin covariant_linear⟩)
+      ⟨_root_.PI.QnCovDetW.qnCovDet_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHatW.qnCovHat_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHat2W.qnCovHat2_of_lin _root_.PI.QnCovLinW.qnCovLin⟩)
     quantum_minor_move.1 quantum_minor_move.2 _root_.QnYLeibnizW.y_operator_leibniz_rule qnEabGl qnEabPres
 end -- clump:auto
 end -- clump:auto

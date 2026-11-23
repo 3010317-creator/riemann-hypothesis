@@ -490,7 +490,7 @@ section -- clump:auto
 theorem qnTInv : Formalism.FourierDecayAlt.Q.TInvariant :=
   Formalism.FourierDecayAlt.Q.TInvW.qnTInv_of
     (PI.contractionsCovariant_iff.2
-      ⟨covariant_det_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHatW.qnCovHat_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHat2W.qnCovHat2_of_lin covariant_linear⟩)
+      ⟨_root_.PI.QnCovDetW.qnCovDet_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHatW.qnCovHat_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHat2W.qnCovHat2_of_lin _root_.PI.QnCovLinW.qnCovLin⟩)
     qnEabPres qnEabGl qnMinorLeft
 end -- clump:auto
 end -- clump:auto
