@@ -68,44 +68,29 @@ theorem val_eq_of_le_of_le
     ∀ (g : ℕ) (z y : Fin n), (w y).val = (w z).val + g → z ≤ y →
       ∀ x : Fin n, z ≤ x → x ≤ y → (w x).val = (w z).val + (x.val - z.val) := by
   intro g
-  induction g using Nat.strong_induction_on with
-  | _ g ih =>
-  intro z y hgap hzy x hzx hxy
-  rw [Fin.le_iff_val_le_val] at hzy hzx hxy
-  rcases Nat.eq_zero_or_pos g with hg | hg
-  · subst hg
-    have hyz : y = z := w.injective (Fin.ext (by omega))
-    subst hyz
-    have hxy' : x = y := Fin.ext (by omega)
-    subst hxy'
+  induction g with
+  | zero =>
+    intro z y hgap hzy x hzx hxy
+    have hyz : y = z := w.injective (Fin.ext (by simpa using hgap))
+    subst y
+    obtain rfl := le_antisymm hxy hzx
     simp
-  · have hlt : (w z).val + 1 < n := by have := (w y).isLt; omega
-    set p := w.symm ⟨(w z).val + 1, hlt⟩ with hp
-    have hwp : (w p).val = (w z).val + 1 := by simp [hp]
-    have hzy' : z.val < y.val := by
-      rcases Nat.lt_or_eq_of_le hzy with h | h
-      · exact h
-      · have : z = y := Fin.ext h
-        subst this
-        omega
-    rcases lt_trichotomy p.val z.val with hpz | hpz | hpz
-    ·
-      exfalso
-      have key := ih (g - 1) (by omega) p y (by omega) (Fin.le_iff_val_le_val.2 (by omega)) z
-        (Fin.le_iff_val_le_val.2 (by omega)) (Fin.le_iff_val_le_val.2 hzy)
+  | succ g ih =>
+    intro z y hgap hzy x hzx hxy
+    have hlt : (w z).val + 1 < n := by
+      have := (w y).isLt
       omega
-    · exfalso
-      have : p = z := Fin.ext hpz
-      rw [this] at hwp
+    let p := w.symm ⟨(w z).val + 1, hlt⟩
+    have hwp : (w p).val = (w z).val + 1 := by simp [p]
+    have hpy : (w y).val = (w p).val + g := by omega
+    obtain hpz | hzp := le_or_gt p z
+    · have := ih p y hpy (hpz.trans hzy) z hpz hzy
       omega
-    ·
-      have hp1 : p.val = z.val + 1 := hB z p (Fin.lt_def.2 hpz) hwp
-      rcases Nat.eq_or_lt_of_le hzx with hx | hx
-      · have : x = z := Fin.ext hx.symm
-        subst this
-        simp
-      · have key := ih (g - 1) (by omega) p y (by omega) (Fin.le_iff_val_le_val.2 (by omega)) x
-          (Fin.le_iff_val_le_val.2 (by omega)) (Fin.le_iff_val_le_val.2 hxy)
+    · have hp := hB z p hzp hwp
+      obtain rfl | hzx := hzx.eq_or_lt
+      · simp
+      · have hpx : p.val ≤ x.val := hp.symm ▸ Fin.lt_def.mp hzx
+        have := ih p y hpy (le_trans (Fin.le_def.mpr hpx) hxy) x hpx hxy
         omega
 
 theorem val_eq_of_le_right
@@ -176,27 +161,20 @@ theorem card_filter_lt_apply (w : Equiv.Perm (Fin n)) (b : Fin n) :
 theorem val_add_card_right (w : Equiv.Perm (Fin n)) (b : Fin n) :
     (w b).val + #(univ.filter fun y : Fin n => b < y ∧ w b < w y) =
       #(univ.filter fun y : Fin n => y < b ∧ w y < w b) + (n - 1 - b.val) := by
-  have hIoi : #(univ.filter fun y : Fin n => b < y) = n - 1 - b.val := by
-    have : (univ.filter fun y : Fin n => b < y) = Ioi b := by
-      ext y
-      simp
-    rw [this, Fin.card_Ioi]
-  rw [← card_filter_lt_apply w b, ← hIoi, card_filter, card_filter, card_filter, card_filter,
-    ← sum_add_distrib, ← sum_add_distrib]
-  refine sum_congr rfl fun y _ => ?_
-  have hne : y ≠ b → w y ≠ w b := fun h e => h (w.injective e)
-  rcases lt_trichotomy y b with h | h | h
-  · have h' : ¬ b < y := not_lt.2 (le_of_lt h)
-    by_cases hw : w y < w b <;> simp [h, h', hw]
-  · subst h
-    simp
-  · have h' : ¬ y < b := not_lt.2 (le_of_lt h)
-    have hyb : w y ≠ w b := hne (ne_of_gt h)
-    rcases lt_or_gt_of_ne hyb with hw | hw
-    · have hw' : ¬ w b < w y := not_lt.2 (le_of_lt hw)
-      simp [h, h', hw, hw']
-    · have hw' : ¬ w y < w b := not_lt.2 (le_of_lt hw)
-      simp [h, h', hw, hw']
+  -- Both sides count the union of the positions above b and the preimages below w b.
+  let L := univ.filter fun y : Fin n => w y < w b
+  have hright : (univ.filter fun y : Fin n => b < y ∧ w b < w y) = Ioi b \ L := by
+    ext y
+    simp only [L, mem_filter, mem_univ, true_and, mem_sdiff, mem_Ioi, not_lt]
+    exact and_congr_right fun hy => ⟨fun h => h.le, fun h => h.lt_of_ne (w.injective.ne hy.ne)⟩
+  have hleft : (univ.filter fun y : Fin n => y < b ∧ w y < w b) = L \ Ioi b := by
+    ext y
+    simp only [L, mem_filter, mem_univ, true_and, mem_sdiff, mem_Ioi, not_lt]
+    rw [and_comm]
+    exact and_congr_right fun hw =>
+      ⟨fun h => h.le, fun h => h.lt_of_ne (fun e => hw.ne (congrArg w e))⟩
+  rw [← card_filter_lt_apply w b, ← Fin.card_Ioi b, hright, hleft, Nat.add_comm _ #(Ioi b \ L),
+    card_sdiff_add_card, card_sdiff_add_card, union_comm]
 
 theorem relevant_involution
     (hB : ∀ i j : Fin n, i < j → (w j).val = (w i).val + 1 → j.val = i.val + 1) (b : Fin n) :
@@ -216,6 +194,28 @@ theorem relevant_involution
   · have := val_add_eq_of_le_left hB b c (Fin.le_iff_val_le_val.2 (by omega)) (by omega)
     omega
 
+/-- The torus coordinate is constant between any two positions in increasing image order. -/
+private theorem apply_eq_of_le_of_apply_le {α : Type*} (t : Fin n → α)
+    (hB : ∀ i j : Fin n, i < j → (w j).val = (w i).val + 1 → j.val = i.val + 1)
+    (ht : ∀ (i : Fin n) (h : i.val + 1 < n), w i < w ⟨i.val + 1, h⟩ →
+      t (w i) = t (w ⟨i.val + 1, h⟩))
+    {a b : Fin n} (hab : a ≤ b) (hw : w a ≤ w b) : t (w a) = t (w b) := by
+  have hval := val_eq_of_le_of_le hB ((w b).val - (w a).val) a b
+    (Nat.add_sub_of_le (Fin.le_def.mp hw)).symm hab
+  have run (j : ℕ) (haj : a.val ≤ j) (hjb : j ≤ b.val) :
+      t (w a) = t (w ⟨j, hjb.trans_lt b.isLt⟩) := by
+    induction j, haj using Nat.le_induction with
+    | base => rfl
+    | succ j haj ih =>
+      have hj : j < b.val := hjb
+      let i : Fin n := ⟨j, hj.trans b.isLt⟩
+      refine (ih hj.le).trans (ht i (hjb.trans_lt b.isLt) ?_)
+      rw [Fin.lt_def, hval i haj hj.le,
+        hval ⟨j + 1, hjb.trans_lt b.isLt⟩ (Nat.le_succ_of_le haj) hjb]
+      change (w a).val + (j - a.val) < (w a).val + (j + 1 - a.val)
+      omega
+  exact run b.val hab le_rfl
+
 theorem apply_eq_of_run_right {α : Type*} (t : Fin n → α)
     (hB : ∀ i j : Fin n, i < j → (w j).val = (w i).val + 1 → j.val = i.val + 1)
     (ht : ∀ (i : Fin n) (h : i.val + 1 < n), w i < w ⟨i.val + 1, h⟩ →
@@ -223,30 +223,11 @@ theorem apply_eq_of_run_right {α : Type*} (t : Fin n → α)
     (b : Fin n) :
     ∀ k : ℕ, ∀ x : Fin n, x.val = b.val + k →
       k ≤ #(univ.filter fun y : Fin n => b < y ∧ w b < w y) → t (w x) = t (w b) := by
-  intro k
-  induction k with
-  | zero =>
-    intro x hx _
-    have : x = b := Fin.ext (by omega)
-    rw [this]
-  | succ k ih =>
-    intro x hx hk
-    have hxn := x.isLt
-    have hk1 : b.val + k < n := by omega
-    have h1 := ih ⟨b.val + k, hk1⟩ rfl (by omega)
-    have e1 := val_eq_of_le_right hB b x (Fin.le_iff_val_le_val.2 (by omega)) (by omega)
-    have e2 := val_eq_of_le_right hB b ⟨b.val + k, hk1⟩ (Fin.le_iff_val_le_val.2 (by simp))
-      (by simp; omega)
-    have hk2 : b.val + k + 1 < n := by omega
-    have hnext : (⟨b.val + k + 1, hk2⟩ : Fin n) = x := Fin.ext (by simp; omega)
-    have hasc : w ⟨b.val + k, hk1⟩ < w ⟨b.val + k + 1, hk2⟩ := by
-      rw [hnext, Fin.lt_def]
-      simp only at e2
-      omega
-    have := ht ⟨b.val + k, hk1⟩ hk2 hasc
-    simp only at this
-    rw [hnext] at this
-    rw [← this, h1]
+  intro k x hx hk
+  have hbx : b.val ≤ x.val := by omega
+  have h := val_eq_of_le_right hB b x hbx (by omega)
+  have hw : w b ≤ w x := Fin.le_def.mpr (by omega)
+  exact (apply_eq_of_le_of_apply_le t hB ht hbx hw).symm
 
 theorem apply_eq_of_run_left {α : Type*} (t : Fin n → α)
     (hB : ∀ i j : Fin n, i < j → (w j).val = (w i).val + 1 → j.val = i.val + 1)
@@ -255,42 +236,25 @@ theorem apply_eq_of_run_left {α : Type*} (t : Fin n → α)
     (b : Fin n) :
     ∀ k : ℕ, ∀ x : Fin n, x.val + k = b.val →
       k ≤ #(univ.filter fun y : Fin n => y < b ∧ w y < w b) → t (w x) = t (w b) := by
-  intro k
-  induction k with
-  | zero =>
-    intro x hx _
-    have : x = b := Fin.ext (by omega)
-    rw [this]
-  | succ k ih =>
-    intro x hx hk
-    have hbn := b.isLt
-    have hx1 : x.val + 1 < n := by omega
-    have h1 := ih ⟨x.val + 1, hx1⟩ (by simp; omega) (by omega)
-    have e1 := val_add_eq_of_le_left hB b x (Fin.le_iff_val_le_val.2 (by omega)) (by omega)
-    have e2 := val_add_eq_of_le_left hB b ⟨x.val + 1, hx1⟩ (Fin.le_iff_val_le_val.2 (by simp; omega))
-      (by simp; omega)
-    have hasc : w x < w ⟨x.val + 1, hx1⟩ := by
-      rw [Fin.lt_def]
-      simp only at e2
-      omega
-    have := ht x hx1 hasc
-    rw [this]
-    exact h1
+  intro k x hx hk
+  have hxb : x.val ≤ b.val := by omega
+  have h := val_add_eq_of_le_left hB b x hxb (by omega)
+  have hw : w x ≤ w b := Fin.le_def.mpr (by omega)
+  exact apply_eq_of_le_of_apply_le t hB ht hxb hw
 
 theorem relevant_torus {α : Type*} (t : Fin n → α)
     (hB : ∀ i j : Fin n, i < j → (w j).val = (w i).val + 1 → j.val = i.val + 1)
     (ht : ∀ (i : Fin n) (h : i.val + 1 < n), w i < w ⟨i.val + 1, h⟩ →
       t (w i) = t (w ⟨i.val + 1, h⟩))
     (b : Fin n) : t (w b) = t (Fin.rev b) := by
-  have hid := val_add_card_right w b
-  rw [← relevant_involution hB b]
-  set c := Fin.rev (w b) with hc
-  have hcv : c.val = n - (↑(w b) + 1) := by rw [hc, Fin.val_rev]
-  have hb := b.isLt
-  have hwb := (w b).isLt
-  by_cases hcb : b.val ≤ c.val
-  · exact (apply_eq_of_run_right t hB ht b (c.val - b.val) c (by omega) (by omega)).symm
-  · exact (apply_eq_of_run_left t hB ht b (b.val - c.val) c (by omega) (by omega)).symm
+  have hinv := relevant_involution hB b
+  rw [← hinv]
+  obtain h | h := le_total b (Fin.rev (w b))
+  · apply apply_eq_of_le_of_apply_le t hB ht h
+    rwa [hinv, Fin.le_rev_iff]
+  · symm
+    apply apply_eq_of_le_of_apply_le t hB ht h
+    rwa [hinv, Fin.rev_le_iff]
 
 end Whittaker
 
