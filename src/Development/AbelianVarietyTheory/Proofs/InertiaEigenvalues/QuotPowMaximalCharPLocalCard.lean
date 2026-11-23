@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open NumberField IsDedekindDomain
 
 namespace GlobalTheory
@@ -24,7 +29,7 @@ theorem quot_pow_maximal_charP_local_card : ∀ (L : Type) [Field L] [NumberFiel
   have hmem : ∀ a : 𝓞 L, q a ∈ la.map q ↔ a ∈ la := fun a => Ideal.mem_quotient_iff_mem hle
 
   obtain ⟨π₀, hπla, hπ2⟩ :=
-    SetLike.exists_of_lt ((Ideal.pow_right_strictAnti la hla0 hlatop) (by norm_num : 1 < 2))
+    IsConcreteLE.exists_of_lt ((Ideal.pow_right_strictAnti la hla0 hlatop) (by norm_num : 1 < 2))
   replace hπla : π₀ ∈ la := by simpa using hπla
   change π₀ ∉ la ^ 2 at hπ2
   have hQ : Ideal.span {π₀} ⊔ la ^ 2 = la := by
@@ -52,7 +57,7 @@ theorem quot_pow_maximal_charP_local_card : ∀ (L : Type) [Field L] [NumberFiel
   have hJtop : J.map q = ⊤ := by
     have : (1 : 𝓞 L) ∈ la ⊔ J := hJ ▸ Submodule.mem_top
     obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.mp this
-    have hz' : q z = 1 - q y := by rw [← map_one q, ← hyz, map_add]; ring
+    have hz' : q z = 1 - q y := by rw [← map_one q, ← hyz, map_add (f := _)]; ring
     exact Ideal.eq_top_of_isUnit_mem _ (Ideal.mem_map_of_mem q hz) (hz' ▸ (hnil y hy).isUnit_one_sub)
   have hlspan : Ideal.span {((l : ℕ) : 𝓞 L ⧸ la ^ n)} = (la.map q) ^ e := by
     have : ((l : ℕ) : 𝓞 L ⧸ la ^ n) = q (l : 𝓞 L) := (map_natCast q l).symm

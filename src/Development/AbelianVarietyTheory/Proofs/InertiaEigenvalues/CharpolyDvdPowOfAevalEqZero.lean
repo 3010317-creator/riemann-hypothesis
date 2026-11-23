@@ -1,6 +1,11 @@
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.UniNilp
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDvdPowOfAevalEqZero
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.UniNilp
+
+@[expose] public section
 
 open Polynomial
 
@@ -40,7 +45,7 @@ theorem exists_aeval_eq {K : UQ} (B : InvAlg K) (hsep : B.P.Separable) (y : B.A)
     rw [pb.finrank, AdjoinRoot.powerBasis'_dim]
     exact LinearMap.charpoly_natDegree _
   have hinj : Function.Injective φ.toLinearMap := by
-    rw [injective_iff_map_eq_zero]
+    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro z hz
     obtain ⟨p, rfl⟩ := AdjoinRoot.mk_surjective z
     rw [AdjoinRoot.mk_eq_zero]

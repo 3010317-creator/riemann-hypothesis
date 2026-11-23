@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open scoped InnerProductSpace
 
 namespace GlobalTheory
@@ -32,11 +37,11 @@ theorem weyl_number_operator_commutation
     simp only [AddMonoidHom.mk'_apply, e.sum_repr'] at h
     simpa only [h] using Finset.sum_congr rfl fun j _ => hFs _ _
   have hca : ∀ u v, c (u + v) = c u + c v := by
-    intro u v; rw [hc, hc, hc, map_add, hadd, hadd, smul_add]; abel
+    intro u v; rw [hc, hc, hc, map_add (f := _), hadd, hadd, smul_add]; abel
   have hcs : ∀ (r : ℝ) v, c (r • v) = (r : ℂ) • c v := by
     intro r v; rw [hc, hc, map_smul, hsmul, hsmul, smul_sub, smul_comm Complex.I (r : ℂ)]
   have haa' : ∀ u v, a (u + v) = a u + a v := by
-    intro u v; rw [ha, ha, ha, map_add, hadd, hadd, smul_add]; abel
+    intro u v; rw [ha, ha, ha, map_add (f := _), hadd, hadd, smul_add]; abel
   have has : ∀ (r : ℝ) v, a (r • v) = (r : ℂ) • a v := by
     intro r v
     rw [ha, ha, map_smul, hsmul, hsmul, smul_comm Complex.I (r : ℂ), ← smul_add, smul_neg]
@@ -75,10 +80,10 @@ theorem weyl_number_operator_commutation
     ring
   have hcc : ∀ z w, c z * c w = c w * c z := fun z w => by
     rw [← sub_eq_zero, hc', hc', hgen (-Complex.I) (-Complex.I)]
-    simp [neg_mul_neg, Complex.I_mul_I]
+    simp [Complex.I_mul_I]
   have haa : ∀ z w, a z * a w = a w * a z := fun z w => by
     rw [← sub_eq_zero, ha, ha, neg_mul_neg, neg_mul_neg, hgen Complex.I Complex.I]
-    simp [Complex.I_mul_I, Complex.I_sq]
+    simp [Complex.I_mul_I]
   have hcsum := key c hca hcs
   have hasum := key a haa' has
   refine ⟨?_, ?_, ?_, ?_⟩

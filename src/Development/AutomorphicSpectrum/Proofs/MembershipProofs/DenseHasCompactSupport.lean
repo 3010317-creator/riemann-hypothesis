@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLLieD
+
+@[expose] public section
 
 open Complex
 open scoped Real ContDiff
@@ -30,7 +35,7 @@ theorem summable_weight (n : ℕ) :
   refine Summable.of_nonneg_of_le (fun _ => by positivity) (fun m => ?_) (h2 n)
   rw [Finset.prod_inv_distrib, pow_mul]
   refine inv_anti₀ (Finset.prod_pos fun _ _ => by positivity) ?_
-  have h3 := Finset.prod_le_prod (s := Finset.univ) (f := fun i : Fin n => (1 + |(m i : ℝ)|) ^ 2)
+  have h3 := Finset.prod_le_prod₀ (s := Finset.univ) (f := fun i : Fin n => (1 + |(m i : ℝ)|) ^ 2)
     (g := fun _ => (1 + ‖(fun i => (m i : ℝ))‖) ^ 2) (fun _ _ => by positivity) (fun i _ => by
       have := norm_le_pi_norm (fun i => (m i : ℝ)) i
       rw [Real.norm_eq_abs] at this
@@ -127,7 +132,7 @@ theorem eq_mul_comb : ∀ (n : ℕ) (T : SchwartzMap (Fin n → ℝ) ℂ →L[�
     have hsm : ∀ i, ContDiff ℝ ∞ (fun x : Fin n → ℝ => cexp (2 * π * I * x i) * g i x) := by
       intro i
       refine ContDiff.mul ?_ ((g i).smooth ⊤)
-      exact (contDiff_const.mul (Complex.ofRealCLM.contDiff.comp (contDiff_apply ℝ ℝ i))).cexp
+      exact (contDiff_const.mul (Complex.ofRealCLM.contDiff.comp (contDiff_apply ℝ (fun _ => ℝ) i))).cexp
     have hcs : ∀ i, HasCompactSupport (fun x : Fin n → ℝ => cexp (2 * π * I * x i) * g i x) :=
       fun i => (hg i).mul_left
     have e : f = ∑ i, ((hcs i).toSchwartzMap (hsm i) - g i) := by
@@ -136,7 +141,8 @@ theorem eq_mul_comb : ∀ (n : ℕ) (T : SchwartzMap (Fin n → ℝ) ℂ →L[�
       refine Finset.sum_congr rfl fun i _ => ?_
       show _ = cexp (2 * π * I * x i) * g i x - g i x
       ring
-    rw [e, map_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [e, map_sum]
     refine Finset.sum_eq_zero fun i _ => ?_
     rw [map_sub, hχ i (g i) _ (fun x => rfl), sub_self]
   let b : ContDiffBump (0 : Fin n → ℝ) := ⟨1 / 4, 1 / 2, by norm_num, by norm_num⟩
@@ -206,7 +212,8 @@ theorem eq_mul_comb : ∀ (n : ℕ) (T : SchwartzMap (Fin n → ℝ) ℂ →L[�
   intro f hf
   obtain ⟨s, g, hg, rfl⟩ := exists_partition n f hf
   show T _ = T ψ * S _
-  rw [map_sum, map_sum, Finset.mul_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    rw [map_sum, map_sum, Finset.mul_sum]
   exact Finset.sum_congr rfl fun m _ => hC m (g m) (hg m)
 
 end GlobalTheory.CompanionTheory.DiracComb

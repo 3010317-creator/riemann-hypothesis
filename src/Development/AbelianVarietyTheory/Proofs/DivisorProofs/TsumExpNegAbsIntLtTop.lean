@@ -1,4 +1,10 @@
+module
+
+public import Mathlib
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumPiProdEnnreal
+
+@[expose] public section
+
 open MeasureTheory
 open scoped ENNReal
 

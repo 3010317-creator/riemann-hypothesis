@@ -1,5 +1,9 @@
+module
+
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 import Development.WeilBound.CoreStatements.ThetaDilations.IsOpenCoset
-import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+
+@[expose] public section
 
 open MeasureTheory Topology Set
 open scoped ENNReal ComplexConjugate

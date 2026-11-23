@@ -1,5 +1,11 @@
+module
+
+public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDvdPowOfAevalEqZero
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+
+@[expose] public section
+
 open GlobalTheory.JR Matrix MeasureTheory Filter Topology
 
 open Polynomial

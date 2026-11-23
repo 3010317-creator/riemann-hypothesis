@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 namespace ReciprocityTheory.AnForm
 
@@ -83,7 +87,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover O hO
     (fun p _ => Set.mem_iUnion.mpr ⟨p, hxO p⟩)
   have hOψ : ∀ x p, p ∈ O x → 1 / 2 < ψ x p := fun x p hp =>
-    by simpa only [ψ, if_pos hp.1, Set.mem_preimage, Set.mem_setOf_eq] using hp.2
+    by simpa only [ψ, ite_eq_left hp.1, Set.mem_preimage, Set.mem_ofPred_eq] using hp.2
   have hS : ∀ p, 0 < ∑ x ∈ t, ψ x p := by
     intro p
     obtain ⟨x, hx, hpx⟩ := by simpa only [Set.mem_iUnion] using ht (Set.mem_univ p)

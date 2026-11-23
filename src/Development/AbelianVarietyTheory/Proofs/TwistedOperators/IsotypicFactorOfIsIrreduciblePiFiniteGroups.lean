@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsIrrCharAdd
+
+@[expose] public section
 
 namespace GlobalTheory.PiIsotypic
 

@@ -1,4 +1,9 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open NumberField IsDedekindDomain Matrix
 open scoped BigOperators
 
@@ -31,7 +36,7 @@ theorem selfDual_standard_at_rational_prime : ∀ (K : Type) [Field K] [NumberFi
     intro h
     exact hβt (by simpa [ha] using 𝔭.asIdeal.sub_mem h (𝔭.asIdeal.mul_mem_right t' hα))
   have hσa : σ a = a := by
-    rw [haK, map_add, map_mul, map_mul, hβα, ht'', hσ, hσ]
+    rw [haK, map_add (f := _), map_mul, map_mul, hβα, ht'', hσ, hσ]
     ring
   have ha1 : ∀ x ∈ L, ∀ j, (a : K) * x j ∈ (algebraMap (𝓞 K) K).range := by
     intro x hx j

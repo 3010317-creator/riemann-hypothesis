@@ -1,5 +1,9 @@
+module
+
+public import Formalism.HermitianCurvature.ThetaExistenceInductiveFromPieces
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdicNeighbourhood
-import Formalism.HermitianCurvature.ThetaExistenceInductiveFromPieces
+
+@[expose] public section
 
 open Formalism.FourierDecayAlt.A6 Formalism.FourierDecayAlt.A5 Filter Topology Matrix
 

@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Development.WeilBound.CoreStatements.ThetaDilations.Nuabs
+
+@[expose] public section
 
 open NumberField IsDedekindDomain MeasureTheory Topology
 open scoped TensorProduct ENNReal NNReal Matrix Pointwise

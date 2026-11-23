@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoPolish
+
+@[expose] public section
 
 noncomputable section
 

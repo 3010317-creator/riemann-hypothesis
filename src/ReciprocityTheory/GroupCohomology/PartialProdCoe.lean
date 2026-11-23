@@ -1,6 +1,10 @@
+module
+
+public import ReciprocityTheory.GroupCohomology.CupConnRightStatement
+public import ReciprocityTheory.GroupCohomology.HomogExistsStatement
 import ReciprocityTheory.GroupCohomology.CupCorA
-import ReciprocityTheory.GroupCohomology.CupConnRightStatement
-import ReciprocityTheory.GroupCohomology.HomogExistsStatement
+
+@[expose] public section
 
 namespace ReciprocityTheory.Coh
 
@@ -24,9 +28,6 @@ theorem Hom.H_congr (φ ψ : Hom A B) (h : ∀ n x, φ.f n x = ψ.f n x) (n : �
   congr 1
   exact Subtype.ext (h n z)
 
-theorem Hom.H_mk (φ : Hom A B) (n : ℕ) (z : A.Z n) :
-    φ.H n (Submodule.Quotient.mk z) = Submodule.Quotient.mk (φ.Z n z) := rfl
-
 theorem Hom.H_comp (φ : Hom A B) (ψ : Hom B C) (n : ℕ) (y : A.H n) :
     (ψ.comp φ).H n y = ψ.H n (φ.H n y) := by
   refine Submodule.Quotient.induction_on _ y fun z => ?_
@@ -43,18 +44,6 @@ theorem Hom.H_nsmul (φ : Hom A A) (k : ℕ) (n : ℕ) (h : ∀ x, φ.f n x = k 
   rw [← Submodule.Quotient.mk_smul]
   congr 1
   exact Subtype.ext (h z)
-
-theorem Hom.H_sum {ι : Type*} (s : Finset ι) (φ : Hom A B) (ψ : ι → Hom A B) (n : ℕ)
-    (h : ∀ x, φ.f n x = ∑ c ∈ s, (ψ c).f n x) (y : A.H n) :
-    φ.H n y = ∑ c ∈ s, (ψ c).H n y := by
-  refine Submodule.Quotient.induction_on _ y fun z => ?_
-  show Submodule.Quotient.mk (φ.Z n z) = ∑ c ∈ s, Submodule.Quotient.mk ((ψ c).Z n z)
-  rw [← Submodule.mkQ_apply, show (∑ c ∈ s, Submodule.Quotient.mk ((ψ c).Z n z) : B.H n) =
-    ∑ c ∈ s, (Submodule.mkQ _) ((ψ c).Z n z) from rfl, ← map_sum]
-  congr 1
-  apply Subtype.ext
-  rw [Submodule.coe_sum]
-  exact h z.1
 
 end HomLemmas
 
@@ -74,10 +63,6 @@ theorem rep_mul (x : U) (g : G) : rep U ((x : G) * g) = rep U g := by
 theorem rep_out (c : Quotient (QuotientGroup.rightRel U)) : rep U c.out = c.out := by
   unfold rep
   rw [Quotient.out_eq]
-
-theorem mk_rep (g : G) : (Quotient.mk (QuotientGroup.rightRel U) (rep U g)) = Quotient.mk _ g := by
-  unfold rep
-  exact Quotient.out_eq _
 
 theorem retr_mul (x : U) (g : G) : retr U ((x : G) * g) = x * retr U g := by
   apply Subtype.ext
@@ -168,7 +153,8 @@ theorem normF_hd (n : ℕ) (F : (Fin (n + 1) → G) → M.V) :
   classical
   haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   funext x
-  simp only [normF_eq, hd, map_sum, map_zsmul, Finset.smul_sum]
+  set_option synthInstance.maxHeartbeats 100000 in
+    simp only [normF_eq, hd, map_sum, map_zsmul, Finset.smul_sum]
   exact Finset.sum_comm
 
 theorem normF_add (n : ℕ) (F F' : (Fin (n + 1) → G) → M.V) :
@@ -176,7 +162,7 @@ theorem normF_add (n : ℕ) (F F' : (Fin (n + 1) → G) → M.V) :
   classical
   haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   funext x
-  simp only [Pi.add_apply, normF_eq, map_add, Finset.sum_add_distrib]
+  simp only [Pi.add_apply, normF_eq, map_add (f := _), Finset.sum_add_distrib]
 
 theorem normF_smul (n : ℕ) (r : R) (F : (Fin (n + 1) → G) → M.V) :
     normF M U n (r • F) = r • normF M U n F := by
@@ -253,38 +239,6 @@ end Incl
 section Conj
 
 variable {R : Type u} [CommRing R] {G : Type u} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
-
-def conjHom (N : Subgroup G) [N.Normal] (s : G) : N →* N where
-  toFun g := ⟨s⁻¹ * g * s, by simpa using Subgroup.Normal.conj_mem inferInstance _ g.2 s⁻¹⟩
-  map_one' := Subtype.ext (by simp)
-  map_mul' a b := Subtype.ext (by simp [mul_assoc])
-
-def conjPrime₂ (M : TRep R G) (N : Subgroup G) [N.Normal] (s : G) : Pair (M.resSub N) (M.resSub N) where
-  φ := conjHom N s
-  u := M.rho s
-  φ_cont := by
-    refine continuous_induced_rng.2 ?_
-    show Continuous fun g : N => s⁻¹ * (g : G) * s
-    fun_prop
-  u_cont := continuous_rho M s
-  equiv g m := by
-    change (M.rho s * M.rho (s⁻¹ * ↑g * s)) m = (M.rho ↑g * M.rho s) m
-    rw [← map_mul, ← map_mul]
-    congr 2; group
-
-theorem partialProd_coe {N : Subgroup G} {n : ℕ} (g : Fin n → N) (j : Fin (n + 1)) :
-    Fin.partialProd (fun i => (g i : G)) j = ((Fin.partialProd g j : N) : G) := by
-  induction j using Fin.induction with
-  | zero => simp [Fin.partialProd_zero]
-  | succ j ih => simp [Fin.partialProd_succ, ih]
-
-theorem retr_conj (N : Subgroup G) [N.Normal] (s h : G) (hh : h ∈ N) :
-    (retr N (s * h) : G) = s * h * (rep N s)⁻¹ := by
-  rw [retr_spec]
-  unfold rep
-  rw [show Quotient.mk (QuotientGroup.rightRel N) (s * h) = Quotient.mk _ s from (mkR_eq N).2 (by
-    have h1 := (inferInstance : N.Normal).conj_mem _ (N.inv_mem hh) s
-    simpa [mul_inv_rev, mul_assoc] using h1)]
 
 end Conj
 end

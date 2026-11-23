@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivRemCompLe
+
+@[expose] public section
 
 open scoped SchwartzMap
 open Complex

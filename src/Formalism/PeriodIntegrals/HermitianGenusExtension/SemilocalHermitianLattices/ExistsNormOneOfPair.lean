@@ -1,4 +1,9 @@
+module
+
+public import Mathlib
 import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.ExistsNormOneOfPair
+
+@[expose] public section
 
 noncomputable section
 

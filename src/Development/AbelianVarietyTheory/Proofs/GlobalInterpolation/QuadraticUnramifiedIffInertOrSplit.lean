@@ -1,12 +1,17 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open scoped TensorProduct
 open NumberField IsDedekindDomain
 
 namespace GlobalTheory
 
+
 open scoped TensorProduct in
 open NumberField IsDedekindDomain in
-
 theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type) [Field F] [NumberField F] [Field E]
     [NumberField E] [Algebra F E] (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 F)) :
     ((∀ w : HeightOneSpectrum (𝓞 E), w.asIdeal.LiesOver v.asIdeal →
@@ -32,13 +37,13 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
   have hsum : ∑ P ∈ s, P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P = 2 := by
     rw [← h2, ← Ideal.sum_ramification_inertia (𝓞 E) F E hv]
     refine Finset.sum_congr rfl fun P hP => ?_
-    haveI : P.IsPrime := ((hs P).1 hP).1
-    haveI : P.LiesOver v.asIdeal := ((hs P).1 hP).2
+    have : P.IsPrime := ((hs P).1 hP).1
+    have : P.LiesOver v.asIdeal := ((hs P).1 hP).2
     rw [Ideal.ramificationIdx_eq_ramificationIdx' v.asIdeal P hv]
   have hterm : ∀ P ∈ s, 1 ≤ P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P := by
     intro P hP
-    haveI : P.IsPrime := ((hs P).1 hP).1
-    haveI : P.LiesOver v.asIdeal := ((hs P).1 hP).2
+    have : P.IsPrime := ((hs P).1 hP).1
+    have : P.LiesOver v.asIdeal := ((hs P).1 hP).2
     exact Nat.mul_pos (by apply Ideal.ramificationIdx_pos) (Ideal.inertiaDeg'_pos v.asIdeal P)
   have hncard : (v.asIdeal.primesOver (𝓞 E)).ncard = s.card := by
     rw [← Set.ncard_coe_finset, hsdef, IsDedekindDomain.coe_primesOverFinset hv]
@@ -54,7 +59,7 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
       have hPp : P.IsPrime := ((hs P).1 hP).1
       have hPl : P.LiesOver v.asIdeal := ((hs P).1 hP).2
       have hPb : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot hv P
-      exact Algebra.isUnramifiedAt_iff_of_isDedekindDomain.1 (h ⟨P, hPp, hPb⟩ hPl)
+      exact Ideal.ramificationIdx_eq_one_iff.mpr (h ⟨P, hPp, hPb⟩ hPl)
     · intro h w hw
       have hmem : w.asIdeal ∈ s := (hs _).2 ⟨w.isPrime, hw⟩
       exact Algebra.isUnramifiedAt_iff_of_isDedekindDomain.2 (h _ hmem)
@@ -94,8 +99,8 @@ theorem _root_.GlobalTheory.quadratic_unramified_iff_inert_or_split (F E : Type)
       rw [hcount P ((hs P).1 hP), hMI, hPI, Multiset.count_singleton_self]
     · intro P hP
       by_contra hne
-      haveI : P.IsPrime := ((hs P).1 hP).1
-      haveI : P.LiesOver v.asIdeal := ((hs P).1 hP).2
+      have : P.IsPrime := ((hs P).1 hP).1
+      have : P.LiesOver v.asIdeal := ((hs P).1 hP).2
       have he : 0 < P.ramificationIdx (𝓞 F) := by apply Ideal.ramificationIdx_pos
       have hf : 0 < v.asIdeal.inertiaDeg' P := Ideal.inertiaDeg'_pos v.asIdeal P
       have hge : 2 * 1 ≤ P.ramificationIdx (𝓞 F) * v.asIdeal.inertiaDeg' P :=

@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 @[reducible] noncomputable def UpperTheory.Reformulated.B.HilbertNinetyCapelliIdentities.G.{u_1, u_2} :
     (F : Type u_1) → (Ω : Type u_2) → [inst : Field F] → [inst_1 : Field Ω] → [Algebra F Ω] → Type u_2 :=
@@ -18,7 +22,7 @@ theorem UpperTheory.Reformulated.B.HilbertNinetyCapelliIdentities.h90 :
     (krullTopology_mem_nhds_one_iff K Ω _).1 ((hlc {1}).mem_nhds h1)
   have hH : ∀ (g h : Gal(Ω/K)), h ∈ L.fixingSubgroup → f (g * h) = f g :=
     fun g h hh => by rw [hc, hLU hh, map_one, mul_one]
-  letI : Fintype (Gal(Ω/K) ⧸ L.fixingSubgroup) :=
+  let : Fintype (Gal(Ω/K) ⧸ L.fixingSubgroup) :=
     @Fintype.ofFinite _ (Subgroup.quotient_finite_of_isOpen _ L.fixingSubgroup_isOpen)
   let χ : (Gal(Ω/K) ⧸ L.fixingSubgroup) → (L →* Ω) := fun q =>
     ((q.out : Gal(Ω/K)) : Ω →* Ω).comp (L.val : L →* Ω)
@@ -45,7 +49,8 @@ theorem UpperTheory.Reformulated.B.HilbertNinetyCapelliIdentities.h90 :
   have key : ∀ g : Gal(Ω/K),
       f g * g (∑ q, f q.out * χ q x) = ∑ q, f q.out * χ q x := by
     intro g
-    rw [map_sum, Finset.mul_sum]
+    set_option synthInstance.maxHeartbeats 100000 in
+      rw [map_sum, Finset.mul_sum]
     refine Fintype.sum_equiv (MulAction.toPerm g) _ _ fun q => ?_
     have hq : g • q = QuotientGroup.mk (g * q.out) := by
       conv_lhs => rw [← QuotientGroup.out_eq' q]

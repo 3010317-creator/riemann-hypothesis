@@ -1,10 +1,15 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
+
 open NumberField IsDedekindDomain
 
 namespace GlobalTheory
 
-open NumberField IsDedekindDomain in
 
+open NumberField IsDedekindDomain in
 theorem _root_.GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified :
     ∀ (E : Type) [Field E] [NumberField E],
       (∀ P : HeightOneSpectrum (𝓞 E),
@@ -36,7 +41,7 @@ theorem _root_.GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramif
     have hqZ : Prime (q : ℤ) := Nat.prime_iff_prime_int.mp hq
     have hqd : (q : ℤ) ∣ discr E := by
       by_contra hnd
-      haveI hun := (not_dvd_discr_iff_forall_mem E (𝓞 E) hqZ).mp hnd P.asIdeal P.isPrime
+      have hun := (not_dvd_discr_iff_forall_mem E (𝓞 E) hqZ).mp hnd P.asIdeal P.isPrime
         (by simpa using hmem)
       exact hP (Ideal.ramificationIdx_eq_one_of_isUnramifiedAt (p := P.asIdeal))
     have hqle : q ≤ d := Nat.le_of_dvd hd (by simpa using Int.natAbs_dvd_natAbs.mpr hqd)

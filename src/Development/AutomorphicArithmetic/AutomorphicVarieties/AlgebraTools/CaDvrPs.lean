@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 open IsLocalRing
 
@@ -85,7 +89,7 @@ theorem UpperTheory.V.AlgebraTools.powerSeries_equiv_of_complete_dvr :
         (by rw [hsr, map_mul, hsr, hsr])
       map_zero' := hU _ _ (hsq 0) (zero_pow hq0') (by rw [hsr, map_zero])
       map_add' := fun a b => hU _ _ (hsq _) (by rw [hq, add_pow_char_pow, ← hq, hsq, hsq])
-        (by rw [hsr, map_add, hsr, hsr]) }
+        (by rw [hsr, map_add (f := _), hsr, hsr]) }
   have hsr' : ∀ c, residue A (s c) = c := hsr
   have hev : ∀ n (f : PowerSeries (ResidueField A)),
       (PowerSeries.trunc n f).eval₂ s t =
@@ -141,7 +145,7 @@ theorem UpperTheory.V.AlgebraTools.powerSeries_equiv_of_complete_dvr :
     intro n
     simpa [hev, PowerSeries.coeff_X, Finset.sum_range_succ] using hEq (n + 2) PowerSeries.X
   have hinj : Function.Injective e0 := by
-    rw [injective_iff_map_eq_zero]
+    set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro f hf
     by_contra hne
     have hdec := PowerSeries.X_pow_order_mul_divXPowOrder (f := f)
