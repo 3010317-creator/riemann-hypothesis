@@ -30,6 +30,8 @@ MODULE = re.compile(r"[^\s\-#+@:][^\s]*\Z")
 MERGE_IDENTITY = {"GIT_AUTHOR_NAME": "rh-buildq", "GIT_AUTHOR_EMAIL": "rh-buildq@localhost",
                   "GIT_COMMITTER_NAME": "rh-buildq", "GIT_COMMITTER_EMAIL": "rh-buildq@localhost"}
 PUBLISH_WAIT = 45 * 60
+# A Lake job line, e.g. "✔ [12/40] Built Foo.Bar (2.1s)"; the mark is ✔, ⚠, ℹ or ✖ (failed).
+LINE = re.compile(r"^\s*([✔⚠✖ℹ])\s+\[\d+/\d+\]\s+(Built|Replayed|Building|Ran|Running|Fetched|Fetching)\s+(\S+)")
 
 
 def log(msg):
@@ -306,7 +308,9 @@ def cmd_build(a):
     raise_limits()
     outputs = Q / f"outputs-{os.environ.get('GITHUB_RUN_ID', 'local')}.jsonl"
     t0 = time.time()
-    proc = subprocess.Popen(prefix + ["lake", "build", "-o", str(outputs), *targets], cwd=P, env=env,
+    # -v: Lake reports every job, so the log records each module as Built or Replayed. Without
+    # it, modules that compile silently do not appear at all.
+    proc = subprocess.Popen(prefix + ["lake", "build", "-v", "-o", str(outputs), *targets], cwd=P, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True)
 
     def interrupted(signum, frame):
@@ -320,11 +324,19 @@ def cmd_build(a):
 
     signal.signal(signal.SIGTERM, interrupted)
     signal.signal(signal.SIGINT, interrupted)
+    # The full log goes to the file; the job log gets compiled modules, failures and progress.
+    last = 0.0
     with open(a.log, "ab") as logf:
         for line in proc.stdout:
             logf.write(line)
-            sys.stdout.buffer.write(line)
-            sys.stdout.flush()
+            text = line.decode(errors="replace")
+            m = LINE.match(text)
+            show = (m and (m[1] == "✖" or m[2] == "Built")) or text.startswith(("error", "Build ", "Some required"))
+            if not show and m and time.time() - last > 60:
+                show, last = True, time.time()
+            if show:
+                sys.stdout.write(text)
+                sys.stdout.flush()
     code = proc.wait()
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -366,7 +378,6 @@ def cmd_flush(a):
 
 # --- result --------------------------------------------------------------------------------------
 
-LINE = re.compile(r"^\s*([✔⚠✖])\s+\[\d+/\d+\]\s+(Built|Replayed|Building|Ran|Running|Fetched|Fetching)\s+(\S+)")
 
 
 def cmd_result(a):
@@ -380,6 +391,8 @@ def cmd_result(a):
             mark, verb, name = m.groups()
             if mark == "✖":
                 failed.add(name)
+            elif ":" in name:
+                continue  # facet jobs (`Mod:c.o`, `Mod:irArts`), not modules
             elif verb == "Built":
                 built.add(name)
             elif verb == "Replayed":
