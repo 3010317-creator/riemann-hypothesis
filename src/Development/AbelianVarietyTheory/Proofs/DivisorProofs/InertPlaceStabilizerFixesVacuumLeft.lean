@@ -1198,7 +1198,10 @@ theorem exists_lagr_inv_vac : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rintro γ ⟨⟨g, hg, rfl⟩, ⟨u, hu, hgu⟩⟩
     have e : g = u := eq_of_locCo co v g u (hatL g hg) hu.1 hgu.symm
     subst e
-    rw [heig0 g hg, _root_.GlobalTheory.InertVacIso.symp_eq_zero_of_lagAt σ G.V'.J G.W v C hLag _ g g hu hu, mul_zero, AddChar.map_zero_eq_one, one_smul]
+    rw [heig0 g hg]
+    have h0 := _root_.GlobalTheory.InertVacIso.symp_eq_zero_of_lagAt σ G.V'.J G.W v C hLag
+      (inclR (F := F) (AF F) (θ : E)) g g hu hu
+    erw [h0, mul_zero, AddChar.map_zero_eq_one, one_smul]
   obtain ⟨l, hl, hl0⟩ := _root_.GlobalTheory.LagLocForm.lagr_local_form v (GlobalTheory.LatVac.psiAt B.ψ v) (Fin a' × Fin (a + a')) Λ Γ (G.M'.vac v) hψc hψ hiso
     hOC.1 hOC.2 hdual hsb hne heig hfix
   refine ⟨C, l, hLag, ?_, hl0⟩
