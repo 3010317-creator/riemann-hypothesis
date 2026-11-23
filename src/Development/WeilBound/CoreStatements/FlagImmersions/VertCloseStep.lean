@@ -105,7 +105,7 @@ theorem multAt_eqZ (J W : Ideal (MRing ι)) (hW : W.IsPrime) :
 open Classical in
 theorem divCycle_applyZ (V W : Ideal (MRing ι)) (f : MRing ι) :
     divCycle V f W = if W ∈ divSupp V f then multAt (V ⊔ Ideal.span {f}) W else 0 := by
-  simp only [divCycle, Finsupp.ofSupportFinite_coe]
+  simp only [ReciprocityTheory.ChartRestriction.G.Geo.divCycle, Finsupp.ofSupportFinite_coe]
 
 theorem mem_of_mem_divSuppZ {V W : Ideal (MRing ι)} {f : MRing ι} (hW : W ∈ divSupp V f) : f ∈ W :=
   hW.1.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
