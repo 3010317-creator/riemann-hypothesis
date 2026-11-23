@@ -519,7 +519,7 @@ namespace GlobalTheory.Proof.quotientMeasure_integration_formulas_unimodular
 
 theorem quotientMeasures : GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.QuotientMeasures :=
   ⟨GlobalTheory.T.quotientInvariantMeasure_exists_unique_unimodular, _root_.GlobalTheory.Proof.quotientMeasure_normalised_by_haar_unique.normaliseQuotientClause, _root_.GlobalTheory.Proof.existsUnique_haar_subgroup_quotient_integral_formula.normaliseSubgroupClause, _root_.GlobalTheory.normaliseGroupClause_holds, _root_.GlobalTheory.QuotDiscrete.discreteClause, _root_.GlobalTheory.WeilCriterion.modulusClause,
-    GlobalTheory.T.compactSubgroup_quotient_invariant_measure⟩
+    _root_.GlobalTheory.QuotientMeasureCompact.compactClause⟩
 
 end GlobalTheory.Proof.quotientMeasure_integration_formulas_unimodular
 end -- clump:auto
