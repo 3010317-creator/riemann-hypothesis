@@ -1347,7 +1347,7 @@ theorem residue_at (hU : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM
   have hle : ∀ u ∈ Subfield.closure (Set.range jz ∪ Set.range t), u ∈ S' := fun u hu =>
     (hS' u).2 fun γ hγ => ⟨u, hu, by rw [sub_self, map_zero]; exact zero_lt_iff.2 hγ⟩
   have hK : ∀ c : Kp (xplus X E hM) la G.N, ψ c ∈ S' := by
-    refine g3 S' (fun c => (hS' _).2 fun γ hγ => ?_) fun q => hle _ (Subfield.subset_closure (Or.inr ⟨q, by rw [ht']⟩))
+    refine g3 S' (fun c => (hS' _).2 fun γ hγ => ?_) fun q => hle _ (Subfield.subset_closure (Or.inr ⟨q, by rw [ht']; rfl⟩))
     obtain ⟨a, ha⟩ := g2 c γ hγ
     exact ⟨_, Subfield.subset_closure (Or.inl ⟨algebraMap B.KO Ω a, jz_const h gF jz h2 h3 a⟩), ha⟩
   have hmem := phiPt_mem h gF jz h2 h3 S' hK (fun a => hle _ (Subfield.subset_closure (Or.inl ⟨a, rfl⟩))) b
