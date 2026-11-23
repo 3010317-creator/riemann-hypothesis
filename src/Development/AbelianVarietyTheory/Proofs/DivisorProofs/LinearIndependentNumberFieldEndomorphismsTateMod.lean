@@ -110,7 +110,7 @@ theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Alge
   obtain ⟨e, he, hE⟩ := _root_.GlobalTheory.exists_dvd_coords_of_definite_form (Additive (B ⟶ B)) H (fun f => Q (Additive.toMul f))
     (fun f g => by
       have := hQ1 (Additive.toMul f) (Additive.toMul g)
-      simpa [div_eq_mul_inv] using this)
+      exact this)
     (fun f => hQ2 _) (fun f hf h0 => by
       have := hQ3 (Additive.toMul f) hf h0
       exact this) n (fun i => ψ (a i)) hu hindep
