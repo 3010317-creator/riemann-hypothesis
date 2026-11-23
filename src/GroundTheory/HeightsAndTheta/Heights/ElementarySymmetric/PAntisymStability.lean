@@ -94,7 +94,7 @@ lemma exists_uniform_coeff_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace
     simp only [map_smul]
   rw [hy, coeff_sum, Finset.sum_mul]
   refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-  rw [coeff_smul, smul_eq_mul, abs_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, abs_mul]
   have h1 : |b.repr y i| ≤ ‖c i‖ * ‖y‖ := by
     have := (c i).le_opNorm y
     simpa [c, Real.norm_eq_abs] using this

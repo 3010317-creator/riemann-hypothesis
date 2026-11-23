@@ -388,7 +388,7 @@ theorem op_inj {s : Sym m n} (h : ∀ f, op s f = 0) : s = 0 := by
   simp only [opMono_monomial] at h1
   have h2 := congrArg (AddMonoidAlgebra.coeff · (t0.comapDomain Sum.inl Sum.inl_injective.injOn)) h1
   simp only [coeff_sum, AddMonoidAlgebra.coeff_zero] at h2
-  simp only [coeff_smul, coeff_monomial, smul_eq_mul] at h2
+  simp only [MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul] at h2
   rw [Finset.sum_eq_single t0] at h2
   · rw [if_pos] at h2
     · refine absurd h2 (mul_ne_zero (mem_support_iff.1 ht0) ?_)

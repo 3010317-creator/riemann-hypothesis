@@ -84,8 +84,8 @@ theorem linearIndependent_mono (D N : ℕ) :
   have hp0 := VeroneseGenDeg.aeval_t_injective D hpa
   have hc := congrArg (AddMonoidAlgebra.coeff · (Finsupp.equivFunOnFinite.symm (adtEnum D N l))) hp0
   rw [hp, coeff_sum, MvPolynomial.coeff_zero, Finset.sum_eq_single l (fun k _ hkl => ?_) (by simp)] at hc
-  · rwa [coeff_smul, monoZ, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one] at hc
-  · rw [coeff_smul, monoZ, coeff_monomial, if_neg, smul_zero]
+  · rwa [MvPolynomial.coeff_smul, monoZ, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one] at hc
+  · rw [MvPolynomial.coeff_smul, monoZ, coeff_monomial, if_neg, smul_zero]
     intro hE
     exact hkl (adtEnum_injective D N (by simpa using hE))
 

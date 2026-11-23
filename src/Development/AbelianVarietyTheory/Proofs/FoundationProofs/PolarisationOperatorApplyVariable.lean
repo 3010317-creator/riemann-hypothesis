@@ -462,7 +462,7 @@ theorem fock_int_left (z : ℤ) (P Q : MvPolynomial σ ℂ) :
   have e : (z : MvPolynomial σ ℂ) = C (z : ℂ) := by simp
   rw [e, C_mul', fock_eq_sum _ Q P.support support_smul, Formalism.E.fock, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
-  rw [coeff_smul, smul_eq_mul]; ring
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 theorem fock_int_right (z : ℤ) (P Q : MvPolynomial σ ℂ) :
     Formalism.E.fock P ((z : MvPolynomial σ ℂ) * Q) = z * Formalism.E.fock P Q := by

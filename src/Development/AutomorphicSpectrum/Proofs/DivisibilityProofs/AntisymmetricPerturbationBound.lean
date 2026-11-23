@@ -73,7 +73,7 @@ theorem inv_linear_eval (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (l
     rw [← hc, coeff_sum, Finset.sum_eq_single p]
     · simp
     · intro q _ hq
-      rw [coeff_smul, coeff_X, if_neg, smul_zero]
+      rw [MvPolynomial.coeff_smul, coeff_X, if_neg, smul_zero]
       intro h
       exact hq (Finsupp.single_left_injective one_ne_zero h)
     · simp

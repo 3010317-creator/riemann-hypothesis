@@ -76,7 +76,7 @@ theorem coeff_diag (T : Module.End ℂ (MvPolynomial σ ℂ)) (w : (σ →₀ �
   · have h1 : monomial m a = a • monomial m (1 : ℂ) := by
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [h1, map_smul, hT, smul_smul]
-    simp only [coeff_smul, coeff_monomial, smul_eq_mul]
+    simp only [MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     by_cases h : m = e
     · subst h
       rw [if_pos rfl]
@@ -90,7 +90,7 @@ theorem eig_of_mem_support (T : Module.End ℂ (MvPolynomial σ ℂ)) (w : (σ �
     (e : σ →₀ ℕ) (he : e ∈ P.support) : w e = c := by
   have h1 := coeff_diag T w hT P e
   rw [hP] at h1
-  simp only [coeff_smul, smul_eq_mul] at h1
+  simp only [MvPolynomial.coeff_smul, smul_eq_mul] at h1
   exact (mul_right_cancel₀ (mem_support_iff.mp he) h1).symm
 
 def NoVar (P : MvPolynomial σ ℂ) (v : σ) : Prop := ∀ e ∈ P.support, e v = 0

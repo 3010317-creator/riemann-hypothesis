@@ -80,7 +80,7 @@ theorem fockR_smul_left (a : R) (f g : MvPolynomial σ R) : fockR (a • f) g = 
   unfold fockR
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
-  rw [coeff_smul, smul_eq_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 theorem fockR_add_right (f g₁ g₂ : MvPolynomial σ R) : fockR f (g₁ + g₂) = fockR f g₁ + fockR f g₂ := by
@@ -94,7 +94,7 @@ theorem fockR_smul_right (a : R) (f g : MvPolynomial σ R) : fockR f (a • g) =
   unfold fockR
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
-  rw [coeff_smul, smul_eq_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 def fockB (σ R : Type*) [CommRing R] : MvPolynomial σ R →ₗ[R] MvPolynomial σ R →ₗ[R] R :=

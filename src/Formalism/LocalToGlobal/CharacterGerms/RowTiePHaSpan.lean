@@ -126,7 +126,7 @@ theorem comp_sum (lam : K →ₗ[ℚ] ℚ) {α : Type} (s : Finset α) (f : α �
 theorem comp_smul_map (lam : K →ₗ[ℚ] ℚ) (c : K) (p : MvPolynomial σ ℚ) :
     comp lam (c • map (algebraMap ℚ K) p) = lam c • p := by
   ext m
-  simp only [coeff_comp, coeff_smul, coeff_map, smul_eq_mul]
+  simp only [coeff_comp, MvPolynomial.coeff_smul, coeff_map, smul_eq_mul]
   rw [mul_comm c, ← Algebra.smul_def, map_smul, smul_eq_mul]
   exact mul_comm _ _
 
@@ -261,7 +261,7 @@ def Wsub (Bd : Finset (Letter Ty r n →₀ ℕ)) : Submodule ℤ (Bd → ℤ) w
     intro c x hx
     have e : map (Int.castRingHom ℚ) (poly Bd (c • x)) = (c : ℚ) • map (Int.castRingHom ℚ) (poly Bd x) := by
       ext m
-      rw [coeff_smul, coeff_map_poly, coeff_map_poly]
+      rw [MvPolynomial.coeff_smul, coeff_map_poly, coeff_map_poly]
       split_ifs <;> simp
     show map (Int.castRingHom ℚ) (poly Bd (c • x)) ∈ HHa r n ℚ cc isX a
     rw [e]
@@ -271,7 +271,7 @@ theorem wsub_sat (Bd : Finset (Letter Ty r n →₀ ℕ)) (z : ℤ) (x : Bd → 
     (hx : z • x ∈ Wsub r n cc isX a Bd) : x ∈ Wsub r n cc isX a Bd := by
   have e : map (Int.castRingHom ℚ) (poly Bd (z • x)) = (z : ℚ) • map (Int.castRingHom ℚ) (poly Bd x) := by
     ext m
-    rw [coeff_smul, coeff_map_poly, coeff_map_poly]
+    rw [MvPolynomial.coeff_smul, coeff_map_poly, coeff_map_poly]
     split_ifs <;> simp
   have hx' : map (Int.castRingHom ℚ) (poly Bd (z • x)) ∈ HHa r n ℚ cc isX a := hx
   rw [e] at hx'
@@ -320,7 +320,7 @@ theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
     have hzW : z ∈ Wsub r n cc isX a Bd := by
       have e : map (Int.castRingHom ℚ) (poly Bd z) = (N : ℚ) • comp lam P := by
         ext m
-        rw [coeff_map_poly, coeff_smul, coeff_comp, smul_eq_mul]
+        rw [coeff_map_poly, MvPolynomial.coeff_smul, coeff_comp, smul_eq_mul]
         split_ifs with h
         · simpa using hz ⟨m, h⟩
         · have h0 : AddMonoidAlgebra.coeff P m = 0 := by
@@ -348,7 +348,7 @@ theorem haSpanSt_of (hS : SatRetrSt) (hR : RowInvUpSt) : HaSpanSt := by
   have hmain : P = ∑ b : Bd, AddMonoidAlgebra.coeff P b.1 • map (Int.castRingHom K) (poly Bd (ρ (Pi.single b 1))) := by
     ext m
     rw [coeff_sum]
-    simp only [coeff_smul, coeff_map_poly, smul_eq_mul]
+    simp only [MvPolynomial.coeff_smul, coeff_map_poly, smul_eq_mul]
     by_cases h : m ∈ Bd
     · simp only [dite_eq_left h, eq_intCast]
       exact key ⟨m, h⟩

@@ -391,7 +391,7 @@ theorem AntisymDivisible.proof : AntisymDivisible.Statement := by
       AddMonoidAlgebra.coeff (∑ w, c w • (X (g w) : MvPolynomial (T × Fin N) ℝ)) (Finsupp.single u 1) =
         ∑ w, if g w = u then c w else 0 := by
     intro g u
-    simp only [coeff_sum, coeff_smul, coeff_X, Finsupp.single_left_inj one_ne_zero, smul_eq_mul,
+    simp only [coeff_sum, MvPolynomial.coeff_smul, coeff_X, Finsupp.single_left_inj one_ne_zero, smul_eq_mul,
       mul_ite, mul_one, mul_zero]
   have const : ∀ (τ : T) (a b : Fin N), a.val < b.val → (b.val < j ∨ j ≤ a.val) →
       c (τ, a) = c (τ, b) := by

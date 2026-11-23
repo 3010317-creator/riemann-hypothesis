@@ -120,7 +120,7 @@ theorem pair_C_mul_left (c : R) (P Q : MvPolynomial κ R) : pair (C c * P) Q = c
     pair, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro A _
-  simp only [coeff_smul, smul_eq_mul]
+  simp only [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 theorem pair_C_mul_right (c : R) (P Q : MvPolynomial κ R) : pair P (C c * Q) = c * pair P Q := by
