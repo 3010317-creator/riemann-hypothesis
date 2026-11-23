@@ -40,9 +40,14 @@ class QuickChecks(unittest.TestCase):
   args=SimpleNamespace(baseline_manifest=manifest,baseline_map=mapfile,baseline_cache=trusted,baseline_manifest_sha256=ci.sha256(manifest))
   hashes,jobs,_=ci.baseline(args,self.root,cache,modules={'A'});self.assertEqual(len(hashes),2);self.assertEqual(len(jobs),1);self.assertFalse((cache/'artifacts'/rows[1][2]).exists())
  def test_download_filter_uses_module_not_input_hash(self):
-  mapping={'0000000000000001':'000000000000000b.ltar','0000000000000002':'000000000000000c.ltar'}
-  data=gzip.compress((json.dumps({'schema':1,'toolchain':q.ci.TOOLCHAIN,'modules':2})+'\n'+json.dumps(['A','0000000000000001',mapping['0000000000000001'],'a'*64])+'\n'+json.dumps(['B','0000000000000002',mapping['0000000000000002'],'b'*64])+'\n').encode())
-  self.assertEqual(q.prep.select_module_entries(data,mapping,{'A'}),{'0000000000000001':'000000000000000b.ltar'})
+  key_a, key_b = '1' * 16, '2' * 16
+  mapping = {key_a: 'b' * 16 + '.ltar', key_b: 'c' * 16 + '.ltar'}
+  map_data = q.prep.publication.encode_map(mapping)
+  header = {'schema': 1, 'toolchain': q.ci.TOOLCHAIN, 'modules': 2, 'map_sha256': q.prep.digest(map_data)}
+  rows = [['A', key_a, mapping[key_a], 'a' * 64], ['B', key_b, mapping[key_b], 'b' * 64]]
+  manifest = gzip.compress(('\n'.join(map(json.dumps, [header, *rows])) + '\n').encode())
+  entries, _ = q.prep.manifest_artifacts(manifest, map_data, modules={'A'})
+  self.assertEqual(entries, {key_a: mapping[key_a]})
  def test_job_environment_uses_allowed_github_context(self):
   text=(ROOT.parent/'.github/workflows/build-pr.yml').read_text();self.assertNotIn('QUICK_OUTPUT: ${{ runner.',text);self.assertIn('QUICK_OUTPUT: ${{ github.workspace }}/.quick-results/',text)
  def test_full_mode_excluded_and_outputs_unique(self):
