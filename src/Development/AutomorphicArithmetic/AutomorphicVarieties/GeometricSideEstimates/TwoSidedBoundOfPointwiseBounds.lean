@@ -51,13 +51,13 @@ private theorem exp_quad (x : ℝ) : Real.exp x ≤ 1 + x + x ^ 2 * Real.exp |x|
   · rcases le_or_gt 0 x with hx | hx
     · rw [abs_of_nonneg hx] at h ⊢
       have : Real.exp x ≤ x ^ 2 * Real.exp x :=
-        le_mul_of_one_le_left (Real.exp_pos x).le (by nlinarith)
+        le_mul_of_one_le_left (Real.exp_pos x).le (one_le_pow₀ h.le)
       linarith
     · rw [abs_of_neg hx] at h ⊢
       have h1 : Real.exp x ≤ 1 := Real.exp_le_one_iff.mpr hx.le
       have h2 : x ^ 2 ≤ x ^ 2 * Real.exp (-x) :=
         le_mul_of_one_le_right (sq_nonneg x) (Real.one_le_exp (by linarith))
-      nlinarith
+      linarith [mul_nonneg_of_nonpos_of_nonpos hx.le (by linarith : x + 1 ≤ 0)]
 
 private theorem up_pt (q u ε : ℝ) (hq : 0 ≤ q) (h0 : 0 ≤ ε) (h4 : ε ≤ 1 / 4) (hu : |u| ≤ ε * q) :
     Real.exp (-Real.pi * (q + u)) ≤ Real.exp (-Real.pi * q) + -Real.pi * (u * Real.exp (-Real.pi * q)) +
@@ -69,10 +69,10 @@ private theorem up_pt (q u ε : ℝ) (hq : 0 ≤ q) (h0 : 0 ≤ ε) (h4 : ε ≤
   have habs : |-Real.pi * u| = Real.pi * |u| := by
     rw [abs_mul, abs_neg, abs_of_pos hpi]
   rw [habs] at hx
-  have hu4 : |u| ≤ q / 4 := by nlinarith [abs_nonneg u, mul_nonneg (sub_nonneg.mpr h4) hq]
+  have hu4 : |u| ≤ q / 4 := by linarith [h0, abs_nonneg u, mul_nonneg (sub_nonneg.mpr h4) hq]
   have hu2 : u ^ 2 ≤ ε ^ 2 * q ^ 2 := by
     have := mul_self_le_mul_self (abs_nonneg u) hu
-    nlinarith [sq_abs u]
+    linarith [sq_abs u]
   have hpu : Real.pi * |u| ≤ Real.pi * (q / 4) := mul_le_mul_of_nonneg_left hu4 hpi.le
   have hy0 : 0 ≤ Real.pi * q / 4 := by positivity
   have hexp1 : Real.exp (Real.pi * |u|) * Real.exp (-Real.pi * q) ≤
@@ -82,16 +82,16 @@ private theorem up_pt (q u ε : ℝ) (hq : 0 ≤ q) (h0 : 0 ≤ ε) (h4 : ε ≤
     linarith
   have hquad : (Real.pi * q / 4) ^ 2 ≤ 2 * Real.exp (Real.pi * q / 4) := by
     have := Real.quadratic_le_exp_of_nonneg hy0
-    nlinarith
+    linarith
   have hey : (Real.pi * q / 4) ^ 2 * Real.exp (-(Real.pi * q / 4)) ≤ 2 := by
     have h1 : Real.exp (Real.pi * q / 4) * Real.exp (-(Real.pi * q / 4)) = 1 := by
       rw [← Real.exp_add]; simp
     have h2 := Real.exp_pos (-(Real.pi * q / 4))
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right hquad h2.le]
   have A : (-Real.pi * u) ^ 2 ≤ ε ^ 2 * (Real.pi ^ 2 * q ^ 2) := by
     have : (-Real.pi * u) ^ 2 = Real.pi ^ 2 * u ^ 2 := by ring
     rw [this]
-    nlinarith [sq_nonneg Real.pi]
+    linarith [mul_le_mul_of_nonneg_left hu2 (sq_nonneg Real.pi)]
   have hterm : (-Real.pi * u) ^ 2 * Real.exp (Real.pi * |u|) * Real.exp (-Real.pi * q) ≤
       32 * ε ^ 2 * Real.exp (-Real.pi * (1 / 2 * q)) := by
     calc (-Real.pi * u) ^ 2 * Real.exp (Real.pi * |u|) * Real.exp (-Real.pi * q)
@@ -106,7 +106,7 @@ private theorem up_pt (q u ε : ℝ) (hq : 0 ≤ q) (h0 : 0 ≤ ε) (h4 : ε ≤
   rw [hE]
   have hE0 := Real.exp_pos (-Real.pi * q)
   have hm := mul_le_mul_of_nonneg_left hx hE0.le
-  nlinarith
+  linarith
 
 private theorem low_pt (q u m : ℝ) :
     Real.exp m * ((1 - m) * Real.exp (-Real.pi * q) + -Real.pi * (u * Real.exp (-Real.pi * q))) ≤
@@ -117,12 +117,12 @@ private theorem low_pt (q u m : ℝ) :
     rw [← Real.exp_add, ← Real.exp_add]; congr 1; ring
   rw [hE]
   have hp : 0 ≤ Real.exp m * Real.exp (-Real.pi * q) := by positivity
-  nlinarith [mul_le_mul_of_nonneg_left h hp]
+  linarith [mul_le_mul_of_nonneg_left h hp]
 
 private theorem sum_pt (q u ε : ℝ) (hq : 0 ≤ q) (h4 : ε ≤ 1 / 4) (hu : |u| ≤ ε * q) :
     ‖u * Real.exp (-Real.pi * q)‖ ≤ Real.exp (-Real.pi * (1 / 2 * q)) := by
   rw [Real.norm_eq_abs, abs_mul, abs_of_pos (Real.exp_pos _)]
-  have hu4 : |u| ≤ q / 4 := by nlinarith [mul_nonneg (sub_nonneg.mpr h4) hq]
+  have hu4 : |u| ≤ q / 4 := by linarith [mul_nonneg (sub_nonneg.mpr h4) hq]
   have hpi := Real.pi_pos
   have h1 := Real.add_one_le_exp (Real.pi * q / 2)
   have hsplit : Real.exp (-Real.pi * (1 / 2 * q)) =
@@ -130,7 +130,7 @@ private theorem sum_pt (q u ε : ℝ) (hq : 0 ≤ q) (h4 : ε ≤ 1 / 4) (hu : |
     rw [← Real.exp_add]; congr 1; ring
   rw [hsplit]
   have hE := Real.exp_pos (-Real.pi * q)
-  have h2 : q / 4 ≤ Real.exp (Real.pi * q / 2) := by nlinarith [Real.pi_gt_three]
+  have h2 : q / 4 ≤ Real.exp (Real.pi * q / 2) := by linarith [hpi, mul_nonneg (sub_nonneg.mpr Real.pi_gt_three.le) hq]
   calc |u| * Real.exp (-Real.pi * q) ≤ q / 4 * Real.exp (-Real.pi * q) :=
         mul_le_mul_of_nonneg_right hu4 hE.le
     _ ≤ _ := by rw [mul_comm]; exact mul_le_mul_of_nonneg_left h2 hE.le
@@ -189,7 +189,7 @@ theorem UpperTheory.two_sided_bound_of_pointwise_bounds :
     have h2 : Z' / Z - 1 ≤ m + 32 * 2 ^ N * ε ^ 2 := by
       rw [div_sub_one hZpos.ne', div_le_iff₀ hZpos]
       have h3 := mul_le_mul_of_nonneg_left hSle (by positivity : (0 : ℝ) ≤ 32 * ε ^ 2)
-      nlinarith
+      linarith
     linarith
   have hexpr : Real.pi * (M / Z) = -m := by rw [hm]; ring
   rw [hexpr, abs_le]
