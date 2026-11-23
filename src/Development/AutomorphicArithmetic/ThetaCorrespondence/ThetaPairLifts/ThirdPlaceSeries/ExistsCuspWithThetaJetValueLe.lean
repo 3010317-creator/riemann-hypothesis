@@ -914,7 +914,7 @@ theorem isVtOver_of_isNormPull_dvd {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsC
   obtain ⟨s₁, tκ, -⟩ := existsUnique_isTwistPull S A L.L hL T (mulT A T M) (snd T A ^ M) (lift_snd _ _)
     ((M : ℤ) ^ 2) 1 κ gκ s
   refine ⟨t, κ₀, κ, s₁, ⟨t, u', g⟩, rfl, ho, gκ₀, corr_of_val hL fun y J hJ => ?_,
-    corr_of_val hL fun y J hJ => vκ _ _ y J hJ, tκ, by rw [pow_two M, hm]; exact sl, twist_of_val hL g fun z J hJ => ?_⟩
+    corr_of_val hL fun y J hJ => vκ _ _ y J hJ, tκ, by rw [pow_two M, hm]; exact sl, ReciprocityTheory.ChartRestriction.G.Geo.Tor.twist_of_val hL g fun z J hJ => ?_⟩
   · have a₁ := val_corr hJ nα (𝟙 _)
     have a₂ := val_corr hJ nβ (𝟙 _)
     have vr : ∀ k : ℤ, val (rigPow A L.L L.rig k) (𝟙 _) y J = val (L := L.L) L.rig (𝟙 _) y J ^ k :=
