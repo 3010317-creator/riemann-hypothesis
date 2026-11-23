@@ -112,10 +112,8 @@ theorem two_mul_lstar_le_b {P : Par} (H : P.Hyp) (G : P.Large) : 2 * P.lstar ≤
   have hD := lstarDenom_pos H G
   have hle := le_lstarDenom H G
   have ht6 := nb.t6
-  have ht2 : (36 : ℝ) ≤ (P.t : ℝ) ^ 2 := by calc (36 : ℝ) = 6 ^ 2 := by norm_num
-    _ ≤ (P.t : ℝ) ^ 2 := pow_le_pow_left₀ (by norm_num) ht6 2
-  have hL2 : (16 : ℝ) ≤ P.L ^ 2 := by calc (16 : ℝ) = 4 ^ 2 := by norm_num
-    _ ≤ P.L ^ 2 := pow_le_pow_left₀ (by norm_num) hL 2
+  have ht2 : (36 : ℝ) ≤ (P.t : ℝ) ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) ht6 2]
+  have hL2 : (16 : ℝ) ≤ P.L ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) hL 2]
   have h36' := mul_le_mul ht2 hL2 (by norm_num) (by positivity)
   have h36 : (1 : ℝ) ≤ (P.t : ℝ) ^ 2 * P.L ^ 2 := by linarith
   have htt : (P.t : ℝ) ≤ (P.t : ℝ) ^ 3 * P.L ^ 2 := by
@@ -240,8 +238,9 @@ private theorem lJDenom_le_lstarDenom {P : Par} (H : P.Hyp) (G : P.Large) :
     unfold Formalism.CohomologicalDescent.LogSmallConstantBounds.Par.N
     have : 0 ≤ (P.m : ℝ) * (P.t + 1) := by positivity
     linarith
-  have h4 : (4 : ℝ) ≤ P.t * P.L := by calc (4 : ℝ) ≤ 6 * 4 := by norm_num
-    _ ≤ P.t * P.L := mul_le_mul nb.t6 G.L_ge (by norm_num) (by linarith [nb.t6])
+  have h4 : (4 : ℝ) ≤ P.t * P.L := by
+    calc (4 : ℝ) ≤ 6 * 4 := by norm_num
+      _ ≤ P.t * P.L := mul_le_mul nb.t6 G.L_ge (by norm_num) (by linarith [nb.t6])
   have h0 : 0 ≤ (P.k : ℝ) * P.t * P.L := mul_nonneg (mul_nonneg hk0 ht0) (by linarith)
   have e1 := mul_le_mul_of_nonneg_left h4 h0
   have hkn : (P.k : ℝ) ≤ P.n * (P.N + P.t) := by
@@ -652,8 +651,9 @@ theorem ex_mul_log_le_of_thickA {P : Par} (H : P.Hyp) (G : P.Large) {ι : Type} 
 theorem smaller_exponent_lt {P : Par} (H : P.Hyp) (G : P.Large) : P.b' < P.b := by
   have nb := natBounds H
   have hb' := H.b'_pos
-  have h1 : (1 : ℝ) ≤ 12 * P.k * P.t := by calc (1 : ℝ) ≤ 12 * 1 * 6 := by norm_num
-    _ ≤ 12 * P.k * P.t := mul_le_mul (by linarith [nb.k1]) nb.t6 (by norm_num) (by linarith [nb.k1])
+  have h1 : (1 : ℝ) ≤ 12 * P.k * P.t := by
+    calc (1 : ℝ) ≤ 12 * 1 * 6 := by norm_num
+      _ ≤ 12 * P.k * P.t := mul_le_mul (by linarith [nb.k1]) nb.t6 (by norm_num) (by linarith [nb.k1])
   have := mul_le_mul_of_nonneg_right h1 hb'.le
   linarith [G.bb']
 

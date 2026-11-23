@@ -109,8 +109,7 @@ lemma psi_zero_le (h2 : ‖(2 : K)‖ = 2⁻¹) (hb2 : ‖b2‖ ≤ 1) (hb4 : �
 lemma num_norm (h2 : ‖(2 : K)‖ = 2⁻¹) (hb4 : ‖b4‖ ≤ 1) (hb6 : ‖b6‖ ≤ 1) (hb8 : ‖b8‖ ≤ 1)
     (hx : 4 ≤ ‖x‖) : ‖x ^ 4 - b4 * x ^ 2 - 2 * b6 * x - b8‖ = ‖x‖ ^ 4 := by
   have r0 : 0 ≤ ‖x‖ := norm_nonneg _
-  have r2 : 16 ≤ ‖x‖ ^ 2 := by calc (16 : ℝ) = 4 ^ 2 := by norm_num
-    _ ≤ ‖x‖ ^ 2 := pow_le_pow_left₀ (by norm_num) hx 2
+  have r2 : 16 ≤ ‖x‖ ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) hx 2]
   have r4 : ‖x‖ ^ 4 = (‖x‖ ^ 2) ^ 2 := by ring
   have e1 : ‖x‖ ^ 2 < ‖x‖ ^ 4 := by
     rw [r4, sq (‖x‖ ^ 2)]
@@ -399,8 +398,7 @@ theorem kappa_norm_holds : KapNorm := by
     norm_num
   · intro hx
     have r0 := norm_nonneg x
-    have hx2 : ‖x‖ ^ 2 < 16 := by calc ‖x‖ ^ 2 < 4 ^ 2 := pow_lt_pow_left₀ hx r0 (by norm_num : 2 ≠ 0)
-      _ = 16 := by norm_num
+    have hx2 : ‖x‖ ^ 2 < 16 := by linarith [pow_lt_pow_left₀ hx r0 (by norm_num : 2 ≠ 0)]
     exact nadd_lt (nadd_lt (by rw [t1]; exact hx2) (t2.trans_lt (by linarith))) (t3.trans_lt (by norm_num))
 
 end Formalism.L2.Th1.B.KNorm

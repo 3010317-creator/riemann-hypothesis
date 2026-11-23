@@ -211,17 +211,11 @@ private lemma exceptional_zero_estimates {B β X : ℝ} {θ : ℤ}
     obtain ⟨s, hs⟩ : ∃ s, s = Real.sqrt Y := ⟨_, rfl⟩
     have hs0 : 0 ≤ s := by rw [hs]; exact Real.sqrt_nonneg Y
     have hs2 : s ^ 2 = Y := by rw [hs]; exact Real.sq_sqrt (by linarith)
-    have hs36 : 36 ≤ s := by
-      by_contra hlt
-      have : 0 < (36 - s) * (36 + s) := mul_pos (by linarith) (by linarith)
-      linarith [show (36 - s) * (36 + s) = 1296 - s ^ 2 by ring]
+    have hs36 : 36 ≤ s := (sq_le_sq₀ (by norm_num) hs0).mp (by linarith)
     obtain ⟨r, hr⟩ : ∃ r, r = Real.sqrt s := ⟨_, rfl⟩
     have hr0 : 0 ≤ r := by rw [hr]; exact Real.sqrt_nonneg s
     have hr2 : r ^ 2 = s := by rw [hr]; exact Real.sq_sqrt hs0
-    have hr6 : 6 ≤ r := by
-      by_contra hlt
-      have : 0 < (6 - r) * (6 + r) := mul_pos (by linarith) (by linarith)
-      linarith [show (6 - r) * (6 + r) = 36 - r ^ 2 by ring]
+    have hr6 : 6 ≤ r := (sq_le_sq₀ (by norm_num) hr0).mp (by linarith)
     have hrpos : 0 < r := by linarith
     have hlogs : Real.log s = 2 * Real.log r := by
       rw [← hr2, Real.log_pow]
@@ -236,9 +230,8 @@ private lemma exceptional_zero_estimates {B β X : ℝ} {θ : ℤ}
       norm_num at this
       linarith
     have hl2pos : 0 < Real.log 2 := by linarith
-    have h1 := gl2a4_Li_sub_le (a := s) (b := Y) (by linarith) (by
-      have : 1 * s ≤ s * s := mul_le_mul_of_nonneg_right (by linarith) hs0
-      linarith [show s * s = s ^ 2 by ring])
+    have h1 := gl2a4_Li_sub_le (a := s) (b := Y) (by linarith)
+      (by linarith [le_self_pow₀ (by linarith : 1 ≤ s) two_ne_zero])
     have h2 := gl2a4_Li_sub_le (a := 2) (b := s) (by norm_num) (by linarith)
     rw [gl2a4_Li_two] at h2
     have hkey' : 2 * (2 * Real.log r) ≤ r ^ 2 * Real.log 2 := by
@@ -483,7 +476,7 @@ private lemma exceptional_zero_estimates {B β X : ℝ} {θ : ℤ}
       _ = 2 * X := by ring
   have hX'sq : X' ≤ X ^ 2 := by
     have : 2 * X ≤ X * X := mul_le_mul_of_nonneg_right (by linarith) hX0.le
-    linarith [show X * X = X ^ 2 by ring]
+    linarith
   have hX'0 : 0 < X' := by linarith
   obtain ⟨W, hW1, hW2, hWlo, hWhi⟩ := gl2a4_weight hθ hβ2 (B := B) (Z := X) (by linarith) (by linarith)
     (by
