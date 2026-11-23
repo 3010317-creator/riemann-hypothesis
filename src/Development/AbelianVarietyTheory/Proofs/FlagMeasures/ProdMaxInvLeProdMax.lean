@@ -123,20 +123,20 @@ theorem const_loss_le (r : ℕ) (hr : 1 ≤ r) (H : ℝ) (hH : 1 ≤ H) :
     16 * (4 * r + 4 : ℝ) * (4 * r : ℝ) ^ (4 * r ^ 2) * (2 * H) ^ (16 * r ^ 3 + 4 * r) *
       ((2 * H) ^ (2 * r)) ^ ((r + 1) * (8 * r ^ 2 + 2)) ≤ (8 * r * H) ^ (80 * r ^ 4) := by
   have hr' : (1 : ℝ) ≤ r := by exact_mod_cast hr
-  have hB8 : (8 : ℝ) ≤ 8 * r * H := by nlinarith
+  have hB8 : (8 : ℝ) ≤ 8 * r * H := by linarith [one_le_mul_of_one_le_of_one_le hr' hH]
   have hB1 : (1 : ℝ) ≤ 8 * r * H := by linarith
   have hH0 : (0 : ℝ) ≤ 2 * H := by linarith
-  have e1 : (16 : ℝ) ≤ (8 * r * H) ^ 2 := by nlinarith
-  have e2 : (4 * r + 4 : ℝ) ≤ (8 * r * H) ^ 1 := by rw [pow_one]; nlinarith
-  have e3 : (4 * r : ℝ) ≤ 8 * r * H := by nlinarith
-  have e4 : 2 * H ≤ 8 * r * H := by nlinarith
+  have e1 : (16 : ℝ) ≤ (8 * r * H) ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num) hB8 2]
+  have e2 : (4 * r + 4 : ℝ) ≤ (8 * r * H) ^ 1 := by rw [pow_one]; linarith [le_mul_of_one_le_right (show (0 : ℝ) ≤ r by linarith) hH]
+  have e3 : (4 * r : ℝ) ≤ 8 * r * H := by linarith [le_mul_of_one_le_right (show (0 : ℝ) ≤ r by linarith) hH]
+  have e4 : 2 * H ≤ 8 * r * H := by linarith [le_mul_of_one_le_left (show (0 : ℝ) ≤ H by linarith) hr']
   have hexp : 2 + 1 + 4 * r ^ 2 + (16 * r ^ 3 + 4 * r) + 2 * r * ((r + 1) * (8 * r ^ 2 + 2)) ≤ 80 * r ^ 4 := by
     have p1 : r ^ 1 ≤ r ^ 4 := Nat.pow_le_pow_right (by omega) (by norm_num)
     have p2 : r ^ 2 ≤ r ^ 4 := Nat.pow_le_pow_right (by omega) (by norm_num)
     have p3 : r ^ 3 ≤ r ^ 4 := Nat.pow_le_pow_right (by omega) (by norm_num)
     have p0 : 1 ≤ r ^ 4 := Nat.one_le_pow _ _ (by omega)
     rw [pow_one] at p1
-    nlinarith
+    linarith
   calc 16 * (4 * r + 4 : ℝ) * (4 * r : ℝ) ^ (4 * r ^ 2) * (2 * H) ^ (16 * r ^ 3 + 4 * r) *
         ((2 * H) ^ (2 * r)) ^ ((r + 1) * (8 * r ^ 2 + 2))
       ≤ (8 * r * H) ^ 2 * (8 * r * H) ^ 1 * (8 * r * H) ^ (4 * r ^ 2) * (8 * r * H) ^ (16 * r ^ 3 + 4 * r) *
@@ -164,9 +164,9 @@ theorem size_loss_le (C' : ℝ) (C₁ k r : ℕ) (hC : C' + 2 ≤ C₁) (hr : 1 
     field_simp
   have hinv : 1 / (r : ℝ) ≤ 1 := by rw [div_le_one hr0]; exact hr'
   have hCk : (C' + 2) * k ≤ C₁ * k := mul_le_mul_of_nonneg_right hC hk0
-  have q1 : (r : ℝ) ≤ r ^ 2 := by nlinarith
-  have q2 : (r : ℝ) ^ 2 ≤ r ^ 3 := by nlinarith
-  have q3 : (r : ℝ) ^ 3 ≤ r ^ 4 := by nlinarith
-  nlinarith
+  have q1 : (r : ℝ) ≤ r ^ 2 := le_self_pow₀ hr' two_ne_zero
+  have q2 : (r : ℝ) ^ 2 ≤ r ^ 3 := pow_le_pow_right₀ hr' (by norm_num)
+  have q3 : (r : ℝ) ^ 3 ≤ r ^ 4 := pow_le_pow_right₀ hr' (by norm_num)
+  linarith [one_le_pow₀ (n := 4) hr']
 
 end GlobalTheory.Amp

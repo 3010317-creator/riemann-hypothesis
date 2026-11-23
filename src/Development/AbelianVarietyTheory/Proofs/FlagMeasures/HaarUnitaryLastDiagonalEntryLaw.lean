@@ -117,7 +117,7 @@ theorem volume_annulus (a b : ℝ) (ha : 0 ≤ a) :
       intro h
       linarith
     rw [hempty, measure_empty, ENNReal.ofReal_of_nonpos]
-    nlinarith [Real.pi_pos]
+    exact mul_nonpos_of_nonneg_of_nonpos Real.pi_pos.le (by linarith)
   · have hb : 0 ≤ b := ha.trans hab
     have hset : {z : ℂ | a ≤ ‖z‖ ^ 2 ∧ ‖z‖ ^ 2 ≤ b} =
         Metric.closedBall 0 (√b) \ Metric.ball 0 (√a) := by
@@ -132,14 +132,10 @@ theorem volume_annulus (a b : ℝ) (ha : 0 ≤ a) :
       constructor
       · rintro ⟨h1, h2⟩
         constructor
-        · by_contra hc
-          push Not at hc
-          nlinarith
-        · by_contra hc
-          push Not at hc
-          nlinarith
+        · exact (sq_le_sq₀ hz hb0).mp (by linarith)
+        · exact (sq_le_sq₀ ha0 hz).mp (by linarith)
       · rintro ⟨h1, h2⟩
-        constructor <;> nlinarith
+        exact ⟨by linarith [pow_le_pow_left₀ ha0 h2 2], by linarith [pow_le_pow_left₀ hz h1 2]⟩
     have hsub : Metric.ball (0 : ℂ) (√a) ⊆ Metric.closedBall 0 (√b) :=
       Metric.ball_subset_closedBall.trans (Metric.closedBall_subset_closedBall (Real.sqrt_le_sqrt hab))
     rw [hset, measure_sdiff hsub Metric.isOpen_ball.measurableSet.nullMeasurableSet measure_ball_lt_top.ne,
@@ -174,9 +170,9 @@ theorem volume_cone_eq (k : ℕ) (t : ℝ) (h0 : 0 < t) (h1 : t ≤ 1) :
     have := sq_nonneg' (Fin.removeNth (Fin.last k) x)
     constructor
     · rintro ⟨h1, h2⟩
-      constructor <;> nlinarith
+      constructor <;> linarith [this]
     · rintro ⟨h1, h2⟩
-      constructor <;> nlinarith
+      constructor <;> linarith [h1, this]
   rw [hpre, he.measure_preimage hSc.measurableSet.nullMeasurableSet, Measure.prod_apply_symm hSc.measurableSet]
   refine lintegral_congr fun y => ?_
   have hy := sq_nonneg' y
@@ -212,8 +208,7 @@ theorem volume_cone (k : ℕ) (hk : 1 ≤ k) (t : ℝ) (h0 : 0 ≤ t) (h1 : t �
     intro x hx
     rw [mem_closedBall_zero_iff, pi_norm_le_iff_of_nonneg zero_le_one]
     intro i
-    have h := (le_sq x i).trans hx.1
-    nlinarith [norm_nonneg (x i)]
+    exact (sq_le_sq₀ (norm_nonneg (x i)) zero_le_one).mp (by linarith [le_sq x i, hx.1])
   rcases h0.lt_or_eq with ht | ht
   · exact hpos t ht h1
   · subst ht
@@ -228,9 +223,7 @@ theorem volume_cone (k : ℕ) (hk : 1 ≤ k) (t : ℝ) (h0 : 0 ≤ t) (h1 : t �
     filter_upwards [Ioc_mem_nhdsGT one_pos] with s hs
     rw [← hpos s hs.1 hs.2]
     refine measure_mono fun x hx => ⟨hx.1, ?_⟩
-    have := sq_nonneg' x
-    have := hx.2
-    nlinarith [hs.1]
+    linarith [hx.2, mul_nonneg hs.1.le (sq_nonneg' x)]
 
 theorem volume_cone_one_ne_zero (k : ℕ) : volume (cone k 1) ≠ 0 := by
   have hr : (0 : ℝ) < 1 / (k + 1) := by positivity
@@ -245,7 +238,7 @@ theorem volume_cone_one_ne_zero (k : ℕ) : volume (cone k 1) ≠ 0 := by
     _ ≤ ∑ _i : Fin (k + 1), (1 / ((k : ℝ) + 1)) ^ 2 :=
         Finset.sum_le_sum fun i _ => pow_le_pow_left₀ (norm_nonneg _) (hxi i) 2
     _ = ((k : ℝ) + 1) * (1 / ((k : ℝ) + 1)) ^ 2 := by simp
-    _ ≤ 1 := by nlinarith
+    _ ≤ 1 := by have := hr1; field_simp; linarith
 
 theorem volume_cone_one_ne_top (k : ℕ) : volume (cone k 1) ≠ ⊤ := by
   refine ne_top_of_le_ne_top (measure_closedBall_lt_top (x := (0 : Fin (k + 1) → ℂ)) (r := 1)).ne
@@ -253,8 +246,7 @@ theorem volume_cone_one_ne_top (k : ℕ) : volume (cone k 1) ≠ ⊤ := by
   intro x hx
   rw [mem_closedBall_zero_iff, pi_norm_le_iff_of_nonneg zero_le_one]
   intro i
-  have h := (le_sq x i).trans hx.1
-  nlinarith [norm_nonneg (x i)]
+  exact (sq_le_sq₀ (norm_nonneg (x i)) zero_le_one).mp (by linarith [le_sq x i, hx.1])
 
 theorem measurePreserving_vecMul {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) (h : gᴴ * g = 1) :
     MeasurePreserving (fun x : Fin n → ℂ => x ᵥ* g) volume volume := by
@@ -287,7 +279,7 @@ theorem exists_row {n : ℕ} (l : Fin n) (x : Fin n → ℂ) (hx : x ≠ 0) :
     funext i
     have h1 := le_sq x i
     rw [← h0] at h1
-    have h2 : ‖x i‖ = 0 := by nlinarith [norm_nonneg (x i)]
+    have h2 : ‖x i‖ = 0 := sq_eq_zero_iff.mp (le_antisymm h1 (sq_nonneg _))
     simpa using h2
   have hsu : sq ((√(sq x))⁻¹ • x) = 1 := by
     rw [sq_smul, inv_pow, Real.sq_sqrt hs.le, inv_mul_cancel₀ hs.ne']
