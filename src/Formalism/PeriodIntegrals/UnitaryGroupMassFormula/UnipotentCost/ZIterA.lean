@@ -48,6 +48,8 @@ import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 public import Mathlib.Analysis.Calculus.ContDiff.Basic
 
+set_option backward.isDefEq.respectTransparency false
+
 @[expose] public section
 
 open scoped ContDiff
@@ -121,7 +123,7 @@ section words
 variable {V I : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype I]
 
 theorem norm_smulRightL_le (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :
-    ‖ContinuousLinearMap.smulRightL ℝ V E‖ ≤ 1 := by
+    ‖StrongDual.smulRightL ℝ V E‖ ≤ 1 := by
   exact ContinuousLinearMap.norm_smulRightL_le
 
 private theorem one_le_pow_of_one_le_real {x : ℝ} (hx : 1 ≤ x) (n : ℕ) : 1 ≤ x ^ n := by
@@ -197,18 +199,18 @@ theorem iter_words (q : ℕ) (Kc : ℝ) (hKc : 0 ≤ Kc) : ∃ C : ℝ, 1 ≤ C 
       have hG : ∀ i, ContDiffOn ℝ b (fun z => Dop i H (Γ z)) U := fun i z hz =>
         (hsmooth b (Dop i H) (hDop b H i hH) z hz).contDiffWithinAt
       have hf : ∀ i, ContDiffOn ℝ b
-          (fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U := fun i =>
-        ((ContinuousLinearMap.smulRightL ℝ V E).contDiff.comp_contDiffOn (hc i b)).clm_apply (hG i)
+          (fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U := fun i =>
+        ((StrongDual.smulRightL ℝ V E).contDiff.comp_contDiffOn (hc i b)).clm_apply (hG i)
       have heq : Set.EqOn (fderiv ℝ (fun z => H (Γ z)))
-          (∑ i, fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U := by
+          (∑ i, fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U := by
         intro z hz
         rw [Finset.sum_apply, hderiv b H hH z hz]
         rfl
       have hfi : ∀ i, ‖iteratedFDerivWithin ℝ b
-          (fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ ≤
+          (fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ ≤
             2 ^ b * T := by
         intro i
-        refine ((ContinuousLinearMap.smulRightL ℝ V E).norm_iteratedFDerivWithin_le_of_bilinear
+        refine ((StrongDual.smulRightL ℝ V E).norm_iteratedFDerivWithin_le_of_bilinear
           (hc i b) (hG i) hU.uniqueDiffOn hz₀ le_rfl).trans ?_
         have hsum : ∑ j ∈ Finset.range (b + 1), (b.choose j : ℝ) *
             ‖iteratedFDerivWithin ℝ j (c i) U z₀‖ *
@@ -255,7 +257,7 @@ theorem iter_words (q : ℕ) (Kc : ℝ) (hKc : 0 ≤ Kc) : ∃ C : ℝ, 1 ≤ C 
         mul_nonneg (mul_nonneg (pow_nonneg hR0 _) hβ) (pow_nonneg (mul_nonneg hlam0 hM0) _)
       calc ‖iteratedFDeriv ℝ (b + 1) (fun z => H (Γ z)) z₀‖
           = ‖iteratedFDerivWithin ℝ b
-              (∑ i, fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z)))
+              (∑ i, fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z)))
               U z₀‖ := by
             rw [← norm_iteratedFDeriv_fderiv,
               ← (iteratedFDerivWithin_of_isOpen b hU hz₀ :
@@ -263,10 +265,10 @@ theorem iter_words (q : ℕ) (Kc : ℝ) (hKc : 0 ≤ Kc) : ∃ C : ℝ, 1 ≤ C 
                   iteratedFDeriv ℝ b (fderiv ℝ (fun z => H (Γ z))) z₀),
               iteratedFDerivWithin_congr heq hz₀]
         _ = ‖∑ i, iteratedFDerivWithin ℝ b
-              (fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ := by
+              (fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ := by
             rw [iteratedFDerivWithin_sum_apply hU.uniqueDiffOn hz₀ fun i _ => hf i z₀ hz₀]
         _ ≤ ∑ i, ‖iteratedFDerivWithin ℝ b
-              (fun z => ContinuousLinearMap.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ :=
+              (fun z => StrongDual.smulRightL ℝ V E (c i z) (Dop i H (Γ z))) U z₀‖ :=
             norm_sum_le _ _
         _ ≤ ∑ _i : I, 2 ^ b * T := Finset.sum_le_sum fun i _ => hfi i
         _ = (Fintype.card I : ℝ) * (2 ^ b * T) := by

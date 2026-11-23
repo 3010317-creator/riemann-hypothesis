@@ -61,7 +61,8 @@ theorem rank_frame_exists :
   intro K _ A D _ _ _ _ X
   classical
   let V := LinearMap.range X.mulVecLin
-  let b : Module.Basis (Fin X.rank) K V := Module.finBasis K V
+  let b : Module.Basis (Fin X.rank) K V := by
+    simpa only [V, Matrix.finrank_range_mulVecLin] using (Module.finBasis K V)
   obtain ⟨g, hg⟩ := LinearMap.exists_extend (p := V) b.equivFun.toLinearMap
   have hpre : ∀ i, ∃ v : D → K, X *ᵥ v = ((b i : V) : A → K) := fun i => by
     obtain ⟨v, hv⟩ := LinearMap.mem_range.mp (b i).2

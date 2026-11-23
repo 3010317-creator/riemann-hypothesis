@@ -242,7 +242,7 @@ theorem finrank_piece_rep (e : A) : finrank k (piece (Rep ρ) e) = (ρ e).rank :
     simp only [Submodule.restrictScalars_mem, piece, LinearMap.mem_range, LinearMap.lsmul_apply,
       Matrix.mulVecLin_apply]
     rfl
-  rw [Matrix.rank, ← hs]
+  rw [← Matrix.finrank_range_mulVecLin, ← hs]
   rfl
 
 end rep

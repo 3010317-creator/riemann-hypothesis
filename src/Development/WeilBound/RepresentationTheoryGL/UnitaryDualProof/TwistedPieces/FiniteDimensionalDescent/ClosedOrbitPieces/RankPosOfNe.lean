@@ -83,7 +83,7 @@ theorem rank_add_orth {a b : Matrix (Fin N) (Fin N) k} (ha : IsIdempotentElem a)
     rw [Submodule.mem_bot, ← hv, ← h1]
   have h := Submodule.finrank_sup_add_finrank_inf_eq (LinearMap.range a.mulVecLin) (LinearMap.range b.mulVecLin)
   rw [hinf, finrank_bot, add_zero, ← hsup] at h
-  exact h
+  simpa only [Matrix.finrank_range_mulVecLin] using h
 
 theorem idem_sum_orth {ι : Type} (s : Finset ι) (e : ι → Matrix (Fin N) (Fin N) k)
     (hid : ∀ i ∈ s, IsIdempotentElem (e i)) (ho : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → e i * e j = 0) :
@@ -117,7 +117,7 @@ theorem rank_pos_of_ne {e : Matrix (Fin N) (Fin N) k} (h : e ≠ 0) : 0 < e.rank
   rw [Nat.pos_iff_ne_zero]
   intro h0
   apply h
-  rw [Matrix.rank, Submodule.finrank_eq_zero, LinearMap.range_eq_bot] at h0
+  rw [← Matrix.finrank_range_mulVecLin, Submodule.finrank_eq_zero, LinearMap.range_eq_bot] at h0
   have : Matrix.toLin' e = 0 := h0
   simpa using congrArg LinearMap.toMatrix' this
 

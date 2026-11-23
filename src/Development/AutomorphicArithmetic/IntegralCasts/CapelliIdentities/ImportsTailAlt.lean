@@ -61,7 +61,7 @@ theorem UpperTheory.Reformulated.B.Yra1.main.{u_1} :
     rw [← LinearMap.ker_eq_bot, Matrix.ker_mulVecLin_eq_bot_iff]
     exact hM
   have hrank : M.rank = a := by
-    rw [Matrix.rank, LinearMap.finrank_range_of_inj hinj, Module.finrank_fin_fun]
+    rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hinj, Module.finrank_fin_fun]
   obtain ⟨κ, f, hf, hsp, hli⟩ := exists_linearIndependent' F M.row
   haveI : Finite κ := Finite.of_injective f hf
   letI : Fintype κ := Fintype.ofFinite κ

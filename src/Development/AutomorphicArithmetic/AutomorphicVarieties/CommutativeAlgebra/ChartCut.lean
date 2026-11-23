@@ -293,7 +293,7 @@ private theorem exists_columns_det_ne_zero_of_rows_linearIndependent {E τ κ : 
   classical
   have hspan : Submodule.span E (Set.range l.col) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank_eq_finrank_span_cols, Matrix.rank_eq_finrank_span_row, finrank_span_eq_card hl,
+    rw [Matrix.finrank_span_range_col, Matrix.rank_eq_finrank_span_row, finrank_span_eq_card hl,
       Module.finrank_fintype_fun_eq_card]
   obtain ⟨ι, a, ha, hsa, hli⟩ := exists_linearIndependent' E l.col
   haveI : Fintype ι := Fintype.ofInjective a ha
