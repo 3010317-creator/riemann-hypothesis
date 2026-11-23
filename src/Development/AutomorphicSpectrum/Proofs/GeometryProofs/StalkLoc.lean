@@ -180,7 +180,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
   refine (congrArg (valAt y' _ _) hf).trans ?_
   exact valAt_res y' _ ⊤ le_top _ le_top _
 
-theorem exists_denom (h455 : type_of% @GlobalTheory.T.lie_model_finite_base_change) {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom]
+theorem exists_denom {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom]
     {R O : Type} [CommRing R] [CommRing O] [Algebra R O] (S : Submonoid R) [IsLocalization S O]
     (x : Spec (CommRingCat.of R) ⟶ X) {L₀ : Type} [AddCommGroup L₀] [Module R L₀] (M₀ : LieModel G x L₀)
     {z : Spec (CommRingCat.of O) ⟶ X} (hz : Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x = z)
@@ -219,7 +219,7 @@ theorem exists_denom (h455 : type_of% @GlobalTheory.T.lie_model_finite_base_chan
     { toFun := j
       map_add' := jadd
       map_smul' := jsmul }
-  have hbc : IsBaseChange O β := (h455 X G R x L₀ M₀).2.2 O L' M' β hjl
+  have hbc : IsBaseChange O β := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R x L₀ M₀).2.2 O L' M' β hjl
   have hloc : IsLocalizedModule S β := (isLocalizedModule_iff_isBaseChange S O β).2 hbc
   obtain ⟨e', he'⟩ := M'.onto v hv
   obtain ⟨⟨b, u⟩, hb⟩ := IsLocalizedModule.surj S β e'
@@ -229,7 +229,7 @@ theorem exists_denom (h455 : type_of% @GlobalTheory.T.lie_model_finite_base_chan
   rw [← h1, ← hjl]
   congr 3
 
-theorem core_tan (h455 : type_of% @GlobalTheory.T.lie_model_finite_base_change) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {G : Over X} [GrpObj G]
+theorem core_tan {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {G : Over X} [GrpObj G]
     [IsCommMonObj G] [Smooth G.hom] {E : Type} [AddCommGroup E] [Module Ω E]
     (M : LieModel G ξ E) {R O : Type} [CommRing R] [IsDomain R] [CommRing O] [Algebra R O]
     (S : Submonoid R) [IsLocalization S O] {T : Type} [CommGroup T] (Γ : BT.QFGroup R T)
@@ -253,7 +253,7 @@ theorem core_tan (h455 : type_of% @GlobalTheory.T.lie_model_finite_base_change) 
     (he : (M.pt e).left = Spec.map (CommRingCat.ofHom (dualMap g)) ≫ v.left) :
     ∃ c : O, w e = g c ∧ ∀ h : ⊤ ≤ v.left ⁻¹ᵁ W, ∃ r : O, c = (valAt v.left W h f).snd + n * r := by
   subst hk₀
-  obtain ⟨u, hu, b, hub⟩ := exists_denom h455 G S x M₀ hz v hv
+  obtain ⟨u, hu, b, hub⟩ := exists_denom G S x M₀ hz v hv
   obtain ⟨U', hU⟩ := (IsLocalization.map_units O (⟨u, hu⟩ : S)).exists_right_inv
   replace hU : algebraMap R O u * U' = 1 := hU
   have hje : g (algebraMap R O u) • e = j b := M.inj (Over.OverMorphism.ext (by
