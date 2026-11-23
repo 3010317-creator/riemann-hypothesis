@@ -51,7 +51,7 @@ theorem smallPrimeOne_of_primesRel : GlobalTheory.Lin.PrimesRel → SmallPrimeOn
   obtain ⟨s, hsC, hs21, hsr⟩ : ∃ s : ℝ, C₀ ≤ s ∧ 21 ≤ s ∧ 200 * Cr / cr ≤ s :=
     ⟨max C₀ (max 21 (200 * Cr / cr)), le_max_left _ _,
       le_trans (le_max_left _ _) (le_max_right _ _), le_trans (le_max_right _ _) (le_max_right _ _)⟩
-  have hss : s ≤ s ^ 2 := by nlinarith
+  have hss : s ≤ s ^ 2 := le_self_pow₀ (by linarith) two_ne_zero
   have hexp : Cr * Real.exp (-cr * s) ≤ 1 / 200 := by
     have e1 : 200 * Cr ≤ cr * s := by
       rw [div_le_iff₀ h2] at hsr; linarith
@@ -59,12 +59,12 @@ theorem smallPrimeOne_of_primesRel : GlobalTheory.Lin.PrimesRel → SmallPrimeOn
     have e3 : 0 < Real.exp (cr * s) := Real.exp_pos _
     rw [neg_mul, Real.exp_neg, ← div_eq_mul_inv, div_le_div_iff₀ e3 (by norm_num)]
     linarith
-  refine ⟨3 * s ^ 2 + 1, by nlinarith, ?_⟩
+  refine ⟨3 * s ^ 2 + 1, by linarith, ?_⟩
   intro M hM
   rcases Nat.eq_or_lt_of_le hM with rfl | hM3
   · refine ⟨3, Nat.prime_three, by norm_num, ?_⟩
     have e1 : ((2 : ℕ) : ℝ) ^ (2 : ℝ) ≤ ((2 : ℕ) : ℝ) ^ (3 * s ^ 2 + 1) :=
-      Real.rpow_le_rpow_of_exponent_le (by norm_num) (by nlinarith)
+      Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
     refine le_trans ?_ e1
     norm_num
   have hm3 : (3 : ℝ) ≤ M := by exact_mod_cast hM3
@@ -77,18 +77,18 @@ theorem smallPrimeOne_of_primesRel : GlobalTheory.Lin.PrimesRel → SmallPrimeOn
   set Y : ℝ := (4 * (M : ℝ)) ^ (s ^ 2) with hY
   have hY0 : 0 < Y := Real.rpow_pos_of_pos hB0 _
   have hlY : Real.log Y = s ^ 2 * Real.log (4 * (M : ℝ)) := Real.log_rpow hB0 _
-  have hlY2 : s ^ 2 ≤ Real.log Y := by rw [hlY]; nlinarith [sq_nonneg s]
+  have hlY2 : s ^ 2 ≤ Real.log Y := by rw [hlY]; exact le_mul_of_one_le_right (sq_nonneg s) hlB
   have hlY0 : 0 < Real.log Y := by linarith
   have hrho : Formalism.HermitianLattices.GL2PrimeSums.rhoErr Cr cr (4 * M) Y ≤ 1 / 100 := by
     unfold Formalism.HermitianLattices.GL2PrimeSums.rhoErr
     have a1 : Real.exp (-cr * Real.log Y / Real.log (4 * (M : ℝ))) ≤ Real.exp (-cr * s) := by
       apply Real.exp_le_exp.2
       rw [hlY, ← mul_assoc, mul_div_assoc, div_self (by linarith), mul_one]
-      nlinarith
+      linarith [mul_le_mul_of_nonneg_left hss h2.le]
     have a2 : Real.exp (-cr * Real.sqrt (Real.log Y)) ≤ Real.exp (-cr * s) := by
       apply Real.exp_le_exp.2
       have : s ≤ Real.sqrt (Real.log Y) := Real.le_sqrt_of_sq_le hlY2
-      nlinarith
+      linarith [mul_le_mul_of_nonneg_left this h2.le]
     have b1 := mul_le_mul_of_nonneg_left a1 h1.le
     have b2 := mul_le_mul_of_nonneg_left a2 h1.le
     linarith
@@ -116,9 +116,10 @@ theorem smallPrimeOne_of_primesRel : GlobalTheory.Lin.PrimesRel → SmallPrimeOn
       apply Real.rpow_le_rpow hB0.le _ (by positivity)
       have : (M : ℝ) ^ (3 : ℝ) = (M : ℝ) ^ (3 : ℕ) := by exact_mod_cast Real.rpow_natCast (M : ℝ) 3
       rw [this]
-      have : (4 : ℝ) ≤ (M : ℝ) ^ 2 := by nlinarith
-      nlinarith
+      have hM2 : (4 : ℝ) ≤ (M : ℝ) ^ 2 := by linarith [pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 3) hm3 2]
+      have hpow3 : (M : ℝ) ^ 2 * (M : ℝ) = (M : ℝ) ^ (3 : ℕ) := by ring
+      linarith [mul_le_mul_of_nonneg_right hM2 hM0.le]
     rw [Real.rpow_add hM0, Real.rpow_one]
-    nlinarith
+    linarith [mul_le_mul e2 (show (2 : ℝ) ≤ M by linarith) (by norm_num) (le_trans hY0.le e2)]
 
 end GlobalTheory.EX

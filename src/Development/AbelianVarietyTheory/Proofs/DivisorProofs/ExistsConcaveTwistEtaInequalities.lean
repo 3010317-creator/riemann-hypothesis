@@ -89,7 +89,7 @@ lemma twistMap_add_mul (T y : ℝ) : (1 + Real.exp (y - T)) * twP T y = 1 := by
 lemma logistic_lt_one (T y : ℝ) : twP T y < 1 := by
   have h := twistMap_add_mul T y
   have := logistic_pos T y
-  nlinarith [Real.exp_pos (y - T)]
+  linarith [mul_pos (Real.exp_pos (y - T)) this]
 
 lemma twShift_nonneg (T : ℝ) : 0 ≤ twShift T :=
   Real.log_nonneg (by linarith [Real.exp_pos (-T)])
@@ -116,7 +116,7 @@ lemma twV_nonneg (T y : ℝ) (hy : 0 ≤ y) : 0 ≤ twV T y := by
       rw [Real.log_mul (Real.exp_pos y).ne' (by positivity), Real.log_exp]; rfl
     rw [hr]
     apply Real.log_le_log (by positivity)
-    rw [he]; nlinarith [Real.exp_pos (-T)]
+    rw [he]; linarith
   unfold twV; linarith
 
 lemma twV_le (T y : ℝ) (hT : 0 ≤ T) : twV T y ≤ T + 1 := by
@@ -151,7 +151,7 @@ lemma twV_ge_T_sub_two (T y : ℝ) (h1 : T - 1 ≤ y) (h2 : y ≤ T + 1) : T - 2
     calc Real.log (1 + q) ≤ Real.log (Real.exp (y - T + 2)) := by
           apply Real.log_le_log (by positivity)
           rw [hE]
-          nlinarith [mul_nonneg hq0.le (show 0 ≤ Real.exp 1 * Real.exp 1 - Real.exp 1 - 1 by nlinarith)]
+          linarith [mul_nonneg hq0.le (show 0 ≤ Real.exp 1 * Real.exp 1 - Real.exp 1 - 1 by linarith [mul_nonneg (show 0 ≤ Real.exp 1 - 2 by linarith) (Real.exp_pos 1).le])]
       _ = y - T + 2 := Real.log_exp _
   have := twShift_nonneg T
   unfold twV; rw [← hq]; linarith
@@ -228,7 +228,7 @@ lemma twEta_bounds (T y : ℝ) (hT : 0 ≤ T) (hy : 0 ≤ y) :
   set r := (1 + v)⁻¹ with hrdef
   have hr0 : 0 < r := inv_pos.mpr hw
   have hwr : (1 + v) * r = 1 := mul_inv_cancel₀ hw.ne'
-  have hr1 : r ≤ 1 := by nlinarith
+  have hr1 : r ≤ 1 := by linarith [mul_nonneg hv0 hr0.le]
   have hr2 : ((1 + v) ^ 2)⁻¹ = r ^ 2 := by rw [inv_pow]
   have hη1 : twEta1 T y = p * (1 + r) := rfl
   have hη2 : -twEta2 T y = p * (1 - p) * (1 + r) + p ^ 2 * r ^ 2 := by
@@ -250,10 +250,10 @@ lemma twEta_bounds (T y : ℝ) (hT : 0 ≤ T) (hy : 0 ≤ y) :
       have := sub_pos.mpr hp1; positivity
     linarith
   have hvm2 : v ^ 2 ≤ m ^ 2 := pow_le_pow_left₀ hv0 hvm 2
-  refine ⟨by rw [hη1]; positivity, by rw [hη1]; nlinarith, by rw [hη]; linarith, by linarith,
+  refine ⟨by rw [hη1]; positivity, by rw [hη1]; linarith [mul_le_mul hp1.le (show 1 + r ≤ 2 by linarith) (by linarith) zero_le_one], by rw [hη]; linarith, by linarith,
     by rw [hη]; linarith, ?_⟩
   rw [hη]
-  nlinarith [sq_nonneg (v - 3/7)]
+  linarith [sq_nonneg (v - 3/7)]
 
 lemma twEta_mid (T y : ℝ) (hT : 2 ≤ T) (h1 : T - 1 ≤ y) (h2 : y ≤ T + 1) :
     3 / 16 ≤ -twEta2 T y ∧ T ≤ twEta T y := by
@@ -272,7 +272,7 @@ lemma twEta_mid (T y : ℝ) (hT : 2 ≤ T) (h1 : T - 1 ≤ y) (h2 : y ≤ T + 1)
     linarith
   have hqe : 1 ≤ q * Real.exp 1 := by
     rw [hq, ← Real.exp_add]; exact Real.one_le_exp (by linarith)
-  have hq13 : 1 / 3 ≤ q := by nlinarith
+  have hq13 : 1 / 3 ≤ q := by linarith [mul_lt_mul_of_pos_left he3 hq0]
   have hw : 0 < 1 + v := by linarith
   set r := (1 + v)⁻¹ with hrdef
   have hr0 : 0 < r := inv_pos.mpr hw
@@ -289,11 +289,11 @@ lemma twEta_mid (T y : ℝ) (hT : 2 ≤ T) (h1 : T - 1 ≤ y) (h2 : y ≤ T + 1)
       have a : 0 ≤ 3 * q - 1 := by linarith
       have b : 0 ≤ 3 - q := by linarith
       positivity
-    nlinarith
+    linarith
   refine ⟨?_, ?_⟩
   · rw [hη2]
     have : 0 ≤ p * (1 - p) * r := by have := sub_pos.mpr hp1; positivity
-    nlinarith [sq_nonneg (p * r)]
+    linarith [sq_nonneg (p * r)]
   · have hlog0 : 0 ≤ Real.log (1 + v) := Real.log_nonneg (by linarith)
     show T ≤ 2 + v + Real.log (1 + v)
     linarith
