@@ -183,7 +183,7 @@ theorem le_of_forall_le_exp {a b : ℤᵐ⁰} (hb : b ≤ 1)
     have ha0 : a ≠ 0 := by
       rintro rfl
       exact ha le_rfl
-    obtain ⟨n, hn⟩ := GlobalTheory.Idele.exists_exp_neg_lt ha0
+    obtain ⟨n, hn⟩ := WithZero.exists_exp_neg_natCast_lt ha0
     exact absurd (h n zero_le') (not_le.2 hn)
   · have hl : log b ≤ 0 := by
       rw [← exp_le_exp, exp_log hb0, exp_zero]
