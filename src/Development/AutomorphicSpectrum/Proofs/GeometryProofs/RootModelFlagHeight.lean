@@ -614,8 +614,6 @@ theorem ip_conj (h : LieMetric M y) (MB : LieModel G z E) (σ : L →+* ℂ) (e 
       (starRingEnd ℂ).comp (σ.comp (algebraMap (𝓞 L) L)) := by
     ext a; rfl
   rw [Category.comp_id] at hv hw hv' hw'
-  simp only [_root_.GlobalTheory.CompanionTheory.Ar.GlobalTheory.CompanionTheory.Ar.dualMap]
-    at hv hw hv' hw'
   refine key _ _ ?_ v w v' w' ?_ ?_
   · rw [← Category.assoc, spMap_spMap', hc]
   · rw [hv, hv', hc, dualMap_comp', ← Category.assoc, spMap_spMap']
