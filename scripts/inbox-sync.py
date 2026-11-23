@@ -20,8 +20,9 @@ not overruled, and one who puts it back asks for another look: it stays until th
 Reviews on pull requests from forks only get a read-only token, so the workflow cannot act on
 them as they are submitted. The sweep picks them up instead. It reads every open pull request
 through GraphQL, a few requests in all, whose allowance is separate from the REST one that the
-batch queue counts on. Access is looked up through REST, once a run for each reviewer who could
-have it.
+batch queue counts on. Before it puts a pull request in the inbox it reads that pull request
+again, so that a review or a close that came in meanwhile is not missed. Access is looked up
+through REST, once a run for each reviewer.
 """
 from __future__ import annotations
 
@@ -38,9 +39,6 @@ DECIDED = ("batch queue", "building", "awaiting-author")
 PREFIX = "batch/"
 # Events that put a pull request in the inbox whatever happened to it before.
 ENTRY = ("opened", "reopened", "ready_for_review")
-# Anyone with triage access or more is an owner, a member of the organisation or a collaborator.
-# Reviews by anyone else are passed over without looking up their access.
-ASSOCIATED = ("OWNER", "MEMBER", "COLLABORATOR")
 # Repository roles whose review takes a pull request out of the inbox. The REST API reports
 # maintain as write and triage as read under `permission`, so `role_name` is the one to read.
 ROLES = ("admin", "maintain", "write", "triage")
@@ -50,7 +48,7 @@ FIELDS = """
   number state isDraft headRefName
   author { login }
   labels(first: 100) { nodes { name } }
-  reviews(last: 50) { nodes { state submittedAt authorAssociation author { __typename login } } }
+  reviews(last: 50) { nodes { state submittedAt author { __typename login } } }
   timelineItems(last: 100, itemTypes: [LABELED_EVENT, UNLABELED_EVENT]) {
     nodes {
       __typename
@@ -82,7 +80,7 @@ class GitHub:
     def __init__(self, repo, dry_run=False):
         self.repo, self.dry_run = repo, dry_run
         self.owner, _, self.name = repo.partition("/")
-        self.calls, self.remaining, self.access = 0, None, {}
+        self.calls, self.remaining, self.access, self.failed = 0, None, {}, False
 
     def run(self, args, payload=None):
         data = json.dumps(payload).encode() if payload is not None else None
@@ -197,8 +195,7 @@ def pull(node):
     for review in node["reviews"]["nodes"]:
         login = person(review.get("author"))
         if login and review.get("submittedAt") and review.get("state") != "PENDING":
-            reviews.append({"login": login, "at": when(review["submittedAt"]),
-                            "associated": review.get("authorAssociation") in ASSOCIATED})
+            reviews.append({"login": login, "at": when(review["submittedAt"])})
     return {
         "number": node["number"], "open": node["state"] == "OPEN", "draft": node["isDraft"],
         "ref": node["headRefName"], "author": (node.get("author") or {}).get("login"),
@@ -220,9 +217,14 @@ def unavailable(pr):
 
 
 def reviewer(gh, pr, since=None):
-    """Someone with triage access who reviewed the pull request after `since`, or None."""
+    """Someone with triage access who reviewed the pull request after `since`, or None.
+
+    Every reviewer's access is looked up. Their `authorAssociation` would be cheaper, but GitHub
+    reports a private member of the organisation as a mere contributor to a token that cannot see
+    the membership, and the workflow's token is one of those.
+    """
     for review in pr["reviews"]:
-        if review["login"] == pr["author"] or not review["associated"]:
+        if review["login"] == pr["author"]:
             continue
         if since and review["at"] <= since:
             continue
@@ -267,17 +269,28 @@ def sync(gh, number=None, event=None):
         if found is None:
             raise Refused(f"There is no pull request #{number} in {gh.repo}.")
         pulls = [found]
-    for pr in pulls:
-        action, why = decide(gh, pr, event)
-        if action:
-            gh.label(pr["number"], action == "add")
-            pr["labels"] = (pr["labels"] | {INBOX}) if action == "add" else (pr["labels"] - {INBOX})
-            log.append(f"#{pr['number']}: {'put in' if action == 'add' else 'taken out of'} "
-                       f"the inbox, because {why}")
-        elif number is not None:
-            log.append(f"#{pr['number']}: left as it was, because {why}")
+    for i, pr in enumerate(pulls):
+        try:
+            action, why = decide(gh, pr, event)
+            if action == "add" and number is None:
+                # The sweep read this pull request a while ago. A review, a close or a new label
+                # since then would otherwise be missed, and a review older than the label never
+                # counts again.
+                pr = pulls[i] = gh.pull(pr["number"]) or pr
+                action, why = decide(gh, pr, event)
+            if action:
+                gh.label(pr["number"], action == "add")
+                pr["labels"] = (pr["labels"] | {INBOX}) if action == "add" else (pr["labels"] - {INBOX})
+                log.append(f"#{pr['number']}: {'put in' if action == 'add' else 'taken out of'} "
+                           f"the inbox, because {why}")
+            elif number is not None:
+                log.append(f"#{pr['number']}: left as it was, because {why}")
+        except RuntimeError as error:
+            # One pull request that cannot be read or labelled should not hold up the rest.
+            gh.failed = True
+            log.append(f"#{pr['number']}: skipped, because {error}")
     if number is None:
-        waiting = sum(INBOX in pr["labels"] for pr in pulls)
+        waiting = sum(INBOX in pr["labels"] and pr["open"] for pr in pulls)
         log.append(f"{waiting} of {len(pulls)} open pull requests are in the inbox")
     return log
 
@@ -295,7 +308,8 @@ def main():
     failure = None
     try:
         log = sync(gh, args.pr, args.event)
-    except Refused as error:
+        failure = 1 if gh.failed else None
+    except (Refused, RuntimeError) as error:
         log, failure = [str(error)], 1
     left = f"; {gh.remaining} REST requests left this hour" if gh.remaining is not None else ""
     log.append(f"{gh.calls} requests to GitHub{left}")
