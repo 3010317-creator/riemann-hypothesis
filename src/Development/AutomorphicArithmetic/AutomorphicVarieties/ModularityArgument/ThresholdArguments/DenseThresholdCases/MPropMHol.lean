@@ -108,7 +108,7 @@ namespace UpperTheory.V.Sd
 
 variable {F : Type} [Field F] [NumberField F]
 
-private theorem norm_one {w : Pl F} {x : w.adicCompletion F} (h : Valued.v x = 1) : ‖x‖ = 1 := by
+private theorem norm_one_of_v {w : Pl F} {x : w.adicCompletion F} (h : Valued.v x = 1) : ‖x‖ = 1 := by
   have := (Valued.toNormedField.norm_le_one_iff (x := x)).2 h.le
   have h2 := (Valued.toNormedField.one_le_norm_iff (x := x)).2 h.ge
   exact le_antisymm this h2
@@ -123,7 +123,7 @@ private theorem fin_supp (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : P
   have a2 : Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) ≤ 1 := hc.2
   have a3 : Valued.v (pLoc F w (y : Af F)) * Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) = 1 := by
     rw [← map_mul, ← map_mul, Units.mul_inv, map_one, map_one]
-  refine hw (norm_one (le_antisymm a1 ?_))
+  refine hw (norm_one_of_v (le_antisymm a1 ?_))
   calc 1 = _ := a3.symm
     _ ≤ Valued.v (pLoc F w (y : Af F)) * 1 := mul_le_mul_right a2 _
     _ = _ := mul_one _
@@ -253,7 +253,7 @@ private theorem map_aff {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (
   ext i j
   fin_cases i <;> fin_cases j <;> simp [aff]
 
-private theorem aff_mul {R : Type} [CommRing R] (y z : Rˣ) : aff y (0 : R) * aff z 0 = aff (y * z) 0 := by
+private theorem aff_mul_zero {R : Type} [CommRing R] (y z : Rˣ) : aff y (0 : R) * aff z 0 = aff (y * z) 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [aff, Matrix.mul_apply, Fin.sum_univ_succ]
 
@@ -390,7 +390,7 @@ theorem UpperTheory.V.Sd.holB :
     have hy' : 0 < ∏ v, y.val v := Finset.prod_pos fun v _ => hy v
     convert h using 2
     · rw [coefAt_shift hu, Units.val_mul, mul_assoc (algebraMap F (Af F) _)]
-    · rw [hv, mul_assoc, ← map_mul, aff_mul, absF_mul, ← mul_assoc,
+    · rw [hv, mul_assoc, ← map_mul, aff_mul_zero, absF_mul, ← mul_assoc,
         Real.mul_rpow (mul_pos hy' (absF_pos yf)).le (absF_pos u).le, Complex.ofReal_mul, hs]
       rw [mul_comm _ (φ.1 _), ← div_eq_mul_inv, div_div, mul_comm (_ : ℂ)]
 end -- clump:auto
