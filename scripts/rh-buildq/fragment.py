@@ -316,9 +316,15 @@ def cmd_build(a):
     def interrupted(signum, frame):
         (Q / "interrupted-at").write_text(f"{time.time()}\n")
         log(f"signal {signum}: stopping the build")
-        for p in (proc, publisher):
-            if p and p.poll() is None:
-                os.killpg(p.pid, signal.SIGTERM)
+        live = [p for p in (proc, publisher) if p and p.poll() is None]
+        for p in live:
+            os.killpg(p.pid, signal.SIGTERM)
+        # The flush step must not race a still-running Lake: wait, then kill what is left.
+        for p in live:
+            try:
+                p.wait(20)
+            except subprocess.TimeoutExpired:
+                os.killpg(p.pid, signal.SIGKILL)
         phase(Q, "failed")
         sys.exit(128 + signum)
 
@@ -361,6 +367,14 @@ def cmd_flush(a):
     if not a.creds or not Path(a.creds).is_file() or not (Q / "job.env").exists():
         print("flush: nothing to publish (no credentials or no restored project)")
         return
+    # If the build step was killed without its handler running, its Lake and publisher may still
+    # be alive. They are matched by this run's queue path, which nothing else uses.
+    for pattern in (f"-o {Q}/outputs-", f"publish.py {Q} "):
+        if subprocess.run(["pkill", "-TERM", "-f", "--", pattern]).returncode == 0:
+            log(f"stopped leftover processes matching {pattern!r}")
+            if not (Q / "interrupted-at").exists():
+                (Q / "interrupted-at").write_text(f"{time.time()}\n")
+            time.sleep(10)
     if (Q / "phase").read_text().strip() not in ("done", "failed"):
         phase(Q, "failed")
     args = [sys.executable, "-I", str(HERE / "publish.py"), str(Q), "--once", "--settle", "0"]
