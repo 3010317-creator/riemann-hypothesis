@@ -1326,7 +1326,7 @@ theorem B2.cohAxAr (hP : CohP) (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] 
       leV := fun v => (hl (Subtype.val v)).2.2.1 ((mem_of_over (s.hw _) (s.hA _) l).2 (Subtype.property v))
       leU := fun u => (hl (Subtype.val u)).2.2.2 fun h =>
         s.St_l _ (Subtype.property u) ((mem_of_over (s.hw _) (s.hA _) l).1 h)
-      ur := arUr hP l L Ω s V0 V O n r
+      ur := fun u => urOf l _ _ (unrLoc l L Ω s V0 O n r u)
       ck := arCk hP l L Ω s V0 V O n r }
 
 theorem b2Ar : TaylorWilesObstructionBound := fun hP l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ _ _ n r T P x k al _ _ hPL hE =>
