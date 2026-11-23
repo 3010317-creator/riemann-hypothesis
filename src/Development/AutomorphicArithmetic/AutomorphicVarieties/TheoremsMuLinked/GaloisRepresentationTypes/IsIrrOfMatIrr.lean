@@ -319,10 +319,13 @@ theorem UpperTheory.V.Sd.twist :
   have hnat : ∀ (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 K)), IsPlaceOver A w → ∀ n : ℤ,
       ¬ A.valuation (n : Ω) < 1 → (n : 𝓞 K) ∉ w.asIdeal := fun A w hw n hn h => by
     have := (hw (n : 𝓞 K)).2 h
-    exact hn (by simpa using this)
+    rw [show ((n : 𝓞 K) : K) = (n : K) from map_intCast (algebraMap (𝓞 K) K) n,
+      map_intCast] at this
+    exact hn this
   have hnat' : ∀ (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 K)), IsPlaceOver A w → ∀ n : ℕ,
       ¬ A.valuation (n : Ω) < 1 → (n : 𝓞 K) ∉ w.asIdeal := fun A w hw n hn => by
-    simpa using hnat A w hw n (by simpa using hn)
+    have := hnat A w hw n (by rw [Int.cast_natCast]; exact hn)
+    rwa [Int.cast_natCast] at this
   have hver := ver_of_frob K hK κ hκ (l * N) (mul_ne_zero hl.out.ne_zero (NeZero.ne N)) fun q A t s hq hqT hA ht htK hs => by
     have hc' := (Nat.Prime.coprime_iff_not_dvd hq).2 hqT
     have hql := hc'.coprime_mul_right_right
