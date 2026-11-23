@@ -77,7 +77,7 @@ theorem exists_limit_form (I : Ideal R) [IsPrecomplete I R] (n e : ℕ)
   have hcoef : ∀ d i k, AddMonoidAlgebra.coeff (G i) d - AddMonoidAlgebra.coeff (G (i + k)) d ∈ I ^ (e + i + 1) := by
     intro d i k
     have h := (mem_map_C_iff.1 (sub_tail_mem I e G hd i k)) d
-    rwa [coeff_sub] at h
+    rwa [MvPolynomial.coeff_sub] at h
   have hL : ∀ d, ∃ Ld : R, ∀ i, AddMonoidAlgebra.coeff (G i) d - Ld ∈ I ^ (e + i + 1) := by
     intro d
     obtain ⟨Ld, hLd⟩ := IsPrecomplete.prec' (I := I) (fun i => AddMonoidAlgebra.coeff (G i) d) (by
@@ -102,7 +102,7 @@ theorem exists_limit_form (I : Ideal R) [IsPrecomplete I R] (n e : ℕ)
   · intro i
     rw [mem_map_C_iff]
     intro d
-    rw [coeff_sub, coeff_sum]
+    rw [MvPolynomial.coeff_sub, coeff_sum]
     simp only [coeff_monomial]
     rw [Finset.sum_ite_eq']
     by_cases hdS : d ∈ (Finset.univ : Finset (Fin (N + 1))).finsuppAntidiag n
