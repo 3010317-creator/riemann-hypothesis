@@ -413,7 +413,7 @@ theorem UpperTheory.V.Sd.S2.indGlob_of_kill (hk : IndKill) : IndGlob := by
     fin_cases i <;> exact this
   have all : ∀ g : G T.F Ω, Sh (R (resQ T.F g) : M4 (Qbar l)) (fun i => ch T i (resQ T.F g)) := by
     intro g
-    by_cases hg : resQ T.F g ∈ (resQ k₀).range
+    rcases em (resQ T.F g ∈ (resQ k₀).range) with hg | hg
     · obtain ⟨h, hh⟩ := hg
       exact (inn g h hh).1
     · have : resQ T.F (g * T.g0⁻¹) ∈ (resQ k₀).range := by
