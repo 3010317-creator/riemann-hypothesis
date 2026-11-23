@@ -309,7 +309,7 @@ theorem shiftH_eq_tensor_constLine {K : Type} [Fintype K] {ι : K → Type} [∀
     rw [neg_neg, mul_comm]
 
 theorem selfInt_shiftH : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) (D : ℕ)
-    (A : HermLine ι) (t : ℝ) (II : IntersectionSystem), IsIntersectionSystem II → IsArithVar P (D + 1) →
+    (A : HermLine ι) (t : ℝ) (II : IntersectionSystem), IsIntersectionSystem II → ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar P (D + 1) →
     IsSmoothHerm A →
     II K ι P (D + 1) (fun _ => shiftH A t) =
       II K ι P (D + 1) (fun _ => A) + ((D : ℝ) + 1) * t * geomDeg P A D := by
