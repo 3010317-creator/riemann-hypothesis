@@ -25,12 +25,15 @@ Each job runs these steps:
    deleted at the end. Each job also deletes the trees of other runs that have completed
    (with any conclusion); it keeps those of queued or running runs. When it cannot read a
    run's status, it deletes the tree only after a week untouched. The first
-   time, it clones the repository and runs `lake exe cache get` at
-   the nearest first-parent ancestor that has a published CI record. On every run it then
-   merges the public maps (`pool-restore.py`: the `rh-buildq/pool` union, this commit's
-   `rh-buildq/maps` entry and the stock revision maps), runs `lake cache add`, and prefetches
-   missing artifacts (`fetch-artifacts.py`). Lake 4.37 compiles a mapped module whose artifact
-   is not local; it does not download it.
+   time, it clones the repository and picks the nearest first-parent ancestor that has a
+   published CI record. On every run, `pool-restore.py` then fetches Mathlib's cache and builds
+   one merged map: the CI map of a successful build with that ancestor's inputs (checked like
+   `scripts/ci-cache-get.py` does, and SHA-256 checked per artifact on download), the
+   `rh-buildq/pool` union, this commit's `rh-buildq/maps` entry and the stock revision maps.
+   It registers the mappings Lake does not know yet with `lake cache add` (in parallel shards)
+   while curl downloads the missing artifacts (`fetch-artifacts.py`, 500 at a time). Nothing is
+   unpacked here: Lake 4.37 compiles a mapped module whose artifact is not local and does not
+   download it, but it unpacks a local one during `lake build`.
 2. `fragment.py build` runs `lake build -v -o outputs-<run>.jsonl <targets>` with
    `LAKE_RESTORE_ARTIFACTS=true`. With `-v`, Lake logs every module as Built or Replayed,
    not only those with messages. The job log shows compiled modules, failures and one

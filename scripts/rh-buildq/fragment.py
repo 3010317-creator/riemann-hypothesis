@@ -213,28 +213,21 @@ def cmd_restore(a):
     tcdir = lean_tc.replace("/", "--").replace(":", "---")
     marker = Q / "restored-ancestor"
     if not marker.exists():
-        src = restore_from(P, target)
-        phase(Q, "restore-ancestor")
-        log(f"restoring the complete CI cache of {src}")
-        git(P, "checkout", "-q", "--detach", src, capture=False)
-        for attempt in range(1, 5):
-            if subprocess.run(["lake", "exe", "cache", "get"], cwd=P).returncode == 0:
-                break
-            log(f"cache get attempt {attempt} failed; retrying (downloaded artifacts are kept)")
-            time.sleep(20)
-        else:
-            log("WARNING: ancestor cache restore incomplete; Lake will compile what is missing")
-        marker.write_text(src + "\n")
+        marker.write_text(restore_from(P, target) + "\n")
     src = marker.read_text().strip()
-    add_timing(a.timings, "restore_ancestor_s", time.time() - t0)
-    t1 = time.time()
     if git(P, "rev-parse", "HEAD") != target:
         git(P, "checkout", "-q", "--detach", target, capture=False)
+    add_timing(a.timings, "restore_ancestor_s", time.time() - t0)
+    t1 = time.time()
     (Q / "job.env").write_text(f"TARGET={target}\nRESTORE_FROM={src}\nTOOLCHAIN_DIR={tcdir}\n"
                                f"POOL_EXTRA_REVS=\"{' '.join(extra)}\"\n")
-    # The pool grows while other fragments publish, so this runs on every job.
+    # One merged map (Mathlib's cache, the validated CI map of src's build inputs, the pool and the
+    # revision maps), registered once while the missing artifacts download. The pool grows while
+    # other fragments publish, so this runs on every job; a rerun registers and fetches only what
+    # is new. `lake build` unpacks the restored modules itself.
     phase(Q, "restore-pool")
-    r = subprocess.run([sys.executable, "-I", str(HERE / "pool-restore.py"), str(P), *extra])
+    log(f"restoring the CI cache of {src} and the shared pool")
+    r = subprocess.run([sys.executable, "-I", str(HERE / "pool-restore.py"), "--ancestor", src, str(P), *extra])
     if r.returncode != 0:
         log("pool restore failed (continuing; Lake will compile what is missing)")
     known = Q / "known-maps"
