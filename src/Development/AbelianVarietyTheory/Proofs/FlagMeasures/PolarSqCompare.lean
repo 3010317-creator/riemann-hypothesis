@@ -68,10 +68,10 @@ theorem sq_compare_left {T S N r s : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hN : 0 
 
   have hr2 : 0 < r ^ 2 := by positivity
   have hs : s < 1 := by linarith
-  have hsr : s * r ^ 2 < r ^ 2 := by nlinarith
-  have hS2 : 2 * S < r ^ 2 := by nlinarith
-  have hT2 : T ^ 2 < r ^ 2 := by nlinarith
-  have hTr : T < r := by nlinarith
+  have hsr : s * r ^ 2 < r ^ 2 := mul_lt_of_lt_one_left hr2 hs
+  have hS2 : 2 * S < r ^ 2 := by linarith [sq_nonneg T]
+  have hT2 : T ^ 2 < r ^ 2 := by linarith
+  have hTr : T < r := (sq_lt_sq₀ hT hr0.le).mp hT2
   have hN2 : N * N ≤ (T + S) * (T + S) := mul_self_le_mul_self hN h1
   have a1 : T * S ≤ r * S := mul_le_mul_of_nonneg_right hTr.le hS
   have a2 : r * (2 * S) ≤ r * r ^ 2 := mul_le_mul_of_nonneg_left hS2.le hr0.le
@@ -79,7 +79,7 @@ theorem sq_compare_left {T S N r s : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hN : 0 
   have a4 : r * r ^ 2 * r ≤ r * r ^ 2 * (1 / 2) :=
     mul_le_mul_of_nonneg_left hr1.le (by positivity)
   have a5 : 3 * r * r ^ 2 < (1 - s) * r ^ 2 := mul_lt_mul_of_pos_right hr hr2
-  nlinarith [mul_pos hr0 hr2]
+  linarith [mul_pos hr0 hr2]
 
 theorem sq_compare_right {T S N E r s : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hN : 0 ≤ N)
     (hr0 : 0 < r) (hr1 : r < 1 / 2) (hr : 11 * r < s - 1) (h1 : E ≤ N + S) (h2 : T ≤ 2 * E)
@@ -87,16 +87,16 @@ theorem sq_compare_right {T S N E r s : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hN :
     (h : N ^ 2 + 2 * S < r ^ 2) : T ^ 2 + 2 * S < s * r ^ 2 := by
 
   have hr2 : 0 < r ^ 2 := by positivity
-  have hS2 : 2 * S < r ^ 2 := by nlinarith
-  have hNr : N < r := by nlinarith
-  have hrr : r ^ 2 < r / 2 := by nlinarith [mul_pos hr0 (sub_pos.mpr hr1)]
+  have hS2 : 2 * S < r ^ 2 := by linarith [sq_nonneg N]
+  have hNr : N < r := (sq_lt_sq₀ hN hr0.le).mp (by linarith)
+  have hrr : r ^ 2 < r / 2 := by linarith [mul_pos hr0 (sub_pos.mpr hr1)]
   have hT3r : T ≤ 3 * r := by linarith
   have hTE : T - T ^ 3 / 16 ≤ E := h3 (by linarith)
   have hc1 : T * T ≤ 3 * r * (3 * r) := mul_self_le_mul_self hT hT3r
   have hc2 : T * T * T ≤ 3 * r * (3 * r) * (3 * r) := mul_le_mul hc1 hT3r hT (by positivity)
   have hr3 : r ^ 2 * r ≤ r ^ 2 * (1 / 2) := mul_le_mul_of_nonneg_left hr1.le (sq_nonneg r)
   have hb0 : 0 ≤ S + T ^ 3 / 16 := by positivity
-  have hb2 : S + T ^ 3 / 16 ≤ 2 * r ^ 2 := by nlinarith
+  have hb2 : S + T ^ 3 / 16 ≤ 2 * r ^ 2 := by linarith
   have hTNb : T ≤ N + (S + T ^ 3 / 16) := by linarith
   have hT2 : T * T ≤ (N + (S + T ^ 3 / 16)) * (N + (S + T ^ 3 / 16)) :=
     mul_self_le_mul_self hT hTNb
@@ -108,7 +108,7 @@ theorem sq_compare_right {T S N E r s : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hN :
   have a4 : r * r ^ 2 * r ≤ r * r ^ 2 * (1 / 2) :=
     mul_le_mul_of_nonneg_left hr1.le (by positivity)
   have a5 : 11 * r * r ^ 2 < (s - 1) * r ^ 2 := mul_lt_mul_of_pos_right hr hr2
-  nlinarith [mul_pos hr0 hr2]
+  linarith [mul_pos hr0 hr2]
 
 theorem polar_sq_compare : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)) (t : ℝ), 1 < t → ∀ᶠ r in 𝓝[>] (0 : ℝ), ∀ u : ℝ × Sp P' Q', u.1 ∈ Set.Ioo (-Real.pi) Real.pi → (tanSq u < (t⁻¹ * r) ^ 2 → ptSq e (polarPt e u) < r ^ 2) ∧ (ptSq e (polarPt e u) < r ^ 2 → tanSq u < (t * r) ^ 2) := by
   intro P Q P' Q' e t ht
@@ -116,8 +116,8 @@ theorem polar_sq_compare : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q')
   have hA : 0 < 1 - t⁻¹ ^ 2 := by
     have h1 : t⁻¹ < 1 := inv_lt_one_of_one_lt₀ ht
     have h2 : 0 < t⁻¹ := inv_pos.mpr ht0
-    nlinarith
-  have hB : 0 < t ^ 2 - 1 := by nlinarith
+    linarith [pow_lt_one₀ h2.le h1 two_ne_zero]
+  have hB : 0 < t ^ 2 - 1 := by linarith [one_lt_pow₀ ht two_ne_zero]
   have hc : 0 < min (1 / 2 : ℝ) (min ((1 - t⁻¹ ^ 2) / 3) ((t ^ 2 - 1) / 11)) :=
     lt_min (by norm_num) (lt_min (div_pos hA (by norm_num)) (div_pos hB (by norm_num)))
   filter_upwards [inter_mem_nhdsWithin (Set.Ioi (0 : ℝ)) (Iio_mem_nhds hc)] with r hr

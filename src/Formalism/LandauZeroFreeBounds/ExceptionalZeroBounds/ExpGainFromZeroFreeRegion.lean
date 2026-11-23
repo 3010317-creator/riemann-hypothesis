@@ -60,8 +60,8 @@ theorem perron_error_terms_sum_bound (C C₀ c₁ y T X L Pw Y ℓ : ℝ) (hc₁
       (2 * Real.pi * Real.exp 1 * (1 + C₀) + 6 * Real.exp 1 * (C + 1) +
         16 * (C / c₁ + 24 / c₁ ^ 2) + 8 / c₁) * Pw * (y * X + T * Y) := by
   have hT0 : 0 < T := by linarith
-  have hX0 : 0 < X := by nlinarith
-  have hX1 : X ≤ 1 := by nlinarith
+  have hX0 : 0 < X := pos_of_mul_pos_right (hTX ▸ one_pos) hT0.le
+  have hX1 : X ≤ 1 := by linarith [le_mul_of_one_le_left hX0.le hT1]
   have e1 : ∀ z : ℝ, z / T = z * X := fun z => by
     rw [div_eq_iff hT0.ne', mul_assoc, mul_comm X T, hTX, mul_one]
   have e2 : ∀ z : ℝ, z / T ^ 2 = z * X * X := fun z => by
@@ -80,7 +80,7 @@ theorem perron_error_terms_sum_bound (C C₀ c₁ y T X L Pw Y ℓ : ℝ) (hc₁
   have k3 : 0 ≤ 16 * (C / c₁ + 24 / c₁ ^ 2) := mul_nonneg (by norm_num) (add_nonneg hcC hc2)
   have h1 : 2 * Real.pi * ((ℓ + C₀) * (Real.exp 1 * y)) * X ≤
       2 * Real.pi * Real.exp 1 * (1 + C₀) * Pw * (y * X) := by
-    have hA : ℓ + C₀ ≤ (1 + C₀) * Pw := by nlinarith
+    have hA : ℓ + C₀ ≤ (1 + C₀) * Pw := by linarith [le_mul_of_one_le_right hC₀ hP1]
     have hk : 0 ≤ 2 * Real.pi * Real.exp 1 * (y * X) := mul_nonneg (by positivity) hyX
     have := mul_le_mul_of_nonneg_left hA hk
     linarith
@@ -105,10 +105,10 @@ theorem perron_error_terms_sum_bound (C C₀ c₁ y T X L Pw Y ℓ : ℝ) (hc₁
     have hid : Y * (8 * L / c₁) = 8 / c₁ * L * Y := by ring
     rw [hid]
     have s1 : 8 / c₁ * L ≤ 8 / c₁ * Pw := mul_le_mul_of_nonneg_left hLP h8
-    have s2 : Y ≤ T * Y := by nlinarith
+    have s2 : Y ≤ T * Y := le_mul_of_one_le_left hY hT1
     calc 8 / c₁ * L * Y ≤ 8 / c₁ * Pw * Y := mul_le_mul_of_nonneg_right s1 hY
       _ ≤ 8 / c₁ * Pw * (T * Y) := mul_le_mul_of_nonneg_left s2 (mul_nonneg h8 hPw)
-  nlinarith [mul_nonneg (mul_nonneg k1 hPw) hTY, mul_nonneg (mul_nonneg k2 hPw) hTY,
+  linarith [mul_nonneg (mul_nonneg k1 hPw) hTY, mul_nonneg (mul_nonneg k2 hPw) hTY,
     mul_nonneg (mul_nonneg k3 hPw) hyX, mul_nonneg (mul_nonneg h8 hPw) hyX]
 
 theorem exp_gain_from_zero_free_region (y s c₁ σ₁ L : ℝ) (hy0 : 0 < y) (hℓ : Real.log y = s ^ 2) (hs0 : 0 < s)
@@ -120,18 +120,18 @@ theorem exp_gain_from_zero_free_region (y s c₁ σ₁ L : ℝ) (hy0 : 0 < y) (h
   apply Real.exp_le_exp.mpr
   have h4L : 0 < 4 * L := by linarith
   have hq : c₁ ≤ c₁ / (4 * L) * s := by
-    rw [div_mul_eq_mul_div, le_div_iff₀ h4L]; nlinarith
+    rw [div_mul_eq_mul_div, le_div_iff₀ h4L]; exact mul_le_mul_of_nonneg_left hL4 hc₁.le
   have hc : c₁ ≤ (1 - σ₁) * s := by
-    nlinarith [mul_le_mul_of_nonneg_right (by linarith : c₁ / (4 * L) ≤ 1 - σ₁) hs0.le]
-  nlinarith [mul_le_mul_of_nonneg_right hc hs0.le]
+    linarith [mul_le_mul_of_nonneg_right (by linarith : c₁ / (4 * L) ≤ 1 - σ₁) hs0.le]
+  linarith [mul_le_mul_of_nonneg_right hc hs0.le]
 
 theorem small_scale_exp_bounds (c₁ s : ℝ) (hc₁ : 0 < c₁) (hc₁' : c₁ ≤ 1 / 20) (hs : s < 10) :
     Real.exp (c₁ * s / 2) ≤ 3 ∧ 1 ≤ 3 * Real.exp (-(c₁ / 4) * s) := by
   constructor
-  · have h : c₁ * s / 2 ≤ 1 := by nlinarith
+  · have h : c₁ * s / 2 ≤ 1 := by linarith [mul_lt_mul_of_pos_left hs hc₁]
     calc Real.exp (c₁ * s / 2) ≤ Real.exp 1 := Real.exp_le_exp.mpr h
       _ ≤ 3 := by have := Real.exp_one_lt_d9; norm_num at this; linarith
-  · have h : -(1 / 8 : ℝ) ≤ -(c₁ / 4) * s := by nlinarith
+  · have h : -(1 / 8 : ℝ) ≤ -(c₁ / 4) * s := by linarith [mul_lt_mul_of_pos_left hs hc₁]
     have := Real.add_one_le_exp (-(c₁ / 4) * s)
     linarith
 
@@ -162,7 +162,7 @@ theorem cube_mul_exp_le_poly_bound (c₁ s y X : ℝ) (hc₁ : 0 < c₁) (hs0 : 
     have hs3 : s ^ 3 = (8 / (2 * c₁)) ^ 3 * (c₁ * s / 4) ^ 3 := by
       rw [← mul_pow, ← hsu]
     rw [hs3]
-    nlinarith [mul_le_mul_of_nonneg_left hu3 hK]
-  nlinarith [mul_le_mul_of_nonneg_right key (mul_pos (Real.exp_pos (-(c₁ * s / 4))) hy0).le]
+    linarith [mul_le_mul_of_nonneg_left hu3 hK]
+  linarith [mul_le_mul_of_nonneg_right key (mul_pos (Real.exp_pos (-(c₁ * s / 4))) hy0).le]
 
 end Formalism.ZeroFreeDirichlet

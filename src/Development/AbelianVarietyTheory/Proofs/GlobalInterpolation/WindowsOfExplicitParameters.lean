@@ -80,13 +80,13 @@ theorem windows_scale_facts (eps ch : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (
     have e1 : s.w'' 1 = s.b' / s.x := by simp [Scale.w'']
     rw [e1, hPe] at hw1
     have : 0 ≤ s.x ^ ch * (s.x * s.x) := by positivity
-    nlinarith
-  have hxx : 36 ≤ s.x * s.x := by nlinarith
+    linarith [le_mul_of_one_le_right this hbh]
+  have hxx : 36 ≤ s.x * s.x := by linarith [mul_le_mul hx6 hx6 (by norm_num) hx0.le]
   have hdiv : s.b' / s.x ≤ s.b' := div_le_self hb'pos.le hxo
   have hbb : s.b' ≤ s.b := by
     rw [hPe] at hb'
-    have : 1 ≤ s.x ^ ch * (s.x * s.x) := by nlinarith
-    nlinarith
+    have : 1 ≤ s.x ^ ch * (s.x * s.x) := one_le_mul_of_one_le_of_one_le hP1 (by linarith)
+    linarith [le_mul_of_one_le_left hb'pos.le this]
   have hk : (R.k : ℝ) ≤ s.x ^ ch := by
     have : (R.k : ℝ) ≤ R.r := by exact_mod_cast hkr
     linarith
@@ -95,13 +95,13 @@ theorem windows_scale_facts (eps ch : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (
     unfold h0v
     push_cast
     linarith
-  refine ⟨by nlinarith, ?_, hbb, by nlinarith, ht, ?_⟩
+  refine ⟨by linarith [mul_le_mul_of_nonneg_left hxx (show 0 ≤ s.x ^ ch by linarith)], ?_, hbb, by linarith [le_mul_of_one_le_left (show 0 ≤ s.x * s.x by linarith) hP1], ht, ?_⟩
   · have a1 : (R.m : ℝ) * (h0v s ch : ℝ) ≤ s.x * (4 * s.x ^ ch) :=
       mul_le_mul hm hh (Nat.cast_nonneg _) hx0.le
     have a2 : s.x * (4 * s.x ^ ch) ≤ s.x ^ ch * (s.x * s.x) := by
       have : 0 ≤ s.x ^ ch * s.x * (s.x - 4) := by
         apply mul_nonneg (by positivity) (by linarith)
-      nlinarith
+      linarith
     linarith
   · have hn : (R.n : ℝ) ≤ s.x ^ (3 : ℝ) := by
       have : (R.n : ℝ) ≤ R.f := by
@@ -132,7 +132,7 @@ theorem ten_ceil_logb_le_Lwv (s : Scale) (y : ℝ) (hy0 : 0 ≤ y) (hy : y ≤ s
       · rw [← Real.log_rpow hx0]; exact Real.log_le_log h hy
     unfold Real.logb
     rw [div_le_iff₀ (by linarith)]
-    nlinarith
+    linarith [le_mul_of_one_le_right (mul_nonneg (by norm_num : (0 : ℝ) ≤ 405) hl) h5]
   have := Nat.ceil_mono key
   unfold Lwv
   omega
@@ -193,7 +193,7 @@ theorem windows_of_large_scale : ∀ eps cD ch C8 : ℝ, 0 < eps → eps < 1 / 5
     intro j
     have : (j.1 : ℝ) + 1 ≤ D.R.m := by exact_mod_cast j.2
     show _ ≤ (D.R.m : ℝ) * (h0v s ch : ℝ)
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right this (show (0 : ℝ) ≤ h0v s ch by linarith)]
   have hj0 : ∀ j : Fin D.R.m, 0 ≤ (j.1 : ℝ) * (h0v s ch : ℝ) := fun j => by positivity
   have hw : ∀ j, 1 ≤ j → j ≤ D.R.m → ∀ τ, (b1 τ : ℝ) + 1 ≤ wj D j τ ∧
       wj D j τ ≤ (b1 τ : ℝ) + η - (h0v s ch : ℝ) / 2 := by
@@ -254,12 +254,12 @@ theorem windows_of_large_scale : ∀ eps cD ch C8 : ℝ, 0 < eps → eps < 1 / 5
           have a3 : η ≤ s.b := hη
           linarith
         · have a1 := (hthinR τ ⟨(D.eTau τ).2, h1, h2⟩).2
-          have a2 : s.w'' D.R.n ≤ s.b' := div_le_self hb'pos.le (by nlinarith)
+          have a2 : s.w'' D.R.n ≤ s.b' := div_le_self hb'pos.le (by linarith [one_le_mul_of_one_le_of_one_le hx1.le hn1])
           linarith
     rw [hbR]
     have a1 := hjη j
     have a2 : η ≤ s.b := hη
-    nlinarith
+    linarith [mul_le_mul_of_nonneg_right hb6 (show 0 ≤ s.b by linarith)]
   · intro j h1 h2 τ h
     have a1 := hw j h1 h2 τ
     have a2 := hthickR τ h
@@ -280,7 +280,7 @@ theorem windows_of_large_scale : ∀ eps cD ch C8 : ℝ, 0 < eps → eps < 1 / 5
       ring
     have hS : 1 ≤ S := by
       show 1 ≤ (D.R.k : ℝ) * (4 * (Delv s cD : ℝ))
-      nlinarith
+      linarith [one_le_mul_of_one_le_of_one_le (show (1 : ℝ) ≤ D.R.k by linarith) (show (1 : ℝ) ≤ 4 * (Delv s cD : ℝ) by linarith)]
     rw [e1]
     constructor <;> linarith
   · intro τ i
@@ -309,7 +309,7 @@ theorem windows_of_large_scale : ∀ eps cD ch C8 : ℝ, 0 < eps → eps < 1 / 5
       rw [Finset.mem_range]
       have a3 : D.R.n0 ≤ D.R.n :=
         addOrderOf_le_card.trans (le_of_eq D.R.toFrame.natCard_A)
-      nlinarith
+      linarith [Nat.mul_le_mul_left a a2, Nat.mul_le_mul_right a a2, Nat.mul_le_mul_left D.R.n0 a2, Nat.mul_le_mul_right D.R.n0 a2]
     simpa using Finset.card_le_card hsub
 
 end GlobalTheory.EX
