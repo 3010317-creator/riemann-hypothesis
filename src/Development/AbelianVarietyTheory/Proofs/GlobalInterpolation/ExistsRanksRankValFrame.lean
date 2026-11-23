@@ -51,6 +51,9 @@ theorem exists_even_between (A : ℝ) (hA : 2 ≤ A) : ∃ m : ℕ, Even m ∧ A
   · have := Nat.ceil_lt_add_one (a := A / 2) (by linarith)
     push_cast; linarith
 
+/-- Given any frame `φ` and even integers `k`, `m` with `2 ≤ m ≤ 2 * φ.ord ≤ k` and `m + 3 ≤ k`,
+constructs a `Ranks` structure with `R.k = k` and `R.m = m`. In particular, the frame does not
+force `m ≈ √x`; the choice of `m` is made in `exists_ranks_rankVal_frame`. -/
 theorem exists_ranks_of_frame (φ : Formalism.HC.Frame) (k m T W : ℕ) (hk : Even k) (hm : Even m) (h2 : 2 ≤ m) (h3 : m + 3 ≤ k)
     (hmf : m ≤ 2 * φ.ord) (hfk : 2 * φ.ord ≤ k) :
     ∃ R : Ranks, R.toFrame = φ ∧ R.k = k ∧ R.m = m ∧ R.r + R.t = 8 * R.f * R.r + 4 + T * (8 * W) := by
@@ -72,6 +75,10 @@ theorem exists_ranks_of_frame (φ : Formalism.HC.Frame) (k m T W : ℕ) (hk : Ev
     rw [← hr, ← hf, mul_assoc 8 f r, ← hp, mul_left_comm T 8 W, ← hq]
     omega
 
+/-- Chooses the chain parameters `R : Ranks` satisfying `RankVal s R` at scale `s`: for
+`φ.ord ∈ [x^(2 + 8*eps), 2 * x^(2 + 8*eps)]`, picks even `m ≈ √(x * delta1)` (with
+`delta1 = x^(-eps / 8)`) and even `k ≈ x^(9/2 + 10*eps)` via `exists_even_between`, balancing
+the `x/m` and `m` error terms in the size bound. -/
 theorem exists_ranks_rankVal_frame : ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ s : Scale, s.eps = eps → x0 ≤ s.x →
     ∀ φ : Formalism.HC.Frame, s.x ^ (2 + 8 * s.eps) ≤ (φ.ord : ℝ) → (φ.ord : ℝ) ≤ 2 * s.x ^ (2 + 8 * s.eps) →
       ∃ R : Ranks, R.toFrame = φ ∧ RankVal s R := by

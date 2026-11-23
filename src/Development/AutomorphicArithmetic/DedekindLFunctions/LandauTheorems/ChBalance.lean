@@ -249,6 +249,10 @@ lemma askExp (D : ArithData H) {S0 : Finset ℕ} (hD : HostFactsS D S0) (a : ℝ
 
 end CharacterBalance
 
+/-- Exact Fourier-isolation identity: expanding the inert/ramified prime sum `ASK D N a t w` over
+the characters of `E0 × H` splits it into the main term `MAIN ell a w` (coming from the trivial
+character `ψ = 0` and the target colour character `chC`) plus the oscillatory character sum
+`De D ell a t w`. -/
 theorem ch_balance {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] (D : ArithData H) (S : Finset ℕ) (hD : HostFactsS D S)
     (ell : AddChar (E0 × H) ℂ → ℂ) (a : ℝ) (t : H) (w : E0 × H → ℝ) (ha : 0 < a) (hw : ∀ ρ, InPhi ρ → 0 < w ρ)
     (N : ℕ) (hN : ∀ ρ, InPhi ρ → a / w ρ ≤ N) : (ASK D N a t w : ℂ) - MAIN ell a w = De D ell a t w := by
