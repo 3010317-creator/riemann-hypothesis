@@ -600,12 +600,12 @@ theorem BlockResolutionFormsIndependent.proof (hND : NonvanishingDense.Statement
     exact this
   have hli : LinearIndependent ℤ fun k => aeval d.y (f k) := by
     have := hb.2.1
-    simp only [hbf, aeval_map_int] at this
+    simp only [hbf, SupBoundCount.aeval_map_int] at this
     exact this
   have hFc : Continuous F :=
     continuous_finsetSum _ fun k _ => continuous_const.mul (continuous_eval _)
 
-  have hev : ∀ (s : MRing ι) (e : K → ℕ), IsMultiHomog s e → ∀ (c : K → ℂ) (z : (Σ k, ι k) → ℂ),
+  have hev : ∀ (s : MRing ι) (e : K → ℕ), ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog s e → ∀ (c : K → ℂ) (z : (Σ k, ι k) → ℂ),
       eval (fun p => c p.1 * z p) (map (Int.castRingHom ℂ) s) =
         (∏ k, c k ^ e k) * eval z (map (Int.castRingHom ℂ) s) := by
     intro s e hs c z
@@ -733,7 +733,8 @@ noncomputable section
 
 namespace PointHeightFSAux
 
-abbrev fsOne : HermLine (GlobalTheory (Fin 1)) := HermLine.ofCone (fsMetric (ι := Ix (Fin 1)))
+abbrev fsOne : ReciprocityTheory.ChartRestriction.G.Geo.HermLine (GlobalTheory (Fin 1)) :=
+  ReciprocityTheory.ChartRestriction.G.Geo.HermLine.ofCone (fsMetric (ι := Ix (Fin 1)))
 
 abbrev x0 : MRing (GlobalTheory (Fin 1)) := X ⟨(), 0⟩
 
@@ -779,13 +780,13 @@ theorem PointHeightFS.proof : PointHeightFS.Statement := by
   intro I hI
   classical
   have hP : IsArithVar (⊥ : Ideal (MRing (GlobalTheory (Fin 1)))) (0 + 1) := IndefiniteRowSideFullHecke.Inter.isArithVar_bot 0
-  have hs : IsMultiHomog x0 fun _ => 1 := IndefiniteRowSideFullHecke.Inter.isMultiHomog_Xb 1 0
+  have hs : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog x0 fun _ => 1 := IndefiniteRowSideFullHecke.Inter.isMultiHomog_Xb 1 0
   have hx0 : x0 ∉ (⊥ : Ideal (MRing (GlobalTheory (Fin 1)))) := by
     rw [Ideal.mem_bot]
     exact X_ne_zero _
   have hR := (hI Unit (GlobalTheory (Fin 1))).2.2 ⊥ 0 Fin.elim0 fsOne x0 (fun _ => 1) hP (fun j => j.elim0)
     isSmoothHerm_fsOne (fun _ => rfl) hs hx0
-  have hL : (Fin.snoc (Fin.elim0 : Fin 0 → HermLine (GlobalTheory (Fin 1))) fsOne : Fin 1 → _) =
+  have hL : (Fin.snoc (Fin.elim0 : Fin 0 → ReciprocityTheory.ChartRestriction.G.Geo.HermLine (GlobalTheory (Fin 1))) fsOne : Fin 1 → _) =
       fun _ => fsOne := by
     funext j
     fin_cases j
@@ -1037,7 +1038,7 @@ theorem proof : ProjFrameGenPtTransc.Statement := by
     refine Finset.sum_congr rfl fun n _ => ?_
     rw [map_mul, map_pow, aeval_X, aeval_rename]
     exact congrArg (· * _) (hg n)
-  replace hFΓ : graphMap (coordIdeal ℤ x) (linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
+  replace hFΓ : graphMap (coordIdeal ℤ x) (ReciprocityTheory.ChartRestriction.G.AI.I4.linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
       (∑ n ∈ q.support, rename (fun p : Ix κ => aV D p.2) (g n) * X (bV κ 0) ^ n) = 0 := hFΓ
 
   rw [map_sum] at hFΓ
@@ -1095,9 +1096,9 @@ namespace ProjFrameImage
 variable {D : ℕ} {Ω : Type} [Field Ω] {κ : Type} [Fintype κ]
 
 theorem linForm_projMat (e : Fin (D + 1) → Ix κ) (k : Fin (D + 1)) :
-    linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e) ⟨(), k⟩ = X (e k) := by
+    ReciprocityTheory.ChartRestriction.G.AI.I4.linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e) ⟨(), k⟩ = X (e k) := by
   classical
-  simp only [linForm, projMat]
+  simp only [ReciprocityTheory.ChartRestriction.G.AI.I4.linForm, projMat]
   rw [Finset.sum_eq_single (e k).2]
   · simp
   · intro i _ hi
@@ -1110,7 +1111,7 @@ def coneEval (x : Ix κ → Ω) :
     (fun _a ha => (RingHom.mem_ker).1 ha)) (fun _ => 1)
 
 theorem coneEval_graphMap (x : Ix κ → Ω) (e : Fin (D + 1) → Ix κ) (f : MRing (GlobalTheory (Fin (D + 1)))) :
-    coneEval x (graphMap (coordIdeal ℤ x) (linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
+    coneEval x (graphMap (coordIdeal ℤ x) (ReciprocityTheory.ChartRestriction.G.AI.I4.linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
         (rename (inrV (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1)))) f)) =
       coneMap ℤ (x ∘ e) (rename (fun q : Σ _ : Unit, Fin (D + 1) => q.2) f) := by
   set_option synthInstance.maxHeartbeats 200000 in
@@ -1130,7 +1131,7 @@ open ProjFrameImage in
 theorem ProjFrameImage.proof : ProjFrameImage.Statement := by
   intro D Ω _ _ κ _ x e hP
   refine le_antisymm (fun f hf => ?_) bot_le
-  have h0 : graphMap (coordIdeal ℤ x) (linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
+  have h0 : graphMap (coordIdeal ℤ x) (ReciprocityTheory.ChartRestriction.G.AI.I4.linForm (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1))) (projMat e))
       (rename (inrV (ι := GlobalTheory κ) (ι₂ := GlobalTheory (Fin (D + 1)))) f) = 0 :=
     (RingHom.mem_ker).1 (Ideal.mem_comap.1 hf)
   have h1 : rename (fun q : Σ _ : Unit, Fin (D + 1) => q.2) f ∈ coordIdeal ℤ (x ∘ e) := by
@@ -1234,9 +1235,9 @@ noncomputable section
 variable {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} (F : Type) [Field F]
 
 theorem segreMap_monomial_isMultiHomog (d : ((_ : Unit) × ((k : K) → ι k)) →₀ ℕ) (a : F) :
-    IsMultiHomog (segreMap F (monomial d a))
+    NumbersDVR.IsMultiHomog (segreMap F (monomial d a))
       (fun _ => Finsupp.weight (blockWeight (fun _ : Unit => ∀ k, ι k)) d ()) := by
-  unfold IsMultiHomog
+  unfold NumbersDVR.IsMultiHomog
   rw [segreMap, aeval_monomial, algebraMap_eq, Finsupp.prod]
   refine IsWeightedHomogeneous.C_mul ?_ a
   have hX : ∀ v : (_ : Unit) × ((k : K) → ι k),
@@ -1327,7 +1328,7 @@ theorem prod_weights {n : ℕ} (q : ℝ) (s : Fin n → Fin 2) :
 theorem proof : ShiftIntersectionPolynomial.Statement := by
   intro K _ ι _ II P n A B hII hP hA hB
   have hI : IsIntersectionFamily (II K ι) := hII K ι
-  set e : Fin 2 → HermLine ι := ![A, B] with he_def
+  set e : Fin 2 → ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι := ![A, B] with he_def
   have he : ∀ i, IsSmoothHerm (e i) := by
     intro i
     rcases Fin.exists_fin_two.mp ⟨i, rfl⟩ with h | h <;> rw [h] <;> simpa [e]
@@ -1353,9 +1354,9 @@ theorem proof : ShiftIntersectionPolynomial.Statement := by
     · intro h
       exact absurd (Finset.mem_univ _) h
   · intro q
-    set Z := HermLine.zcomb A B (q : ℤ) 1 with hZ_def
+    set Z := GroundTheory.Heights₂.Heights.HilbertSamuel.HermLine.zcomb A B (q : ℤ) 1 with hZ_def
     have hZ : IsSmoothHerm Z := ZCombLimit.isSmoothHerm_zcomb_int hA hB _ _
-    have hposition : ∀ (L : Fin n → HermLine ι) (a : Fin n), (∀ j, IsSmoothHerm (L j)) →
+    have hposition : ∀ (L : Fin n → ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι) (a : Fin n), (∀ j, IsSmoothHerm (L j)) →
         II K ι P n (Function.update L a Z) =
           (![(q : ℝ), 1] : Fin 2 → ℝ) 0 * II K ι P n (Function.update L a (e 0)) +
             (![(q : ℝ), 1] : Fin 2 → ℝ) 1 * II K ι P n (Function.update L a (e 1)) := by
@@ -1409,7 +1410,7 @@ theorem regularityLocalDimension_holds.proof (hF : LocRingFrac.Statement) (hL : 
   have := hnoeth
   refine ⟨hloc, hnoeth, ?_⟩
   choose c hc using hW.2
-  have ht : IsMultiHomog (∏ k, (X ⟨k, c k⟩ : MRing ι) ^ a k) a := AvoidRing.isMultiHomog_coordProd c a
+  have ht : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (∏ k, (X ⟨k, c k⟩ : MRing ι) ^ a k) a := AvoidRing.isMultiHomog_coordProd c a
   have htW : (∏ k, (X ⟨k, c k⟩ : MRing ι) ^ a k) ∉ W := AvoidRing.coordProd_not_mem hWp c hc a
   have htP : Ideal.Quotient.mk P (∏ k, (X ⟨k, c k⟩ : MRing ι) ^ a k) ∈ nonZeroDivisors (MRing ι ⧸ P) :=
     mem_nonZeroDivisors_of_ne_zero fun h => htW (hPW (Ideal.Quotient.eq_zero_iff_mem.mp h))
