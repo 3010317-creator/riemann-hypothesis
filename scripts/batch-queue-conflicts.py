@@ -5,14 +5,16 @@ The batch-queue workflow runs this from its trusted checkout. Pull request commi
 as git objects and compared with `git merge-tree`. Nothing from a pull request is checked out
 or run, and the only thing written to GitHub is one comment on the pull request being checked.
 
-This finds pull requests that edit the same lines. It cannot tell whether pull requests that
-merge cleanly also build together.
+This finds pull requests that edit the same lines, and pairs of which one deletes a Lean file
+that the other starts to import. It cannot tell whether pull requests that pass both checks also
+build together.
 """
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -31,6 +33,12 @@ MERGE_LIMIT = 5000
 RENAME_LIMIT = 2000
 # Most file names listed for one pull request in the report.
 LISTED = 10
+# Lean modules live under this directory: the module `A.B` is the file `src/A/B.lean`.
+SOURCE, LEAN = b"src/", b".lean"
+# Most changed Lean files whose import lines are read for one pull request.
+IMPORT_LIMIT = 5000
+# One line of a Lean file's import header, as scripts/quick-check.py reads it.
+IMPORT = re.compile(r"(?:public\s+)?(?:meta\s+)?import(?:\s+all)?\s+([\w']+(?:\.[\w']+)*)")
 
 
 def run(args, *, data=None, ok=(0,)):
@@ -59,6 +67,10 @@ class Comparison:
         self.shared = list(shared)  # files both change
         self.conflicts = list(conflicts)  # files git cannot merge
         self.note = note
+        # (who deletes, deleted file, importing file): a Lean file that one of the two deletes
+        # and the other starts to import. "ours" is the pull request being checked.
+        self.stale = []
+        self.unread = False  # too many changed files to read one side's import lines
 
 
 def changed(repo, base, head):
@@ -67,18 +79,31 @@ def changed(repo, base, head):
     return {path for path in out.split(b"\0") if path}
 
 
+def blob_ids(repo, commit, paths):
+    """The blob of each of `paths` that exists at `commit`, as {path: id}. Reads trees only."""
+    found = {}
+    paths = sorted(paths)
+    for start in range(0, len(paths), 200):
+        chunk = paths[start:start + 200]
+        _, out = git(repo, "--literal-pathspecs", "ls-tree", "-r", "-z", commit, "--", *chunk)
+        for entry in out.split(b"\0"):
+            meta, _, path = entry.partition(b"\t")
+            meta = meta.split()
+            if len(meta) == 3 and meta[1] == b"blob":
+                found[path] = meta[2]
+    return found
+
+
 def fetch_blobs(repo, commits, paths):
     """Fetch the contents of `paths` at `commits` in one request, for a clone without blobs."""
     wanted = set()
-    paths = sorted(paths)
     for commit in commits:
-        for start in range(0, len(paths), 200):
-            chunk = paths[start:start + 200]
-            _, out = git(repo, "--literal-pathspecs", "ls-tree", "-r", "-z", commit, "--", *chunk)
-            for entry in out.split(b"\0"):
-                meta = entry.split(b"\t", 1)[0].split()
-                if len(meta) == 3 and meta[1] == b"blob":
-                    wanted.add(meta[2])
+        wanted.update(blob_ids(repo, commit, paths).values())
+    fetch_ids(repo, wanted)
+
+
+def fetch_ids(repo, wanted):
+    """Fetch blobs by id in one request."""
     if wanted:
         git(repo, "fetch", "--quiet", "--no-tags", "--no-write-fetch-head", "--recurse-submodules=no",
             "--filter=blob:none", "--stdin", "origin", data=b"\n".join(sorted(wanted)) + b"\n",
@@ -113,6 +138,133 @@ def compare(repo, base, ours, theirs, *, ours_fork=None, theirs_fork=None,
     # a file only one of the two changed is a conflict with main, which GitHub already shows.
     conflicts = sorted({path for path in out.split(b"\0")[1:] if path} & set(shared)) if code else []
     return Comparison("conflict" if conflicts else "clean", shared, conflicts)
+
+
+# ---------------------------------------------------------------------------------------------
+# A Lean file that one pull request deletes and another starts to import. git merges the two
+# without conflict, because they change different files, and the result does not build.
+
+
+def lean_files(repo, fork, head, status):
+    """Lean files under SOURCE that a pull request deletes ("D") or adds or edits ("AM")."""
+    _, out = git(repo, "diff", "--name-only", "--no-renames", f"--diff-filter={status}", "-z", fork, head)
+    return {path for path in out.split(b"\0") if path.startswith(SOURCE) and path.endswith(LEAN)}
+
+
+def imports(contents):
+    """The files that a Lean file's import header names, as paths under SOURCE.
+
+    Only the header is read. It ends at the first line that is not blank, a comment, `module`,
+    `prelude` or an import.
+    """
+    found, depth = set(), 0
+    for raw in contents.decode("utf-8", "replace").split("\n"):
+        kept, at = [], 0
+        while at < len(raw):
+            if raw.startswith("/-", at):
+                depth, at = depth + 1, at + 2
+            elif depth and raw.startswith("-/", at):
+                depth, at = depth - 1, at + 2
+            elif depth:
+                at += 1
+            elif raw.startswith("--", at):
+                break
+            else:
+                kept.append(raw[at])
+                at += 1
+        line = "".join(kept).strip()
+        if not line or line in ("module", "prelude"):
+            continue
+        match = IMPORT.fullmatch(line)
+        if not match:
+            break
+        found.add(SOURCE + match[1].replace(".", "/").encode() + LEAN)
+    return found
+
+
+def read_blobs(repo, ids):
+    """The contents of blobs that are already here, as {id: contents}, from one git process."""
+    ids = sorted(set(ids))
+    if not ids:
+        return {}
+    _, out = git(repo, "cat-file", "--batch", data=b"\n".join(ids) + b"\n")
+    found, at = {}, 0
+    for wanted in ids:
+        end = out.index(b"\n", at)
+        header = out[at:end].split()
+        at = end + 1
+        if len(header) == 3:  # "<id> <type> <size>"; a blob that is not here gives "<id> missing"
+            size = int(header[2])
+            found[wanted] = out[at:at + size]
+            at += size + 1
+    return found
+
+
+def added_imports(repo, fork, head, *, limit=IMPORT_LIMIT):
+    """What a pull request starts to import, as {file it adds or edits: files newly imported}.
+
+    An import that the file already had where the pull request left main is not new. Returns
+    None if the pull request adds or edits more than `limit` Lean files. In a clone without
+    blobs, `prefetch_imports` fetches what this reads.
+    """
+    paths = lean_files(repo, fork, head, "AM")
+    if len(paths) > limit:
+        return None
+    before, after = blob_ids(repo, fork, paths), blob_ids(repo, head, paths)
+    contents = read_blobs(repo, [*before.values(), *after.values()])
+    found = {}
+    for path in paths:
+        new = imports(contents.get(after.get(path), b"")) - imports(contents.get(before.get(path), b""))
+        if new:
+            found[path] = new
+    return found
+
+
+def compare_imports(repo, result, ours_fork, ours, theirs_fork, theirs, *,
+                    seen=None, limit=IMPORT_LIMIT):
+    """Record in `result` the Lean files that one side deletes and the other starts to import.
+
+    `seen` keeps what was read for each pull request, so that checking one pull request against
+    many others reads its files once. Import lines are only read when the other side deletes
+    a Lean file.
+    """
+    seen = {} if seen is None else seen
+
+    def once(kind, fork, head, read):
+        if (kind, fork, head) not in seen:
+            seen[kind, fork, head] = read()
+        return seen[kind, fork, head]
+
+    sides = (("ours", (ours_fork, ours), (theirs_fork, theirs)),
+             ("theirs", (theirs_fork, theirs), (ours_fork, ours)))
+    for who, deleter, importer in sides:
+        gone = once("deleted", *deleter, lambda: lean_files(repo, *deleter, "D"))
+        if not gone:
+            continue
+        new = once("imports", *importer, lambda: added_imports(repo, *importer, limit=limit))
+        if new is None:
+            result.unread = True
+            continue
+        result.stale += sorted((who, target, path)
+                               for path, targets in new.items() for target in targets & gone)
+    return result
+
+
+def prefetch_imports(repo, ours, others, *, limit=IMPORT_LIMIT):
+    """For a clone without blobs: fetch, in one request, every file `compare_imports` will read.
+
+    `ours` and each of `others` are (fork, head) pairs. A pull request's files are read only if
+    the other side of some comparison deletes a Lean file, which is known from the trees alone.
+    """
+    readers = list(others) if lean_files(repo, *ours, "D") else []
+    if any(lean_files(repo, *pair, "D") for pair in others):
+        readers.append(ours)
+    wanted = set()
+    for fork, head in readers:
+        paths = lean_files(repo, fork, head, "AM")
+        if len(paths) <= limit:
+            wanted.update(blob_ids(repo, fork, paths).values(), blob_ids(repo, head, paths).values())
+    fetch_ids(repo, wanted)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -182,15 +334,21 @@ def survey(repo, number, work):
         f"+refs/heads/{main}:refs/remotes/origin/{main}", head, *sorted({pulls[other][0] for other in others}))
     trunk = f"refs/remotes/origin/{main}"
     fork = merge_base(work, trunk, head)
+    forks = {other: merge_base(work, trunk, pulls[other][0]) for other in others}
+    seen = {}
+    if fork:
+        prefetch_imports(work, (fork, head),
+                         [(forks[other], pulls[other][0]) for other in others if forks[other]])
     for other in others:
         theirs = pulls[other][0]
-        base, theirs_fork = merge_base(work, head, theirs), merge_base(work, trunk, theirs)
+        base, theirs_fork = merge_base(work, head, theirs), forks[other]
         if None in (fork, base, theirs_fork):
             results[other] = Comparison("unknown", note="no common ancestor")
             continue
         try:
             results[other] = compare(work, base, head, theirs, ours_fork=fork, theirs_fork=theirs_fork,
                                      partial=True)
+            compare_imports(work, results[other], fork, head, theirs_fork, theirs, seen=seen)
         except RuntimeError as error:
             results[other] = Comparison("unknown", note=str(error))
     return head, others, results
@@ -236,6 +394,28 @@ def report(number, head, others, results):
         lines += ["", "It does not merge cleanly with:", ""]
         lines += [f"- #{other} (`{label}`): {count(len(result.conflicts), 'file')} in conflict: "
                   f"{listing(result.conflicts)}" for other, label, result in conflicts]
+    stale = [(other, others[other], results[other]) for other in sorted(results) if results[other].stale]
+    if stale:
+        lines += ["", "git merges these without conflict, but one deletes a Lean file that the other "
+                      "starts to import:", ""]
+        for other, label, result in stale:
+            said = []
+            for who, deleter, importer in (("ours", number, other), ("theirs", other, number)):
+                users = {}
+                for side, target, path in result.stale:
+                    if side == who:
+                        users.setdefault(target, []).append(path)
+                said += [f"#{deleter} deletes {show(target)}, "
+                         f"which #{importer} starts to import in {listing(paths)}"
+                         for target, paths in sorted(users.items())]
+            more = len(said) - LISTED
+            lines.append(f"- #{other} (`{label}`): " + "; ".join(said[:LISTED])
+                         + (f"; and {more:,} more" if more > 0 else ""))
+    unread = [(other, others[other]) for other in sorted(results) if results[other].unread]
+    if unread:
+        lines += ["", "Import lines were not read for these, because one side changes more than "
+                      f"{IMPORT_LIMIT:,} Lean files:", ""]
+        lines += [f"- #{other} (`{label}`)" for other, label in unread]
     if too_many:
         lines += ["", "It shares too many files with these for a trial merge here:", ""]
         lines += [f"- #{other} (`{label}`): {count(len(result.shared), 'file')} changed by both"
@@ -250,9 +430,9 @@ def report(number, head, others, results):
     apart = rows("apart")
     if apart:
         lines += ["", "It has no file in common with " + ", ".join(f"#{other}" for other, _, _ in apart) + "."]
-    lines += ["", f"This compares text only, at `{head[:10]}`. "
-                  "Pull requests that merge cleanly can still fail to build together."]
-    return "\n".join(lines) + "\n", bool(conflicts or too_many or unknown)
+    lines += ["", f"This compares text, and new imports against deleted Lean files, at `{head[:10]}`. "
+                  "Pull requests that pass both can still fail to build together."]
+    return "\n".join(lines) + "\n", bool(conflicts or stale or unread or too_many or unknown)
 
 
 def publish(repo, number, body, needed):
