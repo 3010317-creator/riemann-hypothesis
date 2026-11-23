@@ -394,7 +394,7 @@ theorem auxiliaryFrames_standard : Std (GlobalTheory.AscInh.auxiliaryFrames G) :
     aJ ρ h := rfl
   }
 
-theorem exists_std_frames : All fun {_} _ _ _ {G} _ _ => ∃ F : Frames G, Std F :=
+theorem exists_std_frames : All fun {_} _ _ _ {G} _ _ => ∃ F : GlobalTheory.Asc.Frames G, Std F :=
   fun _ _ _ _ _ _ _ G _ _ _ => ⟨_, auxiliaryFrames_standard G⟩
 
 end GlobalTheory.AscFin
@@ -417,7 +417,7 @@ open GlobalTheory.FinPl (Lat idAt idOff intAt grpAt grpOff MxAt latV latA InK Mo
 open scoped nonZeroDivisors ContDiff
 open GlobalTheory.AscFin
 
-theorem _root_.GlobalTheory.T.exists_standardAuxiliaryFrames_allRowGrids : All fun {_} _ _ _ {G} _ _ => ∃ F : Frames G, Std F := by
+theorem _root_.GlobalTheory.T.exists_standardAuxiliaryFrames_allRowGrids : All fun {_} _ _ _ {G} _ _ => ∃ F : GlobalTheory.Asc.Frames G, Std F := by
   first | exact @GlobalTheory.AscFin.exists_std_frames | exact GlobalTheory.AscFin.exists_std_frames | (intros; apply GlobalTheory.AscFin.exists_std_frames <;> assumption)
 end -- clump:auto
 end -- clump:auto
@@ -792,7 +792,7 @@ theorem top_gen {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData 
   rw [per_conj W d o ζ hN hE hψ vA.μ vA.𝓕 vN.ν vN.𝓝 (φ D.R.m) (f D.R.m)]
   exact (congrArg (starRingEnd ℂ) hrr').trans (map_zero _)
 
-theorem ends : All fun {_} _ _ _ {G} W M => ∀ (v : CoreVol G) (F : Frames G), Std F → F.Ends v W M := by
+theorem ends : All fun {_} _ _ _ {G} W M => ∀ (v : CoreVol G) (F : GlobalTheory.Asc.Frames G), Std F → F.Ends v W M := by
   intro D _ T L μ0 _ sc G W M hM v F hF
   refine ⟨fun h => (embRel_iff _ h _).1 (F.oz.embRel_left _ hF.zA.symm h), fun ρ h he φ f hφ hf hne => ?_⟩
   refine top_gen W M hM (2 * ρ + 2) ρ he rfl (by omega) h (F.dB ρ h) (F.oB ρ h) (F.ζ (ρ + 1))
@@ -819,7 +819,7 @@ open GlobalTheory.FinPl (Lat idAt idOff intAt grpAt grpOff MxAt latV latA InK Mo
 open scoped nonZeroDivisors ContDiff
 open GlobalTheory.AscFin
 
-theorem _root_.GlobalTheory.T.standardAuxiliaryFrames_fit_grid_ends : All fun {_} _ _ _ {G} W M => ∀ (v : CoreVol G) (F : Frames G), Std F → F.Ends v W M := by
+theorem _root_.GlobalTheory.T.standardAuxiliaryFrames_fit_grid_ends : All fun {_} _ _ _ {G} W M => ∀ (v : CoreVol G) (F : GlobalTheory.Asc.Frames G), Std F → F.Ends v W M := by
   first | exact @GlobalTheory.AscFin.EndsPf.ends | exact GlobalTheory.AscFin.EndsPf.ends | (intros; apply GlobalTheory.AscFin.EndsPf.ends <;> assumption)
 end -- clump:auto
 end -- clump:auto
