@@ -101,7 +101,7 @@ private lemma finrank_ker_toLin'_add_rank_eq_card {L : Type} [Field L] {n : Type
   have h := LinearMap.finrank_range_add_finrank_ker (Matrix.toLin' A)
   rw [Matrix.toLin'_apply'] at h ⊢
   rw [Module.finrank_pi] at h
-  unfold Matrix.rank
+  rw [← Matrix.finrank_range_mulVecLin]
   omega
 
 theorem eigDim_ker_map {K L : Type} [Field K] [Field L] (φ : K →+* L) {n : Type} [Fintype n]

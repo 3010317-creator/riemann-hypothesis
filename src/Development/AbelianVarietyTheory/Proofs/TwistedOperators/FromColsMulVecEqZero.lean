@@ -105,12 +105,12 @@ theorem mulVec_surjective {n r m : ℕ} {G : Matrix (Fin n) (Fin n) E} (hG : G�
     have h3 := fromCols_mulVec_eq_zero hG hC hBB hCB _ h2
     simpa using congrArg star h3
   have hr : Mᵀ.rank = Fintype.card (Fin r ⊕ Fin m) := by
-    rw [Matrix.rank, LinearMap.finrank_range_of_inj hinj, Module.finrank_fintype_fun_eq_card]
+    rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hinj, Module.finrank_fintype_fun_eq_card]
   rw [Matrix.rank_transpose] at hr
   rw [← LinearMap.range_eq_top]
   apply Submodule.eq_top_of_finrank_eq
   rw [Module.finrank_fintype_fun_eq_card, ← hr]
-  rfl
+  exact Matrix.finrank_range_mulVecLin _
 
 theorem exists_dual {n r m : ℕ} {G : Matrix (Fin n) (Fin n) E} (hG : Gᴴ = G) (hGd : G.det ≠ 0)
     {C : Matrix (Fin n) (Fin r) E} {B : Matrix (Fin n) (Fin m) E} (hC : LinearIndependent E Cᵀ)

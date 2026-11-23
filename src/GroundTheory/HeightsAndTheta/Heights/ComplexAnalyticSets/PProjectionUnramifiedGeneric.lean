@@ -180,7 +180,7 @@ theorem proof : ProjectionUnramifiedGeneric.Statement := by
     have := congrFun hc j
     simpa [M, Matrix.mulVec, dotProduct, D] using this
   have hrank : M.rank = Fintype.card β := by
-    rw [Matrix.rank, LinearMap.finrank_range_of_inj hMinj, Module.finrank_fintype_fun_eq_card]
+    rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hMinj, Module.finrank_fintype_fun_eq_card]
   obtain ⟨I, J, hIJ⟩ := GroundTheory.Heights₂.Theta.SplitLinear.exists_minor_ne_zero M hrank.ge
   have hJinj : Function.Injective J := by
     intro x x' hxx'

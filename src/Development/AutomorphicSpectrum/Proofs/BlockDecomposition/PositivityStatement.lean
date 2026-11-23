@@ -137,7 +137,7 @@ theorem card_lker (M : Matrix (Fin n) (Fin n) k) :
     Fintype.card k ^ (n - M.rank) = Nat.card {x : Fin n → k // x ᵥ* M = 0} := by
   have h1 := LinearMap.finrank_range_add_finrank_ker (Mᵀ.mulVecLin)
   have h2 : Module.finrank k (LinearMap.range Mᵀ.mulVecLin) = M.rank := by
-    rw [← Matrix.rank_transpose M]; rfl
+    rw [Matrix.finrank_range_mulVecLin, Matrix.rank_transpose]
   rw [h2, Module.finrank_fin_fun] at h1
   have h3 : n - M.rank = Module.finrank k (LinearMap.ker Mᵀ.mulVecLin) := by omega
   have h4 := Module.natCard_eq_pow_finrank (K := k) (V := LinearMap.ker Mᵀ.mulVecLin)

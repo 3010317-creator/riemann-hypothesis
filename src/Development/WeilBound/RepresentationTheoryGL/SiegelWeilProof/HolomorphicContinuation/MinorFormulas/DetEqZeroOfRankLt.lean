@@ -115,7 +115,7 @@ theorem rank_lt_of_minors {n : ℕ} (M : Matrix (Fin n) (Fin n) K) {k : ℕ}
   exact hIJ (h I J)
 
 theorem rank_add_le' {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) : (A + B).rank ≤ A.rank + B.rank := by
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   rw [Matrix.mulVecLin_add]
   calc finrank K (LinearMap.range (A.mulVecLin + B.mulVecLin))
       ≤ finrank K ↥(LinearMap.range A.mulVecLin ⊔ LinearMap.range B.mulVecLin : Submodule K (Fin n → K)) :=

@@ -192,7 +192,7 @@ theorem isoIdem : ∀ (E : Type) [Field E] [StarRing E] (r : ℕ) (A₀ : Matrix
     · rw [add_mul, mul_add, mul_add, hff, hfg, hgf, hgg]; abel
     · rw [star_add, add_mul, mul_add, mul_add, hfs, hfsg, hgsf, hgs]; abel
   have hrank : f.rank < (f + g).rank := by
-    unfold Matrix.rank
+    simp only [← Matrix.finrank_range_mulVecLin]
     apply Submodule.finrank_lt_finrank_of_lt
     rw [SetLike.lt_iff_le_and_exists]
     constructor

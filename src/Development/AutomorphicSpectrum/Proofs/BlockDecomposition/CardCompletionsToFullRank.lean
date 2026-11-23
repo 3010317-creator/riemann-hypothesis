@@ -64,7 +64,7 @@ variable {k : Type} [Field k]
 theorem rank_fromCols_eq_iff {n : ℕ} (C D : Matrix (Fin n) (Fin n) k) :
     (Matrix.fromCols C D).rank = n ↔ ∀ y : Fin n → k, y ᵥ* C = 0 → y ᵥ* D = 0 → y = 0 := by
   have h1 : (Matrix.fromCols C D).rank = Module.finrank k (LinearMap.range (Matrix.fromCols C D)ᵀ.mulVecLin) := by
-    rw [← Matrix.rank_transpose]; rfl
+    rw [Matrix.finrank_range_mulVecLin, Matrix.rank_transpose]
   have h2 := LinearMap.finrank_range_add_finrank_ker (Matrix.fromCols C D)ᵀ.mulVecLin
   rw [← h1, Module.finrank_fin_fun] at h2
   constructor
@@ -90,7 +90,7 @@ theorem rank_fromCols_eq_iff {n : ℕ} (C D : Matrix (Fin n) (Fin n) k) :
 theorem finrank_leftKer {n : ℕ} (D : Matrix (Fin n) (Fin n) k) :
     Module.finrank k (LinearMap.ker Dᵀ.mulVecLin) = n - D.rank := by
   have h1 : D.rank = Module.finrank k (LinearMap.range Dᵀ.mulVecLin) := by
-    rw [← Matrix.rank_transpose]; rfl
+    rw [Matrix.finrank_range_mulVecLin, Matrix.rank_transpose]
   have h2 := LinearMap.finrank_range_add_finrank_ker Dᵀ.mulVecLin
   rw [← h1, Module.finrank_fin_fun] at h2
   omega

@@ -97,7 +97,7 @@ theorem embeddings_eval_onto (L : Type) [Field L] [NumberField L] (K : Type) [Fi
   have hrank : M.rank = Fintype.card (L →+* K) := hrow.rank_matrix
   have htop : LinearMap.range M.mulVecLin = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank, hrank, Module.finrank_fintype_fun_eq_card]
+    rw [Matrix.finrank_range_mulVecLin, hrank, Module.finrank_fintype_fun_eq_card]
   have hz : z ∈ LinearMap.range M.mulVecLin := by rw [htop]; trivial
   obtain ⟨y, hy⟩ := hz
   refine ⟨y, fun σ => ?_⟩

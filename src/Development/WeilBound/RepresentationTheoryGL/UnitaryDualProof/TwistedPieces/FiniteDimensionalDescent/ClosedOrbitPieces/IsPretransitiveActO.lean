@@ -222,7 +222,7 @@ theorem rank_add_of_orth {e f : Matrix (Fin N) (Fin N) k} (he : IsIdempotentElem
     rw [hu, ← hw, Matrix.mulVec_mulVec, hef, Matrix.zero_mulVec]
   have h := Submodule.finrank_sup_add_finrank_inf_eq (LinearMap.range e.mulVecLin) (LinearMap.range f.mulVecLin)
   rw [hinf, finrank_bot, add_zero, ← hsup] at h
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   exact h
 
 theorem rank_sum_orth {ι : Type*} [DecidableEq ι] (e : ι → Matrix (Fin N) (Fin N) k) (he : ∀ t, IsIdempotentElem (e t))

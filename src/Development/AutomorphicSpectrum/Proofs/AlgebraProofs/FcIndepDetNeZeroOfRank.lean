@@ -58,7 +58,7 @@ theorem fcIndep_det_ne_zero_of_rank {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) (
   have hs : Function.Surjective B.mulVecLin := by
     rw [← LinearMap.range_eq_top]
     apply Submodule.eq_top_of_finrank_eq
-    simpa [Matrix.rank] using h
+    simpa [← Matrix.finrank_range_mulVecLin] using h
   have hu : IsUnit B := Matrix.mulVec_surjective_iff_isUnit.mp hs
   exact ((Matrix.isUnit_iff_isUnit_det B).mp hu).ne_zero
 

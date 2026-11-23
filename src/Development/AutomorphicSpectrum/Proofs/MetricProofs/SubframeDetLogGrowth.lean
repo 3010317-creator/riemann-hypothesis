@@ -150,7 +150,7 @@ theorem subframe_gram_posDef (F : Matrix (Fin g) (Fin k) ℂ) (h : F.rank = k) :
     have he : F.map star = (Fᴴ)ᵀ := by
       ext i j; simp [Matrix.conjTranspose_apply]
     rw [he, Matrix.rank_transpose, Matrix.rank_conjTranspose, h]
-  have hr' : Module.finrank ℂ (LinearMap.range (F.map star).mulVecLin) = k := hr
+  have hr' : Module.finrank ℂ (LinearMap.range (F.map star).mulVecLin) = k := by simpa only [Matrix.finrank_range_mulVecLin] using hr
   have hsum := LinearMap.finrank_range_add_finrank_ker (F.map star).mulVecLin
   rw [Module.finrank_fin_fun, hr'] at hsum
   have hker0 : Module.finrank ℂ (LinearMap.ker (F.map star).mulVecLin) = 0 := by omega

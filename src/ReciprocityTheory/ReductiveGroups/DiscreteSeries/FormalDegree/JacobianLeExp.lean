@@ -244,7 +244,7 @@ private theorem pmat_eq_zero_of_sign_eq {ε : Fin n → Bool} (z : PCoord ε →
 
 private theorem matrix_rank_add_le' (P Q : Matrix (Fin n) (Fin n) ℂ) :
     (P + Q).rank ≤ P.rank + Q.rank := by
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   have hle : LinearMap.range (P + Q).mulVecLin
       ≤ LinearMap.range P.mulVecLin ⊔ LinearMap.range Q.mulVecLin := by
     rintro _ ⟨v, rfl⟩

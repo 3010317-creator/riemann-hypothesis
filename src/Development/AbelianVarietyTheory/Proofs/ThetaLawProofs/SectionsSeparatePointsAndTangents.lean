@@ -182,7 +182,7 @@ theorem exists_rows_det_ne_zero {K m : Type} [Field K] [Fintype m] {g : ℕ} (M 
   have hr : M.rank = g := by
     have h1 := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
     rw [LinearMap.ker_eq_bot'.2 h, finrank_bot, add_zero, Module.finrank_fin_fun] at h1
-    exact h1
+    simpa only [Matrix.finrank_range_mulVecLin] using h1
   have hκ : Fintype.card κ = g := by
     rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row, hr]
   let e : Fin g ≃ κ := (Fintype.equivFinOfCardEq hκ).symm

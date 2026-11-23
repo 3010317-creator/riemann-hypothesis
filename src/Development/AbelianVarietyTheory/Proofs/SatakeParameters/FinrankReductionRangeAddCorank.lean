@@ -103,6 +103,7 @@ theorem finrank_range_reduction (O K : Type) [CommRing O] [IsDomain O] [IsDiscre
   have h6 : (A.map r).rank = n - j := by
     rw [h4]
     convert h5
+  rw [Matrix.finrank_range_mulVecLin]
   change (A.map r).rank + j = n
   omega
 

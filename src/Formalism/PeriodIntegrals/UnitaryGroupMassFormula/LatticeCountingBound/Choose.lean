@@ -110,7 +110,7 @@ lemma basis_range (A : Matrix (Fin n) (Fin n) K) (k : ℕ) (hk : A.rank = k) :
     ∃ z : Fin k → Fin n → K, LinearIndependent K (fun c => A *ᵥ z c) ∧
       ∀ w, A *ᵥ w ∈ Submodule.span K (Set.range fun c => A *ᵥ z c) := by
   let R := LinearMap.range A.mulVecLin
-  let bas := Module.finBasisOfFinrankEq K R hk
+  let bas := Module.finBasisOfFinrankEq K R (by simpa only [R, Matrix.finrank_range_mulVecLin] using hk)
   have hz : ∀ c, ∃ z, A *ᵥ z = (bas c : Fin n → K) := fun c => by
     obtain ⟨z, hz⟩ := LinearMap.mem_range.mp (bas c).2
     exact ⟨z, by simpa using hz⟩
@@ -129,7 +129,7 @@ lemma basis_range (A : Matrix (Fin n) (Fin n) K) (k : ℕ) (hk : A.rank = k) :
 lemma rank_pos (δ : Matrix (Fin n) (Fin n) K) (hδ : δ ≠ 0) : 1 ≤ δ.rank := by
   by_contra h
   have h0 : δ.rank = 0 := by omega
-  have hbot : LinearMap.range δ.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp h0
+  have hbot : LinearMap.range δ.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp (by simpa only [Matrix.finrank_range_mulVecLin] using h0)
   have hz : Matrix.toLin' δ = 0 := by
     rw [Matrix.toLin'_apply']
     exact LinearMap.range_eq_bot.mp hbot

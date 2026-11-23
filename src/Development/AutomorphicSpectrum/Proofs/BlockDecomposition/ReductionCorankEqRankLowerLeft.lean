@@ -107,7 +107,7 @@ theorem rank_add_rank_eq {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
       simp [Matrix.mulVec_mulVec, hzero]
   have hrn := LinearMap.finrank_range_add_finrank_ker (d.map (IsLocalRing.residue O)).mulVecLin
   rw [hker] at hrn
-  simpa [Matrix.rank] using hrn
+  simpa [← Matrix.finrank_range_mulVecLin] using hrn
 
 theorem low_rows {R : Type} [CommRing R] {n : ℕ} (g : GL (Ix n) R) :
     lowerLeftBlock g * (g⁻¹).1.toBlocks₁₂ + dBlk g * (g⁻¹).1.toBlocks₂₂ = 1 := by

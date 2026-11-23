@@ -69,7 +69,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 variable {n : ℕ}
 
 lemma dm_rank_add (A B : Matrix (Fin n) (Fin n) ℂ) : (A + B).rank ≤ A.rank + B.rank := by
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   rw [Matrix.mulVecLin_add]
   calc Module.finrank ℂ (LinearMap.range (A.mulVecLin + B.mulVecLin))
       ≤ Module.finrank ℂ ↥(LinearMap.range A.mulVecLin ⊔ LinearMap.range B.mulVecLin) := by

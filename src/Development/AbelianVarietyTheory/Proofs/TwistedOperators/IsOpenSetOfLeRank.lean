@@ -58,7 +58,7 @@ theorem exists_mul_mul_eq_one_of_le_rank {k : Type} [Field k] {m n : Type} [Fint
     ∃ (A : Matrix (Fin κ) m k) (B : Matrix n (Fin κ) k), A * x * B = 1 := by
   classical
   obtain ⟨w, hw⟩ := exists_linearIndependent_of_le_finrank
-    (R := k) (M := LinearMap.range x.mulVecLin) (n := κ) h
+    (R := k) (M := LinearMap.range x.mulVecLin) (n := κ) (by simpa only [Matrix.finrank_range_mulVecLin] using h)
   choose v hv using fun i => (w i).2
   let B : Matrix n (Fin κ) k := Matrix.of fun j i => v i j
   have hw' : LinearIndependent k (fun i => (w i : m → k)) :=

@@ -68,7 +68,7 @@ theorem _root_.GlobalTheory.rank_eq_of_acts_through_first_block {K : Type} [Fiel
       refine ⟨_, ⟨e.symm (v, 0), rfl⟩, ?_⟩
       rw [LinearEquiv.coe_coe, h]
       simpa using hx
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   rw [← LinearEquiv.finrank_map_eq e, key]
   exact (Submodule.equivMapOfInjective _ LinearMap.inl_injective _).finrank_eq.symm
 

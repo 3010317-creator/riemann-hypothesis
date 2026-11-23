@@ -77,7 +77,7 @@ theorem natCard_matrices_mul_eq_zero (k : Type) [Field k] [Finite k] (m n j : �
     (h : Module.finrank k (LinearMap.range A.mulVecLin) + j = n) :
     Nat.card {w : Matrix (Fin m) (Fin n) k // w * A = 0} = Nat.card k ^ (j * m) := by
   have h1 : Module.finrank k (LinearMap.range (Aᵀ).mulVecLin)
-      = Module.finrank k (LinearMap.range A.mulVecLin) := Matrix.rank_transpose A
+      = Module.finrank k (LinearMap.range A.mulVecLin) := by simpa only [Matrix.finrank_range_mulVecLin] using Matrix.rank_transpose A
   have h2 := LinearMap.finrank_range_add_finrank_ker (Aᵀ).mulVecLin
   rw [h1, Module.finrank_fin_fun] at h2
   have h3 : Module.finrank k (LinearMap.ker (Aᵀ).mulVecLin) = j := by omega

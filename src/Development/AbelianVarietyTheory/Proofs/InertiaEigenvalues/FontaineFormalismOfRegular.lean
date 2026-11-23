@@ -600,7 +600,7 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
     rw [← LinearMap.range_eq_top]
     apply Submodule.eq_top_of_finrank_eq
     have := hA.rank_matrix
-    rw [Matrix.rank] at this
+    rw [← Matrix.finrank_range_mulVecLin] at this
     rw [this, finrank_fintype_fun_eq_card]
   have hinj : Function.Injective A.mulVecLin :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (by simp [hc])).2 hsurj

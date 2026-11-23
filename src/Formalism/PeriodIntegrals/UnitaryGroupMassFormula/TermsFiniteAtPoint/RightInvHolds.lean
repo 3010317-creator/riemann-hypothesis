@@ -93,11 +93,12 @@ theorem rightInv_holds : RightInv := by
     rw [Matrix.mulVecLin_apply, Matrix.mulVec_transpose] at h1
     exact h1
   have hrank : β.rank = r := by
-    rw [← Matrix.rank_transpose, Matrix.rank, LinearMap.finrank_range_of_inj hinjT]
+    rw [← Matrix.rank_transpose, ← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hinjT]
     simp
   have hsurj : Function.Surjective (Matrix.mulVecLin β) := by
     rw [← LinearMap.range_eq_top]
     apply Submodule.eq_top_of_finrank_eq
+    rw [Matrix.finrank_range_mulVecLin]
     show β.rank = _
     rw [hrank]
     simp

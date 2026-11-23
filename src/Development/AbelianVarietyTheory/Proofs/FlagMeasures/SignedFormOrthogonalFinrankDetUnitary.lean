@@ -88,14 +88,14 @@ theorem rank_basisMat (V : Submodule ℂ (Fin n → ℂ)) : (basisMat V).rank = 
     · intro x hx
       refine ⟨(Module.finBasis ℂ V).equivFun ⟨x, hx⟩, ?_⟩
       rw [Matrix.mulVecLin_apply, basisMat_mulVec, LinearEquiv.symm_apply_apply]
-  rw [Matrix.rank, hr]
+  rw [← Matrix.finrank_range_mulVecLin, hr]
 
 theorem pairMap_surj (V : Submodule ℂ (Fin n → ℂ)) : Function.Surjective (pairMap ε V) := by
   have hJ : IsUnit (Formalism.REAL.Jm ε).det :=
     Matrix.isUnit_det_of_right_inverse (Formalism.REAL.Jm_mul_self ε)
   have hrk : ((basisMat V)ᴴ * Formalism.REAL.Jm ε).rank = Module.finrank ℂ V := by
     rw [Matrix.rank_mul_eq_left_of_isUnit_det _ _ hJ, Matrix.rank_conjTranspose, rank_basisMat]
-  unfold Matrix.rank at hrk
+  simp only [← Matrix.finrank_range_mulVecLin] at hrk
   have htop : LinearMap.range (pairMap ε V) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
     rw [Module.finrank_fin_fun]

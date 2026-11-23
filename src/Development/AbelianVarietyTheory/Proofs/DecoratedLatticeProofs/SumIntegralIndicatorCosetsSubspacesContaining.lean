@@ -156,7 +156,7 @@ theorem finrank_rowKer (s : Finset n) (κ : GL n 𝒪[k]) :
   have h2 : (projE 𝓀[k] s * red (k := k) (κ⁻¹).1).rank = s.card := by
     rw [← rank_projE 𝓀[k] s]
     exact rank_mul_eq_left_of_isUnit_det _ _ (isUnit_red κ⁻¹)
-  rw [Matrix.rank] at h2
+  rw [← Matrix.finrank_range_mulVecLin] at h2
   rw [Module.finrank_fintype_fun_eq_card] at h1
   unfold rowKer
   omega
@@ -299,7 +299,7 @@ theorem exists_rowKer (s : Finset n) (U : Submodule 𝓀[k] (n → 𝓀[k]))
   have h0 : Module.finrank 𝓀[k] (LinearMap.ker (projE 𝓀[k] s).mulVecLin) + s.card = Fintype.card n := by
     have h1 := LinearMap.finrank_range_add_finrank_ker (projE 𝓀[k] s).mulVecLin
     have h2 := rank_projE 𝓀[k] s
-    rw [Matrix.rank] at h2
+    rw [← Matrix.finrank_range_mulVecLin] at h2
     rw [Module.finrank_fintype_fun_eq_card] at h1
     omega
   obtain ⟨g, hg⟩ := exists_gl_map_eq 𝒪[k] n U (LinearMap.ker (projE 𝓀[k] s).mulVecLin) (by omega)

@@ -61,7 +61,7 @@ theorem rinv_of_rank {K : Type*} [Field K] {m n : ℕ} (x : Matrix (Fin m) (Fin 
     ∃ x' : Matrix (Fin n) (Fin m) K, x * x' = 1 := by
   have hr : LinearMap.range x.mulVecLin = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank, h]
+    rw [Matrix.finrank_range_mulVecLin, h]
     simp
   obtain ⟨g, hg⟩ := x.mulVecLin.exists_rightInverse_of_surjective hr
   refine ⟨LinearMap.toMatrix' g, ?_⟩

@@ -89,7 +89,7 @@ theorem exists_left_inv_of_rank {w a : ℕ} (P : Matrix (Fin w) (Fin a) E) (h : 
   refine exists_left_inv P ?_
   rw [← LinearMap.ker_eq_bot, ← Submodule.finrank_eq_zero]
   have e := LinearMap.finrank_range_add_finrank_ker P.mulVecLin
-  rw [Matrix.rank] at h
+  rw [← Matrix.finrank_range_mulVecLin] at h
   rw [h, Module.finrank_fin_fun] at e
   omega
 
@@ -98,7 +98,7 @@ theorem exists_right_inv_of_rank {b v : ℕ} (Q : Matrix (Fin b) (Fin v) E) (h :
   refine exists_right_inv Q ?_
   rw [← LinearMap.range_eq_top]
   apply Submodule.eq_top_of_finrank_eq
-  rw [← Matrix.rank, h, Module.finrank_fin_fun]
+  rw [Matrix.finrank_range_mulVecLin, h, Module.finrank_fin_fun]
 
 end Core
 

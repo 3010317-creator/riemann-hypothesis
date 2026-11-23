@@ -62,7 +62,7 @@ theorem exists_left_inv {K : Type} [Field K] {m n : ℕ} (P : Matrix (Fin m) (Fi
     ∃ P' : Matrix (Fin n) (Fin m) K, P' * P = 1 := by
   have hker : LinearMap.ker P.mulVecLin = ⊥ := by
     have e := LinearMap.finrank_range_add_finrank_ker P.mulVecLin
-    rw [← Matrix.rank, h, Module.finrank_fin_fun] at e
+    rw [Matrix.finrank_range_mulVecLin, h, Module.finrank_fin_fun] at e
     exact Submodule.finrank_eq_zero.1 (by omega)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective P.mulVecLin hker
   refine ⟨LinearMap.toMatrix' g, ?_⟩
@@ -73,7 +73,7 @@ theorem exists_right_inv {K : Type} [Field K] {m n : ℕ} (Q : Matrix (Fin m) (F
     ∃ Q' : Matrix (Fin n) (Fin m) K, Q * Q' = 1 := by
   have hrange : LinearMap.range Q.mulVecLin = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank, h, Module.finrank_fin_fun]
+    rw [Matrix.finrank_range_mulVecLin, h, Module.finrank_fin_fun]
   obtain ⟨g, hg⟩ := LinearMap.exists_rightInverse_of_surjective Q.mulVecLin hrange
   refine ⟨LinearMap.toMatrix' g, ?_⟩
   rw [← LinearMap.toMatrix'_toLin' Q, ← LinearMap.toMatrix'_comp]

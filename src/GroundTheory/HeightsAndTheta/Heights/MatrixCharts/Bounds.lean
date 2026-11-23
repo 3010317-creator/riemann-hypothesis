@@ -73,7 +73,7 @@ theorem injective_of_rank {g rk : ℕ} (F : Matrix (Fin g) (Fin rk) ℂ) (h : F.
   have h1 := LinearMap.finrank_range_add_finrank_ker (Matrix.mulVecLin F)
   rw [Module.finrank_fin_fun] at h1
   have h2 : Module.finrank ℂ (LinearMap.ker F.mulVecLin) = 0 := by
-    unfold Matrix.rank at h; omega
+    rw [← Matrix.finrank_range_mulVecLin] at h; omega
   have h3 : LinearMap.ker F.mulVecLin = ⊥ := Submodule.finrank_eq_zero.mp h2
   exact LinearMap.ker_eq_bot.mp h3
 

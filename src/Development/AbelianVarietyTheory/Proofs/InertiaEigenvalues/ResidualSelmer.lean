@@ -62,7 +62,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
       ← Matrix.mulVec_mulVec] at h
     exact h
   have hz : ((Eel D.nd S x').map (toK D.nd i)).mulVecLin = 0 := LinearMap.ext h0
-  unfold Matrix.rank at hrank
+  simp only [← Matrix.finrank_range_mulVecLin] at hrank
   rw [hz, LinearMap.range_zero, finrank_bot] at hrank
   exact zero_ne_one hrank
 

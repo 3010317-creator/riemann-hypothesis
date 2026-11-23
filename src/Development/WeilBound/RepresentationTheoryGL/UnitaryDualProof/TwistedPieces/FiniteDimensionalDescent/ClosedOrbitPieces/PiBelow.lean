@@ -172,7 +172,7 @@ theorem pi_below (hA : CR A) : ∀ (n : ℕ) (g : Matrix (Fin N) (Fin N) k), g.r
   obtain ⟨h, hhA, hhi, hhg, hh0, hhg'⟩ := hprim
   have hgh : g * h = h := by rw [hA.1 _ hgA _ hhA, hhg]
   have hlt : h.rank < g.rank := by
-    unfold Matrix.rank
+    simp only [← Matrix.finrank_range_mulVecLin]
     apply Submodule.finrank_lt_finrank_of_lt
     refine lt_of_le_of_ne ?_ ?_
     · rw [← hgh, Matrix.mulVecLin_mul]; exact LinearMap.range_comp_le_range _ _

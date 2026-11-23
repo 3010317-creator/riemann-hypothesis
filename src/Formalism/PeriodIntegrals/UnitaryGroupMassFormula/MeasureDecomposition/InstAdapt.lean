@@ -77,7 +77,7 @@ theorem inst_sign_real (l : ℝ) (hl : l ≠ 0) :
 theorem inst_rank_add_le {n : ℕ} (X Y : Matrix (Fin n) (Fin n) ℂ) : (X + Y).rank ≤ X.rank + Y.rank := by
   first
     | exact Matrix.rank_add_le X Y
-    | (unfold Matrix.rank
+    | (simp only [← Matrix.finrank_range_mulVecLin]
        rw [Matrix.mulVecLin_add]
        exact (Submodule.finrank_mono (LinearMap.range_add_le _ _)).trans
          (Submodule.finrank_add_le_finrank_add_finrank _ _))

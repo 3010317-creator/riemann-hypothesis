@@ -109,7 +109,7 @@ theorem not_X_pow_succ_dvd_det_of_first_order_kernel_eq_zero :
       Fintype.card_subtype _
     have h5 : Fintype.card {i // D i = 0} ≤ a := by
       simpa using Fintype.card_subtype_le (fun i => D i = 0)
-    rw [Matrix.rank] at h1
+    rw [← Matrix.finrank_range_mulVecLin] at h1
     simp only [Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at h2
     omega
   have hAQ : ∀ v : Fin a → K, P.mulVec (A.mulVec (Q.mulVec v)) = fun i => D i * v i := by

@@ -78,7 +78,7 @@ theorem exists_left_inv {K : Type*} [Field K] {n a : ℕ} (P : Matrix (Fin n) (F
     ∃ P' : Matrix (Fin a) (Fin n) K, P' * P = 1 := by
   have hker : LinearMap.ker P.mulVecLin = ⊥ := by
     have h1 := LinearMap.finrank_range_add_finrank_ker P.mulVecLin
-    rw [Matrix.rank] at hP
+    rw [← Matrix.finrank_range_mulVecLin] at hP
     rw [hP, Module.finrank_fin_fun] at h1
     exact Submodule.finrank_eq_zero.1 (by omega)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective _ hker

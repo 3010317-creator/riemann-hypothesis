@@ -62,7 +62,7 @@ namespace GlobalTheory.EigenPartialSum
 
 theorem rank_add_le' {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) :
     (A + B).rank ≤ A.rank + B.rank := by
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   rw [Matrix.mulVecLin_add]
   refine le_trans (Submodule.finrank_mono ?_)
     (Submodule.finrank_add_le_finrank_add_finrank (LinearMap.range A.mulVecLin)

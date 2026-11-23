@@ -70,7 +70,7 @@ theorem exists_left_inv {K : Type} [Field K] {n a : ℕ} (M : Matrix (Fin n) (Fi
     ∃ L : Matrix (Fin a) (Fin n) K, L * M = 1 := by
   have hk : LinearMap.ker M.mulVecLin = ⊥ := by
     have e := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
-    have e2 : Module.finrank K (LinearMap.range M.mulVecLin) = a := h
+    have e2 : Module.finrank K (LinearMap.range M.mulVecLin) = a := by simpa only [Matrix.finrank_range_mulVecLin] using h
     rw [e2, Module.finrank_fin_fun] at e
     exact Submodule.finrank_eq_zero.1 (by omega)
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective _ hk

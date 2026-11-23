@@ -192,7 +192,7 @@ theorem dHS_unitary {k k' : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Matrix.unita
   exact congrArg Real.sqrt e1
 
 theorem rank_add_le' (A B : Matrix (Fin n) (Fin n) ℂ) : (A + B).rank ≤ A.rank + B.rank := by
-  unfold Matrix.rank
+  simp only [← Matrix.finrank_range_mulVecLin]
   rw [Matrix.mulVecLin_add]
   calc Module.finrank ℂ (LinearMap.range (A.mulVecLin + B.mulVecLin))
       ≤ Module.finrank ℂ ((LinearMap.range A.mulVecLin ⊔ LinearMap.range B.mulVecLin : Submodule ℂ (Fin n → ℂ))) :=

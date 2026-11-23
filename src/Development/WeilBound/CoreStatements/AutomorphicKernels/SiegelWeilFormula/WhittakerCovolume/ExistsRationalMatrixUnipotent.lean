@@ -98,7 +98,7 @@ theorem rel_definite {m r s : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (h : HasSig 
   have hsurj : ∃ w, A *ᵥ w = z := by
     have : LinearMap.range A.mulVecLin = ⊤ := by
       apply Submodule.eq_top_of_finrank_eq
-      rw [← Matrix.rank, hrank]
+      rw [Matrix.finrank_range_mulVecLin, hrank]
       simp
     exact LinearMap.range_eq_top.mp this z
   obtain ⟨w, rfl⟩ := hsurj

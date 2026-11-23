@@ -159,7 +159,7 @@ theorem kerM_mul (Z : Matrix (Fin n) (Fin n) K) (γ : GL (Fin n) K) (v : Fin n �
   rw [mem_kerM, mem_kerM, ← Matrix.mulVec_mulVec]
 
 theorem rank_add_finrank_kerM (Z : Matrix (Fin n) (Fin n) K) : Z.rank + finrank K (kerM Z) = n := by
-  rw [Matrix.rank, kerM, LinearMap.finrank_range_add_finrank_ker, finrank_fin_fun]
+  rw [← Matrix.finrank_range_mulVecLin, kerM, LinearMap.finrank_range_add_finrank_ker, finrank_fin_fun]
 
 theorem U0_le_kerM_iff {Z : Matrix (Fin n) (Fin n) K} :
     U0 k ≤ kerM Z ↔ ∀ i j : Fin n, (j : ℕ) < k → Z i j = 0 := by
