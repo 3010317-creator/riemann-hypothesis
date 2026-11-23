@@ -93,8 +93,6 @@ theorem eigAd (Y : RdTw x N) (H : ∀ i y, x.r.Y.mj.eW i y = eWB Y i y) {Sb eig}
     EigAd Y ((Sb)) ((eig)) := fun i σ k Q α Rr hd hg y hy =>
   (by with_unfolding_all exact ((eigAd_of h (((eWB Y))) ((H)) ((i)) ((σ)) k ((Q)) ((α)) ((Rr)) (((hkDat hd))) ((hg)) ((y)) ((hy))) : _))
 
--- `noncomputable` stops Lean from generating code for this definition. Lean 4.37.0-rc1's
--- code generator panics on it, which aborts builds run with `LEAN_ABORT_ON_PANIC=1`.
 noncomputable def ratInTw (n : InRat x.r.Y x.m.z.cG) : RatIn (w.st (oTw x N).Z).toD7
     (ratDatR (datTw x N).R (datTw x N).cG n.kKs n.hk) where
   Sb := n.In.Sb
