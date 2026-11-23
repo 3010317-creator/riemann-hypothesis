@@ -506,7 +506,9 @@ theorem pullTorus_left_comp_iso (h : IsGrpPullback G' G f φ) (i : splitTorus S 
 theorem mono_pullTorus (h : IsGrpPullback G' G f φ) (i : splitTorus S X ⟶ G)
     (hc : IsClosedImmersion ((Over.pullback f).map i).left) : Mono (pullTorus h i) := by
   have k := pullTorus_left_comp_iso h i
-  have : Mono ((bcIso f X).hom.left ≫ ((Over.pullback f).map i).left) := inferInstance
+  have h₁ : IsIso (bcIso f X).hom.left := inferInstanceAs (IsIso ((Over.forget _).map (bcIso f X).hom))
+  have h₂ : Mono ((Over.pullback f).map i).left := (IsClosedImmersion.iff_isFinite_and_mono _ |>.1 hc).2
+  have : Mono ((bcIso f X).hom.left ≫ ((Over.pullback f).map i).left) := mono_comp _ _
   rw [← k] at this
   have : Mono (pullTorus h i).left := mono_of_mono _ h.1.isoPullback.hom
   exact (Over.forget _).mono_of_mono_map this
