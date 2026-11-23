@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report text conflicts between one queued pull request and the rest of the batch queue.
+"""Report conflicts between one queued pull request and the rest of the batch queue.
 
 The batch-queue workflow runs this from its trusted checkout. Pull request commits are fetched
 as git objects and compared with `git merge-tree`. Nothing from a pull request is checked out
