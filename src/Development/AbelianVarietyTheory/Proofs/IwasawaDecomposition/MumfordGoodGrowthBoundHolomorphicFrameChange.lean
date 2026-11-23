@@ -149,45 +149,45 @@ theorem entryLe_antisymm_del : ∀ (K : Type) [Fintype K] (X A Ta Tb Dab Dba dAa
     simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, smul_sub, smul_add, Matrix.mul_add,
       Matrix.add_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc, mul_comm (wb : ℂ) (wa : ℂ)]
     abel
-  have hwa : wa * b ≤ b := by nlinarith
-  have hwb : wb * b ≤ b := by nlinarith
+  have hwa : wa * b ≤ b := mul_le_of_le_one_left hb hwa1
+  have hwb : wb * b ≤ b := mul_le_of_le_one_left hb hwb1
   have hw0 : 0 ≤ wa * wb := mul_nonneg hwa0 hwb0
-  have hw1 : wa * wb ≤ 1 := by nlinarith
+  have hw1 : wa * wb ≤ 1 := (mul_le_of_le_one_left hwb0 hwa1).trans hwb1
   have hkb : 0 ≤ k * b * b := by positivity
   have t1 : GlobalTheory.GoodMetric.FrameChange.EntryLe (X * (((wa * wb : ℝ) : ℂ) • (Dab - Dba)) * A) (k ^ 2 * b ^ 2 * c) :=
     ((hX.mul hb hD).mul (by positivity) hA).mono (le_of_eq (by ring))
   have t2 : GlobalTheory.GoodMetric.FrameChange.EntryLe (X * ((wb : ℂ) • Tb) * ((wa : ℂ) • dAa)) (k ^ 2 * b ^ 2 * c) :=
     ((hX.mul hb hTb).mul (by positivity) (hdAa.smul hwa0)).mono (by
       have := mul_le_mul_of_nonneg_left hwa (by positivity : 0 ≤ k * (k * b * c))
-      nlinarith)
+      linarith)
   have t3 : GlobalTheory.GoodMetric.FrameChange.EntryLe (X * ((wa : ℂ) • Ta) * ((wb : ℂ) • dAb)) (k ^ 2 * b ^ 2 * c) :=
     ((hX.mul hb hTa).mul (by positivity) (hdAb.smul hwb0)).mono (by
       have := mul_le_mul_of_nonneg_left hwb (by positivity : 0 ≤ k * (k * b * c))
-      nlinarith)
+      linarith)
   have t4 : GlobalTheory.GoodMetric.FrameChange.EntryLe (X * ((wa : ℂ) • dAa) * X * ((wb : ℂ) • Tb) * A) (k ^ 4 * b ^ 4 * c) := by
     have h := ((((hX.mul hb (hdAa.smul hwa0)).mul (by positivity) hX).mul (by positivity) hTb).mul
       (by positivity) hA)
     refine h.mono ?_
-    have := mul_le_mul_of_nonneg_left hwa (by positivity : 0 ≤ k ^ 4 * b ^ 2 * c)
-    nlinarith
+    have := mul_le_mul_of_nonneg_left hwa (by positivity : 0 ≤ k ^ 4 * b ^ 3 * c)
+    linarith
   have t5 : GlobalTheory.GoodMetric.FrameChange.EntryLe (X * ((wb : ℂ) • dAb) * X * ((wa : ℂ) • Ta) * A) (k ^ 4 * b ^ 4 * c) := by
     have h := ((((hX.mul hb (hdAb.smul hwb0)).mul (by positivity) hX).mul (by positivity) hTa).mul
       (by positivity) hA)
     refine h.mono ?_
-    have := mul_le_mul_of_nonneg_left hwb (by positivity : 0 ≤ k ^ 4 * b ^ 2 * c)
-    nlinarith
+    have := mul_le_mul_of_nonneg_left hwb (by positivity : 0 ≤ k ^ 4 * b ^ 3 * c)
+    linarith
   have t6 : GlobalTheory.GoodMetric.FrameChange.EntryLe (((wa * wb : ℝ) : ℂ) • (X * dAa * X * dAb)) (k ^ 3 * b ^ 4) := by
     refine ((((hX.mul hb hdAa).mul (by positivity) hX).mul (by positivity) hdAb).smul hw0).mono ?_
     have := mul_le_mul_of_nonneg_right hw1 (by positivity : 0 ≤ k ^ 3 * b ^ 4)
-    nlinarith
+    linarith
   have t7 : GlobalTheory.GoodMetric.FrameChange.EntryLe (((wa * wb : ℝ) : ℂ) • (X * dAb * X * dAa)) (k ^ 3 * b ^ 4) := by
     refine ((((hX.mul hb hdAb).mul (by positivity) hX).mul (by positivity) hdAa).smul hw0).mono ?_
     have := mul_le_mul_of_nonneg_right hw1 (by positivity : 0 ≤ k ^ 3 * b ^ 4)
-    nlinarith
+    linarith
   have t8 : GlobalTheory.GoodMetric.FrameChange.EntryLe (((wa * wb : ℝ) : ℂ) • (X * (ddAab - ddAba))) (2 * k * b ^ 2) := by
     refine ((hX.mul hb (hddab.sub hddba)).smul hw0).mono ?_
     have := mul_le_mul_of_nonneg_right hw1 (by positivity : 0 ≤ 2 * k * b ^ 2)
-    nlinarith
+    linarith
   rw [e]
   refine (((((((t1.add t2).sub t3).sub t4).add t5).sub t6).add t7).add t8).mono (le_of_eq ?_)
   ring
@@ -222,8 +222,7 @@ theorem goodBound_changeFrame : ∀ (n : ℕ) (K : Type) [Fintype K] [DecidableE
     have h1 := hgb.det
     have h2 : 0 < ‖(G₀ v).det‖⁻¹ := inv_pos.2 (norm_pos_iff.2 hdet)
     by_contra hc
-    push_neg at hc
-    nlinarith [mul_nonpos_of_nonpos_of_nonneg hc hs0]
+    linarith [mul_nonpos_of_nonpos_of_nonneg (not_lt.mp hc) hs0]
   have hc0 := hcpos.le
 
   set A : ReciprocityTheory.L2DbarEstimates.V n → Matrix K K ℂ := fun u => (P u)ᵀ with hA
@@ -310,8 +309,8 @@ theorem goodBound_changeFrame : ∀ (n : ℕ) (K : Type) [Fintype K] [DecidableE
       rw [← hk]
       have : (w * (k * b * b)) ≤ k * b ^ 2 := by
         have := mul_le_mul_of_nonneg_right (hw a).2 (by positivity : 0 ≤ k * b * b)
-        nlinarith
-      nlinarith
+        linarith
+      linarith
     refine (h1.of_smul (hw a).1 i j).trans ?_
     have : 0 ≤ D ^ 2 * c := by positivity
     have : 0 ≤ k ^ 2 * b ^ 2 * c := by positivity
