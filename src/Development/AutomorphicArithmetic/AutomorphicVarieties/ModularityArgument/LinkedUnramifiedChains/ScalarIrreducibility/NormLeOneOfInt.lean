@@ -135,7 +135,9 @@ theorem UpperTheory.digit_expansion_lattice :
     refine SModEq.sub_mem.2 ?_
     have hsum : g n - L = ∑ i : E, (g n i - L i) • (Pi.single i 1 : E → O) := by
       funext j
-      simp [Finset.sum_apply, Pi.single_apply]
+      simp only [Finset.sum_apply, Pi.sub_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul,
+        mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,Finset.mem_univ,
+        ite_true]
     rw [hsum]
     refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul ?_ trivial
     have h := SModEq.sub_mem.1 (hL i n)
@@ -323,6 +325,7 @@ theorem UpperTheory.integral_dvr_norm :
         (∀ x : PadicAlgCl l, ‖x‖ ≤ 1 → IsIntegral O x) ∧ (∀ a : O, ‖(a : PadicAlgCl l)‖ ≤ 1) ∧
           ∀ a : O, ¬ IsUnit a → ‖(a : PadicAlgCl l)‖ < 1 := by
   intro l _ O _ _
+  haveI hIntO : Algebra.IsIntegral ℤ_[l] O := Algebra.IsIntegral.of_finite ℤ_[l] O
   have hfin : ∀ a : O, IsIntegral ℤ_[l] (a : PadicAlgCl l) := fun a =>
     (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) a).map O.val
   refine ⟨fun x hx => (integral_of_norm x hx).tower_top, fun a => norm_of_integral _ (hfin a),
@@ -432,6 +435,7 @@ theorem UpperTheory.Reformulated.B.CoPoint.coPt :
     have h1 : Polynomial.aeval (y x) P = 0 := h0
     rw [Polynomial.aeval_algHom_apply] at h1
     exact h1
+  haveI hlocR : IsLocalHom (algebraMap c.O R) := UpperTheory.V.Alg.IsCO.isLocalHom
   have hfin := UpperTheory.monic_ideal_completion hres (RingHom.ker y) hJ ϖ hϖ
   have hlt : ‖algebraMap c.O (Formalism.ConjugateSelfDual.Qbar l) ϖ‖ < 1 :=
     hm ϖ hϖ.not_isUnit
