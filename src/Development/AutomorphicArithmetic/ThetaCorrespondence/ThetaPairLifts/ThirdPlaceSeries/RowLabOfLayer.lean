@@ -762,7 +762,10 @@ theorem mem_VT_of_sum_fixed : ∀ (D : D7) (X : HidaSetting D) (red : X.B.I.Gf �
   obtain ⟨hcoef, hcent⟩ := GlobalTheory.LabIdem.ES_single_coeff_central D t ht
   have hegA : egA X (ES {t}) = ρ.lift X.B.μf (ES {t}) := by
     funext x
-    rw [egA, GlobalTheory.coeff_chosenRed_eq_redHom D X red hred _ hcent x]
+    refine Eq.trans (b := if x ∈ X.B.I.Kset then
+      (ES {t}).coeff (red x) / ((X.B.μf (X.B.I.Kg X.B.g)).toReal : ℂ) else 0) ?_ ?_
+    · unfold egA
+      convert GlobalTheory.coeff_chosenRed_eq_redHom D X red hred (ES {t}) hcent x using 2
     by_cases hx : x ∈ X.B.I.Kset
     · rw [if_pos hx, GlobalTheory.RowLev.Red.lift_of_mem ρ _ _ hx]
     · rw [if_neg hx, GlobalTheory.RowLev.Red.lift_of_notMem ρ _ _ hx]
