@@ -77,12 +77,12 @@ theorem lbIso_of_gen {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {
   refine (h₁ _ _ _ b c).1 ?_
   have e := ((h₂ _ _ a).2 ⟨t, ht⟩).symm.trans a'
   rw [b', c', ← div_eq_one, e]
-  have key := form_rosati f g (V := Multiplicative (FreeAbelianGroup ((G ⊗ G).left ⟶ G.left)))
-    (fun ψ => Multiplicative.ofAdd (FreeAbelianGroup.of ψ))
+  have key := form_rosati f g (V := Multiplicative (FreeAddCommGroup ((G ⊗ G).left ⟶ G.left)))
+    (fun ψ => Multiplicative.ofAdd (FreeAddCommGroup.of ψ))
   have k := congrArg (AddMonoidHom.toMultiplicativeLeft
-    (FreeAbelianGroup.lift fun ψ : (G ⊗ G).left ⟶ G.left => Additive.ofMul (pl ψ (cl L)))) key
+    (FreeAddCommGroup.lift fun ψ : (G ⊗ G).left ⟶ G.left => Additive.ofMul (pl ψ (cl L)))) key
   simpa only [map_div, map_prod, map_zpow, AddMonoidHom.coe_toMultiplicativeLeft, Function.comp_apply, toAdd_ofAdd,
-    FreeAbelianGroup.lift_apply_of, toMul_ofMul] using k
+    FreeAddCommGroup.lift_apply_of, toMul_ofMul] using k
 
 theorem rosatiAdj_iff_lamEq : Out.GlobalFnsSt → ∀ (S : Scheme.{0}) (P : Out.PolAV S) (f g : P.A ⟶ P.A), IsMonHom f → IsMonHom g → (Out.RosatiAdj P.A P.L f g ↔ LamEq P.L f (𝟙 P.A) P.L (𝟙 P.A) g) := by
   intro hG S P f g hf hg

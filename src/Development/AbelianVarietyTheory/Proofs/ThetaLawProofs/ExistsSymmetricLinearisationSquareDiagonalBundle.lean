@@ -225,19 +225,19 @@ theorem pl_uv (h : Y' ⟶ Y) (a : Γ(Y, ⊤)ˣ) : pl h (uv M Y a) = uv M Y' (pul
   exact (gm_pull r h z ⊤ trivial a).symm
 
 
-open FreeAbelianGroup in
-def Rep (M : LB X) (D : FreeAbelianGroup (Y ⟶ X)) (f : Vals M Y) : Prop :=
+open FreeAddCommGroup in
+def Rep (M : LB X) (D : FreeAddCommGroup (Y ⟶ X)) (f : Vals M Y) : Prop :=
   ∃ (K : Type) (_ : Fintype K) (φ : K → (Y ⟶ X)) (ε : K → ℤ) (t : LB.Gen (LB.LinComb M φ ε)),
     t.IsGen ∧ ∑ k, ε k • of (φ k) = D ∧ vals t = f
 
-open FreeAbelianGroup
+open FreeAddCommGroup
 
 theorem rep_vals {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ} {t : LB.Gen (LB.LinComb M φ ε)} (ht : t.IsGen) :
     Rep M (∑ k, ε k • of (φ k)) (vals t) := ⟨K, _, φ, ε, t, ht, rfl, rfl⟩
 
-theorem Rep.form {D D' : FreeAbelianGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) (e : D = D') : Rep M D' f := e ▸ h
+theorem Rep.form {D D' : FreeAddCommGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) (e : D = D') : Rep M D' f := e ▸ h
 
-theorem Rep.mul {D D' : FreeAbelianGroup (Y ⟶ X)} {f f' : Vals M Y} (h : Rep M D f) (h' : Rep M D' f') :
+theorem Rep.mul {D D' : FreeAddCommGroup (Y ⟶ X)} {f f' : Vals M Y} (h : Rep M D f) (h' : Rep M D' f') :
     Rep M (D + D') (f * f') := by
   obtain ⟨K, _, φ, ε, t, ht, rfl, rfl⟩ := h
   obtain ⟨K', _, φ', ε', t', ht', rfl, rfl⟩ := h'
@@ -246,14 +246,14 @@ theorem Rep.mul {D D' : FreeAbelianGroup (Y ⟶ X)} {f f' : Vals M Y} (h : Rep M
   funext Z r z J
   exact val_mul J.2 _ _ _
 
-theorem Rep.inv {D : FreeAbelianGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) : Rep M (-D) f⁻¹ := by
+theorem Rep.inv {D : FreeAddCommGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) : Rep M (-D) f⁻¹ := by
   obtain ⟨K, _, φ, ε, t, ht, rfl, rfl⟩ := h
   refine ⟨K, inferInstance, _, _, LB.invGen M _ _ t, DVR.invGen_isGen _ _ _ _ ht, by simp, ?_⟩
   funext Z r z J
   exact val_inv _ _
 
-theorem Rep.pull {D : FreeAbelianGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) (g : Y' ⟶ Y) :
-    Rep M (FreeAbelianGroup.map (g ≫ ·) D) (pl g f) := by
+theorem Rep.pull {D : FreeAddCommGroup (Y ⟶ X)} {f : Vals M Y} (h : Rep M D f) (g : Y' ⟶ Y) :
+    Rep M (FreeAddCommGroup.map (g ≫ ·) D) (pl g f) := by
   obtain ⟨K, _, φ, ε, t, ht, rfl, rfl⟩ := h
   refine ⟨K, inferInstance, _, _, LB.pullGen M _ _ t g, DVR.pullGen_isGen _ _ _ _ ht _, by simp, ?_⟩
   funext Z r z J
@@ -271,7 +271,7 @@ theorem Rep.out (hM : M.IsLB) {K : Type} [Fintype K] (φ : K → (Y ⟶ X)) (ε 
     (h : Rep M (∑ k, ε k • of (φ k)) f) : ∃ t : LB.Gen (LB.LinComb M φ ε), t.IsGen ∧ vals t = f := by
   obtain ⟨K', _, φ', ε', t', ht', e, rfl⟩ := h
   obtain ⟨t, ht, hv⟩ := exists_gen hM (φ' := φ) (ε' := ε) (fun U _ h => by
-    have := congrArg (FreeAbelianGroup.lift fun ψ => Additive.ofMul (h ψ)) e
+    have := congrArg (FreeAddCommGroup.lift fun ψ => Additive.ofMul (h ψ)) e
 
     simp only [map_sum, map_zsmul, lift_apply_of] at this
     apply Additive.ofMul.injective
@@ -318,7 +318,7 @@ end Values
 
 section Core
 
-open FreeAbelianGroup GlobalTheory.CechPic
+open FreeAddCommGroup GlobalTheory.CechPic
 
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A]
 
@@ -467,7 +467,7 @@ theorem core (hG : Out.GlobalFnsSt) (hA : IsAbelianScheme A) {M : LB A.left} (hM
 end Core
 
 
-open FreeAbelianGroup in
+open FreeAddCommGroup in
 
 theorem main : Out.Laws → ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ : o) (R : Type) [CommRing R] [Algebra ℚ R] [IsNoetherianRing R] (β : o →+* R) (c : SiegPre h k ζ (spMap β)) (g : ℕ) (i₀ : (Multiplicative (Fin (2 * g) → ZMod 2)) →* (𝟙_ (Over (Sp R)) ⟶ c.A)), c.Principal → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra R R₁), (Module.Finite R R₁ ∧ Algebra.Etale R R₁ ∧ Module.FaithfullyFlat R R₁) ∧ ∀ (A : Over (Sp R₁)) [GrpObj A] [IsCommMonObj A] (φ : A.left ⟶ c.A.left) (i : (Multiplicative (Fin (2 * g) → ZMod 2)) →* (𝟙_ (Over (Sp R₁)) ⟶ A)) (L : LB A.left), IsGrpPullback A c.A (spMap (algebraMap R R₁)) φ → (∀ a, (i a).left ≫ φ = spMap (algebraMap R R₁) ≫ (i₀ a).left) → L = lbPow (c.diag.pull φ) 2 → ∃ (u : ∀ c, LB.Gen (LB.LinComb L (K := Fin 2) ![𝟙 A.left, ((toUnit A ≫ i c) * 𝟙 A).left] ![1, -1])) (j : LB.Gen (LB.LinComb L (K := Fin 2) ![𝟙 A.left, (GrpObj.inv : A ⟶ A).left] ![1, -1])), (∀ c, (u c).IsGen) ∧ (∀ c c', LB.Gen.Corr L _ _ _ _ (u (c * c')) (LB.mulGen L _ _ _ _ (u c) (LB.pullGen L _ _ (u c') ((toUnit A ≫ i c) * 𝟙 A).left))) ∧ j.IsGen ∧ ∀ c (T : Over (Sp R₁)) (x : T ⟶ A) (z : T.left) (J), Good L z J → val (u c) x.left z J * val j ((toUnit T ≫ i c) * x).left z J = val j x.left z J * val (u c⁻¹) (x⁻¹).left z J := by
   intro hL h k o _ ζ R _ _ _ β c g i₀ hc

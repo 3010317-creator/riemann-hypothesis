@@ -67,7 +67,7 @@ variable {R : Type} [CommRing R] [IsDomain R]
 
 section Rep
 
-open FreeAbelianGroup
+open FreeAddCommGroup
 
 variable {D : DegPre R} {T₀ : Over (Spec (CommRingCat.of R))}
 
@@ -75,10 +75,10 @@ abbrev Vals (D : DegPre R) (T₀ : Over (Spec (CommRingCat.of R))) :=
   ∀ (T : Over (Spec (CommRingCat.of R))) (_ : T ⟶ T₀) (z : T.left) (_ : (T.left ⟶ D.P.A.left) → D.P.L.ι),
     (T.left.presheaf.stalk z)ˣ
 
-def Rep (s : FreeAbelianGroup (T₀ ⟶ D.P.A)) (v : Vals D T₀) : Prop :=
+def Rep (s : FreeAddCommGroup (T₀ ⟶ D.P.A)) (v : Vals D T₀) : Prop :=
   ∃ (K : Type) (_ : Fintype K) (φ : K → (T₀.left ⟶ D.P.A.left)) (ε : K → ℤ) (t : LB.Gen (LB.LinComb D.P.L φ ε)),
     t.IsGen ∧ (∀ (U : Type) [CommGroup U] (h : (T₀.left ⟶ D.P.A.left) → U),
-      ∏ k, h (φ k) ^ ε k = (FreeAbelianGroup.lift (fun q : T₀ ⟶ D.P.A => Additive.ofMul (h q.left)) s).toMul) ∧
+      ∏ k, h (φ k) ^ ε k = (FreeAddCommGroup.lift (fun q : T₀ ⟶ D.P.A => Additive.ofMul (h q.left)) s).toMul) ∧
     ∀ T (ρ : T ⟶ T₀) z J, Good D.P.L z J → val t ρ.left z J = v T ρ z J
 
 theorem Rep.one : Rep (D := D) (T₀ := T₀) 0 fun _ _ _ _ => 1 :=
@@ -86,7 +86,7 @@ theorem Rep.one : Rep (D := D) (T₀ := T₀) 0 fun _ _ _ _ => 1 :=
     fun i j => (map_one _).trans ((congrArg₂ (· * ·) (Fintype.prod_empty _) (map_one _)).trans (_root_.mul_one _)).symm,
     fun U _ h => by simp, fun _ _ _ _ _ => val_one _⟩
 
-theorem Rep.mul {s s' : FreeAbelianGroup (T₀ ⟶ D.P.A)} {v v' : Vals D T₀} (h : Rep s v) (h' : Rep s' v') :
+theorem Rep.mul {s s' : FreeAddCommGroup (T₀ ⟶ D.P.A)} {v v' : Vals D T₀} (h : Rep s v) (h' : Rep s' v') :
     Rep (s + s') fun T ρ z J => v T ρ z J * v' T ρ z J := by
   obtain ⟨K, _, φ, ε, t, ht, f, e⟩ := h
   obtain ⟨K', _, φ', ε', t', ht', f', e'⟩ := h'
@@ -121,7 +121,7 @@ theorem Rep.cmp {a : D.P.A ⟶ D.P.A} {p χ : D.X} {u : CmpGen D a p χ} (hu : N
   simp only [map_add (f := _), map_sub, lift_apply_of, ofMul_mul, ofMul_inv, ofMul_toMul]
   abel
 
-theorem Rep.unique {s s' : FreeAbelianGroup (T₀ ⟶ D.P.A)} {v v' : Vals D T₀} (h : Rep s v) (h' : Rep s' v')
+theorem Rep.unique {s s' : FreeAddCommGroup (T₀ ⟶ D.P.A)} {v v' : Vals D T₀} (h : Rep s v) (h' : Rep s' v')
     (hs : Function.Surjective T₀.hom.appTop.hom) (e : 𝟙_ _ ⟶ T₀) (hF : s = s')
     (h₀ : ∀ y J, Good D.P.L y J → v _ e y J = v' _ e y J) {T} (ρ : T ⟶ T₀) {z J} (hJ : Good D.P.L z J) :
     v T ρ z J = v' T ρ z J := by

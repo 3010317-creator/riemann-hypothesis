@@ -90,7 +90,6 @@ theorem sIso_nat {A B : Shv R} (φ : A ⟶ B) :
   simp [sIso, HomologicalComplex.extendSingleIso_hom_f,
     HomologicalComplex.extendMap_f _ ComplexShape.embeddingDownNat (i := 0) (i' := (0 : ℤ)) (by simp),
     HomologicalComplex.single_map_f_self]
-  erw [Iso.inv_hom_id_assoc]
 
 theorem disc0 : Disc0 := by
   intro R _ X Y f

@@ -120,23 +120,23 @@ theorem exists_torus (S : Scheme.{0}) (κ : Type) :
         ∀ k, g.appTop.hom (t k).val = (v k).val) ∧
       ∀ (Z : Scheme.{0}) (g g' : Z ⟶ T), g ≫ p = g' ≫ p →
         (∀ k, g.appTop.hom (t k).val = g'.appTop.hom (t k).val) → g = g' := by
-  refine ⟨(splitTorus S (FreeAbelianGroup κ)).left, (splitTorus S (FreeAbelianGroup κ)).hom,
-    fun k => charUnit S _ (FreeAbelianGroup.of k), fun Z c v => ?_, fun Z g g' h hk => ?_⟩
-  · let φ : FreeAbelianGroup κ →+ Additive Γ(Z, ⊤)ˣ :=
-      FreeAbelianGroup.lift fun k => Additive.ofMul (v k)
-    obtain ⟨g, hg⟩ := (splitTorusPointsEquiv S (FreeAbelianGroup κ) (Over.mk c)).surjective
+  refine ⟨(splitTorus S (FreeAddCommGroup κ)).left, (splitTorus S (FreeAddCommGroup κ)).hom,
+    fun k => charUnit S _ (FreeAddCommGroup.of k), fun Z c v => ?_, fun Z g g' h hk => ?_⟩
+  · let φ : FreeAddCommGroup κ →+ Additive Γ(Z, ⊤)ˣ :=
+      FreeAddCommGroup.lift fun k => Additive.ofMul (v k)
+    obtain ⟨g, hg⟩ := (splitTorusPointsEquiv S (FreeAddCommGroup κ) (Over.mk c)).surjective
       (AddMonoidHom.toMultiplicativeLeft φ)
     refine ⟨g.left, Over.w g, fun k => ?_⟩
     refine (splitTorusPointsEquiv_val S _ (Over.mk c) g _).symm.trans ?_
     rw [hg]
     simp [φ]
-  · let Z' : Over S := Over.mk (g' ≫ (splitTorus S (FreeAbelianGroup κ)).hom)
-    let a : Z' ⟶ splitTorus S (FreeAbelianGroup κ) := Over.homMk g h
-    let a' : Z' ⟶ splitTorus S (FreeAbelianGroup κ) := Over.homMk g' rfl
+  · let Z' : Over S := Over.mk (g' ≫ (splitTorus S (FreeAddCommGroup κ)).hom)
+    let a : Z' ⟶ splitTorus S (FreeAddCommGroup κ) := Over.homMk g h
+    let a' : Z' ⟶ splitTorus S (FreeAddCommGroup κ) := Over.homMk g' rfl
     have : a = a' := by
-      apply (splitTorusPointsEquiv S (FreeAbelianGroup κ) Z').injective
+      apply (splitTorusPointsEquiv S (FreeAddCommGroup κ) Z').injective
       apply AddMonoidHom.toMultiplicativeLeft.symm.injective
-      refine FreeAbelianGroup.lift_ext _ _ fun k => ?_
+      refine FreeAddCommGroup.lift_ext _ _ fun k => ?_
       apply Additive.toMul.injective
       apply Units.ext
       exact ((splitTorusPointsEquiv_val S _ Z' a _).trans (hk k)).trans

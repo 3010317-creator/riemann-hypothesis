@@ -85,17 +85,17 @@ theorem comm_eq {B U : Type} [CommGroup B] [CommGroup U] (v : B → B → B → 
 
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] (L : LB A.left)
 
-def pt {Y : Over S} (a : Y ⟶ A) : FreeAbelianGroup (Y.left ⟶ A.left) := FreeAbelianGroup.of a.left
+def pt {Y : Over S} (a : Y ⟶ A) : FreeAddCommGroup (Y.left ⟶ A.left) := FreeAddCommGroup.of a.left
 
 abbrev ValFam (Y : Over S) : Type 1 :=
   ∀ (Z : Over S) (_ : Z ⟶ Y) (z : Z.left) (_ : (Z.left ⟶ A.left) → L.ι), (Z.left.presheaf.stalk z)ˣ
 
-def Rep {Y : Over S} (D : FreeAbelianGroup (Y.left ⟶ A.left)) (f : ValFam L Y) : Prop :=
+def Rep {Y : Over S} (D : FreeAddCommGroup (Y.left ⟶ A.left)) (f : ValFam L Y) : Prop :=
   ∃ (K : Type) (_ : Fintype K) (φ : K → (Y.left ⟶ A.left)) (ε : K → ℤ) (t : LB.Gen (LB.LinComb L φ ε)),
-    t.IsGen ∧ ∑ k, ε k • FreeAbelianGroup.of (φ k) = D ∧
+    t.IsGen ∧ ∑ k, ε k • FreeAddCommGroup.of (φ k) = D ∧
       ∀ (Z : Over S) (r : Z ⟶ Y) (z : Z.left) (J), Good L z J → val t r.left z J = f Z r z J
 
-variable {L} {Y : Over S} {D D' : FreeAbelianGroup (Y.left ⟶ A.left)} {f f' : ValFam L Y}
+variable {L} {Y : Over S} {D D' : FreeAddCommGroup (Y.left ⟶ A.left)} {f f' : ValFam L Y}
 
 omit [GrpObj A] in
 theorem oneGen_isGen : (LB.oneGen L (Y := Y.left)).IsGen := fun _ _ =>
@@ -142,7 +142,7 @@ theorem Rep.theta {k : ℤ} {T : Over S} (θ : ThetaGrp A L k T) (s : Y ⟶ T) (
   refine ⟨Fin 2, inferInstance, _, _, LB.pullGen L (K := Fin 2) ![(snd T A).left, (translPt A θ.pt).left] ![k, -k] θ.φ
     (lift s a).left, DVR.pullGen_isGen _ _ _ _ θ.isGen _, ?_, fun Z r z J hJ => ?_⟩
   · have := congrArg Multiplicative.toAdd
-      (prod_theta (k := k) θ.pt s a (fun q => Multiplicative.ofAdd (FreeAbelianGroup.of q)))
+      (prod_theta (k := k) θ.pt s a (fun q => Multiplicative.ofAdd (FreeAddCommGroup.of q)))
     simp only [toAdd_prod, toAdd_zpow, toAdd_ofAdd, toAdd_mul] at this
     rw [this, neg_smul, ← sub_eq_add_neg]; rfl
   · refine (val_pull hJ _ _ _).trans ?_
@@ -157,7 +157,7 @@ theorem Rep.cube [IsCommMonObj A] {t : LB.Gen (Theta A L)} (ht : t.IsGen) (a b c
   refine ⟨thK, inferInstance, _, _, LB.pullGen L (thφ A (x3 A)) thε t (lift a (lift b c)).left,
     DVR.pullGen_isGen _ _ _ _ ht _, ?_, fun Z r z J hJ => ?_⟩
   · have := congrArg Multiplicative.toAdd
-      (prod_cub a b c (fun q => Multiplicative.ofAdd (FreeAbelianGroup.of q)))
+      (prod_cub a b c (fun q => Multiplicative.ofAdd (FreeAddCommGroup.of q)))
     simp only [toAdd_prod, toAdd_zpow, toAdd_ofAdd, toAdd_mul, toAdd_inv] at this
     rw [this]; simp only [sub_eq_add_neg]; rfl
   · refine (val_pull hJ _ _ _).trans ?_
@@ -174,14 +174,14 @@ theorem Rep.cubeProd [IsCommMonObj A] {t : LB.Gen (Theta A L)} (ht : t.IsGen) (x
     · rw [Finset.prod_range_succ, MonObj.comp_pow]
 
 theorem Rep.rigid (hG : GlobalFnsSt) (hA : IsAbelianScheme A) (hL : L.IsLB) {Z : Over S}
-    {D : FreeAbelianGroup ((Z ⊗ A).left ⟶ A.left)} {f : ValFam L (Z ⊗ A)} (h : Rep L D f) (hD : D = 0)
+    {D : FreeAddCommGroup ((Z ⊗ A).left ⟶ A.left)} {f : ValFam L (Z ⊗ A)} (h : Rep L D f) (hD : D = 0)
     (a : Z ⟶ A) {z : Z.left} {J} (hJ : Good L z J) : f Z (lift (𝟙 Z) a) z J = f Z (lift (𝟙 Z) 1) z J := by
   obtain ⟨K, _, φ, ε, t, ht, hD', hv⟩ := h
   obtain ⟨c, hc⟩ := exists_ratio hL (φ := φ) (ε := ε) (K' := PEmpty) (φ' := PEmpty.elim) (ε' := PEmpty.elim)
     (fun U _ g => by
-      have := congrArg (FreeAbelianGroup.lift (fun q => Additive.ofMul (g q))) (hD'.trans hD)
+      have := congrArg (FreeAddCommGroup.lift (fun q => Additive.ofMul (g q))) (hD'.trans hD)
 
-      simp only [map_sum, map_zsmul, FreeAbelianGroup.lift_apply_of, map_zero] at this
+      simp only [map_sum, map_zsmul, FreeAddCommGroup.lift_apply_of, map_zero] at this
       refine Eq.trans ?_ (Fintype.prod_empty _).symm
       apply Additive.ofMul.injective
       simpa only [ofMul_prod, ofMul_zpow, ofMul_one] using this)
