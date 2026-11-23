@@ -559,7 +559,7 @@ theorem exists_fixed_vacSet {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
   obtain ⟨g, hg, g0, h1, h2⟩ := GlobalTheory.LocMod.Inhab.exists_vacuum (hk' ψk hk).1 (hk' ψk hk).2
     (fun x => heisL S T ψ (p.up FS FT x)) (fun b => heisL S T ψ (dual p FS FT b))
     (fun x x' f => by rw [up_add, heisL_half S T ψ (by rw [mul_comm, hec]) _ (up_mem p FS FT x) _ (up_mem p FS FT x')])
-    (fun x x' f => by rw [dual_add, heisL_half S T ψ (by rw [cA_cA, hec]) _ (dual_mem p FS FT x) _ (dual_mem p FS FT x')])
+    (fun x x' f => by rw [dual_add, heisL_half S T ψ (by rw [SeeSaw.cA_cA, hec]) _ (dual_mem p FS FT x) _ (dual_mem p FS FT x')])
     (fun f => by rw [up_zero, h0]) (fun f => by rw [dual_zero, h0])
     (fun x y f => by rw [heisL_comm, char_sympl p FS FT hk]) P
     (fun x => st _ (isHalf_add_left p (Witness.up_half p FS FT x)) (i1 x))
@@ -594,7 +594,7 @@ theorem idem_orth {k' : Type} [Field k'] [ValuativeRel k'] [TopologicalSpace k']
   have he' : cA D q'.e * cA D q'.e = cA D q'.e := by rw [← map_mul, he]
   have h1 : q'.e + cA D q'.e ∈ GlobalTheory.FinPl.idAt D (· = q'.v) :=
     ((_root_.GlobalTheory.FinPl.placeIdem_acts D q'.v ε' hε').1 _).2 (by rw [← hs']; linear_combination he + he' + 2 * hec)
-  rw [map_add (f := _), cA_cA, add_comm, hs]
+  rw [map_add (f := _), SeeSaw.cA_cA, add_comm, hs]
   refine (_root_.GlobalTheory.FinPl.placeIdem_acts D q.v ε hε).2 _ ⟨h1.1, ?_⟩
   have h2 := h1.2
   simp only [SetLike.mem_coe, Submodule.mem_iInf] at h2 ⊢
