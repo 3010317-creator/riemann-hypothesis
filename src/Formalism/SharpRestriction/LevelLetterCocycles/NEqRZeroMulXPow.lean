@@ -363,8 +363,7 @@ theorem lA_le {C : ℝ} (P : ParameterChoice' D L) (hPar : ParametersPolynomiall
     have : L.sc.x ^ L.sc.eps * L.sc.x ^ (-L.sc.eps) = 1 := by
       rw [← Real.rpow_add hx]; simp
     have hxe : 0 ≤ L.sc.x ^ L.sc.eps := Real.rpow_nonneg hx.le _
-    rw [← this]
-    exact mul_le_mul_of_nonneg_left hde hxe
+    linarith only [this, mul_le_mul_of_nonneg_left hde hxe]
   have hL := L_ge_one L
   have hm := m_ge_one D
   have : (D.R.k : ℝ) * large₂ L ≤ L.sc.x ^ C * large₂ L := mul_le_mul_of_nonneg_right hk (by linarith)
@@ -539,8 +538,8 @@ theorem band_small : C * (4 * L.etaSz + L.Sc + large₂ L) ≤ L.sc.w'' D.R.n / 
   have hk := k_ge_sqrt L hC P hPar hL
   have hs : 0 < L.sc.x ^ ((1 : ℝ) / 2) := Real.rpow_pos_of_pos hx _
   have hS : L.Sc ≤ L.sc.w'' D.R.n / L.sc.x ^ ((1 : ℝ) / 2) := by
-    rw [le_div_iff₀ hs, mul_comm]
-    exact (mul_le_mul_of_nonneg_right hk L.Sc_pos.le).trans P.kS_le
+    rw [le_div_iff₀ hs]
+    linarith only [mul_le_mul_of_nonneg_right hk L.Sc_pos.le, P.kS_le]
   have hLg := Lg_le_w'' L hC P hPar hL
   have hxs : L.sc.x ^ ((1 : ℝ) / 2) ≤ L.sc.x := by
     calc L.sc.x ^ ((1 : ℝ) / 2) ≤ L.sc.x ^ (1 : ℝ) :=
@@ -585,7 +584,7 @@ theorem band_w'' {l : ℕ} (hl : 2 * C ≤ l) (hl1 : 1 ≤ l) (hb : bandI L C l 
       linarith only [mul_le_mul_of_nonneg_right hl hs0]
     have h5 : (l : ℝ) * s ≤ 4 * L.sc.b := by linarith only [h1, h2, h3, h4]
     rw [le_div_iff₀ hl0]
-    simpa only [mul_comm (L.sc.w'' D.R.n)] using (mul_le_mul_of_nonneg_left hs1 hl0.le).trans h5
+    linarith only [mul_le_mul_of_nonneg_left hs1 hl0.le, h5]
   · norm_num at hb
 
 theorem r_mul_eta_le : (D.R.r : ℝ) * eta₃ L ≤ 4 * D.R.m * L.sc.w'' D.R.n := by
@@ -1064,7 +1063,8 @@ theorem four_le_Lg : 4 ≤ large₂ L := by
   have hl0 : 0 ≤ Real.log L.sc.x := Real.log_nonneg (by linarith)
   have ha : (3 : ℝ) ^ 2 ≤ (C + 3) ^ 2 := pow_le_pow_left₀ (by norm_num) (by linarith) 2
   have hb : 1 ≤ (1 + Real.log L.sc.x) ^ 2 := one_le_pow₀ (by linarith)
-  have h9 := mul_le_mul ha hb (by norm_num) (sq_nonneg _)
+  have h9 : 9 ≤ (C + 3) ^ 2 * (1 + Real.log L.sc.x) ^ 2 := by
+    linarith [mul_le_mul ha hb (by norm_num) (sq_nonneg _)]
   show 4 ≤ L.sc.x ^ L.sc.eps
   linarith
 
@@ -1413,7 +1413,7 @@ theorem sum_flat (T : Finset ℕ) (hT : ∀ l ∈ T, 2 ≤ l ∧ (l : ℝ) ≤ l
     have : 0 ≤ Real.log (lStar L) := Real.log_nonneg (by linarith)
     calc (1 + Real.log (lStar L)) ^ 2 ≤ (2 * large₂ L) ^ 2 :=
           pow_le_pow_left₀ (by positivity) (by linarith) 2
-      _ = _ := by ring
+      _ = 4 * large₂ L ^ 2 := by ring
   set F := fun l : ℕ => (D.R.r : ℝ) * (wP L + eta₃ L) * (Real.log l / l) + (D.R.r : ℝ) * (L.Sc + large₂ L) * Real.log l +
     (16 * D.R.m * L.sc.b * (Real.log l / l) + (if (l : ℝ) ≤ 2 * C then 4 * D.R.m * L.sc.b * Real.log l else 0))
     with hF

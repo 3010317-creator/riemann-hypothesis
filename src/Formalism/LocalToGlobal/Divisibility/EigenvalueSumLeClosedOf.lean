@@ -193,7 +193,6 @@ theorem error_bound_closed_numbers (hZ : ClosedScale3 A3 Nd eJz Nc Zsc) (eJ : A3
     have h1 : Nd.B0 * Real.log (Real.log Nd.sc.x) ≤ Nd.B0 * Nd.sc.x ^ Nd.sc.eps := mul_le_mul_of_nonneg_left hll hB
     have h2 : 0 ≤ Nd.sc.x ^ Nd.sc.eps * Nc := mul_nonneg hx H.Nc0
     unfold NumDatum.unitE
-    have hmul : Nd.sc.x ^ Nd.sc.eps * (Nd.B0 + Nc) = Nd.B0 * Nd.sc.x ^ Nd.sc.eps + Nd.sc.x ^ Nd.sc.eps * Nc := by ring
     linarith
   · exact hLam
   · intro j
@@ -296,7 +295,6 @@ theorem QOfR_le_record {A3 : FamIn3 K G Pl0 I0 Ty T m} {eJz : A3.fam3.base3.J �
   rw [hZ.x, hZ.b, hZ.la]
   change B + L.sc.x ^ CH * L.sc.b + 28 * Real.log (Fintype.card G) ≤ 3 * L.sc.b ^ 2
   have hCHb := mul_le_mul_of_nonneg_right hCH hb0
-  have hsq : L.sc.b * L.sc.b = L.sc.b ^ 2 := (sq _).symm
   linarith
 
 theorem hg_of_sizeG (hSG : SizeG L) {A3 : FamIn3 K G Pl0 I0 Ty T m} {eJz : A3.fam3.base3.J ≃ Fin (ofRecord D L Del h0).R.m}
@@ -595,7 +593,7 @@ theorem nf_eta (hS : SizesAt L) (hh0 : L.etaSz = (D.R.m : ℝ) * (h0 : ℝ)) :
   have hm1 : (1 : ℝ) ≤ D.R.m := by exact_mod_cast (by have := D.R.two_le_m; omega : 1 ≤ D.R.m)
   have hL1 : 1 ≤ L.sc.L := le_of_lt (Formalism.L2.DIV.NumDatum.one_lt_L (ofRecord D L Del h0))
   have hmk : (D.R.m : ℝ) ≤ D.R.k := by
-    have hm2 : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 2 := by rw [sq]; exact le_mul_of_one_le_right (by linarith) hm1
+    have hm2 : (D.R.m : ℝ) ≤ (D.R.m : ℝ) ^ 2 := le_self_pow₀ hm1 two_ne_zero
     exact (hm2.trans (le_mul_of_one_le_right (by positivity) hL1)).trans hmL
   have hLk : L.sc.L ≤ D.R.k :=
     (le_mul_of_one_le_left (by linarith) (one_le_pow₀ hm1)).trans hmL
@@ -751,7 +749,6 @@ theorem nf_lam (G : Type) [Group G] [Fintype G] (hS : SizesAt L) (hB : BigX L) (
     have h2 : L.sc.x ^ szTh L * L.sc.L ≤ L.sc.L * L.sc.L := mul_le_mul_of_nonneg_right hth (by linarith)
     have h3 := Real.log_two_lt_d9
     have hsq : 1 ≤ L.sc.L ^ 2 := one_le_pow₀ hL1
-    have heq : L.sc.L * L.sc.L = L.sc.L ^ 2 := (sq _).symm
     linarith
   have hP1 := one_le_szPol L
   have hP0 : (0 : ℝ) ≤ szPol L := by linarith
@@ -1142,7 +1139,7 @@ theorem blk_of (N : NumDatum) (δ : Code N) (η : ℝ) (hη : 0 ≤ η)
   have ht0 : (0 : ℝ) ≤ N.R.t := Nat.cast_nonneg _
   have h1 : ((j : ℝ) - 1) * ((N.R.t : ℝ) + 1) ≤ (N.R.m : ℝ) * ((N.R.t : ℝ) + 1) :=
     mul_le_mul_of_nonneg_right (by linarith) (by positivity)
-  exact mul_le_mul_of_nonneg_right h1 hη
+  linarith [mul_le_mul_of_nonneg_right h1 hη]
 
 theorem nf_blk_rec (hh0 : L.etaSz = (D.R.m : ℝ) * (h0 : ℝ)) (u : D.what₂.Word) :
     ∀ j, 1 ≤ j → j ≤ (ofRecord D L Del h0).R.m → ∀ z,
@@ -1316,11 +1313,7 @@ theorem two_le_rd (N : NumDatum) : 2 ≤ N.rd := by
   have h : (4 * N.R.ord : ℝ) ≤ N.rd ^ 2 := N.H.der.rd_sq_ge
   have ho : (1 : ℝ) ≤ N.R.ord := by exact_mod_cast N.R.ord_pos
   have h0 : 0 ≤ N.rd := Real.rpow_nonneg (abs_nonneg _) _
-  by_contra hc
-  have hlt : N.rd < 2 := lt_of_not_ge hc
-  have hsq : N.rd ^ 2 < 2 ^ 2 := pow_lt_pow_left₀ hlt h0 (by norm_num)
-  norm_num at hsq
-  linarith
+  exact (sq_le_sq₀ (by norm_num) h0).mp (by linarith)
 
 theorem Sc_le_b (P5 : ParameterChoice' D L) : L.Sc ≤ L.sc.b := by
   have hk : (1 : ℝ) ≤ D.R.k := by
@@ -1340,7 +1333,6 @@ theorem Sc_le_b (P5 : ParameterChoice' D L) : L.Sc ≤ L.sc.b := by
     rw [div_div, div_le_iff₀ (by positivity)]
     have hle : L.sc.x * L.sc.b ≤ L.sc.x * L.sc.b * (L.sc.X' * D.R.n) :=
       le_mul_of_one_le_right (by positivity) (one_le_mul_of_one_le_of_one_le hX hn)
-    have hdiv : L.sc.x * L.sc.b * (L.sc.X' * D.R.n) = L.sc.b * (L.sc.X' * (L.sc.x * D.R.n)) := by ring
     linarith
   linarith [P5.kS_le]
 
@@ -1427,7 +1419,6 @@ theorem w''_le_b : L.sc.w'' D.R.n ≤ L.sc.b := by
   rw [div_div, div_le_iff₀ (by positivity)]
   have hle : L.sc.x * L.sc.b ≤ L.sc.x * L.sc.b * (L.sc.X' * D.R.n) :=
     le_mul_of_one_le_right (by positivity) (one_le_mul_of_one_le_of_one_le hX hn)
-  have hdiv : L.sc.x * L.sc.b * (L.sc.X' * D.R.n) = L.sc.b * (L.sc.X' * (L.sc.x * D.R.n)) := by ring
   linarith
 
 theorem Nm_le_w'' (hDel : D.s.Del = (Del : ℚ)) (P5 : ParameterChoice' D L) :
@@ -1685,7 +1676,7 @@ theorem mul_rpow_le_exp_rpow {x eps c e : ℝ} (hx1 : 1 ≤ x) (heps : 0 < eps) 
   · replace hc : 0 < c := lt_of_not_ge hc
     have h5 : c * x ^ e * (Nat.factorial N : ℝ) ≤ x * x ^ e := by
       have hmul := mul_le_mul_of_nonneg_right hxc hxe
-      linarith [show c * (Nat.factorial N : ℝ) * x ^ e = c * x ^ e * (Nat.factorial N : ℝ) by ring]
+      linarith
     have h6 : c * x ^ e ≤ x ^ (e + 1) / (Nat.factorial N : ℝ) := by
       rw [le_div_iff₀ hF, h4]; exact h5
     calc c * x ^ e ≤ x ^ (e + 1) / (Nat.factorial N : ℝ) := h6
@@ -1785,7 +1776,8 @@ theorem Nc_le_rec : L.Nc ≤ szPol L ^ 3 * L.sc.b := by
       have h1 := D.host.second_set_range u hu
       have h2 := D.host.two_le_Lw
       have h3 : D.R.n0 ≤ D.R.n := D.R.cyclic_order_le_exponent
-      exact lt_of_le_of_lt (Nat.le_mul_of_pos_left u (Nat.mul_pos (by decide) (by omega))) (lt_of_lt_of_le h1 h3))
+      refine lt_of_le_of_lt ?_ (h1.trans_le h3)
+      exact Nat.le_mul_of_pos_left u (Nat.mul_pos (by decide) (by omega)))
     exact_mod_cast (by simpa using Finset.card_le_card this)
   have hxe : L.sc.x ^ (-L.sc.eps) = (L.sc.L)⁻¹ := by
     rw [Real.rpow_neg hx0.le]; rfl
@@ -1814,10 +1806,9 @@ theorem Nc_le_rec : L.Nc ≤ szPol L ^ 3 * L.sc.b := by
     calc _ ≤ (D.R.n : ℝ) * szPol L * L.sc.b * szPol L ^ 2 := a4
       _ = _ := by ring
   have e2 : (D.R.n : ℝ) * (szPol L * L.sc.b * szPol L ^ 2) ≤ szPol L ^ 3 * L.sc.b * (D.R.n : ℝ) ^ 2 := by
-    have hn2 : (D.R.n : ℝ) ≤ (D.R.n : ℝ) ^ 2 := by rw [sq]; exact le_mul_of_one_le_right (by linarith) hn
+    have hn2 : (D.R.n : ℝ) ≤ (D.R.n : ℝ) ^ 2 := le_self_pow₀ hn two_ne_zero
     have h3 : 0 ≤ szPol L ^ 3 * L.sc.b := by positivity
     have hmul := mul_le_mul_of_nonneg_left hn2 h3
-    have hLHS : (D.R.n : ℝ) * (szPol L * L.sc.b * szPol L ^ 2) = szPol L ^ 3 * L.sc.b * (D.R.n : ℝ) := by ring
     linarith
   linarith
 
@@ -1833,8 +1824,6 @@ theorem initialBound_le_cube : L.B0 ≤ szPol L ^ 3 * L.sc.b := by
   have hmul : (D.R.f : ℝ) * D.R.m * L.sc.L ≤ szPol L * szPol L * szPol L :=
     mul_le_mul (mul_le_mul hf hm h1 (by linarith [one_le_szPol L])) hL hL0 hP2
   have hmulb := mul_le_mul_of_nonneg_right hmul (show (0 : ℝ) ≤ L.sc.b by linarith)
-  have hLHS : (D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L = (D.R.f : ℝ) * D.R.m * L.sc.L * L.sc.b := by ring
-  have hRHS : szPol L * szPol L * szPol L * L.sc.b = szPol L ^ 3 * L.sc.b := by ring
   linarith
 
 theorem unitE_le_rec : (ofRecord D L Del h0).unitE L.Nc ≤ 2 * szPol L ^ 4 * L.sc.b := by
@@ -1963,7 +1952,7 @@ theorem q_rec (hS : SizesAt L) (hFD : L.FDef)
     have e1 : 16 * szPol L ^ 4 * L.sc.b ≤ 16 * (szPol L ^ 9 * L.sc.b) := by linarith
     have e2 : 2 * ce * szPol L ^ 5 * L.sc.b ≤ 2 * ce * (szPol L ^ 9 * L.sc.b) := by
       have hmul := mul_le_mul_of_nonneg_left p5 (by linarith : 0 ≤ 2 * ce)
-      linarith [show 2 * ce * (szPol L ^ 5 * L.sc.b) = 2 * ce * szPol L ^ 5 * L.sc.b by ring]
+      linarith
     have e3 : K0 * szPol L ^ 9 * L.sc.b = 272 * (szPol L ^ 9 * L.sc.b) + 2 * ce * (szPol L ^ 9 * L.sc.b) := by rw [hK0]; ring
     linarith
   ·

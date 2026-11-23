@@ -552,8 +552,6 @@ theorem kerPlace_lower (P5 : ParameterChoice' D L) (hN : SizeN L) (hK : SizeK L)
   have hK2 : (n : ℝ) * (M * Real.log M + M + 1 + M * (7 * szPol L)) ≤ szPol L * (300 * szPol L ^ 6 * L.sc.b) :=
     mul_le_mul hn hK1 (by positivity) (by linarith)
   have e5 : szPol L * (300 * szPol L ^ 6 * L.sc.b) = 300 * szPol L ^ 7 * L.sc.b := by ring
-  have hcomb : (n : ℝ) * -(M * Real.log M + M + 1) - (n : ℝ) * M * (7 * szPol L) =
-      -((n : ℝ) * (M * Real.log M + M + 1 + M * (7 * szPol L))) := by ring
   unfold Formalism.BasicNotions.DV.kerPlace
   linarith
 
@@ -848,8 +846,6 @@ theorem negSZbP_le (hN : SizeN L) (hK : SizeK L) (hQD : SizeQD L) (hTT : SizeTT 
     have t4 : szPol L * szPol L ^ 2 ≤ szPol L ^ 3 * L.sc.b :=
       calc szPol L * szPol L ^ 2 = szPol L ^ 3 := by ring
         _ ≤ szPol L ^ 3 * L.sc.b := le_mul_of_one_le_right (by positivity) hb
-    have h1 : szPol L * (szPol L * L.sc.b) * szPol L = szPol L ^ 3 * L.sc.b := by ring
-    have h2 : szPol L * (szPol L * L.sc.b + szPol L * L.sc.b) * szPol L = 2 * szPol L ^ 3 * L.sc.b := by ring
     rw [hQ]; linarith
   have key : -(C * Q * L.La) ≤ |C| * (4 * szPol L ^ 3 * L.sc.b) * (4 * szPol L) := by
     calc -(C * Q * L.La) ≤ |C * Q * L.La| := neg_le_abs _
