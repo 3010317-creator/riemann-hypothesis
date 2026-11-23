@@ -1384,14 +1384,16 @@ theorem UpperTheory.ConvolutionTheory.C.termEV :
   let w : Fin r₂ → Pl E := fun i => (T.mk' (p₂ i)).1
   have hwinj : Function.Injective w := fun i j h => hp₂ (by
     have e : (T.mk' (p₂ i)).1 = (T.mk' (p₂ j)).1 := h
-    rw [← under_over' (T.mk' (p₂ i)), e, under_over'])
+    rw [← TraceVanishing.under_over' (T.mk' (p₂ i)), e, TraceVanishing.under_over'])
   have hwm : ∀ i, w i ∉ T.marked := by
     rintro i (h | ⟨v, hv, h⟩)
     · have h1 : p₂ i = q := by
-        rw [← under_over' (T.mk' (p₂ i)), show (T.mk' (p₂ i)).1 = w₀.1 from h, under_over']
+        rw [← TraceVanishing.under_over' (T.mk' (p₂ i)), show (T.mk' (p₂ i)).1 = w₀.1 from h,
+          TraceVanishing.under_over']
       exact T.q_not (h1 ▸ (hns _ (hm₂ i)).1)
     · have h1 : p₂ i = v := by
-        rw [← under_over' (T.mk' (p₂ i)), show (T.mk' (p₂ i)).1 = (T.mk' v).1 from h, under_over']
+        rw [← TraceVanishing.under_over' (T.mk' (p₂ i)), show (T.mk' (p₂ i)).1 = (T.mk' v).1 from h,
+          TraceVanishing.under_over']
       exact (hns _ (hm₂ i)).2 (h1 ▸ (Finset.mem_filter.1 hv).2)
   obtain ⟨hZc, hZs, hZa⟩ := UpperTheory.finiteDimensional_eigenspace_inf_fixed_offN_CMDatum F E σ n hn μ νE aE q w₀ T V hV hU x hx.ne'
   let Z := eigIn (V ⊓ offN μ T) (Oinf μ νE aE) x
@@ -1409,7 +1411,7 @@ theorem UpperTheory.ConvolutionTheory.C.termEV :
     · have := congrArg (fun S : LL μ →L[ℂ] LL μ => S f) hθP.eq
       simp only [ContinuousLinearMap.mul_apply, prj_self' h2] at this
       rw [this]
-      exact prj_mem' hoffc _
+      exact TraceVanishing.prj_mem' hoffc _
     · have := congrArg (fun S : LL μ →L[ℂ] LL μ => S f) hθO.eq
       simp only [ContinuousLinearMap.mul_apply] at this
       rw [← this, h3, map_smul]
@@ -1558,11 +1560,11 @@ theorem UpperTheory.ConvolutionTheory.C.termEV :
       fixL_comm μ P (h2 _ (hwm i)) ((Submodule.mem_iInf N).1 a2 i)⟩
   have hVc : IsClosed (V : Set (LL μ)) := IsSummandOf.closed hV
   have hS : ∀ f, S f ∈ offN μ T ⊓ FN := fun f =>
-    hmk _ hDo hDr _ ⟨hNo _ (prj_mem' hoffc f), hNf _⟩
+    hmk _ hDo hDr _ ⟨hNo _ (TraceVanishing.prj_mem' hoffc f), hNf _⟩
   have hUS_eq (f : LL μ) : (𝔢.Uq 0 ^ j) (S f) = C (P₂ (prj (offN μ T) f)) :=
     congrArg (fun U : LL μ →L[ℂ] LL μ => (U ^ j) (S f)) hUq
   have hUS : ∀ f, (𝔢.Uq 0 ^ j) (S f) ∈ offN μ T ⊓ FN := fun f =>
-    (hUS_eq f).symm ▸ hmk C hCo hCr _ ⟨hNo _ (prj_mem' hoffc f), hNf _⟩
+    (hUS_eq f).symm ▸ hmk C hCo hCr _ ⟨hNo _ (TraceVanishing.prj_mem' hoffc f), hNf _⟩
   have hY : eigIn (V ⊓ (offN μ T ⊓ FN)) (Oinf μ νE aE) x = Z ⊓ FN := by
     ext f
     simp only [Z, Submodule.mem_inf, mem_eigIn']
@@ -1578,7 +1580,7 @@ theorem UpperTheory.ConvolutionTheory.C.termEV :
   have hRop := hK L ψ hfit r₁ p₁ hp₁ hpr₁ r₂ p₂ hp₂ hpr₂ mm hmmA B₁ B₂ hB₁ hB₂ 𝔢.g hg
   have hCB : Commute C P₂ := Commute.list_prod_right _ _ fun Bx hBx => by
     obtain ⟨i, rfl⟩ := (List.mem_ofFn' _ _).1 hBx
-    exact oloc_comm μ (hB₂ i) C (fun g => hCr _ (hwm i) g)
+    exact TraceVanishing.oloc_comm μ (hB₂ i) C (fun g => hCr _ (hwm i) g)
   have hZFc : IsClosed ((Z ⊓ FN : Submodule ℂ (LL μ)) : Set (LL μ)) := hZc.inter hFNc
   have hsw : trOn (Z ⊓ FN) ((𝔢.Uq 0 ^ j) ∘L S ∘L θ.U) = trOn (Z ⊓ FN) (P₂ ∘L C ∘L θ.U) := by
     refine trOn_congr hZFc fun f hf => ?_
