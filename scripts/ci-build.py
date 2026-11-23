@@ -754,22 +754,30 @@ def recover_raw_outputs(project, cache, work, control, command, prefix, environm
     return verified
 
 
-def collect_mapped_ltars(project, cache, mapping):
-    """Stock -o confirms completed packs; readonly cache leaves new LTARs local."""
+def collect_mapped_modules(project, cache, mapping, incomplete=False):
+    """Collect manifest entries and copy completed LTARs from the read-only build."""
     missing = {filename for filename in mapping.values()
                if not (cache / "artifacts" / filename).exists()}
-    if not missing:
-        return
-    found = set()
-    for _, module, dep_hash in module_traces(project):
+    modules, covered, found = [], set(), set()
+    # Require well-formed traces when using one to locate a missing archive.
+    for name, module, dep_hash in module_traces(project, incomplete=incomplete and not missing):
         filename = mapping.get(dep_hash)
-        if filename not in missing:
+        if filename is None:
             continue
-        archive = safe_file(project / ".lake/build/ir", str(module.parent / (module.name + ".ltar")))
-        shutil.copyfile(archive, cache / "artifacts" / filename)
-        found.add(filename)
+        safe_file(project / "src", str(Path(*name.split(".")).with_suffix(".lean")))
+        if dep_hash in covered:
+            raise ValueError("multiple modules claim one input hash")
+        covered.add(dep_hash)
+        if filename in missing:
+            archive = safe_file(project / ".lake/build/ir", str(module.parent / (module.name + ".ltar")))
+            shutil.copyfile(archive, cache / "artifacts" / filename)
+            found.add(filename)
+        modules.append((name, dep_hash, filename))
     if found != missing:
         raise ValueError("completed output map references a missing module LTAR")
+    if covered != set(mapping):
+        raise ValueError("compiled module manifest does not cover the full output map")
+    return modules
 
 
 def main():
@@ -933,7 +941,7 @@ def main():
                 tomllib.loads((project / "lakefile.toml").read_text()).get("platformIndependent") is True):
             recover_completed_map(project, cache, toolchain, work, mapping_file, base_hashes, mapping, known_mappings)
             mapping = load_map(mapping_file)
-        collect_mapped_ltars(project, cache, mapping)
+        modules = collect_mapped_modules(project, cache, mapping, incomplete=bool(build_exit_code))
         artifacts = []
         paths = [safe_file(cache, "artifacts/" + name) for name in sorted(set(mapping.values()))]
         new_paths = [path for path in paths if path.name not in base_hashes]
@@ -958,24 +966,13 @@ def main():
                    "cache_map_sha256": [sha256(path) for path in args.cache_map],
                    "input_fingerprint": hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
                    "build_exit_code": build_exit_code, "map_sha256": sha256(output / "outputs.jsonl"), "artifacts": artifacts}
-        module_rows, covered = [], set()
-        for name, module, dep_hash in module_traces(project, incomplete=bool(build_exit_code)):
-            if dep_hash not in mapping:
-                continue
-            safe_file(project / "src", str(Path(*name.split(".")).with_suffix(".lean")))
-            if dep_hash in covered:
-                raise ValueError("multiple modules claim one input hash")
-            covered.add(dep_hash)
-            filename = mapping[dep_hash]
-            module_rows.append([name, dep_hash, filename, digests[filename]])
-        if covered != set(mapping):
-            raise ValueError("compiled module manifest does not cover the full output map")
         header = {"schema": 1, **inputs, "map_sha256": receipt["map_sha256"],
-                  "input_fingerprint": receipt["input_fingerprint"], "modules": len(module_rows)}
+                  "input_fingerprint": receipt["input_fingerprint"], "modules": len(modules)}
         manifest = output / "module-manifest.jsonl.gz"
         with manifest.open("wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as zipped:
             zipped.write((json.dumps(header, sort_keys=True, separators=(",", ":")) + "\n").encode())
-            for row in sorted(module_rows):
+            for name, dep_hash, filename in sorted(modules):
+                row = [name, dep_hash, filename, digests[filename]]
                 zipped.write((json.dumps(row, separators=(",", ":")) + "\n").encode())
         receipt.update(module_manifest_sha256=sha256(manifest), module_manifest_bytes=manifest.stat().st_size)
         if args.recover_work:
