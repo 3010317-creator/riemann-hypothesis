@@ -495,6 +495,8 @@ def baseline(args, project, cache, restore=True, modules=None):
     mapping = load_map(args.baseline_map)
     hashes, names = {}, set()
     jobs = []
+    baseline_cache = None
+    output_dirs = {}
     for row in rows:
         if not isinstance(row, list) or len(row) != 4 or not all(isinstance(x, str) for x in row):
             raise ValueError("invalid baseline module")
@@ -514,19 +516,25 @@ def baseline(args, project, cache, restore=True, modules=None):
             continue  # Deleted modules need no warm output.
         archive = cache / "artifacts" / filename
         if not archive.exists():
-            original = safe_file(args.baseline_cache.resolve(), "artifacts/" + filename)
+            if baseline_cache is None:
+                baseline_cache = args.baseline_cache.resolve()
+            original = safe_file(baseline_cache, "artifacts/" + filename)
             if sha256(original) != digest:
                 raise ValueError(f"incomplete baseline archive: {filename}")
             # Never hard-link a trusted baseline into a PR-writable filesystem.
             shutil.copyfile(original, archive)
-        bases = [project / ".lake/build/lib/lean" / module.parent,
-                 project / ".lake/build/ir" / module.parent]
-        for directory in bases:
-            directory.mkdir(parents=True, exist_ok=True)
-        alias = project / ".lake/build/ir" / module.with_suffix(".ltar")
+        parent = module.parent
+        if parent not in output_dirs:
+            lib_dir = Path(".lake/build/lib/lean") / parent
+            ir_dir = Path(".lake/build/ir") / parent
+            (project / lib_dir).mkdir(parents=True, exist_ok=True)
+            (project / ir_dir).mkdir(parents=True, exist_ok=True)
+            output_dirs[parent] = (project / ir_dir, (f"/work/project/{lib_dir}", f"/work/project/{ir_dir}"))
+        ir_path, bases = output_dirs[parent]
+        alias = ir_path / module.with_suffix(".ltar").name
         os.link(archive, alias)  # Both links are private to this isolated job.
         jobs.append({"file": "/work/cache/artifacts/" + filename, "hash": dep_hash,
-                     "base": ["/work/project/" + str(path.relative_to(project)) for path in bases]})
+                     "base": list(bases)})
     if len(names) != len(mapping):
         raise ValueError("baseline module map is incomplete")
     return hashes, jobs, map_sha
