@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicArithmetic.MeanSquareBounds.PrimeSetTwoBounds
 public import Formalism.PeriodIntegrals.ExplicitFormula
 public import Formalism.LandauZeroFreeBounds.NoZeroComplex
-public import Formalism.PeriodIntegrals.ExplicitFormulaCounts.ExplicitFormula
+public import Formalism.PeriodIntegrals.ZerosWindow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,6 +46,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Formalism.GL3MeanSquares.GenusMeanAsymptotics.JacobiCharacterSums.MeanSquareHypWIff
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FinsumMemLeOfSubset
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TruncatedExplicitFormula
 
 @[expose] public section
 
@@ -426,8 +428,8 @@ theorem psi_thin :
         ‖PI.psi0 χ u‖ ≤ C * u * (Real.log u + lam) ^ 2 * Real.exp (-c * Real.log u / (lam + Real.sqrt (Real.log u))) := by
   intro c₀ hc₀
   obtain ⟨c, hc, hzf⟩ := pt_zero_free c₀ hc₀
-  obtain ⟨C7, hC7, h7⟩ := explicitFormula_closed
-  obtain ⟨C, hC, h11⟩ := zerosWindow_closed
+  obtain ⟨C7, hC7, h7⟩ : PI.ExplicitFormula := GlobalTheory.ExplicitFormula.truncated_explicit_formula
+  obtain ⟨C, hC, h11⟩ : PI.ZerosWindow := GlobalTheory.ZeroWindow.count_zeros_window
   have hC2 : 0 < 6 * C * (3 / (c / 3) + 4) := by positivity
   refine ⟨C7 * (5 + 6 * C * (3 / (c / 3) + 4)) + 6 * C * (3 / (c / 3) + 4), min (c / 3) 1, by positivity,
     lt_min (by positivity) one_pos, ?_⟩
