@@ -217,10 +217,10 @@ theorem lbIso_pull_O1_of_proportional (R : Type) [CommRing R] (X W : Scheme.{0})
   have hch : ∀ y : W, ∃ i, y ∈ ψ ⁻¹ᵁ chart R m i := by
     intro y
     have h := iSup_nonzeroLocus_secPull (iSup_nonzeroLocus_coord R m) ψ
-    have hy : y ∈ ⨆ i, Out.nonzeroLocus (secPull (coord R m i) ψ) := by rw [h]; trivial
+    have hy : y ∈ ⨆ i, Out.nonzeroLocus (Cartier.secPull (coord R m i) ψ) := by rw [h]; trivial
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hy
     refine ⟨i, ?_⟩
-    have e := toProj_preimage_chart (ψ ≫ PSpace.str R m) (fun i => secPull (coord R m i) ψ)
+    have e := toProj_preimage_chart (ψ ≫ PSpace.str R m) (fun i => Cartier.secPull (coord R m i) ψ)
       (iSup_nonzeroLocus_secPull (iSup_nonzeroLocus_coord R m) ψ) i
     rw [toProj_secPull_coord] at e
     rw [e]
