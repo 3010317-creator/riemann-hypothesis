@@ -1,7 +1,46 @@
 module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.OneCopyTh1S
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.MMRead
+public import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CoeffPowEqZeroOfCc
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -41,15 +80,15 @@ theorem change_of_parameters_const_scale : ReadChangeS := by
           PowerSeries.subst (MvPowerSeries.X i : MvPowerSeries (Fin r) ℂ_[p]) (flog (C • wModel lam Λ) wq)) := by
       apply MvPowerSeries.hasSubst_of_constantCoeff_zero
       intro k
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_sum, hXfl]
+
+      simp [map_sum, hXfl]
     have hΦ' : MvPowerSeries.HasSubst (fun τ : D.what₂.Tau =>
         ∑ i, algebraMap ℂ_[p] (MvPowerSeries (Fin r) ℂ_[p]) (((C.u⁻¹ : ℂ_[p]ˣ) : ℂ_[p]) * v i (τ, 0, 0)) *
           PowerSeries.subst (MvPowerSeries.X i : MvPowerSeries (Fin r) ℂ_[p]) (flog (C • wModel lam Λ) wq)) := by
       apply MvPowerSeries.hasSubst_of_constantCoeff_zero
       intro k
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_sum, hXfl]
+
+      simp [map_sum, hXfl]
     have hL : MvPowerSeries.HasSubst (fun τ : D.what₂.Tau =>
         (MvPowerSeries.X (τ, 0, 0) : MvPowerSeries (D.what₂.Tau × Fin 1 × Fin 1) ℂ_[p])) :=
       MvPowerSeries.hasSubst_of_constantCoeff_zero (fun τ => MvPowerSeries.constantCoeff_X _)
@@ -60,8 +99,8 @@ theorem change_of_parameters_const_scale : ReadChangeS := by
     rw [MvPowerSeries.subst_comp_subst_apply hΦ' hSs]
     congr 1
     funext τ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPowerSeries.coe_substAlgHom hSs, map_sum]
+
+    rw [← MvPowerSeries.coe_substAlgHom hSs, map_sum]
     simp only [map_mul, AlgHom.commutes, MvPowerSeries.coe_substAlgHom, subst_single_var S hSs]
     refine (Fintype.sum_equiv e _ _ fun j => ?_).symm
     rw [hSi, e.symm_apply_apply, ← PowerSeries.subst_comp_subst_apply hh (PowerSeries.HasSubst.X j)]

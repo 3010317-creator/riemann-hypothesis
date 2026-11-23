@@ -1,14 +1,61 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Formalism.LocalToGlobal.ProjectiveLattices.AvMono
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
+public import Formalism.LocalToGlobal.ProjectiveLattices.AvMono
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+public import Mathlib.RingTheory.RootsOfUnity.Lemmas
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.TypeStar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.FiniteAlgebraLocalCompletion
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.FieldTheory.Galois.Infinite
 
 @[expose] public section
 
@@ -170,8 +217,8 @@ theorem norm_move_le (K : FinExt l) {τ : GQ l} (hτ : τ ∈ Gj K 1) (i : ℕ) 
     have hτ1 : ‖τ ζ‖ ≤ 1 := by rwa [norm_gal]
     have hζ' : IsPrimitiveRoot (ζ ^ l) (l ^ i) :=
       hζ.pow (pow_pos hl.pos _) (by ring)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ← Finset.sum_sub_distrib]
+
+    rw [map_sum, ← Finset.sum_sub_distrib]
     refine norm_sum_le_of_le _ _ (norm_nonneg _) fun a _ => ?_
     have : τ (ζ ^ (a : ℕ) * y a) - ζ ^ (a : ℕ) * y a =
         τ ζ ^ (a : ℕ) * (τ (y a) - y a) + y a * (τ ζ ^ (a : ℕ) - ζ ^ (a : ℕ)) := by

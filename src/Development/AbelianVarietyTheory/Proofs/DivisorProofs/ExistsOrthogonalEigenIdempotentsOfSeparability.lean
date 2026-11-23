@@ -1,6 +1,55 @@
 module
 
-public import Mathlib
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
+public import Mathlib.RingTheory.Ideal.Span
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Module.BigOperators
+public import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 @[expose] public section
 
@@ -14,8 +63,8 @@ theorem balanced_apply {K : Type} {M : Type*} [CommRing K] [AddCommGroup M] (k :
   have hB : ∀ (r : ℤ) (m n : K), B (r • m) n = B m (r • n) := by
     intro r m n; rw [map_zsmul, map_zsmul]; rfl
   have := congrArg (TensorProduct.liftAddHom B hB) (hyp c)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simpa [map_sum, TensorProduct.liftAddHom_tmul] using this
+
+  simpa [map_sum, TensorProduct.liftAddHom_tmul] using this
 
 end GlobalTheory.LieIdempotents
 
@@ -29,8 +78,8 @@ theorem GlobalTheory.lie_idempotents : ∀ (R C K : Type) [CommRing R] [CommRing
     intro p q
     split_ifs with hpq
     · subst hpq
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [← map_mul, ← map_sum, huv, map_intCast]
+
+      simp only [← map_mul, ← map_sum, huv, map_intCast]
     · set S := ∑ j, t p (u j) * t q (v j) with hSdef
       let B : K →+ K →+ R := AddMonoidHom.mk' (fun x => AddMonoidHom.mk' (fun y => t p x * t q y)
         (by intro y y'; simp [mul_add])) (by intro x x'; ext y; simp [add_mul])
@@ -51,8 +100,8 @@ theorem GlobalTheory.lie_idempotents : ∀ (R C K : Type) [CommRing R] [CommRing
   have hSC : ∀ p q, ∑ j, tR (t p (u j)) * tR (t q (v j)) = if p = q then (N : C) else 0 := by
     intro p q
     have := congrArg tR (hS p q)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul] at this
+
+    simp only [map_sum, map_mul] at this
     rw [this]; split_ifs <;> simp
   have hnNx : ∀ x : Module.End C H, n • (N : C) • x = x := by
     intro x; rw [smul_smul, hnN, one_smul]

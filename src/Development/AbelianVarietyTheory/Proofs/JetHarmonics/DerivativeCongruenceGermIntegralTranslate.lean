@@ -1,18 +1,65 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.ColValMonomial
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.TwistBC
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffDofSubMem
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SurjectiveAppTop
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExpansionBijectiveOverFields
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
+public import Development.AbelianVarietyTheory.Definitions.Jets.SurjectiveAppTopSqCube
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsGoodConst
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.TopLePreimageWchart
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CharacterEqWeilPairing
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralExpansionsOfValuationGeStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ToFSurjectiveFractionRing
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.TopLePreimageWchart
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FnEigenEquationOfForallGeometricPointStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLiftPointTranslationFieldPointStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffDofSubMem
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EigenEquationTranslationKernelGenericFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralExpansionsOfValuationGeStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLiftPointTranslationFieldPointStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FnEigenEquationOfForallGeometricPointStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StalkMapInjectiveOfFlat
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SurjectiveAppTop
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThreePointSeriesExponentialOfDefect
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionCommutesPullbackCmEndoFourLeStatement
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SecLinIffComb
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ToFSurjectiveFractionRing
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.AlphaPair
 
 @[expose] public section
 
@@ -71,8 +118,8 @@ theorem dof_of_tangent (hJ : JetSer.JetAlgSt) (hRep : JetSer.RepSt) (hSer : JetS
   let φ' : Chart.JetR V (Fin d) 1 →ₐ[V] DualNumber (O ⧸ I) := { φ with commutes' := fun v => RingHom.congr_fun hc v }
   have e₀ : MvPowerSeries.map (Ideal.Quotient.mk I) (∑ i, MvPowerSeries.C (c i) * MvPowerSeries.map β (S i)) =
       ∑ i, MvPowerSeries.C (Ideal.Quotient.mk I (c i)) * MvPowerSeries.map (algebraMap V (O ⧸ I)) (S i) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_mul, MvPowerSeries.map_C]
     congr 1
@@ -96,8 +143,8 @@ theorem dof_of_tangent (hJ : JetSer.JetAlgSt) (hRep : JetSer.RepSt) (hSer : JetS
   have c₃ := fun i => PullGerm.gs_eq_germ_fnVal _ U h₁ (s i) z
   have c₄ := fun i => PullGerm.gs_eq_germ_fnVal _ U h₂ (s i) z
   show Φ _ = Φ _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_mul, map_sum, map_sum, ← c₂]
+
+  rw [map_mul, map_sum, map_sum, ← c₂]
   simp only [map_mul, ← c₁]
   refine Eq.trans (Finset.sum_congr rfl fun i _ => congrArg _ (c₄ i).symm) (H.trans ?_)
   exact congrArg _ (Finset.sum_congr rfl fun i _ => congrArg _ (c₃ i))
@@ -330,14 +377,14 @@ theorem eigen_germ : Laws → Laws4 → TwistBCSpanStatement → JetSer.JetAlgSt
       · rw [← map_mul, hr', map_one]
       · rw [← map_mul, hΨ, hΨ, ← map_mul, hr', map_one, map_one]
       · rw [← map_mul, ← map_mul, Units.mul_inv, map_one, map_one]
-      set_option synthInstance.maxHeartbeats 100000 in
-        · rw [hfe, map_sum, Finset.sum_mul, eV]
-          refine Finset.sum_congr rfl fun i _ => ?_
-          have mm : MvPowerSeries.map (algebraMap (TWO.Ov y.v) F) (MvPowerSeries.map (TWO.fO y.v y.hϖ y.hv) (S i)) =
-              MvPowerSeries.map (algebraMap V F) (S i) := by
-            rw [← hβ]; rfl
-          rw [map_mul, map_mul, map_pow, map_pow, map_mul, MvPowerSeries.map_C, mm, _root_.mul_assoc]
-          rfl) mo
+
+      · rw [hfe, map_sum, Finset.sum_mul, eV]
+        refine Finset.sum_congr rfl fun i _ => ?_
+        have mm : MvPowerSeries.map (algebraMap (TWO.Ov y.v) F) (MvPowerSeries.map (TWO.fO y.v y.hϖ y.hv) (S i)) =
+            MvPowerSeries.map (algebraMap V F) (S i) := by
+          rw [← hβ]; rfl
+        rw [map_mul, map_mul, map_pow, map_pow, map_mul, MvPowerSeries.map_C, mm, _root_.mul_assoc]
+        rfl) mo
   obtain ⟨x', rfl⟩ := Ideal.mem_span_singleton'.1 hx
   refine le_of_le_of_eq ?_ (congrArg y.v hxe).symm
   rw [map_mul, map_natCast (algebraMap (TWO.Ov y.v) F), AddValuation.map_mul]

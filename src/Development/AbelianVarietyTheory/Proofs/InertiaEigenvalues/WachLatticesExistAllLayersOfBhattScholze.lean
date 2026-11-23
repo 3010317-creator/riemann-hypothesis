@@ -1,7 +1,51 @@
 module
 
-public import Mathlib
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConvZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsUnitMatrixOfPowSmulSpanInvertStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWachPrismOverIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWittTiltLatticeTensorCancelStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrysLatOfTrivial
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitOfOneTmul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismaticFCrystalValueLocalPrismAinfWittTensorStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachInclusionInjectiveSaturatedInterStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittTwistInvariantBasisChangeStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -26,7 +70,7 @@ variable {l : ℕ} [Fact l.Prime] {F : FinExt l} {Qp K₀ K : Type} [Field Qp] [
     {I : WIo R RA RW inclR φR gR πA}
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem build_prism (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices) (E : WEt I) [Algebra ℤ_[l] O]
     [Nontrivial O] [FiniteDimensional Qp LL] (hO : Function.Injective (algebraMap O LL)) (hp : PD.p = l)
     {PS PW : Obj l ↥(OL F)} (ev : Hom PS PW) (ioH : Hom PS (ainfObj F)) (gH : ↥(GK F) → Hom PS PS)
@@ -90,8 +134,8 @@ theorem build_prism (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices
   have hνsum : ∀ T hT (t : Fin (q T hT) → PS.A),
       ν T hT (∑ i, t i • b T hT i) = ∑ i, c (ψ (t i)) • κ T (cb T hT i) := fun T hT t => by
     simp only [ν]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum, map_sum]
+
+    rw [map_sum, map_sum, map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [hcb]; exact hνs T hT _ _
   have hν1 : ∀ T hT x, ∃ (k : ℕ) (m : (C T hT).M PS), c (ψ Q) ^ k • TWmap φR T (ν T hT x) = ν T hT m :=
     fun T hT x => by
@@ -102,8 +146,8 @@ theorem build_prism (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices
     obtain ⟨k, t, h⟩ := h2 T hT x
     refine ⟨k, t, ?_⟩
     simp only [ν]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_pow, ← hκs, h, map_sum]
+
+    rw [← map_pow, ← hκs, h, map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [hκs, hκφ]
   have hν3 : ∀ T hT g x, TWact (gR g) T g (ν T hT x) = ν T hT ((C T hT).tr (gH g) x) := fun T hT g x => by
     simp only [ν]
@@ -157,8 +201,8 @@ theorem build_prism (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices
   · intro y
     have key : ∀ t : Fin d → PS.A, κ Γ.one (∑ i, inclW l (ainfId F (ioH.f (t i))) ⊗ₜ[ℤ_[l]] bo i) =
         I.ioE (algebraMap _ R.EE (∑ i, o i • a (t i))) • ((1 : RW) ⊗ₜ[O] e₀) := fun t => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_sum, map_sum, Finset.sum_smul]
+
+      rw [map_sum, map_sum, map_sum, Finset.sum_smul]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [hκ, hbo, Algebra.smul_def (o i) (a _), map_mul, ← IsScalarTower.algebraMap_apply, map_mul,
         AlgHom.commutes, hψ₀, TensorProduct.smul_tmul', smul_eq_mul, mul_one, ← Algebra.smul_def,
@@ -177,8 +221,8 @@ theorem build_prism (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices
 end Generic
 
 
-set_option maxHeartbeats 2000000 in
-set_option synthInstance.maxHeartbeats 200000 in
+
+
 theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices →
     ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → WachEx AI := by
   intro BS l _ P AI tied K s LL hG Γ R I hW E

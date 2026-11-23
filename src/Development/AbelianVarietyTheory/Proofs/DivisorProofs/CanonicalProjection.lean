@@ -1,12 +1,49 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LevelOfOfSameBut
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.NonemptyAlgHomOfIsRayOfDvd
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeFamilyAdoptionSecond
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.ToricLatticeDenominators
+public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.RatDatOfReal
+public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FractionFieldEmbeddingCompat
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeFamilyAdoptionSecond
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FractionalBaseInclusion
+import Development.AbelianVarietyTheory.Definitions.Divisors.LevelOfOfSameBut
+import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
 
 @[expose] public section
 
@@ -22,8 +59,8 @@ namespace GlobalTheory.BigOn.Exp.ProjRd
 attribute [local instance] GroupAverageFixedPoints.GlobalTheory.CompanionTheory.LatSpan.algKK
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 2000000 in
+
+
 theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D c) {Gp : Type} [Group Gp] [Fintype Gp]
     (I : Gp ≃* G0g D.nd) (S : RatDat D.ntw) (j : ℕ)
     {Ks' WL' : Type} {_ : Field Ks'} {_ : NumberField Ks'} {_ : Algebra Ks' D.what₂.LL} {_ : AddCommGroup WL'}
@@ -50,8 +87,8 @@ theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D
     obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun D.what₂.LL).1 hx
     have h5 := h3 n a (fun k => ⟨b k, hbK k⟩)
     refine Eq.trans ?_ h5.symm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum]
+
+    rw [map_sum, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, map_smulₛₗ]
     rw [hrd ⟨b k, hbK k⟩, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
@@ -60,8 +97,8 @@ theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D
   letI : Fintype (G0g D.nd) := Fintype.ofEquiv Gp I.toEquiv
   have hL : A'.eOp eC (fi.e x) = fi.e (∑ s : S.G, eC (fi.eG s) •
       ((((S.A j).chi s)⁻¹ : D.what₂.LLˣ).val • (S.A j).ρ s x)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, FormsL.eOp, LinearMap.sum_apply]
+
+    rw [map_sum, FormsL.eOp, LinearMap.sum_apply]
     refine (Fintype.sum_equiv fi.eG.toEquiv _ _ fun s => ?_).symm
     rw [map_smul, map_smul, fi.rho]
     simp only [MulEquiv.toEquiv_eq_coe, MulEquiv.coe_toEquiv, LinearMap.smul_apply, smul_smul, fi.chi]
@@ -86,8 +123,8 @@ theorem rd_eOp {D : D7} {c : NChoice D} {w : D.what₂.places.Pl} (ht : NChTie D
       refine Finset.sum_congr rfl fun s _ => ?_
       rw [GroupAverageFixedPoints.GlobalTheory.CompanionTheory.LatSpan.tmul_smul_frac, GroupAverageFixedPoints.GlobalTheory.CompanionTheory.LatSpan.ext_tmul, TensorProduct.smul_tmul', smul_eq_mul]
       rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hL, hre, hre, hR, map_sum]
+
+  rw [hL, hre, hre, hR, map_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [map_smulₛₗ, h4 s x]
   congr 1

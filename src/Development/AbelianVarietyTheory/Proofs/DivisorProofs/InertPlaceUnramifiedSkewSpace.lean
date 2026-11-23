@@ -1,14 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.XmApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeInertPlaceSelfDual
+public import Mathlib.Algebra.AffineMonoid.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentCoprimeAtGoodPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeInertPlaceSelfDual
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -60,8 +98,8 @@ theorem sesq_mem_of_closure (O : Subring L) (S : Set (Fin n → L))
 
 theorem sesq_skew (hσσ : ∀ x, σL (σL x) = x) (hJ : ∀ k l, σL (J k l) = -J l k) (x y : Fin n → L) :
     σL (sesq σL J x y) = -sesq σL J y x := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sesq, map_sum, map_mul, hσσ, hJ]
+
+  simp only [sesq, map_sum, map_mul, hσσ, hJ]
   rw [Finset.sum_comm, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun l _ => ?_
   rw [← Finset.sum_neg_distrib]
@@ -75,9 +113,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem sesq_smul_map {L : Type} [Field L] (σ : E →ₐ[F] E) (σL : L →+* L) (φ : E →+* L)
     (hφσ : ∀ e, σL (φ e) = φ (σ e)) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (t t' : L) (y y' : Fin n → E) :
     sesq σL (J.map φ) (t • fun i => φ (y i)) (t' • fun i => φ (y' i)) = t * σL t' * φ (form σ J y y') := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sesq, form, Pi.smul_apply, smul_eq_mul, Matrix.map_apply, map_mul, hφσ, dotProduct, Matrix.mulVec,
-    map_sum, Finset.mul_sum]
+
+  simp only [sesq, form, Pi.smul_apply, smul_eq_mul, Matrix.map_apply, map_mul, hφσ, dotProduct, Matrix.mulVec,
+  map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
   ring
 

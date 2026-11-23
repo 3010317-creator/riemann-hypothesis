@@ -1,18 +1,58 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Formalism.SharpRestriction.LevelLetterCocycles.WachCoordinates
-public import Formalism.SharpRestriction.LevelLetterCocycles.PairedCharacterCondition
-public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
-public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsGenerators
-public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CrysOnCond
-public import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardCocyclesMulInvariantsDiscrete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousFixingSubgroupEquiv
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalDualityPerfectPairFiniteModules
+public import Mathlib.Topology.Instances.ZMod
+public import ReciprocityTheory.Hypotheses.GalCohDefs
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardDualZmodModuleEqCard
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.OrthogonalFreeOfPerfectAltZmod
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardCocyclesMulInvariantsDiscrete
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
+import Formalism.SharpRestriction.CuspSpanNormBounds.Point
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 
 @[expose] public section
 
@@ -146,41 +186,6 @@ theorem exists_equiv_dual {n : ℕ} [NeZero n] {M : Type} [AddCommGroup M] [Modu
     {M' : Type} [AddCommGroup M'] [Module (ZMod n) M'] [Finite M'] (P : M →+ M' →+ ZMod n)
     (h1 : ∀ x, (∀ y, P x y = 0) → x = 0) (h2 : ∀ y, (∀ x, P x y = 0) → y = 0) :
     ∃ e : M' ≃+ ReciprocityTheory.Gal.TDual (ZMod n) M, ∀ y x, e y x = P x y := by
-  classical
-  have hfin : ∀ (A : Type) [AddCommGroup A] [Module (ZMod n) A] [Finite A],
-      Finite (Module.Dual (ZMod n) A) := fun A _ _ _ => (GlobalTheory.CocycleCount.card_linear_le n A).1
-  let f : M' →+ Module.Dual (ZMod n) M :=
-    { toFun := fun y => (P.flip y).toZModLinearMap n
-      map_zero' := LinearMap.ext fun x => by
-        show P x 0 = 0
-        exact map_zero (P x)
-      map_add' := fun y y' => LinearMap.ext fun x => by
-        show P x (y + y') = P x y + P x y'
-        exact map_add (P x) y y' }
-  let g : M → Module.Dual (ZMod n) M' := fun x => (P x).toZModLinearMap n
-  have hf : Function.Injective f := by
-    intro y y' hyy
-    have hyx : ∀ x, P x (y - y') = 0 := by
-      intro x
-      have hx := LinearMap.congr_fun hyy x
-      change P x y = P x y' at hx
-      rw [map_sub, hx, sub_self]
-    exact sub_eq_zero.1 (h2 _ hyx)
-  have hg : Function.Injective g := by
-    intro x x' hxx
-    have hxy : ∀ y, P (x - x') y = 0 := by
-      intro y
-      have hy := LinearMap.congr_fun hxx y
-      change P x y = P x' y at hy
-      rw [map_sub, AddMonoidHom.sub_apply, hy, sub_self]
-    exact sub_eq_zero.1 (h1 _ hxy)
-  haveI := hfin M
-  haveI := hfin M'
-  have c1 := Nat.card_le_card_of_injective f hf
-  have c2 := Nat.card_le_card_of_injective g hg
-  rw [GlobalTheory.ZModDual.card_dual_eq] at c1 c2
-  have hb : Function.Bijective f :=
-    hf.bijective_of_nat_card_le (by rw [GlobalTheory.ZModDual.card_dual_eq]; exact c2)
-  exact ⟨AddEquiv.ofBijective f hb, fun y x => rfl⟩
+  apply GlobalTheory.LocalPair.exists_dual_equiv <;> assumption
 
 end GlobalTheory.CompanionTheory.LocDual.Pair

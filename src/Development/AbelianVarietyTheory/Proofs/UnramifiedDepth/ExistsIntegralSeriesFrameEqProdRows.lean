@@ -1,14 +1,47 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.CharacterGerms.NondegenerateCharts
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
-public import Formalism.LocalToGlobal.CharacterGerms.BlockAdmissibleChart
-public import Formalism.LocalToGlobal.CharacterGerms.NegMem
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieVal
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeBiadditiveSymmAdjointIntegralEnd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -29,8 +62,8 @@ def expAt (X : RawChart C d I κ) {ω : Type} [Fintype ω] (v : ω → κ → C)
 
 theorem comb_cc {ι ω : Type} [Fintype ι] (c : ι → C) (φ : ι → ω) :
     constantCoeff (∑ w, c w • (MvPowerSeries.X (φ w) : MvPowerSeries ω C)) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_eq_zero fun y _ => ?_
   rw [constantCoeff_smul, constantCoeff_X, smul_zero]
 
@@ -149,9 +182,9 @@ theorem exists_intS_frame_eq_prod : ∀ (C : Type) [Field C] [CharZero C] (V : V
     rw [MvPowerSeries.constantCoeff_smul, hEnd_cc H, smul_zero]
   have h3 : MvPowerSeries.subst (expAt X₀ u) ((X₀.k : C) • D + (X₀.k : C) • hEnd X₀ 1 W) =
       ∑ o, MvPowerSeries.subst (r o) (X o).hRow := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← smul_add, MvPowerSeries.subst_smul he, MvPowerSeries.subst_add he, ← h1, ← MvPowerSeries.subst_add he,
-      hDdef, sub_add_cancel, ← MvPowerSeries.substAlgHom_apply he, map_sum, Finset.smul_sum]
+
+    rw [← smul_add, MvPowerSeries.subst_smul he, MvPowerSeries.subst_add he, ← h1, ← MvPowerSeries.subst_add he,
+    hDdef, sub_add_cancel, ← MvPowerSeries.substAlgHom_apply he, map_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun o _ => ?_
     rw [MvPowerSeries.substAlgHom_apply, h2]
   refine ⟨(∏ o, MvPowerSeries.subst (fun p : Fin 2 × κ =>

@@ -1,10 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulHomInjective
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTraceMulOfSeparableGeneratedStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAevalEqOfCharpolySeparableInvolutionStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SesqAsym
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -35,8 +75,8 @@ theorem invT_injective : Function.Injective (invT a R) := fun x y h => by
 theorem comp_mulVec (c : R →+* R) (M : Matrix (Fin a) (Fin a) R) (v : Fin a → R) :
     c ∘ (M *ᵥ v) = c.mapMatrix M *ᵥ (c ∘ v) := by
   funext i
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [Matrix.mulVec, dotProduct, map_sum, map_mul, RingHom.mapMatrix_apply]
+
+  simp [Matrix.mulVec, dotProduct, map_sum, map_mul, RingHom.mapMatrix_apply]
 
 theorem sf_mulVec (c : R →+* R) (G T : Matrix (Fin a) (Fin a) R) (u v : Fin a → R) :
     sf c G (T *ᵥ u) (T *ᵥ v) = sf c (Tᵀ * G * c.mapMatrix T) u v := by
@@ -176,13 +216,13 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {w : Pl E} {K : UQ}
 
 theorem herm_sum_left (x z : B.A) (s : Finset (Fin a)) (f : Fin a → B.A) :
     B.herm x (∑ i ∈ s, f i) z = ∑ i ∈ s, B.herm x (f i) z := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [InvAlg.herm, Finset.mul_sum, Finset.sum_mul, map_sum]
+
+  simp only [InvAlg.herm, Finset.mul_sum, Finset.sum_mul, map_sum]
 
 theorem herm_sum_right (x y : B.A) (s : Finset (Fin a)) (f : Fin a → B.A) :
     B.herm x y (∑ i ∈ s, f i) = ∑ i ∈ s, B.herm x y (f i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [InvAlg.herm, map_sum B.σ, Finset.mul_sum, map_sum]
+
+  simp only [InvAlg.herm, map_sum B.σ, Finset.mul_sum, map_sum]
 
 theorem herm_smul_left (x y z : B.A) (c : K.E) : B.herm x (c • y) z = c * B.herm x y z := by
   simp only [InvAlg.herm, mul_smul_comm, smul_mul_assoc, map_smul, smul_eq_mul]
@@ -205,10 +245,10 @@ theorem herm_basis (x y z : B.A) :
 theorem sf_crd (c : w.adicCompletion E →+* w.adicCompletion E) (he : ∀ x, e (K.c x) = c (e x))
     (G : Matrix (Fin a) (Fin a) (w.adicCompletion E)) (β : B.A) (hG : ∀ i j, G i j = e (B.herm β (b i) (b j)))
     (y z : B.A) : sf c G (crd e b y) (crd e b z) = e (B.herm β y z) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [herm_basis b, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [sf, dotProduct, Matrix.mulVec, Function.comp_apply, crd, hG, ← he, Finset.mul_sum, map_sum, map_mul]
+
+  rw [herm_basis b, map_sum]
+
+  simp only [sf, dotProduct, Matrix.mulVec, Function.comp_apply, crd, hG, ← he, Finset.mul_sum, map_sum, map_mul]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
 

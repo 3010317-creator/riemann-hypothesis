@@ -1,38 +1,81 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsAdaptedEmpty
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LeviNormalizesUnipotentVariant
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanIwasawaMinimalParabolic
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlace
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QminorPolyMap
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetAddOneSubEqSumQminorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TracedQminorComatrixTruncatedInverseStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetPolyMapMonicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuantumDeterminantPolynomialCoefficients
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliPolynomialCoefficientsIdeal
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsGenericIffIsGenericFor
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParIndJacPlacing
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
-public import Formalism.LocalToGlobal.IndefiniteReal.RealSeparation.FrameMatEqGlobal
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousKapSymm
-public import Formalism.LocalToGlobal.GlobalTheory.VolumeCarry.VolumeTheoremTwoOfRationalFrames
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EmbRelAtRealPlaceOfUnitaryEmbedding
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CenterActionTransportChart
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlockBasisChangeEntriesStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousKapSymm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QminorPolyMap
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EmbRelAtRealPlaceOfUnitaryEmbedding
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetAddOneSubEqSumQminorStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetPolyMapMonicStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TracedQminorComatrixTruncatedInverseStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliPolynomialCoefficientsIdeal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuantumDeterminantPolynomialCoefficients
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisConjugateZeroEntriesStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedFrameOrthogonalSubspaceStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterLocalNontrivialStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreservedStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GelfandEigenvalueCasimirScalarStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanIwasawaMinimalParabolic
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AutomorphicFunctionRestrictBlockStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisConjugateZeroEntriesStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlockBasisChangeEntriesStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConjugatedMatrixUnitEntriesStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbeddingStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GelfandEigenvalueCasimirScalarStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreservedStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LeviNormalizesUnipotentVariant
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.OrthogonalSubspaceWittFrameExtensionStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.RealSeparation.FrameMatEqGlobal
+import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.LocalToGlobal.GlobalTheory.VolumeCarry.VolumeTheoremTwoOfRationalFrames
 
 @[expose] public section
 
@@ -327,8 +370,8 @@ theorem mid_frame : ∀ (D : D7) (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V)
     refine GlobalTheory.T.block_basis_change_entries V.rank V'.rank a hdim _ hPu _ _ _ _ f1 ?_ ?_ ?_
     · rw [← Matrix.map_mul, hBB, Matrix.map_one _ (map_zero _) (map_one _)]
     · intro i j
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.map_apply, hB i j, map_sum, map_mul]
+
+      simp only [Matrix.map_apply, hB i j, map_sum, map_mul]
     · intro b hb
       have h1 := hperp b hb
       have h2 : ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ = (Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) (frameMat V V' ι) * V.gram).map (tauE D τ) := by
@@ -658,8 +701,8 @@ theorem gelf_slices_monic : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F 
             (⟨a + u.val, by omega⟩ : Fin V.rank) (1 : ℂ) * (C.1.map (tauE D τ))⁻¹) := by
       funext p q
       rw [hBe p q]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul]
+
+      simp only [map_sum, map_smul]
     rw [e, gelfA_conj _ hBB]
     exact hq F h1 h2 g hg
   choose q hqm hq using key

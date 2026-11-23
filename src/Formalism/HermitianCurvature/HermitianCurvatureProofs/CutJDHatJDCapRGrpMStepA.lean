@@ -2,8 +2,50 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDCapRGrpMRad
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QxChain
-public import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianInvariantCellAction
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.OperatorPreservesFusionForms
+import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -379,8 +421,8 @@ theorem lvlA (hz : inWb k r z) (hz' : inWb k r z') (l : Fin r) (hl : l.val + 1 =
                   (mulB E l.succ (ho1 l hD.1) (aCbi k l) * mulB E l.succ (ho1 l hD.1) (aY z l.succ (skip1 t x)) *
                     mB E l.succ (ho1 l hD.1) (skip1 s ∘ skip1 w) (skip1 t ∘ skip1 x) (uC k r l.succ Y - 1) *
                     (xbv k r z' l.succ (skip1 s w) • (1 : Module.End ℂ (sfData E l.succ (ho1 l hD.1)).V)))))) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul]
+
+    simp only [map_sum, map_smul]
     unfold Formalism.FourierDecayAlt.P.CutMP.NLv
     refine Fintype.sum_equiv (finCongr (mdim_lastL (k := k) l hl)) _ _ (fun s => ?_)
     refine Fintype.sum_equiv (finCongr (mdim_lastL (k := k) l hl)) _ _ (fun t => ?_)

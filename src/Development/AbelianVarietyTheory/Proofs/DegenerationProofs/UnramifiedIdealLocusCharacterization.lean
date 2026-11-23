@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Imports
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -137,11 +183,11 @@ theorem ker_le {R B S : Type} {n : ℕ} [CommRing R] [CommRing B] [CommRing S] [
       intro r
       rw [← q.commutes, hD, algebraMap_eq, gr_C, map_zero])
   have h := congrArg l hu
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero] at h
+
+  rw [map_sum, map_zero] at h
   simp only [map_smul, dd, hl, hD, gr_X] at h
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← map_smul, ← map_sum] at h
+
+  simp only [← map_smul, ← map_sum] at h
   have h2 : ∑ i, u i • (Pi.single i 1 : Fin n → S) = u := by
     funext j; simp [Pi.single_apply]
   rw [h2] at h
@@ -208,8 +254,8 @@ theorem factA {R k C : Type} {n : ℕ} [CommRing R] [CommRing k] [CommRing C] [A
   choose h hh using fun j => hm (D (X j))
   refine ⟨h, fun j => (hI _).2 (by rw [← hρ, hh, hD]), fun g hg => ?_⟩
   have h1 : g - ∑ j, pderiv j g * h j ∈ T := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hm0, map_sub, map_sum]
+
+    rw [← hm0, map_sub, map_sum]
     have := hch g
     simp only [D, (hI g).1 hg, map_zero, sub_zero] at this
     rw [this, sub_eq_zero]
@@ -258,8 +304,8 @@ theorem factB {R B S : Type} {n : ℕ} [CommRing R] [CommRing B] [CommRing S] [A
   have h2 : ∑ i, gr σ f i • (Pi.single i 1 : Fin n → S) = gr σ f := by
     funext j; simp [Pi.single_apply]
   rw [gr_sub, gr_sum, sub_eq_zero, ← h1]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs => rw [← h2, map_sum]
+
+  conv_lhs => rw [← h2, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [gr_mul, hσ (h j), hh1, map_zero, zero_smul, add_zero, hh2, map_smul]; rfl
 
@@ -345,8 +391,8 @@ theorem core {R B B' S : Type} {n : ℕ} [CommRing R] [CommRing B] [CommRing B']
     have e1 : b' = e + ∑ i, φ (q (pderiv i g)) * β i + φ (q p) := by
       apply huniq
       rw [mul_add, mul_add, he, hb', Finset.mul_sum]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sub, map_sum, map_mul, hCπ, ← hβh]
+
+      simp only [map_sub, map_sum, map_mul, hCπ, ← hβh]
       simp only [mul_left_comm (algebraMap R B' π)]
       ring
     have ddsum : ∀ f : Fin n → B', dd R B' S (∑ i, f i) = ∑ i, dd R B' S (f i) := fun f => by
@@ -496,11 +542,11 @@ theorem tors {R B B' S : Type} [CommRing R] [CommRing B] [CommRing B'] [CommRing
   obtain ⟨r, hr⟩ := hu
   have h1 : ι ((r : S) • ∑ i, u i • dd R B S (x i)) = 0 := by
     have := congrArg l hr
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Submonoid.smul_def, map_smul, map_sum, map_zero] at this
+
+    rw [Submonoid.smul_def, map_smul, map_sum, map_zero] at this
     simp only [map_smul, hlφ] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, map_sum]
+
+    rw [map_smul, map_sum]
     simpa only [map_smul] using this
   obtain ⟨s, hs⟩ := (IsLocalizedModule.eq_zero_iff (nonZeroDivisors S) ι).1 h1
   exact ⟨s * r, by rw [mul_smul]; exact hs⟩

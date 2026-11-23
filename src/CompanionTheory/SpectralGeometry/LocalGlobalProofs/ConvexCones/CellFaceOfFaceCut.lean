@@ -1,10 +1,49 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolyhedralPolarisationFaceCutIsCell
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 
 @[expose] public section
 
@@ -36,8 +75,8 @@ theorem apply_eq_sum_of_toReal {m : ℕ} {β : LinearMap.BilinForm ℤ X} {u : F
     have hq : ∀ a b : X, π 1 * ((β a b : ℤ) : ℚ) = ∑ i, π (c i) * ((u i a b : ℤ) : ℚ) := by
       intro a b
       have h1 := congrArg π (hpt a b)
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← one_mul ((β a b : ℤ) : ℝ), hπ, map_sum] at h1
+
+      rw [← one_mul ((β a b : ℤ) : ℝ), hπ, map_sum] at h1
       simpa only [hπ] using h1
     obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors ℤ)
       (Finset.univ : Finset (Option (Fin m))) (fun o : Option (Fin m) => o.elim (π 1) (fun i => π (c i)))
@@ -53,17 +92,17 @@ theorem apply_eq_sum_of_toReal {m : ℕ} {β : LinearMap.BilinForm ℤ X} {u : F
       rw [mul_assoc, hq x y, Finset.mul_sum]
       exact Finset.sum_congr rfl fun i _ => by ring
     have h2 := congrArg (fun β => ((F β : ℤ) : ℚ)) hint
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_zsmul, map_sum, smul_eq_mul, Int.cast_mul, Int.cast_sum, hz', Option.elim_none,
-      Option.elim_some] at h2
+
+    simp only [map_zsmul, map_sum, smul_eq_mul, Int.cast_mul, Int.cast_sum, hz', Option.elim_none,
+    Option.elim_some] at h2
     have hb0 : ((b : ℤ) : ℚ) ≠ 0 := by exact_mod_cast nonZeroDivisors.ne_zero b.2
     apply mul_left_cancel₀ hb0
     rw [Finset.mul_sum, ← mul_assoc, h2]
     exact Finset.sum_congr rfl fun i _ => by ring
   have hr : ∑ i, c i * (F (u i) : ℝ) - (F β : ℝ) = 0 := by
     refine (Module.forall_dual_apply_eq_zero_iff ℚ _).mp fun π => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, ← one_mul ((F β : ℤ) : ℝ), hπ]
+
+    rw [map_sub, map_sum, ← one_mul ((F β : ℤ) : ℝ), hπ]
     simp only [hπ]
     rw [← hrat π]
     ring
@@ -95,8 +134,8 @@ theorem est_at {m : ℕ} {γ : Fin m → LinearMap.BilinForm ℤ X} {N : ℕ} {�
     obtain ⟨k, c, hk, hkc⟩ := hstr u hu hp heqR
     have hsum : (k : ℤ) * h u = ∑ i, (c i : ℤ) * h (γ i) := by
       have := congrArg h hkc
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [map_nsmul, map_sum, nsmul_eq_mul] using this
+
+      simpa [map_nsmul, map_sum, nsmul_eq_mul] using this
     have hnn : 0 ≤ ∑ i, (c i : ℤ) * h (γ i) :=
       Finset.sum_nonneg fun i _ => mul_nonneg (Int.natCast_nonneg _) (hγ i)
     have hhu : 0 ≤ h u := by
@@ -230,8 +269,8 @@ theorem isCell_comp : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero
     obtain ⟨k, c, hk, hkc⟩ := hstr β hβ hp hd
     have hsum : (k : ℤ) * h β = ∑ j, (c j : ℤ) * h (γ j) := by
       have := congrArg h hkc
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [map_nsmul, map_sum, nsmul_eq_mul] using this
+
+      simpa [map_nsmul, map_sum, nsmul_eq_mul] using this
     have hhβ : h β = 0 := by exact_mod_cast hh0β
     rw [hhβ, mul_zero] at hsum
     have hterm := (Finset.sum_eq_zero_iff_of_nonneg

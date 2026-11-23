@@ -1,8 +1,46 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.L2UnitaryRepresentationData
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteDimensionalForallMapMemStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteDimensionalKill
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLinearMapTensorOfPairing
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -95,9 +133,9 @@ theorem exists_finiteDimensional_kill (ha : IsGK a) (hA : AdmGK R.HK)
   have hR : ∀ w, ∀ x ∈ F, inner ℂ (R.ι x) (R.ι (φ w)) = l (B w x) := fun w x hx => by
     conv_rhs => rw [← he x hx]
     rw [hφ]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, inner_sum, inner_smul_right, LinearMap.map_smulₛₗ,
-      inner_conj_symm, smul_eq_mul, mul_comm]
+
+    simp only [map_sum, map_smul, inner_sum, inner_smul_right, LinearMap.map_smulₛₗ,
+    inner_conj_symm, smul_eq_mul, mul_comm]
   have hreal : ∀ X ∈ upq p q, IsKC X → ∀ w, φ (a X w) = R.HK.act X (φ w) := by
     intro X hX hK w
     have hd : φ (a X w) - R.HK.act X (φ w) ∈ F :=
@@ -151,13 +189,13 @@ theorem exists_map (ha : IsGK a) (hA : AdmGK R.HK)
     have h1 := hkill (y - ∑ j, inner ℂ (R.ι (e j)) (R.ι y) • e j) (fun x hx => by
       rw [map_sub, inner_sub_left, sub_eq_zero]
       conv_lhs => rw [← he x hx]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, inner_sum, sum_inner, inner_smul_right, inner_smul_left,
-        inner_conj_symm, mul_comm])
+
+      simp only [map_sum, map_smul, inner_sum, sum_inner, inner_smul_right, inner_smul_left,
+      inner_conj_symm, mul_comm])
     rw [map_sub, sub_eq_zero] at h1
     rw [h1]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, ctr_tmul, LinearMap.map_smulₛₗ, inner_conj_symm]
+
+    simp only [map_sum, ctr_tmul, LinearMap.map_smulₛₗ, inner_conj_symm]
   choose g hg using ex
   let f : W →ₗ[ℂ] R.HK.V ⊗[ℂ] U :=
     { toFun := g

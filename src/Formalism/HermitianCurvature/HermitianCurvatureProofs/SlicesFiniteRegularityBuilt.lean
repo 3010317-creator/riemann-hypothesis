@@ -1,26 +1,80 @@
 module
 
-public import Mathlib
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SliceAppend
+
 public import Formalism.HermitianCurvature.StatementJCT
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPIntegralOfPlaces
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CorollaryU1Plain
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.DegPderivMul
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Expand
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CvRhoOfParts
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DerivativeBoundInBanachSpace
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdditiveCharacterPsi
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactlySupportedBanachModel
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhiBoundPartsOfRadicalParametrisation
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WirtingerIntegrationByParts
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComposeDifferentialOperators
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CoordinateSizesOfHypotheses
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CorollaryU1Plain
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DerivativeBoundInBanachSpace
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.PhiBoundPartsOfRadicalParametrisation
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.TheoremPIntegralOfPlaces
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.WirtingerIntegrationByParts
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.DegPderivMul
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Expand
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -498,16 +552,7 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
   refine ⟨Cp, hCp0, ?_⟩
   intro Cc hCc k r Wp Wq _ _ _ _ _ _ T f χ A₀ N P0 hPk hPr hk2 hχ hf hfA hA₀ ε hε i hi hi1 w hw p hc hp a
 
-  obtain ⟨h, n, t, rfl⟩ : ∃ (h : C.LPt) (n : ℕ) (t : ℂ), p = h ++ [(n + 1, t)] := by
-    have hne : p ≠ [] := by
-      rintro rfl
-      have := hp.2
-      simp [D.ptSize] at this
-      omega
-    refine ⟨p.dropLast, (p.getLast hne).1 - 1, (p.getLast hne).2, ?_⟩
-    have h1 : 1 ≤ (p.getLast hne).1 := (hp.1 _ (List.getLast_mem hne)).1
-    rw [Nat.sub_add_cancel h1]
-    exact (List.dropLast_append_getLast hne).symm
+  obtain ⟨h, n, t, rfl⟩ := Formalism.FourierDecayAlt.P.SliceAppend.exists_append_succ hi1 hp
   obtain ⟨hpb, hps⟩ := hp
   subst hps
   set ph := D.ptSize h with hph
@@ -519,47 +564,13 @@ theorem pos_levels (hL : LettersDD) (hP : PosCore) (hI : IntG) (hT : OrbitSliceI
   set ρ := r - D.ptSize (h ++ [(n + 1, t)]) with hρ
   have hsum : ph + (n + 1) + ρ = r := by omega
 
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hlocH).1
-  have hσ : ∀ q : Fin (D.ptSize (h ++ [(n + 1, t)])),
-      ((Formalism.FourierDecayAlt.P.Dx2.SL.sigP (n := n) (D.ptPerm h)) (Fin.cast hP q)).val = (D.ptPerm (h ++ [(n + 1, t)]) q).val := by
-    intro q
-    rw [hspec q, Formalism.FourierDecayAlt.P.Dx2.SL.partner_append (n + 1) t h q.val (by have := q.isLt; omega)]
-    by_cases h1 : q.val < D.ptSize h
-    · rw [if_pos h1]
-      have e : Fin.cast hP q = Fin.castAdd (n + 1) ⟨q.val, h1⟩ := Fin.ext rfl
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.blockPerm_castAdd]
-      exact hspec' ⟨q.val, h1⟩
-    · rw [if_neg h1]
-      have e : Fin.cast hP q = Fin.natAdd (D.ptSize h) ⟨q.val - D.ptSize h, by have := q.isLt; omega⟩ :=
-        Fin.ext (by simp; omega)
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.blockPerm_natAdd]
-      simp only [Fin.val_natAdd, Fin.val_rev]
-      omega
-  have hd : ∀ q : Fin (D.ptSize (h ++ [(n + 1, t)])),
-      Formalism.FourierDecayAlt.P.Dx2.SL.dP (n := n) (D.ptDiag h) t (Fin.cast hP q) = D.ptDiag (h ++ [(n + 1, t)]) q := by
-    intro q
-    simp only [D.ptDiag]
-    rw [Formalism.FourierDecayAlt.P.Dx2.SL.scal_append (n + 1) t h q.val (by have := q.isLt; omega)]
-    by_cases h1 : q.val < D.ptSize h
-    · rw [if_pos h1]
-      have e : Fin.cast hP q = Fin.castAdd (n + 1) ⟨q.val, h1⟩ := Fin.ext rfl
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.dP, Fin.addCases_left]; rfl
-    · rw [if_neg h1]
-      have e : Fin.cast hP q = Fin.natAdd (D.ptSize h) ⟨q.val - D.ptSize h, by have := q.isLt; omega⟩ :=
-        Fin.ext (by simp; omega)
-      rw [e, Formalism.FourierDecayAlt.P.Dx2.SL.dP, Fin.addCases_right]
   set G := D.uwG k r T.base.z T.base.z' (D.cutF T.base χ f ε) (D.ptSize (h ++ [(n + 1, t)])) hi w a with hG
   have hS : ∀ γ : B.Mat k ρ, D.sliceAt k r T.base.z T.base.z' G (h ++ [(n + 1, t)]) γ =
       U.PhiFun (p := ph + (n + 1)) (s := 0) k ρ (Formalism.FourierDecayAlt.P.Dx2.SL.sigP (D.ptPerm h))
         (Formalism.FourierDecayAlt.P.Dx2.SL.dP (D.ptDiag h) t) (D.castV (by omega) T.base.z) (D.castV (by omega) T.base.z')
         (D.castF (by omega) G) (fun a => a.elim0) γ := by
     intro γ
-    obtain ⟨-, hT2⟩ := Formalism.FourierDecayAlt.P.Dx2.SL.phi_transport (k := k) (ρ := ρ) hP _ _ hσ _ _ hd
-      (D.castV (by omega) T.base.z) (D.castV (by omega) T.base.z') (D.castF (by omega) G) γ
-    unfold D.sliceAt
-    rw [dite_eq_left (by omega), hT2]
-    simp only [Formalism.FourierDecayAlt.P.Dx2.SL.castV_castV, Formalism.FourierDecayAlt.P.Dx2.SL.castF_castF]
+    exact Formalism.FourierDecayAlt.P.SliceAppend.slice_append k r T.base.z T.base.z' G h n t hloc (by omega) γ
   have e1 : r = ph + (n + 1) + ρ := hsum.symm
   have e2 : ph + (n + 1) + ρ = r := hsum
   have hj1 : 1 ≤ ph + (n + 1) := by omega
@@ -1714,7 +1725,7 @@ namespace Formalism.FourierDecayAlt.P.JCTx6.Pos
 
 open Formalism.FourierDecayAlt Formalism.REAL Formalism.QuantumDeterminants
 
-set_option maxHeartbeats 1000000 in
+
 theorem posCore : PosCore := by
   intro hIntG hTrans
   obtain ⟨CcU, hCcU⟩ := Formalism.FourierDecayAlt.P.corollary_u2_germ_hypothesis 127 0

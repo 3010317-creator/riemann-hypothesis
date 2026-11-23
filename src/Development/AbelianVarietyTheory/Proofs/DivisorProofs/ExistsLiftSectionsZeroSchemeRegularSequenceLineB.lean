@@ -1,13 +1,47 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IntegralBound
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsCoordAtPoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeSmul
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHeightIffOfDegreeEq
-public import Formalism.HarderNarasimhan.StatementPl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedSectionChartCoords
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalCombinationOfLocalRegularIdeal
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsFrameOfForallExists
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.SumNegOnePowFinrankEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalCombinationOfLocalRegularIdeal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -62,8 +96,8 @@ theorem map_locSpan (F : Y.Modules) {d : ℕ} (t : Fin (d + 1) → L.Sec) [Mono 
     have hex : Function.Exact ((mulSecOfEq F (zofSec (t 0)) h).app V)
         ((Twist.map (lbZPow L m) (cutπ F hL (t 0))).app V) :=
       exact_app_of_exact_of_mono (RegSeqKer.shortExact_twistComplex hL F (t 0) h).exact V
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← app_res, e, Fin.sum_univ_succ, map_add (f := _), hex.apply_apply_eq_zero, zero_add, map_sum]
+
+    rw [← app_res, e, Fin.sum_univ_succ, map_add (f := _), hex.apply_apply_eq_zero, zero_add, map_sum]
     exact Finset.sum_congr rfl fun i _ => π_mul hL F _ _ h V _
 
 theorem exists_glue (d : ℕ) : ∀ (t : Fin d → L.Sec) (F : Y.Modules) [F.IsQuasicoherent] (j₀ l m : ℤ)
@@ -112,13 +146,13 @@ theorem exists_glue (d : ℕ) : ∀ (t : Fin d → L.Sec) (F : Y.Modules) [F.IsQ
     obtain ⟨v, hv'⟩ := (hex A.1 ((twistZ F L m).presheaf.map (homOfLE (hAV.trans hV)).op
         ((twistZ F L m).presheaf.map (homOfLE le_top).op σ - b y) -
         ∑ i, (mulSecOfEq F (zofSec (t i.succ)) h).app A.1 (u i))).1 (by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sub, map_sum, sub_eq_zero]
+
+      rw [map_sub, map_sum, sub_eq_zero]
       erw [app_res, map_sub, app_res, hσ]
       rw [← res_res _ hAV hV]
       erw [e]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [π_mul, hu]
       exact (app_res _ _ _).symm)
@@ -162,8 +196,8 @@ theorem vanishesTo_of_locSpan {d : ℕ} (t : Fin d → L.Sec) {l m : ℤ} (h : l
     VanishesTo (cutIdeal hL t) 1 (toH0 p x) := fun y hs hy i hi => by
   obtain ⟨V, hV, hyV, c, e⟩ := hx y hy
   have hv : VanishesTo (cutIdeal hL t) 1 (H0.restr hV (toH0 p x)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← toH0_res p hM hL, e, map_sum]
+
+    rw [← toH0_res p hM hL, e, map_sum]
     show _ ∈ filTop p _ V (cutIdeal hL t) 1
     refine Submodule.sum_mem _ fun a _ => ?_
     rw [mem_filTop, global_section_mul p hM hL (t a) h]
@@ -188,9 +222,9 @@ theorem locSpan_of_vanishesTo {d : ℕ} (t : Fin d → L.Sec) {l m : ℤ} (h : l
   obtain ⟨c, hc⟩ := Ideal.mem_span_range_iff_exists_fun.1 h₂
   refine ⟨V.1, hVO, hV, fun a => (Twist.zchartEquiv hL l j hVj).symm ((LB.chartEquiv hM i hVi).symm (c a)), ?_⟩
   refine (Twist.zchartEquiv hL m j hVj).injective ((LB.chartEquiv hM i hVi).injective ?_)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Twist.zchartEquiv_mulSecOfEq_app, map_smul, LinearEquiv.apply_symm_apply, Twist.zfun_zofSec,
-    smul_eq_mul]
+
+  simp only [map_sum, Twist.zchartEquiv_mulSecOfEq_app, map_smul, LinearEquiv.apply_symm_apply, Twist.zfun_zofSec,
+  smul_eq_mul]
   rw [LB.chartEquiv_apply, Twist.zchartEquiv_apply]
   refine Eq.trans ?_ (hc.symm.trans (Finset.sum_congr rfl fun a _ => mul_comm _ _))
   rw [HSKerRes.coord_resM]

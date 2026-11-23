@@ -1,10 +1,48 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConvZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicKernelFixedBasisWittTensorLatticStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtalePhiMatrixDecompletionToWachStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicKernelFixedBasisWittTensorLatticStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -21,8 +59,8 @@ theorem repr_of_fixed (e : Module.Basis (Fin r) R M) (τ : R →+* R) (A : M →
     e.repr (A x) i = τ (e.repr x i) := by
   have h : A x = ∑ k, τ (e.repr x k) • e k := by
     conv_lhs => rw [← e.sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, hA, he]
+
+    simp only [map_sum, hA, he]
   rw [h, e.repr_sum_self]
 
 theorem isUnit_matrix (e : Module.Basis (Fin r) R M) (σ : R →+* R) (Φ : M →+ M)
@@ -32,8 +70,8 @@ theorem isUnit_matrix (e : Module.Basis (Fin r) R M) (σ : R →+* R) (Φ : M �
   have hle : Submodule.span R (Set.range Φ) ≤ Submodule.span R (Set.range fun j => Φ (e j)) := by
     rw [Submodule.span_le]
     rintro _ ⟨x, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← e.sum_repr x, map_sum]
+
+    rw [← e.sum_repr x, map_sum]
     refine Submodule.sum_mem _ fun k _ => ?_
     rw [hΦ]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
@@ -62,8 +100,8 @@ theorem change_basis (e : Module.Basis (Fin r) R M) (σ : R →+* R) (Φ : M →
     ext m
     have hm := congrFun (congrFun h m) j
     simp only [Matrix.mul_apply, Matrix.of_apply, Matrix.map_apply] at hm
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [hL, map_sum, hΦ, map_smul, smul_eq_mul, Finsupp.single_apply]
+
+    simp [hL, map_sum, hΦ, map_smul, smul_eq_mul, Finsupp.single_apply]
     simpa only [mul_comm] using hm
   rw [key, Module.Basis.repr_sum_self]
 

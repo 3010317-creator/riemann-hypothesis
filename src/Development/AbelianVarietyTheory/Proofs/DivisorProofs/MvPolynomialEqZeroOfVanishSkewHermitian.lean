@@ -1,7 +1,54 @@
 module
 
-public import Mathlib
 public import Formalism.SatakeDualWeyl.Statement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.MvPolynomial.Funext
 
 @[expose] public section
 
@@ -39,8 +86,8 @@ theorem eq_zero_of_rat_comb {P G : Type} [Fintype G] (r : G → P → ℂ) (Q : 
     rw [MvPolynomial.eval₂Hom_bind₁]
     congr 2
     funext p
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum]
+
+    simp [map_sum]
   have hQ' : Q' = 0 := by
     refine MvPolynomial.funext_set (fun _ => Set.range (Rat.cast : ℚ → ℂ))
       (fun _ => Set.infinite_range_of_injective Rat.cast_injective) fun z hz => ?_
@@ -107,9 +154,9 @@ theorem eq_zero_of_vanish_skew (F E : Type) [Field F] [NumberField F] [Field E] 
   refine eq_zero_of_rat_comb (fun G p => ψ p.1 ((J⁻¹ * A G) p.2.1 p.2.2)) Q (fun t => ?_) (fun y => ?_)
   · have hA : Formalism.UG.cT c (∑ G, (t G : E) • A G) = -∑ G, (t G : E) • A G := by
       ext i j
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, Matrix.sum_apply, Matrix.neg_apply,
-        Matrix.smul_apply, smul_eq_mul, map_sum, map_mul, map_ratCast]
+
+      simp only [Formalism.UG.cT, Matrix.transpose_apply, Matrix.map_apply, Matrix.sum_apply, Matrix.neg_apply,
+      Matrix.smul_apply, smul_eq_mul, map_sum, map_mul, map_ratCast]
       rw [← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun G _ => ?_
       have := congrFun (congrFun (cT_gen c hcc G.1 G.2.1 (b G.2.2)) i) j
@@ -157,8 +204,8 @@ theorem eq_zero_of_vanish_skew (F E : Type) [Field F] [NumberField F] [Field E] 
     have e2 := congrFun (congrFun e1 i) j
     rw [Matrix.of_apply, Matrix.mul_apply] at e2
     rw [← e2]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Matrix.mul_apply, map_sum, map_mul, Finset.mul_sum, Matrix.map_apply, ← hw]
+
+    simp only [Matrix.mul_apply, map_sum, map_mul, Finset.mul_sum, Matrix.map_apply, ← hw]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun G _ => Finset.sum_congr rfl fun l _ => ?_
     ring

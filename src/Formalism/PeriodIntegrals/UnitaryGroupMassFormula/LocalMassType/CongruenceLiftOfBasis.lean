@@ -1,10 +1,51 @@
 module
 
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.WCoreG
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.IdxStep
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.WProof
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.IsClosedCongruenceSubgroup
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.MemSecondProjectionIff
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.SaturatedSplitLattice
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.IdxStep
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.IsClosedCongruenceSubgroup
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.SplitDecomp
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalMassType.WCoreG
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -72,8 +113,8 @@ theorem congruence_lift_of_basis {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin
   have hPrk : IsPrim v Λ (k • Y0) := by
     refine ⟨fun a => kv_lat hkK (hPr.1 a), fun c hc => hPr.2 c ?_⟩
     have e : ∑ a, c a • (k • Y0) a = lin (Fv F v) σ J k (∑ a, c a • Y0 a) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]; simp only [map_smul, smul_tup]
+
+      rw [map_sum]; simp only [map_smul, smul_tup]
     rw [e] at hc
     have := kv_lat (kv_inv hkK) hc
     rwa [lin_inv_lin] at this
@@ -92,8 +133,8 @@ theorem congruence_lift_of_basis {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin
     rw [memΛ]
     have : Qi *ᵥ (∑ a, c a • W a) = ∑ a, c a • (Qi *ᵥ W a) := by
       show Matrix.mulVecLin Qi (∑ a, c a • W a) = _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp only [map_smul, Matrix.mulVecLin_apply]
     rwa [this]
   set Z0 : Fin (r + 1) → Fin n → Fv F v ⊗[F] E := fun a => Qi *ᵥ Y0 a with hZ0def
@@ -197,8 +238,8 @@ theorem congruence_lift_of_basis {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin
     · intro i
       rw [hkstd, SD.fst_proj_split_matrix_mulVec]
       have := congrArg (fun M => f (M i a)) hk1A
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.mul_apply, map_sum, map_mul] at this
+
+      simp only [Matrix.mul_apply, map_sum, map_mul] at this
       simp only [mulVec, dotProduct, Matrix.map_apply]
       exact this
     · intro i
@@ -206,8 +247,8 @@ theorem congruence_lift_of_basis {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin
         rw [← hk1B, ← Matrix.mul_assoc, e3, Matrix.one_mul]
       rw [hkstd, SD.snd_proj_split_matrix_mulVec]
       have := congrArg (fun M => f (M i a)) hB
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.mul_apply, map_sum, map_mul] at this
+
+      simp only [Matrix.mul_apply, map_sum, map_mul] at this
       simp only [mulVec, dotProduct, Matrix.map_apply]
       exact this
 

@@ -1,8 +1,55 @@
 module
 
 public import Formalism.HermitianCurvature.StatementLE
+public import Mathlib.LinearAlgebra.Lagrange
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.MeasIterDeriv
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ThetaLimit
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -295,7 +342,6 @@ theorem csTerm : CSTerm := by
     rwa [hds0] at this
   have hDi := hCI ε hε Y hY p
   have hfac : (0:ℝ) < p.factorial := by exact_mod_cast p.factorial_pos
-  have hσ : 0 < 4 * σ := by linarith
   set K : ℝ := Real.exp 1 * p.factorial * (4 * σ) ^ p with hK
   have hKpos : 0 < K := by positivity
   have hE0 : 0 ≤ S.En ε σ Y := integral_nonneg fun ω => mul_nonneg (hth ω) (sq_nonneg' B _ hd _ ω)
@@ -361,7 +407,6 @@ theorem L1 (hTR : ThetaRange) (hTL : ThetaLimit) (B : Base) (σ : ℝ) (hσ : 0 
 theorem L2 (hTS : ThetaSmooth) (hTR : ThetaRange) (hTL : ThetaLimit) (hTB : ThetaBound) (hC : E.CauchyTheta)
     (B : Base) (σ : ℝ) (h4 : 4 ≤ σ) (p : ℕ) (hp : p ≠ 0) (h : B.Ω → ℂ) (hh : Integrable h B.μ) :
     Tendsto (fun ε : ℝ => ∫ ω, (ld p (th ε σ) (B.G ω) : ℂ) * h ω ∂B.μ) (𝓝[>] 0) (𝓝 0) := by
-  have hσ : 0 < 4 * σ := by linarith
   have key : Tendsto (fun ε : ℝ => ∫ ω, (ld p (th ε σ) (B.G ω) : ℂ) * h ω ∂B.μ) (𝓝[>] 0)
       (𝓝 (∫ _ω, (0:ℂ) ∂B.μ)) := by
     refine tendsto_integral_filter_of_dominated_convergence
@@ -562,8 +607,8 @@ theorem adj : Adj := by
     intro ε₂ ω
     unfold pr
     simp_rw [hLeib B _ _ (S.g Y) S.X (S.r + 1) (hJet Y hY) (hI4 Y hY) _ (hsm ε₂) ω]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_div₀, map_mul, Complex.conj_ofReal, map_natCast, Finset.mul_sum, Finset.sum_div]
+
+    simp only [map_sum, map_div₀, map_mul, Complex.conj_ofReal, map_natCast, Finset.mul_sum, Finset.sum_div]
     rw [Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro p _

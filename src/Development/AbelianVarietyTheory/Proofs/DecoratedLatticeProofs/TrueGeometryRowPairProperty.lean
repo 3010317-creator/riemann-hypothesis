@@ -1,40 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Live
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Placed
-public import Formalism.LocalToGlobal.IndefiniteReal.RealRec
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLocFac
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryChainDescent
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalDatumFoldrLocalCombinationsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistChainLevelProductInverseScalarLaws
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryTwistChainValue
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteDatumFactorsOverTwistPrimesLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistParahoricChainLastStepsAgreeColumnsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TupleCharacterAtBasePointDetRootRootOfUnityStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntIffUpMemStdHom
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeEntriesMemSchwartzBruhat
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPlaceLastTwoStepEntriesSchwartzBruhat
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPlaceModelPlaceMap
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentSumDisjointUnion
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NarrowJetMoments
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HermitianCodeWordWeilElementMemQuadraticField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdAtKStdOfTwist
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryRowPairValue
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryTwistLocalIdentity
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricChainLastTwoStepsRootOfUnityStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HatMemSBAndHatOmCol
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CxTiesOf
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOpenKerUnramMulTame
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Live
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
 
 @[expose] public section
 
@@ -44,7 +56,7 @@ open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.StepData GlobalTheory.SplitWeil ValuativeRel
 
-set_option maxHeartbeats 1000000
+
 
 noncomputable section
 namespace GlobalTheory.TwPlaces
@@ -84,19 +96,19 @@ theorem toLoc_frames {E k : Type} [Field E] [Field k] (ι : E →+* k) {A C : Ty
   have key : ∀ (y : Fin b' → E) r, ∑ c, M r c * ι (f.symm y (e c)) = ι (y r) := by
     intro y r
     have h4 : y = ∑ c, f.symm y (e c) • f (Pi.single (e c) 1) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [← f.apply_symm_apply y, pi_eq_sum_univ' (f.symm y), map_sum, ← e.sum_comp]
+
+      conv_lhs => rw [← f.apply_symm_apply y, pi_eq_sum_univ' (f.symm y), map_sum, ← e.sum_comp]
       exact Finset.sum_congr rfl fun b _ => map_smul _ _ _
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [h4, Finset.sum_apply, map_sum]
+
+    conv_rhs => rw [h4, Finset.sum_apply, map_sum]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [← hM r c, Pi.smul_apply, smul_eq_mul, map_mul, mul_comm]
     rfl
   ext r c
   rw [Matrix.mul_apply, Matrix.mul_apply]
   refine (key (Matrix.toLin' (z.reindex (finCongr rfl) (finCongr rfl)) (f' (Pi.single (e' c) 1))) r).trans ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.toLin'_apply, Matrix.mulVec, dotProduct, map_sum]
+
+  rw [Matrix.toLin'_apply, Matrix.mulVec, dotProduct, map_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
   rw [map_mul, ← hM' q c]
   rfl

@@ -1,10 +1,54 @@
 module
 
-public import Mathlib
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.EtaleCoordinates
+public import Mathlib.LinearAlgebra.Determinant
+public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.SpanSingletonProduct
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.FormallyEtaleCoordinates
 public import Development.ResolutionOfSingularities.EmbeddedResolution.EtaleCoordinates.IdealGeneratorsFromBase
-public import Development.ResolutionOfSingularities.EmbeddedResolution.AlgebraicPreliminaries.SpanSingletonProduct
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -233,8 +277,8 @@ private theorem mem_maximalIdeal_mul_of_tmul_D_eq_zero (k : Type*) [CommRing k] 
     exact Ideal.Quotient.eq_zero_iff_mem.mp h1
   have hsum : Dder.liftKaehlerDifferential (KaehlerDifferential.D k A z) = 0 := by
     conv_lhs => rw [← bb.sum_repr (KaehlerDifferential.D k A z)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_eq_zero fun i _ => ?_
     obtain ⟨u, huJ, hu⟩ := hLb i
     rw [map_smul, hu, hsmulmk, Ideal.Quotient.eq_zero_iff_mem]
@@ -279,8 +323,8 @@ private theorem ideal_eq_span_of_tmul_D_mem_span (k : Type*) [CommRing k] (A : T
           KaehlerDifferential.D k A (∑ i, c' i * x i)
           = ∑ i, c i • ((1 : IsLocalRing.ResidueField A) ⊗ₜ[A]
             KaehlerDifferential.D k A (x i)) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum, TensorProduct.tmul_sum]
+
+        rw [map_sum, TensorProduct.tmul_sum]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [mul_comm (c' i) (x i),
           KaehlerDifferential.residue_tmul_D_mul_of_mem_maximalIdeal, hc' i]
@@ -468,8 +512,8 @@ theorem exists_away_ideal_eq_span_and_isUnit_det
     intro y hy
     rw [← hspanI] at hy
     obtain ⟨f, -, hf⟩ := Submodule.mem_span_finset.mp hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hf, map_sum, TensorProduct.tmul_sum]
+
+    rw [← hf, map_sum, TensorProduct.tmul_sum]
     refine Submodule.sum_mem _ fun a ha => ?_
     have ham : a ∈ IsLocalRing.maximalIdeal A := by
       refine hJAm ?_

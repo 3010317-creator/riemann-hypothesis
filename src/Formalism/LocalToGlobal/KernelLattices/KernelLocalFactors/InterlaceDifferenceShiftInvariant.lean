@@ -1,19 +1,71 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.KernelLattices.InterlaceAll
 public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.BranchMap
-public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.Numeric
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.StdDual
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-public import Formalism.SharpRestriction.GlobalSchurBounds.StandardIntegralLatticeExists
-public import Formalism.LocalRingCardinality.FactDelDualNabla
 public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.BranchScale
-public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.Numeric
+public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.XiNorm
 public import Formalism.BranchSandwichDivisors.DivFromPassageAndNorm
-public import Formalism.LocalToGlobal.GroupLattices.FockModels.WeylDim
-public import Formalism.SharpRestriction.GlobalSchurBounds.FiniteModelOfAdmissibleTransports
-public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Wlocal
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LBidetLemmas
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LRowdivLemmas
+public import Formalism.LocalRingCardinality.FactDelDualNabla
+import Formalism.LocalToGlobal.Columns.CoefficientsModP.BaseCh
+import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkMapInitMinor
+import Formalism.LocalToGlobal.Columns.CoefficientsModP.StdDual
+import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+public import Formalism.PeriodIntegrals.AdmissibleModel.WeylDim
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Wlocal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -55,15 +107,15 @@ theorem gramB_det_ne [CharZero K] : (gramB (K := K) sg).det ≠ 0 := by
   have hj : ∀ j, fockB (bVVfun K sg j) (x : Pol K ι n) = 0 := by
     intro j
     have e := congrFun hc0 j
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hxc, ← fockBL_apply, map_sum]
+
+    rw [hxc, ← fockBL_apply, map_sum]
     simp only [map_smul, fockBL_apply, smul_eq_mul]
     calc _ = (gramB (K := K) sg).mulVec c j := by simp [Matrix.mulVec, dotProduct, gramB, mul_comm]
       _ = 0 := by rw [e]; rfl
   have hx : ∀ y : VV K sg, pairBK sg y x = 0 := by
     intro y
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← (bVV K sg).sum_repr y, map_sum, LinearMap.sum_apply]
+
+    rw [← (bVV K sg).sum_repr y, map_sum, LinearMap.sum_apply]
     refine Finset.sum_eq_zero fun j _ => ?_
     rw [map_smul, LinearMap.smul_apply, pairBK_apply, pairB_apply, bVV_coe, hj j]
     simp
@@ -83,10 +135,10 @@ theorem fockB_projVV_basis [CharZero K] (p : Pol K ι n) (k : VVIdx sg) :
   classical
   have hG : IsUnit (gramB (K := K) sg).det := isUnit_iff_ne_zero.mpr (gramB_det_ne sg)
   have hinv : gramB (K := K) sg * (gramB sg)⁻¹ = 1 := Matrix.mul_nonsing_inv _ hG
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [projVV_coe, ← fockBL_apply, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, fockBL_apply, smul_eq_mul]
+
+  rw [projVV_coe, ← fockBL_apply, map_sum]
+
+  simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, fockBL_apply, smul_eq_mul]
   have e : ∀ j, ∑ i, (gramB (K := K) sg)⁻¹ i j * fockB (bVVfun K sg j) p * fockB (bVVfun K sg i) (bVVfun K sg k) =
       fockB (bVVfun K sg j) p * ((gramB (K := K) sg * (gramB (K := K) sg)⁻¹ : Matrix (VVIdx sg) (VVIdx sg) K) k j) := by
     intro j
@@ -108,8 +160,8 @@ theorem fockB_projVV [CharZero K] (p : Pol K ι n) (v : Pol K ι n) (hv : v ∈ 
     simp only [Submodule.coe_smul, bVV_coe] at h1
     exact h1.symm
   rw [hv']
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← fockBL_apply, map_sum, map_smul]
+
+  simp only [← fockBL_apply, map_sum, map_smul]
   simp only [fockBL_apply, fockB_projVV_basis]
 
 theorem projVV_of_mem [CharZero K] (v : Pol K ι n) (hv : v ∈ VV K sg) : (projVV sg v : Pol K ι n) = v := by
@@ -290,11 +342,11 @@ variable {K : Type} [Field K] [CharZero K] {ι : Type} [Fintype ι] {N n : ℕ} 
 theorem fockB_smul_left' {σ : Type} (c : K) (f g : MvPolynomial σ K) : fockB (c • f) g = c * fockB f g := by
   rw [fockB_eq_sum (c • f) g f.support support_smul, fockB, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
-  rw [coeff_smul, smul_eq_mul]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]
   ring
 
 theorem fockB_smul_right' {σ : Type} (c : K) (f g : MvPolynomial σ K) : fockB f (c • g) = c * fockB f g := by
-  simp only [fockB, coeff_smul, smul_eq_mul, Finset.mul_sum]
+  simp only [fockB, MvPolynomial.coeff_smul, smul_eq_mul, Finset.mul_sum]
   exact Finset.sum_congr rfl fun m _ => by ring
 
 theorem ioConst_mul_bFac : ioConst hN K lam sg * (bFac (bExp hN lam sg) : K) =
@@ -363,8 +415,8 @@ theorem lb_fockB_symm (f g : MvPolynomial σ K) : fockB f g = fockB g f := by
 theorem lb_fockB_map {K' : Type} [Field K'] (j : K →+* K') (f g : MvPolynomial σ K) :
     fockB (map j f) (map j g) = j (fockB f g) := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [fockB_eq_sum (map j f) (map j g) f.support (support_map_subset j f), fockB, map_sum]
+
+  rw [fockB_eq_sum (map j f) (map j g) f.support (support_map_subset j f), fockB, map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   simp [coeff_map, map_mul, map_natCast]
 
@@ -417,8 +469,8 @@ theorem lb_gram_det_ne : (gramB (K := K) lam).det ≠ 0 := by
     intro k
     rw [lb_fockB_symm, hxdef]
     have e : fockB (bVVfun K lam k) (∑ i, c i • bVVfun K lam i) = (gramB (K := K) lam *ᵥ c) k := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← fockBL_apply, map_sum]
+
+      rw [← fockBL_apply, map_sum]
       simp only [map_smul, fockBL_apply, smul_eq_mul, Matrix.mulVec, dotProduct, gramB, Matrix.of_apply]
       exact Finset.sum_congr rfl fun i _ => by ring
     rw [e, hc0]; rfl
@@ -456,10 +508,10 @@ theorem lb_proj_spec (p : Pol K ι n) : ∀ v ∈ VV K lam, fockB ((projVV lam p
     · rwa [lb_fockB_sub_left, sub_eq_zero] at this
     · intro k
       rw [lb_fockB_sub_left, hp, sub_eq_zero]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [lb_fockB_symm, ← fockBL_apply, map_sum]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, fockBL_apply, smul_eq_mul]
+
+      rw [lb_fockB_symm, ← fockBL_apply, map_sum]
+
+      simp only [map_sum, map_smul, fockBL_apply, smul_eq_mul]
       have e : ∀ i j, (gramB (K := K) lam)⁻¹ i j * fockB (bVVfun K lam j) p * fockB (bVVfun K lam k) (bVVfun K lam i) =
           fockB (bVVfun K lam j) p * ((gramB (K := K) lam)⁻¹ i j * fockB (bVVfun K lam i) (bVVfun K lam k)) := by
         intro i j; rw [lb_fockB_symm (bVVfun K lam k)]; ring
@@ -944,8 +996,8 @@ theorem weight_monomial_shift_eq_omega (b : ι → Fin n → ℕ) (τ : ι) (m' 
     exact Finset.sum_eq_zero fun _ _ => smul_zero _
   rw [h0, zero_add]
   unfold zExp Formalism.BranchingDeterminantCap.omg
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, lx_w_single, Nat.cast_sum]
+
+  simp only [map_sum, lx_w_single, Nat.cast_sum]
   rw [Finset.sum_eq_single τ]
   · refine Finset.sum_congr rfl fun s _ => ?_
     rw [lx_lxW_top, smul_eq_mul]
@@ -1039,8 +1091,8 @@ theorem coefXi_of (hI : InterlaceAll hN lam sg) (hS : SameShiftAll lam sg) : Coe
       rw [hb]
     · unfold hTen ten
       rw [map_prod]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hxi, Finset.prod_add, map_sum, Finset.sum_eq_single Finset.univ]
+
+  rw [hxi, Finset.prod_add, map_sum, Finset.sum_eq_single Finset.univ]
   · rw [Finset.sdiff_self, Finset.prod_empty, mul_one, hA, lx_coefLast_raise]
   · intro t _ ht
     obtain ⟨τ0, hτ0⟩ : ∃ τ0, τ0 ∉ t := by
@@ -1167,8 +1219,8 @@ theorem lm_weight_map (w : Fin N × Fin N → (Fin N → ℕ)) (m : Fin (n + 1) 
 
 theorem lm_weight_ext (m : Fin (n + 1) × Fin n →₀ ℕ) :
     Finsupp.weight (Formalism.GradedWeylDivisibility.colW N N ∘ lxRho hN) m = lmExt (N := N) (Finsupp.weight (Formalism.GradedWeylDivisibility.colW (n + 1) n) m) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Finsupp.weight_apply, Finsupp.weight_apply, Finsupp.sum, Finsupp.sum, map_sum]
+
+  rw [Finsupp.weight_apply, Finsupp.weight_apply, Finsupp.sum, Finsupp.sum, map_sum]
   refine Finset.sum_congr rfl fun v _ => ?_
   rw [map_nsmul, Function.comp_apply, lm_colW]
 
@@ -1482,7 +1534,7 @@ theorem fockF_smul_smul {σ : Type} (c : ℂ) (p q : MvPolynomial σ ℂ) :
   · unfold Formalism.REAL.fockF
     rw [MvPolynomial.support_smul_eq hc, Finset.mul_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
-    simp only [coeff_smul, smul_eq_mul, star_mul']
+    simp only [MvPolynomial.coeff_smul, smul_eq_mul, star_mul']
     ring
 
 end Comparison₂
@@ -1756,8 +1808,8 @@ theorem variableInclusion_equivariant (g : ι → GL (Fin n) K) (p : Pol K ι n)
     simp only [AlgHom.comp_apply]
     rw [trAct_X]
     unfold upperParabolic
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [rename_X, trAct_X, sum_split_CL hN, map_sum]
+
+    rw [rename_X, trAct_X, sum_split_CL hN, map_sum]
     simp only [upVar, embAll, embGL_CC, embGL_LC, map_zero, zero_mul, add_zero, map_mul, rename_C, rename_X]
   exact AlgHom.congr_fun this p
 
@@ -2029,7 +2081,7 @@ theorem hwA_top (lam : DomWeight N) (sg : DomWeight n) (f : MvPolynomial (Fin N 
         (by intro s _ hs; show hwAw hN (iC hN j1, s) ≤ _; rw [hwAw_off hN _ s (Ne.symm hs)]; exact Nat.zero_le _) m hm rfl
   · intro a
     have h := congrArg (AddMonoidAlgebra.coeff · m) (hw.2 a)
-    rw [hwA_coeff_euler, coeff_smul, smul_eq_mul] at h
+    rw [hwA_coeff_euler, MvPolynomial.coeff_smul, smul_eq_mul] at h
     have := mul_right_cancel₀ (mem_support_iff.1 hm) h
     exact_mod_cast this
   · intro s
@@ -2052,7 +2104,7 @@ theorem hwA_mult_one (lam : DomWeight N) (sg : DomWeight n) (f ξ : MvPolynomial
     (hwA_isHwRow_sub hN sg f ξ _ hw hwξ) hH
   rw [hwA_slice_unique hN _ _ m' m hs' hs] at hm'
   apply mem_support_iff.1 hm'
-  rw [coeff_sub, coeff_smul, smul_eq_mul, div_mul_cancel₀ _ (mem_support_iff.1 hm), sub_self]
+  rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, smul_eq_mul, div_mul_cancel₀ _ (mem_support_iff.1 hm), sub_self]
 
 end Slice
 
@@ -2104,8 +2156,8 @@ theorem hwB_det {A : Type} [CommRing A] [Algebra K A] {s : ℕ} (D : Derivation 
   have key : ∀ M : Matrix (Fin s) (Fin s) A, D M.det = ∑ p, (M.updateCol p fun q => D (M q p)).det := by
     intro M
     simp only [Matrix.det_apply']
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_comm]
+
+    rw [map_sum, Finset.sum_comm]
     refine Finset.sum_congr rfl fun σ _ => ?_
     have hε : D ((((Equiv.Perm.sign σ : ℤˣ) : ℤ) : A) * ∏ i, M (σ i) i) =
         (((Equiv.Perm.sign σ : ℤˣ) : ℤ) : A) * D (∏ i, M (σ i) i) := by
@@ -2189,7 +2241,7 @@ theorem hwB_coeff_X_pderiv {σ : Type} (i : σ) (f : MvPolynomial σ K) (m : σ 
 theorem hwB_euler {r n : ℕ} (a : Fin r) (f : MvPolynomial (Fin r × Fin n) K) (ρ : Fin r → ℕ)
     (hf : IsWeightedHomogeneous (rowW r n) f ρ) : rE K r n a a f = (ρ a : K) • f := by
   ext m
-  rw [hwB_rE_sum, coeff_sum, coeff_smul, smul_eq_mul]
+  rw [hwB_rE_sum, coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul]
   simp only [hwB_coeff_X_pderiv]
   rw [← Finset.sum_mul]
   by_cases hm : AddMonoidAlgebra.coeff f m = 0
@@ -2474,8 +2526,8 @@ theorem hwD_fockB_add_left (f f' g : MvPolynomial σ K) : fockB (f + f') g = foc
 
 theorem hwD_fockB_sum_left {ι' : Type} (s : Finset ι') (F : ι' → MvPolynomial σ K) (g : MvPolynomial σ K) :
     fockB (∑ i ∈ s, F i) g = ∑ i ∈ s, fockB (F i) g := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← fockBL_apply, map_sum, LinearMap.sum_apply]
+
+  rw [← fockBL_apply, map_sum, LinearMap.sum_apply]
   rfl
 
 theorem hwD_fockB_X_mul (i : σ) (f g : MvPolynomial σ K) : fockB (X i * f) g = fockB f (pderiv i g) := by
@@ -2786,8 +2838,8 @@ theorem toUnit_rowAct (k : ℕ) (g : GL (Fin k) K) (f : MvPolynomial (Fin k × F
     change toUnit K k _ = trAct _ (toUnit K k (X v))
     rw [toUnit_X, trAct_X]
     unfold Formalism.GradedWeylDivisibility.rowAct
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [aeval_X, map_sum]
+
+    rw [aeval_X, map_sum]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [map_mul, toUnit_X, Matrix.transpose_apply]
     congr 1
@@ -3168,14 +3220,14 @@ lemma inC_ker_rowDiv {n : ℕ} {σ : Type} (sg : Fin n → ℕ)
     intro c hc
     have e := hst (Matrix.GeneralLinearGroup.mkOfDetNeZero (inC_mat a b c) (inC_mat_det a b c hc)) p hp h0
     have e' : d (rowAct ℚ (inC_mat a b c) p) = 0 := e
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← inC_eval_rowGen, inC_eval_C _ N h1, map_sum] at e'
+
+    rw [← inC_eval_rowGen, inC_eval_C _ N h1, map_sum] at e'
     have e2 := congrArg (AddMonoidAlgebra.coeff · m) e'
     simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, coeff_sum] at e2
     rw [Polynomial.IsRoot, hP, Polynomial.eval_finsetSum]
     rw [← e2]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Polynomial.eval_monomial, ← smul_eq_C_mul, map_smul, coeff_smul, smul_eq_mul, mul_comm]
+    rw [Polynomial.eval_monomial, ← smul_eq_C_mul, map_smul, MvPolynomial.coeff_smul, smul_eq_mul, mul_comm]
     rfl
   have hP0 : P = 0 := by
     apply Polynomial.eq_zero_of_infinite_isRoot
@@ -3296,8 +3348,8 @@ lemma inC_rename_rowAct (g : GL (Fin n) ℚ) (G : MvPolynomial (Fin (n + 1) × F
     intro v
     simp only [AlgHom.comp_apply, rename_X]
     unfold rowAct
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [aeval_X, aeval_X, map_sum, inC_emb_extM]
+
+    rw [aeval_X, aeval_X, map_sum, inC_emb_extM]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [map_mul, rename_C, rename_X]
     rfl
@@ -3630,8 +3682,8 @@ theorem nm_R_rowAct (c : Fin n → ℕ) (g : Matrix (Fin n) (Fin n) ℂ) (p : Mv
       apply MvPolynomial.algHom_ext
       intro v
       simp only [AlgHom.comp_apply]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [nm_rowAct_X, rename_X, nm_rowAct_X, sum_split_CL hN, map_sum]
+
+      rw [nm_rowAct_X, rename_X, nm_rowAct_X, sum_split_CL hN, map_sum]
       simp only [nmExt_CC, nmExt_CL, map_zero, zero_mul, add_zero, map_mul, rename_C, rename_X]
     exact AlgHom.congr_fun this p
 

@@ -1,12 +1,59 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPowStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicTowerLevelGeneratorPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPowStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDecompositionCompletedCyclotomicIntegersStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.Nonarchimedean.Completion
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -143,10 +190,10 @@ theorem int_decomp (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) (c : ℕ) : ∀ x : O
       apply Nat.Coprime.pow_right
       have ha0 : (a : ℕ) ≠ 0 := fun h => (Finset.ne_of_mem_erase ha) (Fin.ext h)
       exact (Nat.coprime_of_lt_prime ha0 a.2 hp).symm
-    set_option synthInstance.maxHeartbeats 100000 in
-      · rw [← Finset.add_sum_erase _ _ (Finset.mem_univ (0 : Fin l)), map_add (f := _), map_sum, ← add_assoc,
-        ← hod]
-        simp
+
+    · rw [← Finset.add_sum_erase _ _ (Finset.mem_univ (0 : Fin l)), map_add (f := _), map_sum, ← add_assoc,
+      ← hod]
+      simp
 
 variable {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} {χ : GQ l →* ℚ_[l]ˣ}
 
@@ -258,8 +305,8 @@ theorem solve_alg (hact : IsActC act) (hχ : IsCyc χ) (K : FinExt l) {j : ℕ} 
     sum_mem fun k _ => act_algC hact K (hgk k) (Xalg_alg K j hu), ?_⟩
   have hs : act g (∑ k ∈ Finset.range (l ^ b), act (g ^ k) u) -
       ∑ k ∈ Finset.range (l ^ b), act (g ^ k) u = act (g ^ l ^ b) u - act (g ^ 0) u := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Finset.sum_range_sub (fun k => act (g ^ k) u), map_sum, ← Finset.sum_sub_distrib]
+
+    rw [← Finset.sum_range_sub (fun k => act (g ^ k) u), map_sum, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [pow_succ', map_mul]
     rfl

@@ -1,8 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqZeroOfApplySelf
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -89,8 +129,8 @@ theorem sum_mul_eq_zero_of_sum_toReal {L ι : Type} [AddCommGroup L] [Fintype ι
     (hj : Function.Injective j) (ℓ : L →ₗ[ℤ] ℤ) {β : ι → L} {c : ι → ℝ} (h : ∑ i, c i • toReal (j (β i)) = 0) :
     ∑ i, c i * (ℓ (β i) : ℝ) = 0 := by
   have key : ∀ (f : Module.Dual ℚ ℝ) (z : ι → ℤ), f (∑ i, c i * (z i : ℝ)) = ∑ i, f (c i) * z i := fun f z => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [mul_comm, ← zsmul_eq_mul, map_zsmul, zsmul_eq_mul, mul_comm]
   refine (Module.forall_dual_apply_eq_zero_iff ℚ _).1 fun f => ?_
   obtain ⟨⟨D, hD⟩, hn⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors ℤ) fun i => f (c i)
@@ -150,8 +190,8 @@ theorem isPosDef_iff_basis {ι : Type} [Fintype ι] (b : Module.Basis ι ℤ X) 
     refine (h _ h3).trans_eq ?_
     have hx' : ∀ i j, B (x i) (x j) = ∑ k, ∑ l, (b.repr (x i) k : ℝ) * (b.repr (x j) l : ℝ) * B (b k) (b l) := fun i j => by
       conv_lhs => rw [← b.sum_repr (x i), ← b.sum_repr (x j)]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, zsmul_eq_mul, Finset.mul_sum]
+
+      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, zsmul_eq_mul, Finset.mul_sum]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => by ring
     simp only [hx', Finset.mul_sum, Finset.sum_mul]

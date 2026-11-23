@@ -1,20 +1,47 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LengthPosOfPosDef
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdjFormula
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
-public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.SqNormIntegralFundamentalDomainEqL2NormSq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActOfMemGfC
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RaisingLoweringOperators
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TranslateMemCoefLatFn
-public import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKHwMap
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
 
 @[expose] public section
 
@@ -78,7 +105,7 @@ def form : MvPolynomial σ ℂ →ₗ⋆[ℂ] MvPolynomial σ ℂ →ₗ[ℂ] �
     (fun c P Q => by
       rw [fischerSumSupport_eq_sum_factorial_coeff (c • P) Q Q.support subset_rfl, fischerSumSupport_eq_sum_factorial_coeff P Q _ subset_rfl, smul_eq_mul, Finset.mul_sum]
       refine Finset.sum_congr rfl fun α _ => ?_
-      simp only [coeff_smul, smul_eq_mul, star_mul']; simp only [Complex.star_def]; ring)
+      simp only [MvPolynomial.coeff_smul, smul_eq_mul, star_mul']; simp only [Complex.star_def]; ring)
     (fun P Q Q' => by
       classical
       rw [fischerSumSupport_eq_sum_factorial_coeff P (Q + Q') (Q.support ∪ Q'.support) support_add,
@@ -91,7 +118,7 @@ def form : MvPolynomial σ ℂ →ₗ⋆[ℂ] MvPolynomial σ ℂ →ₗ[ℂ] �
       rw [fischerSumSupport_eq_sum_factorial_coeff P (c • Q) Q.support support_smul, fischerSumSupport_eq_sum_factorial_coeff P Q _ subset_rfl, smul_eq_mul,
         Finset.mul_sum]
       refine Finset.sum_congr rfl fun α _ => ?_
-      simp only [coeff_smul, smul_eq_mul, RingHom.id_apply]; ring)
+      simp only [MvPolynomial.coeff_smul, smul_eq_mul, RingHom.id_apply]; ring)
 
 theorem form_eq (P Q : MvPolynomial σ ℂ) (s : Finset (σ →₀ ℕ)) (h : Q.support ⊆ s) :
     form P Q = ∑ α ∈ s, (fct α : ℂ) * (star (AddMonoidAlgebra.coeff P α) * AddMonoidAlgebra.coeff Q α) := fischerSumSupport_eq_sum_factorial_coeff P Q s h
@@ -202,8 +229,8 @@ theorem fadj_neg {T S : Module.End ℂ (PolF D m n)} (h : FAdj T S) : FAdj (-T) 
 theorem fadj_sum {ι : Type} (s : Finset ι) (T S : ι → Module.End ℂ (PolF D m n))
     (h : ∀ i ∈ s, FAdj (T i) (S i)) : FAdj (∑ i ∈ s, T i) (∑ i ∈ s, S i) := by
   intro P Q
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [LinearMap.sum_apply, map_sum, LinearMap.sum_apply, LinearMap.sum_apply, map_sum]
+
+  rw [LinearMap.sum_apply, map_sum, LinearMap.sum_apply, LinearMap.sum_apply, map_sum]
   exact Finset.sum_congr rfl fun i hi => h i hi P Q
 
 theorem fadj_X {_ : DecidableEq (FVar D m n)} (v : FVar D m n) :

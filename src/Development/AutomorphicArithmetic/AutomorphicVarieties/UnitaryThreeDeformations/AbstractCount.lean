@@ -1,22 +1,65 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.FiniteResidue
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.OrbitVanishingLocal
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsHostFrame
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.AbsCoord
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.NormBoundOfIntegralValues
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.WPresEx
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ExistsRelations
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ContinuousCompOfFilteredContinuity
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ExistsRelations
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ExistsUniqueIsPtHom
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsCharZeroPtOfIsPtHom
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsPtHomAct
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.NormBoundOfIntegralValues
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.NormTwoEqOne
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.Origin
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.TangentCoordEqZeroOfNonposWeight
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.PrecompleteOfPowLe
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.PtSign
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsPtHomAct
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsCharZeroPtOfIsPtHom
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.UnitEqOneOfPowEqOneOfResidueOne
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.TangentCoordEqZeroOfNonposWeight
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.TypeIOfTwoSigned
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.NormTwoEqOne
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ContinuousCompOfFilteredContinuity
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ExistsUniqueIsPtHom
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.UnitEqOneOfPowEqOneOfResidueOne
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.WPresEx
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -68,16 +111,16 @@ theorem UpperTheory.V.UnitaryThreeInertia.abstract_count :
         ∑ i, ⟨(u φ).mat i i, mem_Sring u (hdiag i)⟩ - algebraMap O (Sring (O := O) u) ((r0 F.η F.Ψ φ).mat.trace) := by
       apply Subtype.ext
       simp [a, Matrix.trace]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsplit, map_sub, map_sum, AlgHom.commutes]
+
+    rw [hsplit, map_sub, map_sum, AlgHom.commutes]
     simp only [Matrix.trace, Matrix.diag]
     congr 1
     · exact Finset.sum_congr rfl fun i _ => hval ξ r hr φ i i
-    set_option synthInstance.maxHeartbeats 100000 in
-      · simp [Frame.rz, map_sum]
+
+    · simp [Frame.rz, map_sum]
   have hao : W.origin h a = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [a, Matrix.trace, map_sum, hent]
+
+    simp [a, Matrix.trace, map_sum, hent]
   have hfacts : ∀ (ξ : Sring (O := O) u →ₐ[O] PadicAlgCl l) r, IsPtHom u ξ r →
       (¬∀ j < 0, ∀ (x : R) (hx : x ∈ wpart O u j), ξ ⟨x, mem_Sring u hx⟩ = 0) →
       (¬∀ j > 0, ∀ (x : R) (hx : x ∈ wpart O u j), ξ ⟨x, mem_Sring u hx⟩ = 0) →

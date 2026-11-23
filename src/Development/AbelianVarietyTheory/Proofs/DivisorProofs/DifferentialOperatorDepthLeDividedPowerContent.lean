@@ -1,15 +1,57 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TypicalCurveStructureConstants
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.RootStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.FactorialWeightedSumBound
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.OmBStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.WtSubOneLe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.EqZeroOrSingleOfDegreeLtTwo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupExpTwoSidedInverseUniqueStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameDualStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PtOrderProdSub
 
 @[expose] public section
 
@@ -167,8 +209,8 @@ theorem depth_le_content : ∀ (C : Type) [Field C] [CharZero C] (v : AddValuati
       (∑ a, u b a e • (X ⟨b, a⟩ : MvPowerSeries (Σ b, Fin (n b)) C)) =
         ∑ a, u b a e * if y = ⟨b, a⟩ then 1 else 0 := by
     intro b e y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, coeff_smul, coeff_X, Finsupp.single_left_inj one_ne_zero, smul_eq_mul]
+
+    simp only [map_sum, coeff_smul, coeff_X, Finsupp.single_left_inj one_ne_zero, smul_eq_mul]
   set A := expAlong G u with hAdef
   have hA0 : ∀ x, constantCoeff (A x) = 0 := fun x =>
     constantCoeff_subst_eq_zero (hasSubst_of_constantCoeff_zero (hlin0 x.1)) (hlin0 x.1)
@@ -187,9 +229,9 @@ theorem depth_le_content : ∀ (C : Type) [Field C] [CharZero C] (v : AddValuati
     rw [GlobalTheory.FormalSeries.two_le_order_iff]
     refine ⟨by simp [hYdef, hA0], fun z => ?_⟩
     rw [map_sub, hYdef]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, coeff_smul, hA1, smul_eq_mul, coeff_X,
-      Finsupp.single_left_inj one_ne_zero]
+
+    simp only [map_sum, coeff_smul, hA1, smul_eq_mul, coeff_X,
+    Finsupp.single_left_inj one_ne_zero]
     simp_rw [Finset.mul_sum]
     rw [sub_eq_zero]
     have key : ∀ a : Fin (n y.1), ∑ e, l y.1 y.2 e * (u y.1 a e * if z = ⟨y.1, a⟩ then (1 : C) else 0)
@@ -213,8 +255,8 @@ theorem depth_le_content : ∀ (C : Type) [Field C] [CharZero C] (v : AddValuati
   have hfint : MvIsInt v f := isInt_prod v L hLint α
   have hsub : subst A f = α.prod fun y k => Y y ^ k := by
     rw [hfdef, ← coe_substAlgHom hAs, map_finsuppProd]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_pow, hLdef, hYdef, map_sum, map_smul, substAlgHom_X]
+
+    simp only [map_pow, hLdef, hYdef, map_sum, map_smul, substAlgHom_X]
   have hord := lead_prod Y hY α
   rw [← hsub] at hord
   have hdeg : ∀ β ∈ P.support, β.degree = D := fun β hβ => by

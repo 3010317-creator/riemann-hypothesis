@@ -1,11 +1,53 @@
 module
 
-public import Development.AutomorphicArithmetic.BlowupCategories.SpanScale
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.PullCupPowEqCupPowPull
+public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupHypercohomologyPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssocStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.PullCupPowEqCupPowPull
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Development.AutomorphicArithmetic.BlowupCategories.SpanScale
 
 @[expose] public section
 
@@ -107,8 +149,8 @@ private theorem core {q : ℕ} [NeZero q] (N : ℕ) (hN : 1 ≤ N) {E X Y B : Sp
     rw [← pull_comp, ← pull_comp, hc]
   have h1 : ∑ j : Fin (N + 1), ((cup q (pull _ p _ _ (pull _ πX _ _ (a j))) (cpow q (pull _ β _ _ ξY) j)).cast (by ring) (by ring) : Ht q B n i) = 0 := by
     have h' := congrArg (pull _ β (tw q i) n) h
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_zero] at h'
+
+    rw [map_sum, map_zero] at h'
     rw [← h']
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [pull_cast, pull_cup, UpperTheory.pull_cupPow_eq_cupPow_pull q β ξY j hY, pp]
@@ -130,8 +172,8 @@ private theorem core {q : ℕ} [NeZero q] (N : ℕ) (hN : 1 ≤ N) {E X Y B : Sp
         induction s using Finset.induction_on with
         | empty => simp
         | insert a s ha ih => simp [ha, ih]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_sum, sum_apply, ht_cast_sum]
+
+      rw [map_sum, map_sum, sum_apply, ht_cast_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [pull_cast, cup_cast_left, ht_cast_cast]
       exact (step_term p ξX (pull _ β _ _ ξY) hX hrel _ k _ _ _ _).symm)

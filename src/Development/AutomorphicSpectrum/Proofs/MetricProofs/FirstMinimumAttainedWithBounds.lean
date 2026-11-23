@@ -1,12 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GroupDict
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSheetCover
-public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StatementsProved
-public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeGramDeterminant
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicEigencomponentConjugateFormStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
+public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.PShortVectorsOrthogonal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Data.Pi.Interval
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PUnipotentModulusMatrix
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 
 @[expose] public section
 
@@ -227,31 +276,7 @@ theorem conj_comp_injective : Function.Injective (fun s : 𝓞 E →+* ℂ => (s
 
 theorem finrank_eq_two_mul {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (h : IsCMFam σ) :
     Module.finrank ℚ E = 2 * Fintype.card Ψ := by
-  have hΦ : Function.Bijective (Sum.elim σ (fun τ => (starRingEnd ℂ).comp (σ τ)) : Ψ ⊕ Ψ → (𝓞 E →+* ℂ)) := by
-    constructor
-    · rintro (τ | τ) (τ' | τ') e
-      · simp only [Sum.elim_inl] at e
-        rw [h.1 e]
-      · simp only [Sum.elim_inl, Sum.elim_inr] at e
-        exact absurd ⟨τ, e⟩ ((h.2 (σ τ')).1 ⟨τ', rfl⟩)
-      · simp only [Sum.elim_inl, Sum.elim_inr] at e
-        exact absurd ⟨τ', e.symm⟩ ((h.2 (σ τ)).1 ⟨τ, rfl⟩)
-      · simp only [Sum.elim_inr] at e
-        rw [h.1 (conj_comp_injective e)]
-    · intro s
-      by_cases hs : ∃ τ, σ τ = s
-      · obtain ⟨τ, rfl⟩ := hs
-        exact ⟨Sum.inl τ, rfl⟩
-      · have hB : ∃ τ, σ τ = (starRingEnd ℂ).comp s := by
-          by_contra hB
-          exact hs ((h.2 s).2 hB)
-        obtain ⟨τ, hτ⟩ := hB
-        refine ⟨Sum.inr τ, ?_⟩
-        simp only [Sum.elim_inr, hτ]
-        ext a
-        simp
-  have e := (Equiv.ofBijective _ (comp_bijective (E := E))).trans (Equiv.ofBijective _ hΦ).symm
-  rw [← NumberField.Embeddings.card E ℂ, Fintype.card_congr e, Fintype.card_sum, two_mul]
+  apply GlobalTheory.CompanionTheory.Ar.Cusp.IsoCovol.finrank_eq_two_card <;> assumption
 
 end Embeddings
 
@@ -410,8 +435,8 @@ theorem exists_subspace (R : RiemLat E g Λ) {Ψ : Type} [Fintype Ψ] [Nonempty 
   have hbase : ∀ (a : 𝓞 E) (i : Fin r), per R (a • v i) ∈ W := by
     intro a i
     have ha : a = ∑ k, (b.repr a k) • b k := (b.sum_repr a).symm
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [ha, Finset.sum_smul, map_sum]
+
+    rw [ha, Finset.sum_smul, map_sum]
     refine W.sum_mem fun k _ => ?_
     rw [smul_assoc, map_zsmul]
     exact hzs _ _ (Submodule.subset_span ⟨(k, i), rfl⟩)

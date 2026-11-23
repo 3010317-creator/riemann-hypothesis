@@ -1,26 +1,59 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPtRepTrDat
-public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
-public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
-public import Formalism.SharpRestriction.CuspSpanNormBounds.AmplitudeAndVolumeBounds
-public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
-public import Formalism.SharpRestriction.CuspSpanNormBounds.MassAndBranchingHypotheses
-public import Formalism.SharpRestriction.CuspSpanNormBounds.SBridge
-public import Formalism.LocalRingCardinality.DataTies
-public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
-public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.FormalDegreeCompactDualIff
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OnePlaceKF
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumPlacesEqTrace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.JEqOrbInt
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplifierOfHypotheses
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapDimensionFormula
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselCoefficientNonzero
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.HaarEqSmul
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.SumNonneg
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplifierOfHypotheses
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselCoefficientNonzero
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalInterConjugateClosedUnimodular
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapDimensionFormula
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralAeConvergenceContinuity
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialProperness.ZhatNormLinearBound
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
 
 @[expose] public section
 
@@ -182,8 +215,8 @@ theorem oneAt : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (L : Formalism.MainNo
     intro T
     ext η
     conv_lhs => rw [← e.sum_repr' η]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [ContinuousLinearMap.sum_apply, map_sum]
+
+    simp [ContinuousLinearMap.sum_apply, map_sum]
   have hFe : ∀ g ∈ UH (Hpk k r), F g = ∑ i, ∑ j, coefF L (x i) (y i) (X i (e j)) (e j) g := by
     intro g hg
     rw [hF g hg]
@@ -212,8 +245,8 @@ theorem oneAt : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (L : Formalism.MainNo
   simp only [hc]
   rw [← Finset.sum_smul]
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_rhs => rw [← e.sum_repr' (l' (y i)), map_sum, inner_sum]
+
+  conv_rhs => rw [← e.sum_repr' (l' (y i)), map_sum, inner_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [map_smul, inner_smul_right, mul_comm]
 

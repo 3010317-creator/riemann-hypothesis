@@ -1,11 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescentDataChartsCommonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussPropertySemiAbelianFlatBaseChangeDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVertOfMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfEmbeddings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVertOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussPropertySemiAbelianFlatBaseChangeDvrStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsNatDiagIffIsDiag
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 
 @[expose] public section
 
@@ -43,22 +86,22 @@ theorem rel_transfer {T E F₁ FH Ω : Type} [CommRing T] [IsDomain T] [IsPrinci
       simpa [Algebra.smul_def] using hs)
     exact funext hli) (fun t => ∑ i, r i * b (B.repr (x' i) t)) (by
       rw [← h]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, Finset.sum_mul]
+
+      simp only [map_sum, map_mul, Finset.sum_mul]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun i _ => ?_
       conv_rhs => rw [hx i]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [AddSubmonoidClass.coe_finsetSum, Submodule.coe_smul, Algebra.smul_def, map_sum, map_mul, hb,
-        Finset.mul_sum, _root_.mul_assoc])
+
+      simp only [AddSubmonoidClass.coe_finsetSum, Submodule.coe_smul, Algebra.smul_def, map_sum, map_mul, hb,
+      Finset.mul_sum, _root_.mul_assoc])
   have h1 : ∑ i, v (r i) * lam (x i) = ∑ t, v (∑ i, r i * b (B.repr (x' i) t)) * lam (B t) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, Finset.sum_mul]
+
+    simp only [map_sum, map_mul, Finset.sum_mul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
     conv_lhs => rw [hx i]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Algebra.smul_def, hvb, Finset.mul_sum, _root_.mul_assoc]
+
+    simp only [map_sum, map_smul, Algebra.smul_def, hvb, Finset.mul_sum, _root_.mul_assoc]
   rw [h1]
   refine Finset.sum_eq_zero fun t _ => ?_
   rw [show (∑ i, r i * b (B.repr (x' i) t)) = 0 from congrFun h0 t, map_zero, zero_mul]
@@ -78,8 +121,8 @@ theorem key_of_gauss {T E F F₁ FH Ω : Type} [CommRing T] [IsDomain T] [IsPrin
   have hθ' : ∀ t, θa (θ t) = θb (θ t) := fun t => RingHom.congr_fun hθ t
   have h1 : cE (a π) * θa y = ∑ i, cE (a (r i)) * θb (θ (w i)) := by
     have := congrArg θa h
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, ha', hθ'] at this
+
+    simp only [map_sum, map_mul, ha', hθ'] at this
     exact this.symm
   obtain ⟨s, hs, m, r', t, ht, e⟩ :=
     (hG (θa y) ⟨a π, hπ, n, fun i => a (r i), fun i => θb (θ (w i)), fun i => ⟨_, rfl⟩, h1⟩).1 (hW y hy)

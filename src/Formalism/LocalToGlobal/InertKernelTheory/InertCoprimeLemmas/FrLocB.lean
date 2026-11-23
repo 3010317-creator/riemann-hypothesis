@@ -1,9 +1,57 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsEmbeddingPadicAlgClPlace
 public import Formalism.LocalToGlobal.InertKernelTheory.DefsFrONB
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.IsometryLinkageTrivialLevel
-public import Formalism.LocalToGlobal.GlobalTheory.GL3.PSelfDual
+import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PHfTrace
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PSelfDual
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.DedekindDomain.PID
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -272,37 +320,7 @@ theorem intAt_det {n : Type*} [Fintype n] [DecidableEq n] (M : Matrix n n K) (h 
 
 theorem norm_le_one_of_int {k : Type*} [NormedField k] [IsUltrametricDist k] {y : k}
     (hy : IsIntegral ℤ y) : ‖y‖ ≤ 1 := by
-  by_contra hlt
-  push_neg at hlt
-  obtain ⟨P, hPm, hP⟩ := hy
-  have hsum : y ^ P.natDegree = -∑ i ∈ Finset.range P.natDegree, (P.coeff i : k) * y ^ i := by
-    have h := hP
-    rw [hPm.as_sum] at h
-    simp only [Polynomial.eval₂_add, Polynomial.eval₂_X_pow, Polynomial.eval₂_finsetSum,
-      Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_X_pow, algebraMap_int_eq, eq_intCast, map_sum] at h
-    refine eq_neg_of_add_eq_zero_left ?_
-    rw [← h]
-    congr 1
-    refine Finset.sum_congr rfl fun i _ => ?_
-    congr 1
-    rw [← Polynomial.C_eq_intCast, Polynomial.eval₂_C]
-    simp
-  have hy1 : 1 ≤ ‖y‖ := hlt.le
-  rcases Nat.eq_zero_or_pos P.natDegree with hn | hn
-  · rw [hn, pow_zero, Finset.range_zero, Finset.sum_empty, neg_zero] at hsum
-    exact one_ne_zero hsum
-  · have hle : ‖∑ i ∈ Finset.range P.natDegree, (P.coeff i : k) * y ^ i‖ ≤ ‖y‖ ^ (P.natDegree - 1) := by
-      refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (by positivity) fun i hi => ?_
-      rw [norm_mul, norm_pow]
-      have hc : ‖(P.coeff i : k)‖ ≤ 1 := IsUltrametricDist.norm_intCast_le_one ..
-      have hp : ‖y‖ ^ i ≤ ‖y‖ ^ (P.natDegree - 1) :=
-        pow_le_pow_right₀ hy1 (by have := Finset.mem_range.mp hi; omega)
-      calc ‖(P.coeff i : k)‖ * ‖y‖ ^ i ≤ 1 * ‖y‖ ^ (P.natDegree - 1) :=
-            mul_le_mul hc hp (by positivity) zero_le_one
-        _ = ‖y‖ ^ (P.natDegree - 1) := one_mul _
-    rw [← norm_neg, ← hsum, norm_pow] at hle
-    have hlt2 : ‖y‖ ^ (P.natDegree - 1) < ‖y‖ ^ P.natDegree := pow_lt_pow_right₀ hlt (by omega)
-    linarith
+  apply GlobalTheory.norm_le_one_of_isIntegral_int <;> assumption
 
 theorem norm_nat_coprime [Fact p.Prime] {s : ℕ} (h : Nat.Coprime s p) : ‖(s : ℂ_[p])‖ = 1 := by
   have h1 : ((s : ℚ_[p]) : ℂ_[p]) = (s : ℂ_[p]) := map_natCast (algebraMap ℚ_[p] ℂ_[p]) s
@@ -493,8 +511,8 @@ theorem hK_symm (x y : D.host.E) : G0.hK D x y = G0.cK D (G0.hK D y x) := by
   apply D.host.φ₀.injective
   show D.host.φ₀ ((Algebra.trace D.host.K D.host.E (x * D.host.conj y) : D.host.K) : D.host.E)
     = D.host.φ₀ (D.host.conj ((Algebra.trace D.host.K D.host.E (y * D.host.conj x) : D.host.K) : D.host.E))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [CU.emb_conj, ← FL.sum_tau_trace, ← FL.sum_tau_trace, map_sum]
+
+  rw [CU.emb_conj, ← FL.sum_tau_trace, ← FL.sum_tau_trace, map_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [map_mul, map_mul, map_mul, CU.emb_conj, CU.emb_conj, Complex.conj_conj, mul_comm]
 
@@ -514,8 +532,8 @@ private theorem hK_smul_right' (k : D.host.K) (x y : D.host.E) :
 theorem hK_sum_smul_right {ι : Type*} (s : Finset ι) (k : ι → D.host.K) (f : ι → D.host.E) (x : D.host.E) :
     G0.hK D x (∑ i ∈ s, k i • f i) = ∑ i ∈ s, G0.cK D (k i) * G0.hK D x (f i) := by
   rw [← Finset.sum_congr rfl fun i _ => hK_smul_right' D (k i) x (f i)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [G0.hK, map_sum, Finset.mul_sum]
+
+  simp only [G0.hK, map_sum, Finset.mul_sum]
 
 theorem hK_smul_right (k : D.host.K) (x y : D.host.E) : G0.hK D x (k • y) = G0.cK D k * G0.hK D x y :=
   hK_smul_right' D k x y

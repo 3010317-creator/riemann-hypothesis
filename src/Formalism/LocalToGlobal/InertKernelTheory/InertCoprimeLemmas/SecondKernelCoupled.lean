@@ -1,9 +1,49 @@
 module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.SecondKernelCoupledLastLift
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SecondKernelInstances
-public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.CoupledSumOfEntries
 public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.OrbitSumStabilizer
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SecondKernelInstances
+import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SecondKernelNonzeroUnit
+import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.CoupledSumOfEntries
+import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.LowestInvariantLeDelta
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -66,8 +106,8 @@ theorem second_kernel_coupled (t : KerEntTied ex) {σ : D.what₂.LL →+* X.G.K
         funext c1 y1
         rw [compatible_lift_exists D L hT Gi Gl Kc0 Dx cX ex t u μ j hj _ _ hQ.1 hQ.2 c1 y1]
         simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, entRec]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hCh x y hy, hRd y c' L' hL, hy, hsum, map_sum]
+
+      rw [hCh x y hy, hRd y c' L' hL, hy, hsum, map_sum]
       refine Finset.sum_congr rfl fun c _ => ?_
       rw [map_smulₛₗ, map_inv₀, map_natCast, hDel c x c' L' hL,
         kernel_of_smul p X Y j (lp c) (c', L') _ (hSer c c' L' hL), mul_smul])

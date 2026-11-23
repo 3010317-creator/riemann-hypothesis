@@ -1,11 +1,59 @@
 module
 
 public import Formalism.LocalToGlobal.GlobalTheory.Places
-public import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLo
-public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
+public import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm
+public import Formalism.SharpRestriction.GrowthBounds.CornerGLContinuity
+public import Formalism.SizeWindowBrackets.SlopesHypothesisFinitePlaces
+import Formalism.LocalRingCardinality.Lemmas
 public import Formalism.LogFactorialBounds.LogFactorialProofs.PrimeSum
+public import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLo
+public import Formalism.SharpRestriction.GlobalSchurBounds.FrameCodeOfAdditive
+import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.SevenLogLeLOfPowerBound
+public import Formalism.SharpRestriction.GlobalSchurBounds.JointsL
+public import Formalism.SharpRestriction.GlobalSchurBounds.LinkPk
+public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
 public import Formalism.SizeWindowBrackets.ChainSlopeWindows.ExistsNsmulMem
-public import Formalism.SizeWindowBrackets.ChainSlopeWindows.WeightedSlopeExcessDecomposition
+import Formalism.SizeWindowBrackets.ChainSlopeWindows.WeightedSlopeExcessDecomposition
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -637,20 +685,10 @@ end Family
 
 section Main
 
-theorem placesF_of : PlaceConditionsFamily := by
-  intro eps Fm crystallineComparison h10 tSet hTu hRank lG lMu
+theorem placesF_of_local_conditions {eps : ℝ} (Fm : FamP eps) (h26 : LocalQuadraticParts.LevelTFamily Fm) (hNC : Lnk.NuCommensF Fm) (hTu : TuSize Fm)
+    (hRank : J.MuRank Fm) (lG : LinkG Fm) (lMu : LinkMu Fm) : Lnk.PlacesF Fm := by
   have heps := Lnk.fam_eps_pos Fm
-  have hDl : J.DlSize Fm :=
-    ⟨Fm.x1 + 1, fun x hx i => (Fm.sizes x (by linarith) i).2.2.2.2.2.2.1.2.2.2.2.2.1⟩
-  have h26 : LocalQuadraticParts.LevelTFamily Fm := by
-    obtain ⟨a0, h10'⟩ := h10
-    obtain ⟨a1, hS⟩ := tSet
-    refine J.family_levelPrime_summary_closed Fm crystallineComparison hTu hDl ⟨max (max a0 a1) (Fm.x1 + 1), fun x hx i => ?_⟩
-    have e0 : a0 ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hx
-    have e1 : a1 ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hx
-    have e2 : Fm.x1 < x := by have := le_trans (le_max_right (max a0 a1) (Fm.x1 + 1)) hx; linarith
-    exact ⟨fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.1, fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.2.2.2.1⟩
-  obtain ⟨xNC, hNC⟩ := Lnk.nuCommensF_of Fm crystallineComparison h10 tSet
+  obtain ⟨xNC, hNC⟩ := hNC
   obtain ⟨CT, xT, δ, hδ, hTa⟩ := G.TopChoiceBounds.tau_sum_family_of_mertens Fm (fun _ _ => mertens)
   obtain ⟨C26, x26, h26⟩ := h26
   obtain ⟨CMu, xMu, hMu⟩ := lMu
@@ -745,6 +783,21 @@ theorem placesF_of : PlaceConditionsFamily := by
     have h1 : ¬ ((((Fm.D x i).what₂.places.resChar w : ℕ) : ℝ) ≤ (Fm.L x i).sc.X'' (Fm.D x i).R.n) :=
       fun h => hs (Fm.supp_sat x hx1 i w h)
     linarith [not_le.1 h1]
+
+theorem placesF_of : PlaceConditionsFamily := by
+  intro eps Fm crystallineComparison h10 tSet hTu hRank lG lMu
+  have hDl : J.DlSize Fm :=
+    ⟨Fm.x1 + 1, fun x hx i => (Fm.sizes x (by linarith) i).2.2.2.2.2.2.1.2.2.2.2.2.1⟩
+  have h26 : LocalQuadraticParts.LevelTFamily Fm := by
+    obtain ⟨a0, h10'⟩ := h10
+    obtain ⟨a1, hS⟩ := tSet
+    refine J.family_levelPrime_summary_closed Fm crystallineComparison hTu hDl ⟨max (max a0 a1) (Fm.x1 + 1), fun x hx i => ?_⟩
+    have e0 : a0 ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hx
+    have e1 : a1 ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hx
+    have e2 : Fm.x1 < x := by have := le_trans (le_max_right (max a0 a1) (Fm.x1 + 1)) hx; linarith
+    exact ⟨fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.1, fun u => (h10' x e0 i u (hS x e1 e2 i u)).2.2.2.2.1⟩
+  have hNC := Lnk.nuCommensF_of Fm crystallineComparison h10 tSet
+  exact placesF_of_local_conditions Fm h26 hNC hTu hRank lG lMu
 
 theorem slope_lemma_division_form : SlopeBoundOfMuRank := by
   intro eps Fm crystallineComparison h10 tSet hTu hRank lG lMu

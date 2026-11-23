@@ -1,16 +1,54 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumIntegralDivUniformisersIffReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralLiftResiduesIdempotentSumStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameMatricesIntegralOfMemCompletedLattice
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
-public import Development.AbelianVarietyTheory.Definitions.Divisors.GenReads
-public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsRootNotMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapOfOfExtends
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralLiftResiduesIdempotentSumStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameMatricesIntegralOfMemCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentSumIntegralDivUniformisersIffReductionStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
+import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsRootNotMem
+import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 
 @[expose] public section
 
@@ -50,10 +88,10 @@ theorem exists_factor {M ι : Type} [AddCommGroup M] (k : ι → Type) [∀ i, A
   refine ⟨ψP, fun m => ?_⟩
   have hs : χ m = χ (∑ i ∈ Q, L (Pi.single i (R i m))) := by
     refine key _ _ fun j hj => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_congr rfl (fun i _ => hL (Pi.single i (R i m)) j hj),
-      Finset.sum_eq_single j (fun i _ hij => Pi.single_eq_of_ne (Ne.symm hij) _) (fun h => absurd hj h),
-      Pi.single_eq_same]
+
+    rw [map_sum, Finset.sum_congr rfl (fun i _ => hL (Pi.single i (R i m)) j hj),
+    Finset.sum_eq_single j (fun i _ hij => Pi.single_eq_of_ne (Ne.symm hij) _) (fun h => absurd hj h),
+    Pi.single_eq_same]
   have hprod : ∀ (s : Finset ι) (f : ι → M), χ (∑ i ∈ s, f i) = ∏ i ∈ s, χ (f i) := by
     intro s f
     refine Finset.induction_on s ?_ ?_

@@ -1,11 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSplitFinMulSplitInf
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDefiniteUnitaryRationalPointFiniteAndInfinStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroWeightTensorIntertwiningAutRepStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanInfinitePlacesWeightRepresentationEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDefiniteUnitaryRationalPointFiniteAndInfinStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -59,8 +96,8 @@ theorem eq_zero_of_sum (lam : InfinitePlace E → DomWeight n) {ι : Type} [Fint
   refine b.ext fun m => ?_
   obtain ⟨P, hP⟩ := exists_op lam ((b.coord k).smulRight (b m))
   have := congrArg P h
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero] at this
+
+  rw [map_sum, map_zero] at this
   rw [LinearMap.zero_apply, ← this]
   rw [Finset.sum_eq_single k]
   · rw [← hP _ (hT k)]; simp
@@ -132,8 +169,8 @@ theorem mem_range_of_mem (S : Set (Pl E)) (K' : ∀ w : Pl E, Subgroup (UL n w))
       have := hfix ⟨k, hk⟩
       simpa [RF] using this
     have h2 : ∑ i, (RU E n k.1 ∘ₗ T i - T i) (b i) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [LinearMap.sub_apply, LinearMap.comp_apply, Finset.sum_sub_distrib, ← map_sum, h1, sub_self]
+
+      simp only [LinearMap.sub_apply, LinearMap.comp_apply, Finset.sum_sub_distrib, ← map_sum, h1, sub_self]
     exact sub_eq_zero.1 (eq_zero_of_sum lam b _ (fun i => sub_mem (comp_mem_infHom lam (hT i) k) (hT i)) h2 j)
   obtain ⟨F, hFa⟩ : ∃ F : Fin (Module.finrank ℂ (Wsp lam)) → finU (E := E) (n := n) → Module.Dual ℂ (Wsp lam),
       ∀ j x w, F j x w = T j w x.1 :=
@@ -175,8 +212,8 @@ theorem mem_range_of_mem (S : Set (Pl E)) (K' : ∀ w : Pl E, Subgroup (UL n w))
       change T j w (x.1 * k.1) = T j w x.1
       exact congrFun (LinearMap.congr_fun (hfixT k hk j) w) x.1
   refine ⟨∑ j, ⟨F j, hF j⟩ ⊗ₜ b j, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, Phi_tmul, hphi]
+
+  simp [map_sum, Phi_tmul, hphi]
 
 theorem forms_le_range : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ, 1 ≤ n → ∀ (S : Set (Pl E)), IsSection S → ∀ (lam : InfinitePlace E → DomWeight n) (K' : ∀ w : Pl E, Subgroup (UL n w)), IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K' → forms S lam K' ≤ LinearMap.range (Phi S lam K') := by
   intro E _ _ _ _ n _ S _ lam K' _

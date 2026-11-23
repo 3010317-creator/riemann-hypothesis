@@ -1,12 +1,56 @@
 module
 
-public import Mathlib
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAttainedWithBounds
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GroupDict
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSheetCover
-public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StatementsProved
-public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAttainedWithBoundsStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumContinuousCuspWeightMeasurableStatement
+import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
+public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.Assembly
+import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.Examples
+import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PAdelicCovolumeFinite
+import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PArithmeticCovolumeFinite
+public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.StatementsProved
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 
 @[expose] public section
 
@@ -94,38 +138,7 @@ theorem ringOfIntegers_hom_injective (s : 𝓞 E →+* ℂ) : Function.Injective
 
 theorem finrank_eq_two_mul_card {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) :
     Module.finrank ℚ E = 2 * Fintype.card Ψ := by
-  classical
-  let e : (E →+* ℂ) ≃ (𝓞 E →+* ℂ) :=
-    { toFun := fun φ => φ.comp (algebraMap (𝓞 E) E)
-      invFun := fun s => IsFractionRing.lift (ringOfIntegers_hom_injective s)
-      left_inv := fun φ => by
-        apply IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E))
-        ext x
-        simp
-      right_inv := fun s => by
-        ext x
-        simp }
-  haveI : Fintype (𝓞 E →+* ℂ) := Fintype.ofEquiv _ e
-  have hc : Fintype.card (𝓞 E →+* ℂ) = Module.finrank ℚ E := by
-    rw [← Fintype.card_congr e]
-    exact NumberField.Embeddings.card E ℂ
-  let P : (𝓞 E →+* ℂ) → Prop := fun s => ∃ τ, σ τ = s
-  let c : (𝓞 E →+* ℂ) → (𝓞 E →+* ℂ) := fun s => (starRingEnd ℂ).comp s
-  have hcc : ∀ s, c (c s) = s := fun s => by
-    ext x
-    simp [c]
-  have hP : ∀ s, P s ↔ ¬ P (c s) := hσ.2
-  have e1 : {s // P s} ≃ Ψ := (Equiv.ofInjective σ hσ.1).symm
-  have e2 : {s // ¬ P s} ≃ {s // P s} :=
-    { toFun := fun s => ⟨c s.1, by
-        by_contra hn
-        exact s.2 ((hP s.1).2 hn)⟩
-      invFun := fun s => ⟨c s.1, (hP s.1).1 s.2⟩
-      left_inv := fun s => Subtype.ext (hcc s.1)
-      right_inv := fun s => Subtype.ext (hcc s.1) }
-  have := Fintype.card_congr (Equiv.sumCompl P)
-  rw [Fintype.card_sum, Fintype.card_congr e2, Fintype.card_congr e1, hc] at this
-  omega
+  apply GlobalTheory.CompanionTheory.Ar.Cusp.ShortVec.finrank_eq_two_mul <;> assumption
 
 theorem finrank_real_eq_card {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) :
     Module.finrank ℚ (maximalRealSubfield E) = Fintype.card Ψ := by

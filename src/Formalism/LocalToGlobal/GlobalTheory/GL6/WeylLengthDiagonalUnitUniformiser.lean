@@ -1,14 +1,59 @@
 module
 
+import Formalism.LocalToGlobal.HermitianForms.TiedBrInj
 public import Formalism.LocalToGlobal.GlobalTheory.GL6.BwAValIntegralNonneg
-public import Mathlib
-public import Formalism.GL3MeanSquares.FourierTransformKernelSurjective
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.FourierCommutesHeckeScalar
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.LengthQuotientBoundGeneral
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.LemmaCTwistRamified
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.DoubleCosetDecompositionAll
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.InvariantKernelTraceVanishes
-public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Formalism.GL3MeanSquares.HookFormulaTorsion.FourierCommutesHeckeScalar
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -557,8 +602,8 @@ theorem row_action_diagonal_homogeneous (d : Fin r → R) (f : MvPolynomial (Fin
     · simp
   conv_lhs => rw [MvPolynomial.as_sum f]
   conv_rhs => rw [MvPolynomial.as_sum f]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.smul_sum]
+
+  rw [map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hw : Finsupp.weight (Formalism.GradedWeylDivisibility.rowW r n) m = μ := hf (MvPolynomial.mem_support_iff.mp hm)
   simp only [Formalism.GradedWeylDivisibility.rowAct, MvPolynomial.aeval_monomial, hg, Finsupp.prod, mul_pow,
@@ -691,8 +736,8 @@ theorem weyl_length_diagonal_unit_uniformiser (hν : Antitone ν) (K : Type) [Fi
         rw [Submodule.coe_sum] at h1
         simp only [Submodule.coe_smul] at h1
         exact h1.symm
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hxx, map_sum]
+
+      rw [hxx, map_sum]
       refine Submodule.sum_mem _ fun i _ => ?_
       have : MvPolynomial.map (Int.castRingHom K) (b.repr ⟨x, hx⟩ i • ((b i : Formalism.GradedWeylDivisibility.weyl ℤ r n hn ν) :
           MvPolynomial (Fin r × Fin n) ℤ)) = ((b.repr ⟨x, hx⟩ i : ℤ) : O) • e i := by
@@ -779,47 +824,7 @@ theorem eval_det_product (pt : ι × Fin n × Fin n → ℂ) :
 
 theorem polynomial_function_frames_injective (G : ι → Matrix (Fin n) (Fin n) ℂ) (s : ι → ℤ) (M : ι → Matrix (Fin n) (Fin n) ℂ)
     (hM : ∀ τ, IsUnit (M τ).det) : Function.Injective (fnOf G s M) := by
-  rw [← LinearMap.ker_eq_bot, eq_bot_iff]
-  intro P hP
-  rw [LinearMap.mem_ker] at hP
-  rw [Submodule.mem_bot]
-  have h1 : ∀ z : ι → Matrix (Fin n) (Fin n) ℂ, (∀ τ, IsUnit (z τ).det) →
-      MvPolynomial.eval (fun x : ι × Fin n × Fin n => z x.1 x.2.1 x.2.2) P = 0 := by
-    intro z hz
-    let y : Frames G := ⟨fun τ => (M τ)⁻¹ * z τ, fun τ => by
-      rw [Matrix.det_mul]
-      exact (Matrix.isUnit_nonsing_inv_det_iff.2 (hM τ)).mul (hz τ)⟩
-    have hMy : ∀ τ, M τ * y.1 τ = z τ := by
-      intro τ
-      show M τ * ((M τ)⁻¹ * z τ) = z τ
-      rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (hM τ), Matrix.one_mul]
-    have h := congrFun hP y
-    simp only [fnOf, LinearMap.coe_mk, AddHom.coe_mk, Pi.zero_apply, hMy] at h
-    have hne : (∏ τ, (z τ).det ^ s τ) ≠ 0 :=
-      Finset.prod_ne_zero_iff.2 fun τ _ => zpow_ne_zero _ (hz τ).ne_zero
-    exact (mul_eq_zero.1 h).resolve_left hne
-  have h2 : t2wDet (ι := ι) (n := n) * P = 0 := by
-    apply MvPolynomial.funext
-    intro pt
-    rw [map_mul, map_zero, eval_det_product]
-    by_cases h : ∀ τ, (Matrix.of fun a b : Fin n => pt (τ, a, b)).det ≠ 0
-    · have := h1 (fun τ => Matrix.of fun a b : Fin n => pt (τ, a, b)) (fun τ => isUnit_iff_ne_zero.2 (h τ))
-      simp only [Matrix.of_apply] at this
-      rw [this, mul_zero]
-    · push_neg at h
-      obtain ⟨τ, hτ⟩ := h
-      rw [Finset.prod_eq_zero (Finset.mem_univ τ) hτ, zero_mul]
-  have hD : t2wDet (ι := ι) (n := n) ≠ 0 := by
-    intro h0
-    have := congrArg (MvPolynomial.eval (fun x : ι × Fin n × Fin n => if x.2.1 = x.2.2 then (1 : ℂ) else 0)) h0
-    rw [eval_det_product, map_zero] at this
-    have hI : (Matrix.of fun a b : Fin n => if a = b then (1 : ℂ) else 0).det = 1 := by
-      have : (Matrix.of fun a b : Fin n => if a = b then (1 : ℂ) else 0) = 1 := by
-        ext a b; simp [Matrix.one_apply]
-      rw [this, Matrix.det_one]
-    rw [Finset.prod_eq_one (fun τ _ => hI)] at this
-    exact one_ne_zero this
-  exact (mul_eq_zero.1 h2).resolve_left hD
+  apply Formalism.L2.Forms.fnOf_injective <;> assumption
 
 end FnOf
 

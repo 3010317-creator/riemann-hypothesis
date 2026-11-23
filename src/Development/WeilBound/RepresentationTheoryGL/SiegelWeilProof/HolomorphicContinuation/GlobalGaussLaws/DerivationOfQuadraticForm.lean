@@ -1,7 +1,49 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.MatLApply
-public import GroundTheory.GlobalFields.CompletionAtPlace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSchwartzPolyMulGauss
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.InvGroup
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Star
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -28,8 +70,8 @@ theorem Dv_eq (X : Matrix (Fin m) (Fin m) ℂ) (P : PX m n) :
     intro Q
     show (Derivation.coeFnAddMonoidHom (R := ℂ) (A := PX m n) (M := PX m n)
       (∑ k : Fin m × Fin n × Bool, xyP X k.1 k.2.1 k.2.2 • (pderiv k : Derivation ℂ (PX m n) (PX m n)))) Q = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_apply]
+
+    rw [map_sum, Finset.sum_apply]
     simp only [Derivation.coeFnAddMonoidHom_apply, Derivation.smul_apply, smul_eq_mul]
   have h : Dv X P = D₂ P := by
     refine MvPolynomial.derivation_eq_of_forall_mem_vars (fun i _ => ?_)
@@ -41,8 +83,8 @@ def Q2 (m n : ℕ) : PX m n := ∑ a, ∑ i, MvPolynomial.X (a, i, false) * MvPo
 
 theorem derivation_quadraticForm_eq_sum (X : Matrix (Fin m) (Fin m) ℂ) :
     Dv X (Q2 m n) = ∑ a, ∑ i, (MvPolynomial.X (a, i, false) * xyP X a i true + MvPolynomial.X (a, i, true) * xyP X a i false) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Q2, map_sum, Derivation.leibniz, Dv_X, smul_eq_mul]
+
+  simp only [Q2, map_sum, Derivation.leibniz, Dv_X, smul_eq_mul]
 
 theorem vfX_eq_Dv (c : ℝ) (X : Matrix (Fin m) (Fin m) ℂ) (P : PX m n) :
     vfX c X P = Dv X P - C (c : ℂ) * Dv X (Q2 m n) * P := by
@@ -64,8 +106,8 @@ theorem gs_eq (c : ℝ) (u : Fin m → Fin n → ℂ) :
     gs c u = Complex.exp (-(c : ℂ) * MvPolynomial.eval (fun k => GlobalTheory.CompanionTheory.PolyGaussSchwartz.coord k u) (Q2 m n)) := by
   rw [gs]
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Q2, map_sum, map_mul, MvPolynomial.eval_X, GlobalTheory.CompanionTheory.PolyGaussSchwartz.coord]
+
+  simp only [Q2, map_sum, map_mul, MvPolynomial.eval_X, GlobalTheory.CompanionTheory.PolyGaussSchwartz.coord]
   push_cast
   simp [Complex.mul_conj, Complex.normSq_eq_norm_sq, Finset.mul_sum]
 
@@ -128,8 +170,8 @@ theorem hasDerivAt_curve (c : ℝ) (X : Matrix (Fin m) (Fin m) ℂ) (P : PX m n)
   have H := hP.fun_mul ((hQ.const_mul (-(c : ℂ))).cexp)
   rw [hu0] at H
   refine H.congr_deriv ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sub, map_mul, map_sum, MvPolynomial.eval_C]
+
+  simp only [map_sub, map_mul, map_sum, MvPolynomial.eval_C]
   ring
 
 end PositivityTheory.Rg.Sw.Glob.SchDH

@@ -1,14 +1,63 @@
 module
 
 public import Formalism.LocalToGlobal.AlgebraicTheory.StatementD
+public import Formalism.LocalToGlobal.AlgebraicTheory.StatementC
 public import Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.TensZEt
 public import Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.TensorFourthPowerScaling
-public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated2
-public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer
-public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.NormLtOne
-public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.SubstSingleVar
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.GramFrameComposition.GramFrameCompositionMvExpFact
-public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.GramFrameComposition.IntOpTwoFreeOf
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.GramFrameComposition.IntOpTwoFreeOf
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.NormLtOne
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.SubstSingleVar
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated2
+import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -234,8 +283,8 @@ theorem linSubst_eq {K : Type} [Field K] {m n : Type} [Fintype n] (M : Matrix m 
 theorem linSub_sumC {K : Type} [Field K] {n m ι : Type} [Finite n] [Fintype m] [Fintype ι] (Fm : n → m → K)
     (cc : ι → K) (T : ι → MvPowerSeries n K) :
     linSub Fm (∑ i, MvPowerSeries.C (cc i) * T i) = ∑ i, MvPowerSeries.C (cc i) * linSub Fm (T i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Formalism.L2.Th1.G.linSubHom_apply, map_sum]
+
+  rw [← Formalism.L2.Th1.G.linSubHom_apply, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul, Formalism.L2.Th1.G.linSubHom_apply, Formalism.L2.Th1.G.linSubHom_apply, Formalism.L2.Th1.G.linSub_C]
 
@@ -311,9 +360,9 @@ theorem XiConnection.ser_eq {p : ℕ} [Fact p.Prime] (ι : ℂ ≃+* ℂ_[p]) {n
       rw [if_neg (Ne.symm hw), map_zero, zero_mul]
     · intro hi; exact absurd (Finset.mem_univ i) hi
   unfold serLin
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hfun, hfun2, hcomp, Formalism.L2.Th1.H.FormalGroupLawNegation.map_linSubst, linSubst_eq, Formalism.L2.Th1.GD.GramFrameCompositionLinFacts.linSub_linSub,
-    hmat, hGtay, map_sum]
+
+  rw [hfun, hfun2, hcomp, Formalism.L2.Th1.H.FormalGroupLawNegation.map_linSubst, linSubst_eq, Formalism.L2.Th1.GD.GramFrameCompositionLinFacts.linSub_linSub,
+  hmat, hGtay, map_sum]
   simp only [map_mul, MvPowerSeries.map_C]
   rw [linSub_sumC]
   rfl

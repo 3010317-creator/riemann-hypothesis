@@ -1,11 +1,53 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarFwd
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarLocInA
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ScalarFramePfB
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocFacts
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ScalarFramePfD
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarLocInA
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.ScalarFramePfA
 
 @[expose] public section
 
@@ -34,8 +76,8 @@ theorem exists_dual {r : ℕ} {T : D.host.E} (F0 : FlagG (VS D) r T) :
       intro x
       conv_lhs => rw [show x = ∑ a, x a • Pi.single a (1 : D.host.E) by
         ext i; simp [Finset.sum_apply, Pi.single_apply]]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_sum, map_smul, hk]
+
+      simp [map_sum, map_smul, hk]
     have hzero : ∀ y, ∑ a, (VS D).hT (F0.e a) y * k a = 0 := by
       intro y
       have := hle (LinearMap.mem_range_self Φ y)
@@ -44,8 +86,8 @@ theorem exists_dual {r : ℕ} {T : D.host.E} (F0 : FlagG (VS D) r T) :
     have hu : (∑ a, star (k a) • F0.e a) = 0 := by
       apply (VS D).nondeg.1
       intro y
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, LinearMap.sum_apply]
+
+      rw [map_sum, LinearMap.sum_apply]
       simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star]
       rw [← hzero y]
       exact Finset.sum_congr rfl fun a _ => mul_comm _ _
@@ -85,9 +127,9 @@ theorem locX_move {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (n : (VS D).V ≃�
     intro j
     have key : ∀ a, (VS D).hT (F0.e a) (π j) = 0 := by
       intro a
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hπ, map_sub, map_sum, map_smul, smul_eq_mul, hy, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, hkk, sub_self]
+
+      simp only [hπ, map_sub, map_sum, map_smul, smul_eq_mul, hy, mul_ite, mul_one, mul_zero,
+      Finset.sum_ite_eq, Finset.mem_univ, if_true, hkk, sub_self]
     simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker]
     intro x hx
     change x ∈ Submodule.span D.host.E (Set.range F0.e) at hx
@@ -100,8 +142,8 @@ theorem locX_move {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (n : (VS D).V ≃�
     intro j
     have e1 : b j = π j + ∑ c, kk j c • y c := by simp [hπ]
     conv_lhs => rw [e1]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_add (f := _), map_sum, map_smul, smul_sub, Finset.sum_sub_distrib]
+
+    simp only [map_add (f := _), map_sum, map_smul, smul_sub, Finset.sum_sub_distrib]
     abel
   have hκ : ∀ c : Fin D.R.rS, ∑ j, v j * (D.s.atP p).ιE (kk j c) = 0 := by
     intro c
@@ -120,8 +162,8 @@ theorem locX_move {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (n : (VS D).V ≃�
     exact h2
   have hev : betaP p n v - v = ∑ j, v j • baseChange₂ D p (n (b j) - b j) := by
     conv_lhs => rw [vp_eq_sum p v]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ← Finset.sum_sub_distrib]
+
+    rw [map_sum, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_smul, betaP_bc, map_sub, smul_sub]
   have hsplit : ∑ j, v j • baseChange₂ D p (n (b j) - b j) = ∑ j, v j • baseChange₂ D p (n (π j) - π j) +

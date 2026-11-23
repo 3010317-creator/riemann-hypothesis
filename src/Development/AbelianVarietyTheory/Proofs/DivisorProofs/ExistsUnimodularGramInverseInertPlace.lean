@@ -1,11 +1,46 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.XmApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeInertPlaceSelfDual
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,9 +91,9 @@ theorem at_mul {v : Pl (F := F)} {a b : AF F} (ha : At (evFin F v) a) : At (evFi
 theorem hA_gen (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (a b : AF F) (y y' : Fin n → E) :
     hA σ J (a • fun i => inclR (F := F) (AF F) (y i)) (b • fun i => inclR (F := F) (AF F) (y' i)) =
       (a * b) • inclR (F := F) (AF F) (form σ J y y') := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hA, form, dotProduct, Matrix.mulVec, Pi.smul_apply, map_sum, map_mul, Algebra.smul_def,
-    AlgHom.commutes, GlobalTheory.InertSelfDual.cA_inclR, Finset.mul_sum]
+
+  simp only [hA, form, dotProduct, Matrix.mulVec, Pi.smul_apply, map_sum, map_mul, Algebra.smul_def,
+  AlgHom.commutes, GlobalTheory.InertSelfDual.cA_inclR, Finset.mul_sum]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
   ring
 
@@ -128,8 +163,8 @@ theorem mul_one_right (x : L) : ι x * ι 1 = ι x := by rw [← hmul, mul_one]
 theorem tJ_mul (hinj : Function.Injective ι) {m p q : Type} [Fintype p] (M : Matrix m p E) (N : Matrix p q E) :
     tJ ι (M * N) = tJ ι M * tJ ι N := by
   symm; apply tJ_eq himg hmul hinj; intro i j
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.mul_apply, Matrix.mul_apply, map_sum, map_sum, Finset.mul_sum]
+
+  rw [Matrix.mul_apply, Matrix.mul_apply, map_sum, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [hmul, tJ_spec himg hmul, tJ_spec himg hmul, map_mul]
   calc ι 1 * inclR (F := F) (AF F) (M i k) * (ι 1 * inclR (F := F) (AF F) (N k j))
@@ -236,9 +271,9 @@ theorem exists_gram_inv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     rw [hint']
     have : ι (gram σL ι P X.J i j) = hA σ X.J (fun k => ι (Pm k i)) (fun k => ι (Pm k j)) := by
       rw [hGdef]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hA, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum, hmul,
-        tJ_spec himg hmul, hσ, Finset.sum_mul]
+
+      simp only [hA, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum, hmul,
+      tJ_spec himg hmul, hσ, Finset.sum_mul]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
       rw [← mul_assoc (ι (Pm a i)), mul_one_right himg hmul]

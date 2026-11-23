@@ -1,7 +1,51 @@
 module
 
+public import Formalism.LocalRingCardinality.DataTheta
 public import Formalism.LocalToGlobal.NumberFieldFamilies.ThetaCF
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
 
 @[expose] public section
 
@@ -95,9 +139,9 @@ theorem orth_indep {n : ℕ} (v : Fin n → V.V) (h1 : ∀ i j, i ≠ j → V.hT
   rw [Fintype.linearIndependent_iff]
   intro g hg j
   have e := congrArg (V.hT (v j)) hg
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero, Finset.sum_eq_single j (fun i _ h => by rw [map_smul, h1 j i (Ne.symm h), smul_zero])
-    (fun h => absurd (Finset.mem_univ j) h), map_smul, smul_eq_mul] at e
+
+  rw [map_sum, map_zero, Finset.sum_eq_single j (fun i _ h => by rw [map_smul, h1 j i (Ne.symm h), smul_zero])
+  (fun h => absurd (Finset.mem_univ j) h), map_smul, smul_eq_mul] at e
   exact (mul_eq_zero.1 e).resolve_right (h2 j)
 
 theorem sig_of_diag {n : ℕ} (J : Matrix (Fin n) (Fin n) ℂ) (ε : Fin n → Bool) (Q : Matrix (Fin n) (Fin n) ℂ) (hQ : IsUnit Q)
@@ -188,9 +232,9 @@ theorem basC_unit (V : HSp D) : IsUnit (basC V).det := by
 theorem ob_coord (V : HSp D) (x y : V.V) :
     V.hT x y = ∑ i, ∑ j, star (V.frame.repr x i) * V.gram i j * V.frame.repr y j := by
   conv_lhs => rw [← V.frame.sum_repr x, ← V.frame.sum_repr y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply,
-    RingHom.id_apply, HSpace.gram, Finset.mul_sum]
+
+  simp only [map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply,
+  RingHom.id_apply, HSpace.gram, Finset.mul_sum]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => by ring
 

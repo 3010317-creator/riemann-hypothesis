@@ -1,8 +1,50 @@
 module
 
-public import Mathlib
+import Development.WeilBound.CoreStatements.PlurisubharmonicCones.EmbEquivSymmApply
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -108,29 +150,15 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type
 
 theorem linearIndependent_periods (R : RiemLat E g Λ) {ι : Type} [Fintype ι] (b : Module.Basis ι ℤ Λ) :
     LinearIndependent ℝ fun i => R.P (b i) := by
-  have hspan : Submodule.span ℝ (Set.range R.P) = ⊤ := (GlobalTheory.T.riemann_lattice_eigen_projection E g Λ Unit R).2.1
-  have htop : ⊤ ≤ Submodule.span ℝ (Set.range fun i => R.P (b i)) := by
-    rw [← hspan, Submodule.span_le]
-    rintro _ ⟨v, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← b.sum_repr v, map_sum]
-    refine Submodule.sum_mem _ fun i _ => ?_
-    rw [map_zsmul, ← Int.cast_smul_eq_zsmul ℝ]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  refine linearIndependent_of_top_le_span_of_card_eq_finrank htop ?_
-  have h1 : Fintype.card ι = 2 * g := by
-    rw [← R.rank, Module.finrank_eq_card_basis b]
-  have h2 : Module.finrank ℝ (Fin g → ℂ) = 2 * g := by
-    simp [Module.finrank_pi_fintype, Complex.finrank_real_complex, mul_comm]
-  rw [h1, h2]
+  apply LevelTowerAlt.basis_indep <;> assumption
 
 def comb (R : RiemLat E g Λ) {ι : Type} [Fintype ι] (b : ι → Λ) (a : ι → ℝ) : Fin g → ℂ :=
   ∑ i, ((a i : ℝ) : ℂ) • R.P (b i)
 
 theorem comb_repr (R : RiemLat E g Λ) {ι : Type} [Fintype ι] (b : Module.Basis ι ℤ Λ) (v : Λ) :
     comb R b (fun i => ((b.repr v i : ℤ) : ℝ)) = R.P v := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_rhs => rw [← b.sum_repr v, map_sum]
+
+  conv_rhs => rw [← b.sum_repr v, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_zsmul, ← Int.cast_smul_eq_zsmul ℂ]
   simp

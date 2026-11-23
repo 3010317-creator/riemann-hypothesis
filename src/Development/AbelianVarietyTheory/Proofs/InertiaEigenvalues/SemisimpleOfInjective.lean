@@ -1,13 +1,61 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolarizedGaloisRep
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.BlockComplementLattice
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.CongruenceMaxGalois
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEigenvectorOfTraceEqAddCharacter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMatrixOfSaturated
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowLeSpan
+public import Formalism.LocalRingCardinality.ConjSqrtMinusD
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -181,8 +229,8 @@ theorem exists_complement {L : Type} [Field L] [CharZero L] (φ : FractionRing O
   have hj : Function.Injective j := hv.fintypeLinearCombination_injective
   have hje : ∀ g y, fracRep r g (j y) = j (charSum χ t g y) := by
     intro g y
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [j, Fintype.linearCombination_apply, map_sum, map_smul, he, smul_smul]
+
+    simp only [j, Fintype.linearCombination_apply, map_sum, map_smul, he, smul_smul]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [mul_comm]
     rfl
@@ -221,37 +269,7 @@ variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R}
 
 theorem isSplitPl_of_degree_one (v : PlE H) (hf : v.asIdeal.inertiaDeg ℤ = 1)
     (he : v.asIdeal.ramificationIdx ℤ = 1) : IsSplitPl H v := by
-  have hG : IsGalois ℚ H.E := H.hostE_isGalois
-  have := v.isPrime
-  have h3 := Ideal.card_stabilizer_eq (G := H.E ≃ₐ[ℚ] H.E) (v.asIdeal.under ℤ) v.asIdeal
-  rw [Ideal.ramificationIdxIn_eq_ramificationIdx _ v.asIdeal (H.E ≃ₐ[ℚ] H.E),
-    Ideal.inertiaDegIn_eq_inertiaDeg _ v.asIdeal (H.E ≃ₐ[ℚ] H.E), he, hf] at h3
-  have hb : MulAction.stabilizer (H.E ≃ₐ[ℚ] H.E) v.asIdeal = ⊥ := Subgroup.card_eq_one.1 h3
-  by_contra hn
-  unfold IsSplitPl at hn
-  push Not at hn
-  have hle : H.conj • v.asIdeal ≤ v.asIdeal := by
-    intro y hy
-    rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem] at hy
-    obtain ⟨z, hz, hzv⟩ := hn _ hy
-    have e : z = y := RingOfIntegers.ext (hz.trans (H.conj.apply_symm_apply (y : H.E)))
-    exact e ▸ hzv
-  have hm : (H.conj • v.asIdeal).IsMaximal := by
-    have := v.isMaximal
-    exact (Ideal.isMaximal_map_iff_of_bijective _ (MulAction.bijective H.conj)).2 this
-  have heq : H.conj ∈ MulAction.stabilizer (H.E ≃ₐ[ℚ] H.E) v.asIdeal :=
-    hm.eq_of_le v.isPrime.ne_top hle
-  rw [hb, Subgroup.mem_bot] at heq
-  have hc := H.conj_sqrtMinusD
-  have hsq := H.sqrtMinusD_sq
-  rw [heq] at hc
-  have hc' : H.sqrtMinusD = -H.sqrtMinusD := hc
-  have h0 : H.sqrtMinusD = 0 := by linear_combination (1 / 2 : H.E) * hc'
-  rw [h0] at hsq
-  have h1 : (H.d : H.E) = 0 := by linear_combination hsq
-  have h2 : H.d = 0 := by exact_mod_cast h1
-  have := H.qd_big.2
-  omega
+  apply GlobalTheory.Proof.SemisimpleRepresentationIntegralConjugate.isSplitPl_of_degree_one <;> assumption
 
 variable (N : NData R H what₂)
 
@@ -563,9 +581,9 @@ theorem complement_at (hC : GlobalTheory.TwSys.Cheb) (D : D7) (hG : GaloisRepsCu
     have h6 := D.naut.pt_loc i P π hP w (h4 hw)
     rw [← hr3 w (h4 hw) B σ hB hσ, ← hB4 w hw] at h6
     refine (map_trace_eq_sum _ _ _ h6).trans ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [D.naut.frobEig_tw _ _ h5.1, Multiset.sum_map_mul_right, Multiset.map_id', h5.2, map_add (f := _),
-      h1 hw B σ hB hσ, map_sum, List.sum_map_mul_right]
+
+    rw [D.naut.frobEig_tw _ _ h5.1, Multiset.sum_map_mul_right, Multiset.map_id', h5.2, map_add (f := _),
+    h1 hw B σ hB hσ, map_sum, List.sum_map_mul_right]
     have h7 : ∑ c : Fin D.R.t, D.naut.iotaQC i (chiBar D.naut i (c.1 + 1) σ) =
         sumPart D.naut ⟨1, muEta D.naut i, D.R.t⟩ w *
           ((normV w : ℕ) : ℂ) ^ ((((1 - (D.R.nV : ℝ)) / 2 : ℝ)) : ℂ) := by

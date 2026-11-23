@@ -1,9 +1,55 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsDualStackedExcChartParts
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcChart
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcGeoFirst
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -54,8 +100,8 @@ theorem exists_forms_of_linear {k R A : Type*} [Field k] [CommRing R] [AddCommGr
     rw [h3]
     exact hwd _ _ (hpre _)
   rw [← h2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_rhs => rw [h1, map_sum]
+
+  conv_rhs => rw [h1, map_sum]
   exact Finset.sum_congr rfl fun j _ => by rw [map_smul, hsm]
 
 section Quad
@@ -69,8 +115,8 @@ theorem formCoord_mul_of_quadIdentity {φ₁ φ₂ φ₃ φ₄ : Fin i → K} (h
       (∑ j, C (φ₃ j) * X j) * (∑ j, C (φ₄ j) * X j) := by
     refine MvPolynomial.funext fun x => ?_
     have := h x
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [dotProduct, map_sum] using this
+
+    simpa [dotProduct, map_sum] using this
   simp only [formCoord, AddMonoidHom.mk'_apply, ← map_mul, hp]
 
 theorem graphMap_secondForm {F' : HermLattice K i} (b' : Module.Basis T ℤ (dualLattice F')) (a : T → ℤ) (d : T → ℤ) :
@@ -201,8 +247,8 @@ theorem chartScale_mul_first (ω : 𝓞 K) {c : T → ℤ}
 
 theorem chartMap_firstForm_mul (e : T → ℤ) :
     excChartMap b' a v u (graphFirstForm fun s => e s * a s) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [graphFirstForm, map_sum]
+
+  rw [graphFirstForm, map_sum]
   refine Finset.sum_eq_zero fun s _ => ?_
   rw [C_mul, mul_assoc, map_mul (excChartMap b' a v u), first_eq_zero, mul_zero]
 

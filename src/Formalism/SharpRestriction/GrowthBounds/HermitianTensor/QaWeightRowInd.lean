@@ -1,6 +1,45 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CoeffSumMonomialLinear
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -55,8 +94,8 @@ theorem subMapP : SubMapP := by
       cases hm : midOf w.2 with
       | none => rw [qa_subY_X_none w hm, qa_subY_X_none w hm, map_X]
       | some j =>
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [qa_subY_X_some w j hm, qa_subY_X_some w j hm, map_sum]
+
+        rw [qa_subY_X_some w j hm, qa_subY_X_some w j hm, map_sum]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [map_mul, map_C, map_X, map_X]
   exact RingHom.congr_fun h v
@@ -102,8 +141,8 @@ theorem subRowP : SubRowP := by
       rw [zero_add] at h
       exact h
   have hmain : IsWeightedHomogeneous (rowInd a) (subY A r v) d := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← support_sum_monomial_coeff v, map_sum]
+
+    rw [← support_sum_monomial_coeff v, map_sum]
     refine IsWeightedHomogeneous.sum _ _ _ fun u hu => ?_
     have hd : rowDeg u a = d := hv u (mem_support_iff.1 hu)
     have e : (monomial u (AddMonoidAlgebra.coeff v u) : MvPolynomial (Fin (r + 1 + 1) × Fin (r + 1 + 1)) A) =
@@ -136,8 +175,8 @@ theorem qa_subY_rowAct {A : Type} [CommRing A] {r : ℕ} (g : Matrix (Fin (r + 1
       rw [qa_rowAct_C, qa_subY_C, qa_rowAct_C]
     · intro x
       show subY A r (rowAct A g (X x)) = rowAct _ (g.map C) (subY A r (X x))
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [qa_rowAct_X, map_sum]
+
+      rw [qa_rowAct_X, map_sum]
       cases hm : midOf x.2 with
       | none =>
         rw [qa_subY_X_none x hm, qa_rowAct_X]
@@ -145,8 +184,8 @@ theorem qa_subY_rowAct {A : Type} [CommRing A] {r : ℕ} (g : Matrix (Fin (r + 1
         rw [map_mul (subY A r), qa_subY_C, qa_subY_X_none (b, x.2) hm]
         try rfl
       | some j =>
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [qa_subY_X_some x j hm, map_sum]
+
+        rw [qa_subY_X_some x j hm, map_sum]
         have e1 : ∀ b, subY A r (C (g x.1 b) * X (b, x.2)) =
             ∑ i, C (C (g x.1 b)) * (C (X (i, j)) * X (b, midI r i)) := by
           intro b

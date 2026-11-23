@@ -1,7 +1,50 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsNatDiagIffIsDiag
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 
 @[expose] public section
 
@@ -77,8 +120,8 @@ theorem GlobalTheory.Desc.spanBy_iInter_of_flat : ∀ (R R₁ K L : Type) [CommR
     intro x hx
     obtain ⟨n, u, r, rfl⟩ := exists_fin_sum x
     apply hinj n u r
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [Φ, map_sum, tensorMap_tmul] using hx
+
+    simpa [Φ, map_sum, tensorMap_tmul] using hx
   ext v
   constructor
   · rintro ⟨n, r, t, ht, rfl⟩
@@ -89,8 +132,8 @@ theorem GlobalTheory.Desc.spanBy_iInter_of_flat : ∀ (R R₁ K L : Type) [CommR
       obtain ⟨n, r, t, ht, rfl⟩ := Set.mem_iInter.1 hv j
       choose u hu hut using ht
       refine ⟨(N j).subtype.rTensor R₁ (∑ i, (⟨u i, hu i⟩ : N j) ⊗ₜ[R] r i), LinearMap.mem_range_self _ _, ?_⟩
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [Φ, map_sum, tensorMap_tmul, hut]
+
+      simp [Φ, map_sum, tensorMap_tmul, hut]
     choose T hT hTv using key
     obtain ⟨j₀⟩ := ‹Nonempty J›
     have heq : ∀ j, T j = T j₀ := fun j => by
@@ -101,5 +144,5 @@ theorem GlobalTheory.Desc.spanBy_iInter_of_flat : ∀ (R R₁ K L : Type) [CommR
     refine ⟨n, s, fun i => θ (w i), fun i => ⟨w i, ?_, rfl⟩, ?_⟩
     · exact Set.mem_iInter.2 fun j => (Submodule.mem_iInf N).1 (w i).2 j
     · rw [← hTv j₀, ← hy]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [Φ, map_sum, tensorMap_tmul]
+
+      simp [Φ, map_sum, tensorMap_tmul]

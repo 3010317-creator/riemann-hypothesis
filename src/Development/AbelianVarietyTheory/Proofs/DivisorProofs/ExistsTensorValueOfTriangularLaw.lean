@@ -1,9 +1,50 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
 public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
-public import Formalism.PolynomialDimension.WeylDim
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Formalism.LocalToGlobal.CMDeterminantIdeals.DetIdeal
 
 @[expose] public section
 
@@ -130,8 +171,8 @@ theorem exists_good_points {n : ℕ} (la : Fin n → ℕ) (K : Type) [Field K] [
     (fun i w => bval la i w.1) fun c hc => by
       have hq : ∑ i, c i • map (Int.castRingHom K) (intVec la i) = 0 := by
         refine eq_zero_of_evalAt _ fun w hw => ?_
-        set_option synthInstance.maxHeartbeats 100000 in
-          simpa [map_sum, bval] using hc ⟨w, hw⟩
+
+        simpa [map_sum, bval] using hc ⟨w, hw⟩
       funext i
       exact Fintype.linearIndependent_iff.mp (intVec_spec la K).1 c hq i
   exact ⟨fun k => (p k).1, fun k => (p k).2, hp⟩
@@ -217,8 +258,8 @@ theorem exists_slice (G : MvPolynomial (FrVar N) K)
       exact ⟨_, h1.symm⟩
   refine ⟨c, fun w => ?_⟩
   rw [← hp, hc]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, bval]
+
+  simp [map_sum, bval]
 
 end Slice
 
@@ -231,8 +272,8 @@ theorem evalFr_map_tpoly {T : Type} [Fintype T] [DecidableEq T] {N : T → ℕ} 
     {K S : Type} [CommRing K] [CommRing S] (φ : K →+* S) (x : TIdx la → K) (y : ∀ t, Matrix (Fin (N t)) (Fin (N t)) S) :
     evalFr (map φ (tpoly la x)) y = tval la (fun I => φ (x I)) y := by
   rw [tval_eq]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [tpoly, evalFr, map_sum, map_mul, map_prod, map_C, eval_C, map_rename, eval_rename, map_map]
+
+  simp only [tpoly, evalFr, map_sum, map_mul, map_prod, map_C, eval_C, map_rename, eval_rename, map_map]
   refine Finset.sum_congr rfl fun I _ => ?_
   congr 1
   refine Finset.prod_congr rfl fun t _ => ?_

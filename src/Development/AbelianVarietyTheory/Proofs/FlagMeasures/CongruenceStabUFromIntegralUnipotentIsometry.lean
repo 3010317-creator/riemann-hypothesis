@@ -1,11 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetFromBlocksSingle
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -145,14 +189,14 @@ theorem herm' (x y : S.V) : S.hT x y = star (S.hT y x) := by
 
 theorem hT_comb_left (v : ι → S.V) (c : ι → E) (x : S.V) :
     S.hT (∑ p, c p • v p) x = star c ⬝ᵥ fun p => S.hT (v p) x := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, dotProduct, Pi.star_apply,
-    smul_eq_mul, starRingEnd_apply]
+
+  simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, dotProduct, Pi.star_apply,
+  smul_eq_mul, starRingEnd_apply]
 
 theorem hT_comb_right (v : ι → S.V) (c : ι → E) (x : S.V) :
     S.hT x (∑ p, c p • v p) = star (fun p => S.hT (v p) x) ⬝ᵥ c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, dotProduct, Pi.star_apply, smul_eq_mul]
+
+  simp only [map_sum, map_smul, dotProduct, Pi.star_apply, smul_eq_mul]
   refine Finset.sum_congr rfl fun p _ => ?_
   rw [herm' x (v p), mul_comm]
 
@@ -584,8 +628,8 @@ theorem Dr1_ne_zero {T' : ℕ} (F : LFlag S r T) (F' : LFlag S r (T' : E)) (τ :
   obtain ⟨y, hy⟩ : ∃ y, y = ∑ b, w b • frame F' b := ⟨_, rfl⟩
   have hperp : ∀ c, S.hT (frame F c) y = 0 := by
     intro c
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hy, map_sum]
+
+    rw [hy, map_sum]
     simp only [map_smul, smul_eq_mul]
     have h1 := congrFun hZw c
     simp only [Matrix.mulVec, dotProduct, Pi.zero_apply] at h1
@@ -602,8 +646,8 @@ theorem Dr1_ne_zero {T' : ℕ} (F : LFlag S r T) (F' : LFlag S r (T' : E)) (τ :
       rw [Matrix.mulVec_zero]
       funext p
       have h2 := congrArg (S.hT (Sum.elim (frame F) (frame F') p)) hs
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_zero] at h2
+
+      rw [map_sum, map_zero] at h2
       simp only [map_smul, smul_eq_mul] at h2
       rw [Pi.zero_apply, ← h2]
       simp only [Matrix.mulVec, dotProduct, gramM_apply]
@@ -639,8 +683,8 @@ theorem Dr1_ne_zero {T' : ℕ} (F : LFlag S r T) (F' : LFlag S r (T' : E)) (τ :
     have hyy : S.hT y y = star (w (Fin.last r)) * w (Fin.last r) * -(T' : E) := by
       have h1 : ∀ b, S.hT (frame F' b) y = w b * (if b = Fin.last r then -(T' : E) else 0) := by
         intro b
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [hy, map_sum]
+
+        rw [hy, map_sum]
         simp only [map_smul, smul_eq_mul, gram_self, Matrix.diagonal_apply]
         rw [Finset.sum_eq_single b]
         · simp

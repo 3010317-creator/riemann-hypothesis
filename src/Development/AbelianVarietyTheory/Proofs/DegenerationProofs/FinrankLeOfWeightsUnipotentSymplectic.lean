@@ -1,11 +1,68 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
-public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.LinearAlgebra.BilinearForm.Properties
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
+public import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
+import Mathlib.CategoryTheory.Monoidal.Category
+import Mathlib.CategoryTheory.Monoidal.Mon
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.Topology.Sheaves.Presheaf
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 
 @[expose] public section
 
@@ -38,9 +95,9 @@ theorem aeval_intertwine (f g L : Module.End 𝕜 V) (K : Submodule 𝕜 V)
       intro x hx
       rw [pow_succ, pow_succ, Module.End.mul_apply, Module.End.mul_apply, hL x hx, ih _ (hK x hx)]
   intro x hx
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [aeval_eq_sum_range, LinearMap.sum_apply, LinearMap.smul_apply, map_sum,
-    LinearMap.map_smul_of_tower, hp _ x hx]
+
+  simp only [aeval_eq_sum_range, LinearMap.sum_apply, LinearMap.smul_apply, map_sum,
+  LinearMap.map_smul_of_tower, hp _ x hx]
 
 theorem aeval_adjoint (B : LinearMap.BilinForm 𝕜 V) (f g : Module.End 𝕜 V)
     (h : ∀ x y, B (f x) y = B x (g y)) (p : ℚ[X]) (x y : V) :
@@ -52,9 +109,9 @@ theorem aeval_adjoint (B : LinearMap.BilinForm 𝕜 V) (f g : Module.End 𝕜 V)
     | succ n ih =>
       intro x y
       rw [pow_succ', pow_succ, Module.End.mul_apply, Module.End.mul_apply, h, ih]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [aeval_eq_sum_range, LinearMap.sum_apply, LinearMap.smul_apply, map_sum,
-    LinearMap.map_smul_of_tower, hp]
+
+  simp only [aeval_eq_sum_range, LinearMap.sum_apply, LinearMap.smul_apply, map_sum,
+  LinearMap.map_smul_of_tower, hp]
 
 end
 
@@ -66,8 +123,8 @@ theorem aeval_rev {A : Type} [Ring A] [Algebra ℚ A] (u v : A) (h : u * v = 1) 
     induction i with
     | zero => simp
     | succ i ih => rw [pow_succ, pow_succ', _root_.mul_assoc, ← _root_.mul_assoc u, h, _root_.one_mul, ih]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [aeval_eq_sum_range v, map_sum, Finset.mul_sum]
+
+  rw [aeval_eq_sum_range v, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i hi => ?_
   have hi' : i ≤ R.natDegree := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
   have : u ^ R.natDegree = u ^ (R.natDegree - i) * u ^ i := by
@@ -87,8 +144,8 @@ theorem exists_rev {A : Type} [Ring A] [Algebra ℚ A] (u v : A) (h : u * v = 1)
   by_cases hb : β = 0
   · exfalso
     subst hb
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_eq_single R.natDegree] at hβ
+
+    rw [map_sum, Finset.sum_eq_single R.natDegree] at hβ
     · simp [hR0] at hβ
     · intro i hi hne
       have hi' : i ≤ R.natDegree := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)

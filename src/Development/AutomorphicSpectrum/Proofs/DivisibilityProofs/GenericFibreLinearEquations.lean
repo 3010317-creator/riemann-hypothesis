@@ -1,9 +1,58 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsChainFirst
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsBlockMapDrop
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.AlgebraicIndependentLinearForms
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.LocalProperties.Reduced
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -248,8 +297,8 @@ theorem tF_mem_rest (j : K → FlBlock Ψ N) {k₀ k : K} (hk : k ≠ k₀) : tF
 
 theorem det_mem {R E S : Type} [CommRing R] [Field E] [SetLike S E] [SubringClass S E] (A : S) (θ : R →+* E) {n : ℕ}
     (M : Matrix (Fin n) (Fin n) R) (h : ∀ a b, θ (M a b) ∈ A) : θ M.det ∈ A := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.det_apply', map_sum]
+
+  rw [Matrix.det_apply', map_sum]
   refine sum_mem fun σ _ => ?_
   rw [map_mul, map_prod]
   refine mul_mem ?_ (prod_mem fun i _ => h _ _)
@@ -332,8 +381,8 @@ theorem xP_mem_span (j : K → FlBlock Ψ N) (k₀ : K) (w : CF Ψ N K) (hw0 : w
       thF Ψ N K (minorPolynomial Ψ N (j k₀).1 (j k₀).2 (by have := (j k₀).2.2; omega) B) * w ∈ PhiF j k₀)
     (A : PIdx j k₀) : xP j ⟨k₀, A⟩ ∈ Submodule.span (PhiF j k₀) (Set.range (uF j k₀ w)) := by
   simp only [xP]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [minorPolynomial_succ, map_sum, Finset.sum_mul]
+
+  rw [minorPolynomial_succ, map_sum, Finset.sum_mul]
   refine Submodule.sum_mem _ fun b _ => ?_
   have hm := hB (fun a => A.1 (b.succAbove a)) (A.2.comp (Fin.strictMono_succAbove b))
   have hs : ((-1 : CF Ψ N K) ^ (((j k₀).2 : ℕ) + (b : ℕ))) ∈ PhiF j k₀ := pow_mem (neg_mem (one_mem _)) _

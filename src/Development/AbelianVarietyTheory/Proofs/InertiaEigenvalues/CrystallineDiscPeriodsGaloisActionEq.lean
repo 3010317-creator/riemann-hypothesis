@@ -1,12 +1,56 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinMemIdealPowOfXPowMulMem
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeIntegral
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfAdicTopologicalBasisOverBreuilKisinStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinAinfDiscIsDomainNormBoundsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscToDiscInjectiveOfAdicBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfAdicTopologicalBasisOverBreuilKisinStatement
-public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -59,22 +103,7 @@ namespace BK
 variable (bk : BK K)
 
 theorem X_pow_mem_J_galPer : (X : bk.S) ^ bk.Ep.natDegree ∈ bk.J := by
-  have e1 : bk.Ep - Polynomial.X ^ bk.Ep.natDegree =
-      ∑ i ∈ Finset.range bk.Ep.natDegree, Polynomial.C (bk.Ep.coeff i) * Polynomial.X ^ i := by
-    rw [sub_eq_iff_eq_add']
-    exact bk.monic.as_sum
-  have h1 : (l : Polynomial (Wq l bk.a)) ∣ bk.Ep - Polynomial.X ^ bk.Ep.natDegree := by
-    rw [e1]
-    refine Finset.dvd_sum fun i hi => ?_
-    obtain ⟨c, hc⟩ := bk.dvd_coeff i (Finset.mem_range.1 hi)
-    exact ⟨Polynomial.C c * Polynomial.X ^ i, by rw [hc, map_mul, map_natCast]; ring⟩
-  have h2 : (l : bk.S) ∣ bk.E - X ^ bk.Ep.natDegree := by
-    have := map_dvd (Polynomial.coeToPowerSeries.ringHom (R := Wq l bk.a)) h1
-    simpa using this
-  have e2 : (X : bk.S) ^ bk.Ep.natDegree = bk.E - (bk.E - X ^ bk.Ep.natDegree) := by ring
-  rw [e2]
-  exact Submodule.sub_mem _ (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-    (Ideal.mem_sup_left (Ideal.mem_span_singleton.2 h2))
+  apply GlobalTheory.BSP.BK.X_pow_natDegree_mem_lE <;> assumption
 
 theorem ev_sep_galPer (b : Ainf l) (hb : ∀ n, bk.ev X ^ n ∣ b) : b = 0 := by
   obtain ⟨ι, ⟨tb⟩⟩ := GlobalTheory.T.ainf_adicTopologicalBasis_over_breuilKisin l K bk

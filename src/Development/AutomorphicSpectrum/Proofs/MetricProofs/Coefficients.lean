@@ -1,14 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.Pull1
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationHeightIndependenceStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GapEqWeightSubNextStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AbsCoeffProdXLeOne
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositiveStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FormPolyIsHomogeneousAndEval
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AbsCoeffProdXLeOne
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GapEqWeightSubNextStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.KillNoneFormPoly
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationHeightIndependenceStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -63,10 +99,10 @@ theorem coefficients : Coefficients := by
       have hco : ∀ m, |(formPoly (D + 1) (Re.limNum II) - formPoly (D + 1) (Re'.limNum II)).coeff m| ≤
           ((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) * (C₂' * ∑ p ∈ T, α p * Real.log p) :=
         fun m => by
-          rw [coeff_sub]
+          rw [MvPolynomial.coeff_sub]
           exact (formPoly_sub_bound _ _ _ _ _ hlim).1 m
       intro m
-      rw [hPB, hPB, ← coeff_sub, ← map_sub]
+      rw [hPB, hPB, ← MvPolynomial.coeff_sub, ← map_sub]
       calc _ ≤ Cst * (((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) *
             (C₂' * ∑ p ∈ T, α p * Real.log p)) := (hWS _ _ hhom).2 hco m
         _ = _ := by ring
@@ -77,10 +113,10 @@ theorem coefficients : Coefficients := by
           formPoly (D + 1) (fun w => Re'.limNum II (some ∘ w))).coeff m| ≤
           ((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) * (C₂' * ∑ p ∈ T, α p * Real.log p) :=
         fun m => by
-          rw [coeff_sub]
+          rw [MvPolynomial.coeff_sub]
           exact ((formPoly_sub_bound _ _ _ _ _ fun w => hlim (some ∘ w)).1 m).trans hcard
       intro m
-      rw [hPBwt, hPBwt, ← coeff_sub, ← map_sub]
+      rw [hPBwt, hPBwt, ← MvPolynomial.coeff_sub, ← map_sub]
       calc _ ≤ Cst * (((Fintype.card (Option (Ψ × Fin N)) : ℝ)) ^ (D + 1) *
             (C₂' * ∑ p ∈ T, α p * Real.log p)) := (hW _ _ hhom).2 hco m
         _ = _ := by ring

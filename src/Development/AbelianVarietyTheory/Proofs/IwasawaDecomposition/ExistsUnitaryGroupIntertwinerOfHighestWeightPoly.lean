@@ -1,10 +1,49 @@
 module
 
-public import Mathlib
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
-public import ReciprocityTheory.DualLattices.FischerSelfNeZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
+public import ReciprocityTheory.DualLattices.FischerAdjointStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntertwinerIrreducibleUnitaryHighestWeightStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.DualLattices.ConstantCoeffRowSubst
+public import ReciprocityTheory.DualLattices.FischerSelfNeZero
+import ReciprocityTheory.DualLattices.FischerSmulRight
 
 @[expose] public section
 
@@ -28,8 +67,8 @@ theorem differentiable_rowSubst {k : ℕ} {κ : Type} {F : Type} [NormedAddCommG
         fun g : Fin k → Fin k → ℂ => ∑ l, g l s.1 •
           (ψ ∘ₗ LinearMap.mulRight ℂ (X (l, s.2))) (rowSubst (Matrix.of g) p) := by
       funext g
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_mul, rowSubst_X, Finset.mul_sum, map_sum]
+
+      rw [map_mul, rowSubst_X, Finset.mul_sum, map_sum]
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [LinearMap.comp_apply, LinearMap.mulRight_apply, ← map_smul, MvPolynomial.smul_eq_C_mul, Matrix.of_apply]
       congr 1
@@ -46,9 +85,9 @@ theorem totalDegree_rowSubst_le {k : ℕ} {κ : Type} (g : Matrix (Fin k) (Fin k
 theorem fischer_conj {k : ℕ} {κ : Type} (P Q : MvPolynomial (Fin k × κ) ℂ) :
     starRingEnd ℂ (fischer P Q) = fischer Q P := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [fischer_eq_sum P Q (P.support ∪ Q.support) Finset.subset_union_left,
-    fischer_eq_sum Q P (P.support ∪ Q.support) Finset.subset_union_right, map_sum]
+
+  rw [fischer_eq_sum P Q (P.support ∪ Q.support) Finset.subset_union_left,
+  fischer_eq_sum Q P (P.support ∪ Q.support) Finset.subset_union_right, map_sum]
   refine Finset.sum_congr rfl fun A _ => ?_
   simp only [fw, map_mul, Complex.conj_conj, map_natCast]
   ring

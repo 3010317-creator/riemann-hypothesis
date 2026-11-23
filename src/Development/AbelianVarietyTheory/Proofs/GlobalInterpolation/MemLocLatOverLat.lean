@@ -1,19 +1,60 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OverLatticeIffSelfDualOverBase
-public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsGlob
-public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Afsplit
+import Formalism.LocalRingCardinality.IntCastDvdOfDvdIntegers
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.OverPlaceIntegralForm
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SplittingProjection
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicLatticeCompletionLocalGlobalStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLatticeVectorApproxAllFinitePlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemDualSetOfMemSpan
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DualOfDualFrames
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ImportsExtra
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSplittingOfCharacter
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsAddEquivField
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLatticeVectorApproxAllFinitePlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSecondFunctional
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MulVecMemIff
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSplittingOfCharacter
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ImportsExtra
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemDualSetOfMemSpan
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemRangeBcOfTransposeMulEqOne
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MulVecMemIff
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OverLatticeIffSelfDualOverBase
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -106,7 +147,7 @@ theorem approx_one {Λ Λ' : Submodule (𝓞 E) (Fin k → E)} (hfin : Module.Fi
     exact neg_mem (nsmul_mem_locLat w h z hz)
 
 
-set_option synthInstance.maxHeartbeats 200000 in
+
 theorem mem_of_count {Λ Λ' : Submodule (𝓞 E) (Fin k → E)} (hfin : Module.Finite (𝓞 E) Λ') {T f : ℕ}
     (hT : T ≠ 0) (hf : f ≠ 0) (h : ∀ x ∈ Λ', T • x ∈ Λ)
     (hidx : Λ.toAddSubgroup.relIndex Λ'.toAddSubgroup = T ^ (2 * f))
@@ -232,8 +273,8 @@ theorem hform_add_left {A : Type} [CommRing A] (τ : A →+* A) (J : Matrix (Fin
 theorem hform_loc (J : Matrix (Fin k) (Fin k) E) (x y : Fin k → E) :
     hform (sigR σ (v.adicCompletion F)) (J.map (inclE (F := F) (v.adicCompletion F))) (loc v x) (loc v y) =
       inclE (F := F) (v.adicCompletion F) (hform (σ : E →+* E) J x y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hform, map_sum, map_mul]
+
+  simp only [hform, map_sum, map_mul]
   rfl
 
 end Split
@@ -246,8 +287,8 @@ variable {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     {clsLat : ∀ i, C.cls i → Submodule (𝓞 E) (sp.X i).V}
 
 
-set_option synthInstance.maxHeartbeats 200000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem localAtT (L : ColLevel R F E sp gp C A clsLat) (N : Submodule (𝓞 E) (Fin R.k → E))
     (v : HeightOneSpectrum (𝓞 F)) (hv : (A.T : 𝓞 F) ∈ v.asIdeal)
     {s : E ⊗[F] v.adicCompletion F ≃+* v.adicCompletion F × v.adicCompletion F}
@@ -438,8 +479,8 @@ theorem finite_dualLb (L : ColLevel R F E sp gp C A clsLat) : Module.Finite (�
   exact nsmul_right_injective A.T_prime.ne_zero h'
 
 
-set_option synthInstance.maxHeartbeats 200000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem exists_local (L : ColLevel R F E sp gp C A clsLat)
     (v : HeightOneSpectrum (𝓞 F)) (hv : (A.T : 𝓞 F) ∈ v.asIdeal) :
     ∃ s : E ⊗[F] v.adicCompletion F ≃+* v.adicCompletion F × v.adicCompletion F,
@@ -578,8 +619,8 @@ theorem locLat_dual_le (L : ColLevel R F E sp gp C A clsLat) (v : HeightOneSpect
   fun y hy => mem_of_nsmul_mem hv _ (nsmul_mem_locLat v (nsmul_mem L) y hy)
 
 
-set_option synthInstance.maxHeartbeats 200000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem exists_overLattice (L : ColLevel R F E sp gp C A clsLat)
     (hpl : Nat.card {v : HeightOneSpectrum (𝓞 F) // (A.T : 𝓞 F) ∈ v.asIdeal} = R.f) :
     ∃ N : Submodule (𝓞 E) (Fin R.k → E), IsOverLattice L N ∧
@@ -690,34 +731,7 @@ theorem exists_overLattice (L : ColLevel R F E sp gp C A clsLat)
 end Level
 
 theorem T_ne_g (D : D7) (u : D.what₂.Word) (i : Fin 2) : (D.mem u).A.T ≠ D.host.g i := by
-  intro h
-  obtain ⟨π, -, hπ, hmod⟩ := D.T_norm u
-  obtain ⟨a, ha⟩ := Ideal.mem_span_singleton'.1 hmod
-  have hd : D.host.g i ∣ D.host.QS * D.host.q * D.host.d * (D.host.g 0 * D.host.g 1) ^ 2 := by
-    refine Dvd.dvd.mul_left (Dvd.dvd.pow ?_ two_ne_zero) _
-    fin_cases i
-    · exact Dvd.intro _ rfl
-    · exact Dvd.intro_left _ rfl
-  obtain ⟨m, hm⟩ := hd
-  let c := RingOfIntegers.mapRingHom (D.host.conj : D.host.E →+* D.host.E)
-  have h1 : π = 1 + (D.host.g i : 𝓞 D.host.E) * (a * m) := by
-    rw [hm] at ha; push_cast at ha; linear_combination -ha
-  have h2 : c π = 1 + (D.host.g i : 𝓞 D.host.E) * c (a * m) := by
-    conv_lhs => rw [h1]
-    rw [map_add (f := _), map_one, map_mul c (D.host.g i : 𝓞 D.host.E), map_natCast]
-  have h3 : π * c π = (D.host.g i : 𝓞 D.host.E) := by
-    apply RingOfIntegers.ext
-    rw [← h]
-    exact hπ.trans (map_natCast (algebraMap (𝓞 D.host.E) D.host.E) _).symm
-  have h4 : IsUnit (D.host.g i : 𝓞 D.host.E) := by
-    refine isUnit_of_dvd_one ⟨1 - a * m - c (a * m) - (D.host.g i : 𝓞 D.host.E) * (a * m) * c (a * m), ?_⟩
-    rw [h2] at h3
-    rw [h1] at h3
-    linear_combination h3
-  have h5 := h4.map (Algebra.norm ℤ)
-  rw [show (D.host.g i : 𝓞 D.host.E) = algebraMap ℤ _ (D.host.g i : ℤ) by simp, Algebra.norm_algebraMap,
-    isUnit_pow_iff Module.finrank_pos.ne', Int.isUnit_iff_natAbs_eq, Int.natAbs_natCast] at h5
-  exact (D.host.g_prime i).ne_one h5
+  apply Formalism.BasicNotions.D7.T_ne_g <;> assumption
 
 theorem overLattice : GlobalTheory.IndefiniteRowSideFullHecke.OverPlaceIntegralForm.OverLattice :=
   overLattice_iff_selfDualOverBase.2 fun D Lv u =>

@@ -1,10 +1,58 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmulMemOfOne
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowMinor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddStarEqOneOfIsCMUnram
-public import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
 public import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
+import Formalism.HermitianLattices.HermitianLatticesProofs.IsomAct
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -23,70 +71,7 @@ variable {K : Type} [Field K] [NumberField K] {V : Type} [AddCommGroup V] [Modul
 
 theorem exists_proj (L : Submodule (𝓞 K) V) (hfg : L.FG) (hsp : Submodule.span K (L : Set V) = ⊤) (W : Submodule K V) :
     ∃ P : V →ₗ[K] V, (∀ v, P v ∈ W) ∧ (∀ w ∈ W, P w = w) ∧ ∀ v ∈ L, P v ∈ L := by
-  classical
-  let q : V →ₗ[𝓞 K] V ⧸ W := W.mkQ.restrictScalars (𝓞 K)
-  let Lb : Submodule (𝓞 K) (V ⧸ W) := L.map q
-  have hfin : Module.Finite (𝓞 K) Lb := Module.Finite.iff_fg.2 (hfg.map q)
-  have hcancel : ∀ (d : 𝓞 K) (x : V ⧸ W), d ≠ 0 → d • x = 0 → x = 0 := by
-    intro d x hd h
-    rw [← IsScalarTower.algebraMap_smul K d x] at h
-    exact (smul_eq_zero.1 h).resolve_left (by simpa using hd)
-  have hflat : Module.Flat (𝓞 K) Lb := by
-    rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
-    rintro x ⟨d, hd⟩
-    have : (d : 𝓞 K) • (x : V ⧸ W) = 0 := congrArg Subtype.val hd
-    exact Subtype.ext (hcancel d x (nonZeroDivisors.coe_ne_zero d) this)
-  have hfp : Module.FinitePresentation (𝓞 K) Lb := Module.finitePresentation_of_finite _ _
-  have hproj : Module.Projective (𝓞 K) Lb := Module.Flat.projective_of_finitePresentation
-  let qL : L →ₗ[𝓞 K] Lb := q.submoduleMap L
-  obtain ⟨s, hs⟩ := Module.projective_lifting_property qL LinearMap.id (LinearMap.submoduleMap_surjective q L)
-  have hs' : ∀ y : Lb, q (s y : V) = y := fun y => congrArg Subtype.val (LinearMap.congr_fun hs y)
-  let p0 : L →ₗ[𝓞 K] V := L.subtype - L.subtype ∘ₗ s ∘ₗ qL
-  have hp0 : ∀ x : L, p0 x = (x : V) - s (qL x) := fun x => rfl
-  have hden : ∀ v : V, ∃ d : 𝓞 K, d ≠ 0 ∧ d • v ∈ L := by
-    intro v
-    have hv : v ∈ Submodule.span K (L : Set V) := by rw [hsp]; trivial
-    obtain ⟨d, hd⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors (𝓞 K)) K (L : Set V) v hv
-    rw [Submodule.span_eq] at hd
-    exact ⟨d, nonZeroDivisors.coe_ne_zero d, hd⟩
-  have hunit : ∀ x : nonZeroDivisors (𝓞 K), IsUnit (algebraMap (𝓞 K) (Module.End (𝓞 K) V) x) :=
-    (isLocalizedModule_id (nonZeroDivisors (𝓞 K)) V K).map_units
-  haveI hloc : IsLocalizedModule (nonZeroDivisors (𝓞 K)) L.subtype := by
-    refine ⟨hunit, fun v => ?_, fun {x y} h => ⟨1, by simpa using Subtype.ext h⟩⟩
-    obtain ⟨d, hd, hv⟩ := hden v
-    exact ⟨(⟨d • v, hv⟩, ⟨d, mem_nonZeroDivisors_of_ne_zero hd⟩), rfl⟩
-  let P0 : V →ₗ[𝓞 K] V := IsLocalizedModule.lift (nonZeroDivisors (𝓞 K)) L.subtype p0 hunit
-  have hP0 : ∀ x : L, P0 (x : V) = p0 x := fun x => IsLocalizedModule.lift_apply _ L.subtype p0 hunit x
-  let P : V →ₗ[K] V := P0.extendScalarsOfIsLocalization (nonZeroDivisors (𝓞 K)) K
-  have hP : ∀ v, P v = P0 v := fun v => rfl
-  have hW : ∀ x : L, p0 x ∈ W := by
-    intro x
-    rw [← Submodule.Quotient.mk_eq_zero]
-    change q (p0 x) = 0
-    rw [hp0, map_sub, hs']
-    exact sub_self _
-  refine ⟨P, fun v => ?_, fun w hw => ?_, fun v hv => ?_⟩
-  · obtain ⟨d, hd, hv⟩ := hden v
-    rw [← Submodule.Quotient.mk_eq_zero]
-    apply hcancel d _ hd
-    change d • q (P0 v) = 0
-    rw [← map_smul, ← map_smul, show d • v = ((⟨d • v, hv⟩ : L) : V) from rfl, hP0]
-    exact (Submodule.Quotient.mk_eq_zero W).2 (hW _)
-  · obtain ⟨d, hd, hv⟩ := hden w
-    have h0 : qL ⟨d • w, hv⟩ = 0 := by
-      apply Subtype.ext
-      change q (d • w) = 0
-      rw [map_smul]
-      change d • (Submodule.Quotient.mk w : V ⧸ W) = 0
-      rw [(Submodule.Quotient.mk_eq_zero W).2 hw, smul_zero]
-    have h1 : d • P0 w = d • w := by
-      rw [← map_smul, show d • w = ((⟨d • w, hv⟩ : L) : V) from rfl, hP0, hp0, h0, map_zero]
-      simp
-    rw [hP]
-    rw [← IsScalarTower.algebraMap_smul K d, ← IsScalarTower.algebraMap_smul K d w] at h1
-    exact smul_right_injective V (by simpa using hd) h1
-  · rw [hP, show v = ((⟨v, hv⟩ : L) : V) from rfl, hP0, hp0]
-    exact L.sub_mem hv (s _).2
+  apply GlobalTheory.DegAsm.FrameMove.exists_proj <;> assumption
 
 end Lattices
 
@@ -301,16 +286,16 @@ theorem exists_dual_frame (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) {
     exact pair_idSpan h h0 (hX ▸ ⟨hxL, hx⟩) a (hB a β hβ)
   refine ⟨fun b => g b - ∑ a, ((t : E) * S.hT (g a) (g b)) • e a, ⟨h.1, fun a b => ?_, fun a b => ?_⟩,
     fun a => ?_, fun b β hβ => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, map_smul, h.1, hge, heg,
-      smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, star_mul, hsym]
-      linear_combination (-(S.hT (g a) (g b))) * ht
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [map_sub, map_sum, map_smul, h.1, heg, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, hez, hgz, mul_zero,
-      Finset.sum_const_zero, sub_zero]
+
+  · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, map_smul, h.1, hge, heg,
+    smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq,
+    Finset.sum_ite_eq', Finset.mem_univ, if_true, star_mul, hsym]
+    linear_combination (-(S.hT (g a) (g b))) * ht
+
+  · simp only [map_sub, map_sum, map_smul, h.1, heg, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero]
+
+  · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, hez, hgz, mul_zero,
+    Finset.sum_const_zero, sub_zero]
   · rw [smul_sub, Finset.smul_sum]
     refine Λ.sub_mem (hgL b β hβ) (Λ.sum_mem fun a _ => ?_)
     rw [smul_smul]
@@ -335,24 +320,24 @@ theorem prj_apply (e f : Fin r → S.V) (v : S.V) :
   simp [prj, LinearMap.sum_apply]
 
 theorem e_prj {e f : Fin r → S.V} (h : IsHyp e f) (a : Fin r) (v : S.V) : S.hT (e a) (prj e f v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prj_apply, map_sum, h.1, h.2.2]
+
+  simp [prj_apply, map_sum, h.1, h.2.2]
 
 theorem f_prj {e f : Fin r → S.V} (h : IsHyp e f) (a : Fin r) (v : S.V) : S.hT (f a) (prj e f v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [prj_apply, map_sum, h.2.1, h.fe]
+
+  simp [prj_apply, map_sum, h.2.1, h.fe]
 
 theorem prj_prj {e f : Fin r → S.V} (h : IsHyp e f) (u v : S.V) :
     S.hT (prj e f u) (prj e f v) = S.hT u v - ∑ a, S.hT (f a) v * star (S.hT (e a) u) -
       ∑ a, S.hT (e a) v * star (S.hT (f a) u) := by
   have h1 : S.hT (prj e f u) (prj e f v) = S.hT u (prj e f v) := by
     rw [prj_apply e f u]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, e_prj h, f_prj h, mul_zero,
-      Finset.sum_const_zero, sub_zero]
+
+    simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, e_prj h, f_prj h, mul_zero,
+    Finset.sum_const_zero, sub_zero]
   rw [h1, prj_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sub, map_sum, map_smul, smul_eq_mul, hsym]
+
+  simp only [map_sub, map_sum, map_smul, smul_eq_mul, hsym]
 
 def chg (e f f' : Fin r → S.V) : S.V →ₗ[E] S.V :=
   ∑ a, (S.hT (f' a)).smulRight (e a) + prj e f ∘ₗ prj e f' + ∑ a, (S.hT (e a)).smulRight (f a)
@@ -365,12 +350,12 @@ theorem chg_isom {e f f' : Fin r → S.V} (h : IsHyp e f) (h' : IsHyp e f') (u v
     S.hT (chg e f f' u) (chg e f f' v) = S.hT u v := by
   have h1 : ∀ a v, S.hT (e a) (chg e f f' v) = S.hT (e a) v := by
     intro a v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [chg_apply, map_sum, h.1, h.2.2, e_prj h]
+
+    simp [chg_apply, map_sum, h.1, h.2.2, e_prj h]
   have h2 : ∀ a v, S.hT (f a) (chg e f f' v) = S.hT (f' a) v := by
     intro a v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [chg_apply, map_sum, h.2.1, h.fe, f_prj h]
+
+    simp [chg_apply, map_sum, h.2.1, h.fe, f_prj h]
   have h3 : ∀ v, prj e f (chg e f f' v) = prj e f (prj e f' v) := by
     intro v
     rw [prj_apply e f (chg e f f' v)]

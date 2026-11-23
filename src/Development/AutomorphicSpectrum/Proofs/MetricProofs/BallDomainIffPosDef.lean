@@ -1,7 +1,50 @@
 module
 
-public import Mathlib
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallMobiusHolomorphicPotentialChange
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BigZe
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PUnipotentModulusMatrix
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 
 @[expose] public section
 
@@ -32,45 +75,7 @@ theorem qf_one_sub {m n : Type} [Fintype m] [Fintype n] [DecidableEq n] (A : Mat
 
 theorem posDef_adjoint {m n : Type} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℂ)
     (h : (1 - Aᴴ * A).PosDef) : (1 - A * Aᴴ).PosDef := by
-  refine posDef_iff_dotProduct_mulVec.2 ⟨?_, fun v hv => ?_⟩
-  · simp [IsHermitian, conjTranspose_sub, conjTranspose_mul]
-  have hq := qf_one_sub Aᴴ v
-  rw [conjTranspose_conjTranspose] at hq
-  rw [hq]
-  obtain ⟨c, hc0, hc, hcp⟩ := exists_sqLen v
-  obtain ⟨a, ha0, ha, hap⟩ := exists_sqLen (Aᴴ *ᵥ v)
-  rw [hc, ha, ← Complex.ofReal_sub]
-  have hcpos := hcp hv
-  suffices hac : a < c from by exact_mod_cast sub_pos.2 hac
-  by_cases hw : Aᴴ *ᵥ v = 0
-  · have : a = 0 := by
-      have : (a : ℂ) = 0 := by rw [← ha, hw]; simp
-      exact_mod_cast this
-    rw [this]; exact hcpos
-  have hapos := hap hw
-  set w := Aᴴ *ᵥ v with hwdef
-  obtain ⟨b, hb0, hb, -⟩ := exists_sqLen (A *ᵥ w)
-  have hba : b < a := by
-    have h1 := (posDef_iff_dotProduct_mulVec.1 h).2 hw
-    rw [qf_one_sub, ha, hb, ← Complex.ofReal_sub] at h1
-    have : (0 : ℝ) < a - b := by exact_mod_cast h1
-    linarith
-  have hpv : star (A *ᵥ w) ⬝ᵥ v = (a : ℂ) := by
-    rw [star_mulVec, ← dotProduct_mulVec, ← hwdef, ha]
-  have hvp : star v ⬝ᵥ (A *ᵥ w) = (a : ℂ) := by
-    rw [dotProduct_mulVec, ← star_star (star v ᵥ* A)]
-    rw [star_vecMul, star_star, ← hwdef, ha]
-  have hu := dotProduct_star_self_nonneg ((c : ℂ) • (A *ᵥ w) - (a : ℂ) • v)
-  have hexp : star ((c : ℂ) • (A *ᵥ w) - (a : ℂ) • v) ⬝ᵥ ((c : ℂ) • (A *ᵥ w) - (a : ℂ) • v) =
-      ((c * (c * b - a ^ 2) : ℝ) : ℂ) := by
-    simp only [star_sub, star_smul, dotProduct_sub, sub_dotProduct, dotProduct_smul, smul_dotProduct, hb, hc, hpv, hvp]
-    simp only [Complex.star_def, Complex.conj_ofReal, smul_eq_mul]
-    push_cast
-    ring
-  rw [hexp] at hu
-  have hu' : 0 ≤ c * (c * b - a ^ 2) := by exact_mod_cast hu
-  have h2 : 0 ≤ c * b - a ^ 2 := nonneg_of_mul_nonneg_right hu' hcpos
-  nlinarith
+  apply GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Moeb.posDef_one_sub_swap <;> assumption
 
 theorem posDef_adjoint_iff {m n : Type} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℂ) :
     (1 - Aᴴ * A).PosDef ↔ (1 - A * Aᴴ).PosDef :=

@@ -1,13 +1,45 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Formalism.LocalToGlobal.IndefiniteReal.LinksLemmas
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DiscreteSeriesUpqExistsIffDsExists
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.HermitianOrthogonalExtensionData
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
 
 @[expose] public section
 
@@ -27,9 +59,9 @@ variable {D : D7}
 theorem hT_eq_coords (S : HSp D) (x y : S.V) :
     S.hT x y = ∑ i, ∑ j, star (S.frame.repr x i) * S.gram i j * S.frame.repr y j := by
   conv_lhs => rw [← S.frame.sum_repr x, ← S.frame.sum_repr y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
-    starRingEnd_apply, Finset.mul_sum, RingHom.id_apply]
+
+  simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul,
+  starRingEnd_apply, Finset.mul_sum, RingHom.id_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   simp only [Formalism.BasicNotions.HSpace.gram]
@@ -58,8 +90,8 @@ theorem exists_orthogonalSum_testGrid_of_levelChoiceGrid {D : D7} (A B : GlobalT
     intro x p
     show B.V.hT _ (d.ι x) = 0
     conv_lhs => rw [← A.V.frame.sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul]
+
+    simp only [map_sum, map_smul, smul_eq_mul]
     refine Finset.sum_eq_zero fun k _ => ?_
     have h1 := B.V.herm.eq (d.ι (A.V.frame k)) (B.V.frame.equivFun.symm (fun i => d.a i p))
     have h2 : d.ι (A.V.frame k) = B.V.frame.equivFun.symm (fun i => frameMat B.V A.V d.ι i k) := by
@@ -82,8 +114,8 @@ theorem exists_orthogonalSum_testGrid_of_levelChoiceGrid {D : D7} (A B : GlobalT
         B.V.frame.equivFun (d.ι x + ∑ p, t p • B.V.frame.equivFun.symm (fun k => d.a k p)) =
           frameMat B.V A.V d.ι *ᵥ A.V.frame.equivFun x + d.a *ᵥ t := by
       intro x t
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_add (f := _), map_sum]
+
+      rw [map_add (f := _), map_sum]
       congr 1
       · simp only [Module.Basis.equivFun_apply, frameMat]
         exact (LinearMap.toMatrix_mulVec_repr _ _ _ _).symm

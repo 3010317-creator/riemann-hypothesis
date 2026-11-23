@@ -1,8 +1,48 @@
 module
 
-public import Mathlib
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.QuoZeroSub
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.FlatL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapHCompEqSmul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapHCompEqSmul
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.TwistedRepresentations.Tens
 
 @[expose] public section
 
@@ -162,32 +202,7 @@ end Conn
 
 theorem mapH_bij {K L : Cx.{1} W} (φ : Cx.Hom K L (RingHom.id W)) (h : ∀ i, Function.Bijective (φ.f i))
     (j : ℕ) : Function.Bijective (φ.mapH j) := by
-  constructor
-  · refine (injective_iff_map_eq_zero _).2 fun x hx => ?_
-    obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    have hb : φ.f j z.1 ∈ L.B j := mem_B_of_mk (φ.mapZ j z) hx
-    refine mk_of_mem_B z ?_
-    cases j with
-    | zero =>
-      have e : φ.f 0 z.1 = 0 := hb
-      have e' : z.1 = 0 := (h 0).1 (by rw [e, map_zero])
-      rw [e']
-      exact Submodule.zero_mem _
-    | succ j =>
-      obtain ⟨y, hy⟩ := hb
-      obtain ⟨y, rfl⟩ := (h j).2 y
-      exact ⟨y, (h (j + 1)).1 (by rw [← φ.comm, hy])⟩
-  · intro x
-    obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    obtain ⟨y, hy⟩ := (h j).2 z.1
-    have hd : K.d j y = 0 := by
-      apply (h (j + 1)).1
-      have hz : L.d j z.1 = 0 := z.2
-      rw [map_zero, ← φ.comm, hy, hz]
-    refine ⟨Submodule.Quotient.mk ⟨y, hd⟩, ?_⟩
-    change Submodule.Quotient.mk (φ.mapZ j ⟨y, hd⟩) = Submodule.Quotient.mk z
-    congr 1
-    exact Subtype.ext hy
+  apply CrystallineSemistableComparison.Pb.LsQ.mapH_bij <;> assumption
 
 theorem mem_lpow {l : ℕ} {M : Type 1} [AddCommGroup M] [Module W M] {n : ℕ} {x : M} :
     x ∈ lpow (W := W) l M n ↔ ∃ y : M, ((l : W) ^ n) • y = x := by

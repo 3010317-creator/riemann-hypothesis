@@ -1,7 +1,62 @@
 module
 
 public import Formalism.ThetaLogCoordinates.FockResolutionOnto.StatementG
-public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.RaisingKeepsEarlyLetters
+public import Formalism.MahlerMeasure.MahlerMeasureProofs.RemoveS
+public import Mathlib.RingTheory.Binomial
+import Formalism.MahlerMeasure.MahlerMeasureProofs.FreezeInto
+public import Formalism.ThetaLogCoordinates.FockResolutionOnto.FockMonomialProofs.InitPartZeroXMul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.MahlerMeasure.MahlerMeasureProofs.TheoremM
+import Formalism.PolynomialDimension.MultinomialDepth.MonoCount
 
 @[expose] public section
 
@@ -36,7 +91,7 @@ theorem pderiv_div_int (v : σ) (k : ℕ) (x : MvPolynomial σ ℚ_[p]) (hx : x 
       ((((pderiv v).toLinearMap : MvPolynomial σ ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial σ ℚ_[p]) ^ k) x) ∈ IntPol p σ := by
   rw [intPol_iff_norm] at hx ⊢
   intro m
-  rw [coeff_smul, smul_eq_mul, coeff_pderiv_pow, Nat.descFactorial_eq_factorial_mul_choose, Nat.cast_mul,
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, coeff_pderiv_pow, Nat.descFactorial_eq_factorial_mul_choose, Nat.cast_mul,
     ← mul_assoc, ← mul_assoc, inv_mul_cancel₀ (by exact_mod_cast Nat.factorial_ne_zero k), one_mul, norm_mul]
   exact mul_le_one₀ (norm_natCast_padic_le_one _) (norm_nonneg _) (hx _)
 
@@ -238,8 +293,8 @@ theorem DDop_cov (i : Fin (K + 1)) (hi : i ≠ Fin.last K) (hv : LL.vec i = fals
 
 theorem DDop_pair (ha : a ∈ Cs) (i : Fin (K + 1)) (hi : i ≠ Fin.last K) (hv : LL.vec i = false) :
     DDop p LL Cs a (∑ b ∈ Cs, X (Fin.last K, b) * X (i, b)) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [DDop_mul, DDop_last, DDop_cov LL Cs a i hi hv]
   simp [Finset.sum_add_distrib, mul_ite, Finset.sum_ite_eq, ha]
   rw [Finset.mul_sum, ← sub_eq_add_neg, sub_eq_zero]

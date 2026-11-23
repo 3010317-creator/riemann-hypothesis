@@ -1,17 +1,49 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedVectorEqOfStandardData
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsTwIffCanonEq
-public import Formalism.LocalToGlobal.KernelLattices.TopPin
-public import Formalism.LocalToGlobal.KernelLattices.InterlaceAll
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.JetsInIffStepField
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianChartComplexRationalIntegralFormsStatement
-public import Formalism.LocalToGlobal.KernelLattices.ColumnData.DiagramFitsSourceRank
 public import Formalism.UnipotentAdelicQuotients.WeylLatDual
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolFunApply
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalTwSubK
-public import Formalism.LocalToGlobal.GroupLattices.ComparisonMaps.TiedRec
+public import Formalism.LocalRingCardinality.SpanPowerMembership.EntPlNonempty
+public import Formalism.LocalToGlobal.HermitianForms.TiedStep
+public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -92,8 +124,8 @@ theorem of_map_mem {L K : Type} [CommRing L] [CommRing K] (φ : L →+* K) (hφ 
   choose r' hr' e using fun i => (h i).1
   have : R = ∑ i, r' i • map (Int.castRingHom L) (g i) := by
     apply map_injective φ hφ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hR', map_sum]
+
+    rw [hR', map_sum]
     simp only [map_smul_map, e]
   rw [this]
   exact sum_mem fun i _ => AddSubgroup.subset_closure ⟨r' i, hr' i, g i, (h i).2, rfl⟩
@@ -146,8 +178,8 @@ theorem keyCoord {L K : Type} [Field L] [Field K] [Module.Flat ℤ K] (ψ : L �
       map (Int.castRingHom K') g = ∑ k, (crd g k : K') • map (Int.castRingHom K') (e k) := by
     intro K' _ g hg
     conv_lhs => rw [hexp g hg]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_zsmul, Int.cast_smul_eq_zsmul]
   have hg1 : ∀ i, g1 i ∈ N := fun i => Submodule.subset_span (by simp [hT])
@@ -168,8 +200,8 @@ theorem keyCoord {L K : Type} [Field L] [Field K] [Module.Flat ℤ K] (ψ : L �
     rw [Finset.sum_comm]
     simp [c, Finset.sum_smul]
   have hψ : map ψ R = ∑ k, ψ (c k) • map (Int.castRingHom K) (e k) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hRc, map_sum]; simp only [map_smul_map]
+
+    rw [hRc, map_sum]; simp only [map_smul_map]
   have hd : map ψ R = ∑ k, d k • map (Int.castRingHom K) (e k) := by
     rw [hR2]
     simp_rw [mapExp K _ (hg2 _), Finset.smul_sum, smul_smul]

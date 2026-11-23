@@ -1,15 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CenLocOfCenReal
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoreEq
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoFormsOff
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.DepthZeroWild
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.DepthZeroSupport
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGlobalAboveL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VLeOne
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EtaJUntw
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NotBaseCondFalse
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PositionOfIntro
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowsRestWordColumnUnitBaseTupleAlt
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StableIffCarrierEq
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 
 @[expose] public section
 
@@ -89,7 +124,7 @@ def TwReads {D : D7} (C : NChoice D) (X : LocNd (lay0 D)) (T : LocTw X) : Prop :
     Reads D C (X.nd.w a) (X.nd.embK a) ((algebraMap (X.nd.O a) (FractionRing (X.nd.O a))).comp f)
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem oneField_withLoc {D : D7} (L : LocAll (lay0 D)) (C : NChoice D) :
     OneField (withLoc L) (chL L C) ↔ TwReads C L.X L.T := Iff.rfl
 
@@ -99,8 +134,8 @@ theorem sameChar_of_inj {O₀ O₁ O₂ Γ Ω : Type} [CommRing O₀] [CommRing 
     (hψ : ∀ g, j₁ (ψ₁ g : O₁ˣ) = j₂ (ψ₂ g : O₂ˣ)) : GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.SameChar f₁ f₂ ψ₁ ψ₂ := by
   intro F
   rw [← map_eq_zero_iff j₁ h₁, ← map_eq_zero_iff j₂ h₂]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finsupp.sum, map_sum, map_mul, hf, hψ]
+
+  simp only [Finsupp.sum, map_sum, map_mul, hf, hψ]
 
 theorem sameTwist_of_oneField (D : D7) (C : NChoice D) (hT : NChTie D C) (h : OneField D C) : GlobalTheory.PtCore.SameTwist D C := by
   intro a

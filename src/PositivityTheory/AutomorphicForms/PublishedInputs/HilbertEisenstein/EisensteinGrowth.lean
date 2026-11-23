@@ -2,6 +2,43 @@ module
 
 public import PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.AbsPInfModuleSection
 public import PositivityTheory.AutomorphicForms.PublishedInputs.HilbertEisenstein.PFinInvModuleSectionMul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.RestrictionMemInvariantH1
+import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ConstSmall
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
 
 @[expose] public section
 
@@ -31,8 +68,8 @@ theorem arch_part (ξ : Fin 2 → F) (z : Ideles F) (M M' : Matrix (Fin 2) (Fin 
     simpa [rowA, Matrix.vecMul, dotProduct, Matrix.smul_apply] using this
   have hj : sig p (ξ j) = ∑ i, UpperTheory.V.TR.pInf F (v i) p *
       (UpperTheory.V.TR.pInf F ((z⁻¹ : Ideles F) : Ad F) p * UpperTheory.V.TR.pInf F (M' i j) p) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [sig, hj', map_sum, Finset.sum_apply]
+
+    rw [sig, hj', map_sum, Finset.sum_apply]
     simp only [map_mul, Pi.mul_apply]
   set ρ := max |UpperTheory.V.TR.pInf F (v 0) p| |UpperTheory.V.TR.pInf F (v 1) p|
   set ζ := |UpperTheory.V.TR.pInf F ((z⁻¹ : Ideles F) : Ad F) p|

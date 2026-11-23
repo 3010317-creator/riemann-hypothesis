@@ -1,21 +1,71 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
 public import Formalism.GradedWeylDivisibility.StatementE
-public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas
-public import Formalism.HarderNarasimhan.ShiftInvariance
-public import Formalism.QuotientMetricDivisors.ReductionLemmaZero
-public import Formalism.QuotientMetricDivisors.ProdFormula
-public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StdWeylLatticesFgAndSpanCoeffSpace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitriMonomialOfLowerTri
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LowerTriOfInterlaced
+public import Formalism.LocalToGlobal.Divisibility.CoefMod
+public import Mathlib.Tactic.Monotonicity.Lemmas
+public import Mathlib.Topology.Sheaves.Presheaf
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApplyWordMemDualWeyl
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FockQWordRowActAdj
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LowerTriIntegral
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApplyWordMemDualWeyl
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LowerTriOfInterlaced
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StdWeylLatticesFgAndSpanCoeffSpace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitriMonomialOfLowerTri
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalB
+import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.FinalD
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkMapInitMinor
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkPderivBlockEmbNe
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDualE
+import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
+import Formalism.QuotientMetricDivisors.Statement
 
 @[expose] public section
 
@@ -39,19 +89,19 @@ theorem dual_span_iff {R K V κ : Type} [CommRing R] [Field K] [Algebra R K] [Ad
     refine Submodule.sum_mem _ fun i _ => ?_
     obtain ⟨r, hr⟩ := H (D i) (Submodule.subset_span ⟨i, rfl⟩)
     have e : B (D i) (∑ j, a j • E j) = a i := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_sum, h]
+
+      simp [map_sum, h]
     rw [e] at hr
     rw [← hr, algebraMap_smul]
     exact Submodule.smul_mem _ r (Submodule.subset_span ⟨i, rfl⟩)
   · intro H y hy
     obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun R).mp H
     obtain ⟨b, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun R).mp hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine sum_mem fun j _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, LinearMap.sum_apply]
+
+    rw [map_sum, LinearMap.sum_apply]
     refine sum_mem fun i _ => ?_
     rw [← algebraMap_smul K (a j), ← algebraMap_smul K (b i), map_smul, LinearMap.map_smulₛₗ,
       LinearMap.smul_apply, h, smul_eq_mul, smul_eq_mul]
@@ -68,8 +118,8 @@ theorem linInd_of_dual {R K V κ : Type} [CommRing R] [Field K] [Algebra R K] [F
   rw [Fintype.linearIndependent_iff]
   intro a ha i
   have e : B (D i) (∑ j, a j • E j) = a i * N := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, h]
+
+    simp [map_sum, h]
   rw [ha, map_zero] at e
   exact (mul_eq_zero.mp e.symm).resolve_right hN
 
@@ -182,8 +232,8 @@ theorem exists_dual_bases (n : ℕ) (ν : Fin n → ℕ) (hν : Antitone ν) [Fi
     have e := congrFun (congrFun (Matrix.mul_nonsing_inv Q hQu) i) j
     rw [Matrix.mul_apply, Matrix.one_apply] at e
     have e2 : fockL (b i) (d j) = N * ∑ k, Q i k * Q⁻¹ k j := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hd, map_sum, map_smul, smul_eq_mul, ps_fockL_rat, Finset.mul_sum]
+
+      simp only [hd, map_sum, map_smul, smul_eq_mul, ps_fockL_rat, Finset.mul_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [hQ, Matrix.of_apply]
       ring

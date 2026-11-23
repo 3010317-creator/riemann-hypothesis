@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CommuteRowOpRightMixedOp
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Sl2NonnegWeightOfHighestWeightVector
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ISupEigenspaceEqTop
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumRowDegreeEqOfHarmonicHighestCasimirStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -37,8 +83,8 @@ theorem polar_mem {σ : Type} (u v : σ) (N : ℕ) (Q : MvPolynomial σ ℂ)
       rw [hone] at h2
       change ((Finsupp.single u 1 + (s - Finsupp.single v 1)).sum fun _ e => e) ≤ N
       omega
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [polar_apply, Q.as_sum, map_sum, Finset.mul_sum]
+
+  rw [polar_apply, Q.as_sum, map_sum, Finset.mul_sum]
   exact Submodule.sum_mem _ key
 
 theorem colOp_mem {σ I J : Type} [Fintype I] (z : I × J → σ) (a b : J) (N : ℕ)
@@ -77,8 +123,8 @@ theorem harmonic_rowOp {σ I I' J : Type} [Fintype J] (z : I × J → σ) (y : I
       intro t
       rw [pderiv_swap (y (j, t)) (z (b, k)), pderiv_swap (z (i, t)) (z (b, k))]
     simp only [hsw]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_sum, hQ i j, map_zero, mul_zero]
+
+    rw [← map_sum, hQ i j, map_zero, mul_zero]
   have hB : ∑ t, ∑ k, (if i = a ∧ t = k then pderiv (y (j, t)) (pderiv (z (b, k)) Q) else 0)
       = 0 := by
     by_cases hia : i = a
@@ -87,8 +133,8 @@ theorem harmonic_rowOp {σ I I' J : Type} [Fintype J] (z : I × J → σ) (y : I
       exact Finset.sum_congr rfl fun t _ => pderiv_swap _ _ _
     · simp [hia]
   rw [rowOp_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, hexp, Finset.sum_add_distrib, hA, hB, add_zero]
+
+  simp only [map_sum, hexp, Finset.sum_add_distrib, hA, hB, add_zero]
 
 private theorem coeff_apply_of_diagonal_on_monomials' {σ : Type} (g : Module.End ℂ (MvPolynomial σ ℂ))
     (w : (σ →₀ ℕ) → ℂ) (hg : ∀ u, g (monomial u 1) = w u • monomial u 1) (m : σ →₀ ℕ)
@@ -99,7 +145,7 @@ private theorem coeff_apply_of_diagonal_on_monomials' {σ : Type} (g : Module.En
     have hc : (monomial u c : MvPolynomial σ ℂ) = c • monomial u 1 := by
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [hc, map_smul, hg, smul_smul]
-    simp only [coeff_smul, coeff_monomial, smul_eq_mul]
+    simp only [MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · subst h; ring
     · ring
@@ -295,7 +341,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
       | insert D s hD ih =>
         obtain ⟨Q, hQW, hQ⟩ := ih
         refine ⟨E Q - (D : ℂ) • Q, W.sub_mem (hWE Q hQW) (W.smul_mem _ hQW), fun m => ?_⟩
-        rw [coeff_sub, coeff_smul, hcoeffE, hQ, Finset.prod_insert hD, smul_eq_mul]
+        rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, hcoeffE, hQ, Finset.prod_insert hD, smul_eq_mul]
         ring
     obtain ⟨Q, hQW, hQ⟩ := hiter ((P.support.image zdeg).erase (zdeg m0))
     have hQm0 : AddMonoidAlgebra.coeff Q m0 ≠ 0 := by
@@ -307,7 +353,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
     have hQ0 : Q ≠ 0 := fun h => hQm0 (by simp [h])
     have hEQ : E Q = (zdeg m0 : ℂ) • Q := by
       ext m
-      rw [hcoeffE, coeff_smul, smul_eq_mul]
+      rw [hcoeffE, MvPolynomial.coeff_smul, smul_eq_mul]
       by_cases hm : AddMonoidAlgebra.coeff Q m = 0
       · rw [hm, mul_zero, mul_zero]
       · have hmP : m ∈ P.support := by
@@ -336,7 +382,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
         colOp_monomial, colOp_monomial, ← sub_smul]
       push_cast
       rfl
-    rw [hwt t, coeff_smul, smul_eq_mul] at h1
+    rw [hwt t, MvPolynomial.coeff_smul, smul_eq_mul] at h1
     have hc : AddMonoidAlgebra.coeff P m ≠ 0 := mem_support_iff.1 hm
     exact_mod_cast (mul_right_cancel₀ hc h1).symm
   have hsum : ∑ t, (∑ i, (m (z (i, t)) : ℤ)) = ∑ t, max (κ t) 0 := by

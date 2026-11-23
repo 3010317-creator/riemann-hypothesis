@@ -1,17 +1,64 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
-public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagLatticesNearUnderStabiliser
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvVolEqInfMulSupAndMono
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormTerminalDeterminantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddStarEqOneOfIsCMUnramStatement
-public import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvVolEqInfMulSupAndMono
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormTerminalDeterminantStatement
+import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -501,30 +548,7 @@ private theorem geo_lemma_2 {K : Type} [Field K] [StarRing K] {𝔡 : Ideal (�
 
 theorem star_mem_ipow {𝔡 : Ideal (𝓞 K)} (h : 𝔡 ≠ ⊥) (hs : ∀ x ∈ 𝔡, ∃ y ∈ 𝔡, (y : K) = star (x : K))
     (n : ℤ) {t : K} (ht : t ∈ ipow 𝔡 n) : star t ∈ ipow 𝔡 n := by
-  unfold ipow at ht ⊢
-  rw [FractionalIdeal.mem_coe] at ht ⊢
-  have hI : ((𝔡 : FractionalIdeal (𝓞 K)⁰ K)) ≠ 0 := FractionalIdeal.coeIdeal_ne_zero.2 h
-  have hA : ∀ m : ℕ, ∀ t : K, t ∈ (𝔡 : FractionalIdeal (𝓞 K)⁰ K) ^ m →
-      star t ∈ (𝔡 : FractionalIdeal (𝓞 K)⁰ K) ^ m := by
-    intro m t ht
-    rw [← FractionalIdeal.coeIdeal_pow, FractionalIdeal.mem_coeIdeal] at ht ⊢
-    obtain ⟨x, hx, rfl⟩ := ht
-    obtain ⟨y, hy, e⟩ := geo_lemma_2 hs m x hx
-    exact ⟨y, hy, e⟩
-  have hone : ∀ t : K, t ∈ (1 : FractionalIdeal (𝓞 K)⁰ K) → star t ∈ (1 : FractionalIdeal (𝓞 K)⁰ K) := by
-    intro t ht
-    rw [FractionalIdeal.mem_one_iff] at ht ⊢
-    obtain ⟨x, rfl⟩ := ht
-    have := star_mem_one (K := K) (Submodule.mem_one.2 ⟨x, rfl⟩)
-    exact Submodule.mem_one.1 this
-  obtain ⟨m, rfl | rfl⟩ := Int.eq_nat_or_neg n
-  · rw [zpow_natCast] at ht ⊢
-    exact hA m t ht
-  · rw [zpow_neg, zpow_natCast] at ht ⊢
-    rw [FractionalIdeal.mem_inv_iff (pow_ne_zero m hI)] at ht ⊢
-    intro y hy
-    have h1 := hone _ (ht (star y) (hA m y hy))
-    rwa [star_mul, star_star, mul_comm] at h1
+  apply GlobalTheory.DegCnt.PosJ.star_mem_ipow <;> assumption
 
 end Ideals
 

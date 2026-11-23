@@ -1,25 +1,67 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLeOfSpan
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.T2SpaceLocalLatticeRepresentationSpace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InclWFrobIter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReduction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWachModuleGeneratorReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReductionCyclotomicEndoEqFrobeniusLaurentStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDiagonalRingHomOfLetterwiseReductionsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExactFunctorPhiGammaOfFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrameOfTorsionInvariantsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLetterBijectionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWachModuleGeneratorReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankAndKernelOfLetterImageTensorStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedOfFixedByDeltaGammaLiftsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusFixedTensorEqConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReduction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentWittTiltEqZeroOfResidueZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KernelInverseFibreProductLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeQuotientsClosedSubQuotSumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedOfFixedByDeltaGammaLiftsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerRootsActFaithfullyLaurentStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLetterBijectionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReductionCyclotomicEndoEqFrobeniusLaurentStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReductionMapPi0Statement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankAndKernelOfLetterImageTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExactFunctorPhiGammaOfFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrameOfTorsionInvariantsStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.T2SpaceLocalLatticeRepresentationSpace
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerRootsActFaithfullyLaurentStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqTopOfSpanImage
 
 @[expose] public section
 
@@ -123,8 +165,8 @@ theorem eps_orth {i j : ZMod n} (h : i ≠ j) : eps E ρ i * eps E ρ j = 0 := b
   rw [eps, eps, ← map_mul, ← map_mul, letE_mul_ne h, map_zero, map_zero]
 
 theorem eps_sum [NeZero n] : ∑ i, eps E ρ i = 1 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [eps, ← map_sum, sum_letE, map_one]
+
+  simp only [eps, ← map_sum, sum_letE, map_one]
 
 theorem eps_ext [NeZero n] {x y : Rk} (h : ∀ i, eps E ρ i * x = eps E ρ i * y) : x = y := by
   rw [← one_mul x, ← one_mul y, ← eps_sum E ρ, Finset.sum_mul, Finset.sum_mul]
@@ -234,8 +276,8 @@ theorem IsRed.push [IsDomain O] [IsPrincipalIdealRing O] {lam : O} {κ : k⸨X�
   set z' := ∑ δ ∈ W.DelF, W.γD T'' δ z with hz'
   have hzΔ : z' ∈ DΔ W T'' := sum_mem_DΔ T'' z
   have h3 : W.map f z' = W.DelF.card • (x : W.DD T) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hz', map_sum, ← Finset.sum_const]
+
+    rw [hz', map_sum, ← Finset.sum_const]
     exact Finset.sum_congr rfl fun δ hδ => (W.map_γ f δ z).trans (by rw [hz]; exact x.2 δ hδ)
   refine ⟨⟨u • W.map f' z', fun δ hδ => by rw [map_smul, ← W.map_γ, hzΔ δ hδ]⟩, ?_⟩
   have h4 : J E ρ T' q' (W.map f' z') = g.baseChange Rk (J E ρ T q (W.map f z')) := by
@@ -295,7 +337,7 @@ theorem exists_unit (hO : Function.Injective (algebraMap O LL)) :
     rw [← algebraMap_smul W.EE c, ← algebraMap_smul W.EE c', E.jD_smul, E.jD_smul, h2] at h6
     rw [← ho, tmul_smul, smul_comm _ o, smul_comm _ o, h6]
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_pres [IsDomain O] [IsPrincipalIdealRing O] [NeZero n] (hO : Function.Injective (algebraMap O LL))
     (hm : ∀ m : Ideal W.EE, m.IsMaximal → m.map E.ioE.toRingHom ≠ ⊤)
     (l : ℕ) [Fact l.Prime] [CharP k l] (hp : PD.p = l) {lam : O} {κ : k⸨X⸩ →+* Rk}
@@ -407,12 +449,12 @@ theorem exists_pres [IsDomain O] [IsPrincipalIdealRing O] [NeZero n] (hO : Funct
         have h4 : (1 : Rk) ⊗ₜ[k] A.ρ g t = Act a A g ((1 : Rk) ⊗ₜ[k] t) := by rw [Act_tmul, map_one]
         rw [h4]
         rcases hg with hg | hg
-        set_option synthInstance.maxHeartbeats 100000 in
-          · rw [hy, map_sum]
-            exact Finset.sum_congr rfl fun i _ => by rw [hact T A q hq, (x i).2 _ hg]
+
+        · rw [hy, map_sum]
+          exact Finset.sum_congr rfl fun i _ => by rw [hact T A q hq, (x i).2 _ hg]
         · refine Eq.trans ?_ h2
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [hy, map_sum, map_sum]
+
+          rw [hy, map_sum, map_sum]
           exact Finset.sum_congr rfl fun i _ => by rw [hact T A q hq, hact T A q hq, hg, hg₀] }
   obtain ⟨F, F1, F2, F3, F4, F5⟩ := GlobalTheory.T.exists_exact_functor_phiGamma_of_frames R _ φ a g₀ _ _ _ hfr
   have hj : ∀ (T : LocLat G Qp LL O) (A : Ob k G) (q : ↥T.L.T →ₗ[O] (Fin A.m → k)) (i : ZMod n'),

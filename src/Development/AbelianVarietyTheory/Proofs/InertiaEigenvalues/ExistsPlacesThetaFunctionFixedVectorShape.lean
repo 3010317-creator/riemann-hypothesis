@@ -1,13 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DropPlInsert
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalThetaPairExistence
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorFockVacuum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaVectorNeZero
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFinsetOfMemNhds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PsiVNeOneOfTrace
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCartanInvOneOfOnb
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemHermitianStandardLatticeIffPairingIntegral
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalThetaPairExistence
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -144,8 +185,8 @@ theorem evalV_offIdem {F : Type} [Field F] [NumberField F] (Sb : Finset (HeightO
   have e1 : evalV F w (singleV F w 1) = 1 := GlobalTheory.StdCharTotReal.single_same w 1
   have e2 : ∀ v, v ≠ w → evalV F w (singleV F v 1) = 0 := fun v hv => GlobalTheory.StdCharTotReal.single_ne v 1 hv.symm
   unfold offIdem
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, map_one, map_sum]
+
+  rw [map_sub, map_one, map_sum]
   refine ⟨fun hw => ?_, fun hw => ?_⟩
   · rw [Finset.sum_eq_single_of_mem w hw fun v _ hv => e2 v hv, e1, sub_self]
   · rw [Finset.sum_eq_zero fun v hv => e2 v fun h => hw (h ▸ hv), sub_zero]
@@ -220,9 +261,9 @@ theorem half_of_offPl (Sb : Finset (HeightOneSpectrum (𝓞 D.host.F))) {u : WO 
     exact Prod.ext (show (0 : Ainf D.host.F) = 1 - 1 - 0 by ring)
       (show 1 - ∑ v ∈ Sb, singleV D.host.F v 1 = 1 - 0 - ∑ v ∈ Sb, singleV D.host.F v 1 by rw [sub_zero])
   unfold offE
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, RingHom.map_sub, RingHom.map_sub, RingHom.map_one, map_sum, sub_mul, sub_mul, one_mul, h1, Finset.sum_mul,
-    Finset.sum_eq_zero h2, sub_zero, sub_zero]
+
+  rw [e, RingHom.map_sub, RingHom.map_sub, RingHom.map_one, map_sum, sub_mul, sub_mul, one_mul, h1, Finset.sum_mul,
+  Finset.sum_eq_zero h2, sub_zero, sub_zero]
 
 
 open GlobalTheory.PlaceModel in

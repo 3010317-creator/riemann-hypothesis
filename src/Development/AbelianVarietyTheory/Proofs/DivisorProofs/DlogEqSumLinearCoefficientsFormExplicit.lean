@@ -1,7 +1,49 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FormalExpMulFormalExpNeg
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.NatCastMulCoeffOfPderivEq
 
 @[expose] public section
 
@@ -78,11 +120,11 @@ theorem dUnit_ev_of_two (n : ℕ) (f : MvPowerSeries (Fin d) O)
     have : ((∑ v ∈ P.support, MvPolynomial.monomial v (AddMonoidAlgebra.coeff P v) :
         MvPolynomial (Fin d) O) : MvPowerSeries (Fin d) O) =
         ∑ v ∈ P.support, monomial v (AddMonoidAlgebra.coeff P v) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_sum]
+
+      rw [← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_sum]
       simp only [MvPolynomial.coeToMvPowerSeries.ringHom_apply, MvPolynomial.coe_monomial]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [this, map_sum, dUnit, map_sum]
+
+    rw [this, map_sum, dUnit, map_sum]
     refine Finset.sum_eq_zero fun v hv => ?_
     have hv' : AddMonoidAlgebra.coeff P v ≠ 0 := MvPolynomial.mem_support_iff.1 hv
     have h2 : 2 ≤ v.degree := by
@@ -108,8 +150,8 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
   set g : MvPowerSeries (Fin d) O := ∑ i, lin u i • X i with hg
   have hsplit : u = 1 + g + (u - 1 - g) := by ring
   have hev : c.ev n g = ∑ i, lin u i • c.x n i := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hg, map_sum]
+
+    rw [hg, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, (c.isEval n).1 i]
   have e1 : dUnit (R := O) (c.ev n u) = dUnit (R := O) (c.ev n 1) + dUnit (R := O) (c.ev n g) +
@@ -117,13 +159,13 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
     conv_lhs => rw [hsplit]
     simp only [PDiv.dUnit, map_add (f := _)]
   rw [e1, c.dUnit_ev_of_two n (u - 1 - g) ?_, add_zero, map_one, hev]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [PDiv.dUnit, AugCot.d_one, zero_add, map_sum, map_smul]
-      rfl
+
+  · simp only [PDiv.dUnit, AugCot.d_one, zero_add, map_sum, map_smul]
+    rfl
   intro α hα
   have hcg : ∀ i, coeff (Finsupp.single i 1) g = lin u i := fun i => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hg, map_sum]
+
+    rw [hg, map_sum]
     simp only [map_smul, coeff_X, smul_eq_mul, mul_ite, mul_one, mul_zero]
     rw [Finset.sum_eq_single i]
     · simp
@@ -135,8 +177,8 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
   rcases Nat.le_one_iff_eq_zero_or_eq_one.1 hα with h0 | h1'
   · rw [(Finsupp.degree_eq_zero_iff α).1 h0]
     have hg0 : coeff 0 g = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hg, map_sum]
+
+      rw [hg, map_sum]
       refine Finset.sum_eq_zero fun i _ => ?_
       rw [map_smul, coeff_X, if_neg, smul_zero]
       intro h

@@ -1,13 +1,67 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemBddFormsOfWithSmoothings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CasKOp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CasimirGlFactorEmbeddingMemCapelliAlgebra
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLaplacianPolynomialKillsHarishChandraFinit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaplacianPolynomialKernelOfPolynomialLaplacian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolyMaximalCompactCasimirKillsKType
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolyAnnihilatesCommutingLinearCombination
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolyMaximalCompactCasimirKillsKType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExpGLImageBallMemNhds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaplacianPolynomialKernelOfPolynomialLaplacian
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeftInvariantLaplacianEqCasimirDecomposition
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteLieAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSmoothAdelicFunctions
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFiniteMeasureQuotMeasure
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualInfinitesimalCharacterRegular
 public import GroundTheory.AutomorphicForms.HarishChandraRegularity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GlRes
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsExpLieAlgebraComplexUnits
+
+set_option backward.isDefEq.respectTransparency false
 
 @[expose] public section
 
@@ -165,9 +219,9 @@ theorem chart_lie (X : Lie E a) (φ : Sm E a) (g : GA E a) (z : Lie E a) :
   unfold chart
   split_ifs
   · conv_lhs => rw [← (bas E a).sum_repr X]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Submodule.coe_sum, Finset.sum_apply,
-      Module.Basis.coord_apply]
+
+    simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Submodule.coe_sum, Finset.sum_apply,
+    Module.Basis.coord_apply]
     rfl
   · simp
 
@@ -214,7 +268,7 @@ theorem hasFDerivAt_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ 
       (lt_add_one _)).mono fun _ => le_of_lt
   have hi : ∀ i, Integrable (fun q : Quot (latticeGL E a) => (crd i z).smulRight
       (chart (lie E a (bas E a i) φ).1 (q.out * x) z * conj (ψ q.out))) (GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ) :=
-    fun i => (ContinuousLinearMap.smulRightL ℝ _ ℂ (crd i z)).integrable_comp (integrable_chart μ hω h' (hl _) x z)
+    fun i => (StrongDual.smulRightL ℝ _ ℂ (crd i z)).integrable_comp (integrable_chart μ hω h' (hl _) x z)
   have key := hasFDerivAt_integral_of_dominated_of_fderiv_le (𝕜 := ℝ) (μ := GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ)
     (F := fun y q => chart φ.1 (q.out * x) y * conj (ψ q.out))
     (F' := fun y q => ∑ i, (crd i y).smulRight (chart (lie E a (bas E a i) φ).1 (q.out * x) y * conj (ψ q.out)))
@@ -234,7 +288,7 @@ theorem hasFDerivAt_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ 
   rw [funext (chart_coef μ φ.1 x)]
   refine key.congr_fderiv (Finset.sum_congr rfl fun i _ => ?_)
   rw [chart_coef]
-  exact (ContinuousLinearMap.smulRightL ℝ _ ℂ (crd i z)).integral_comp_comm (integrable_chart μ hω h' (hl _) x z)
+  exact (StrongDual.smulRightL ℝ _ ℂ (crd i z)).integral_comp_comm (integrable_chart μ hω h' (hl _) x z)
 
 variable {V : Submodule ℂ (Sm E a)}
 

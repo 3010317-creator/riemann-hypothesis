@@ -1,6 +1,52 @@
 module
 
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.SmoothColumnLifts.SmoothCol
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.LatticeIndexLifts.SumCharEqZero
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.LatticeIndexLifts.SummandInv
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -18,8 +64,8 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V] {n : ℕ}
 theorem B_u (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ) (c : (Fin n → k) → ℂ) (col : (Fin n → k) → V →ₗ[ℂ] V)
     (T : Finset (Fin n → k)) (v w : V) :
     B (∑ t ∈ T, c t • col t v) w = ∑ t ∈ T, c t * B (col t v) w := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smul, LinearMap.smul_apply, smul_eq_mul]
+
+  simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smul, LinearMap.smul_apply, smul_eq_mul]
 
 theorem gram (φ : AddChar k Circle) (col : (Fin n → k) → V →ₗ[ℂ] V)
     (hc0 : ∀ v, col 0 v = v) (hca : ∀ x y v, col (x + y) v = col x (col y v))
@@ -46,10 +92,10 @@ theorem gram (φ : AddChar k Circle) (col : (Fin n → k) → V →ₗ[ℂ] V)
       starRingEnd ℂ ((φ (ξ ⬝ᵥ (t + -r)) : Circle) : ℂ) * starRingEnd ℂ ((φ (ξ ⬝ᵥ r) : Circle) : ℂ) := by
     intro t r
     rw [← map_mul, ← Circle.coe_mul, ← AddChar.map_add_eq_mul, ← dotProduct_add, neg_add_cancel_right]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs =>
-      simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smul, LinearMap.smul_apply,
-      LinearMap.map_smulₛₗ, smul_eq_mul, starRingEnd_self_apply, RingHom.id_apply, key, Finset.mul_sum]
+
+  conv_lhs =>
+    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smul, LinearMap.smul_apply,
+    LinearMap.map_smulₛₗ, smul_eq_mul, starRingEnd_self_apply, RingHom.id_apply, key, Finset.mul_sum]
   rw [Finset.sum_mul]
   refine Finset.sum_congr rfl fun r hr => ?_
   rw [← hsh r hr, Finset.mul_sum]
@@ -89,14 +135,14 @@ theorem bessel_abs (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ) (hB : Psd B) {ι : T
     ∑ i ∈ s, (B (w i) v).re ≤ (B v v).re := by
   classical
   have hWW : B (∑ i ∈ s, w i) (∑ i ∈ s, w i) = ∑ i ∈ s, B (w i) v := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.sum_apply]
+
+    simp only [map_sum, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun i hi => ?_
     rw [Finset.sum_congr rfl fun d hd => hw d hd i hi]
     simp [hi]
   have hWv : B (∑ i ∈ s, w i) v = ∑ i ∈ s, B (w i) v := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.sum_apply]
+
+    simp only [map_sum, LinearMap.sum_apply]
   have hvW : B v (∑ i ∈ s, w i) = starRingEnd ℂ (∑ i ∈ s, B (w i) v) := by
     rw [hB.1 (∑ i ∈ s, w i) v, hWv]
   have h0 := hB.2 (v - ∑ i ∈ s, w i)

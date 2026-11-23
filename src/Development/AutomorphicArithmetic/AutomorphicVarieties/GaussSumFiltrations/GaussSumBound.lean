@@ -1,8 +1,45 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.EvenPos
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.EvenPosGramQuadFormTotallyPositiveProperness
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ConstSmall
 
 @[expose] public section
 
@@ -151,8 +188,8 @@ theorem coord_bound : ∃ μ : ℝ, 0 < μ ∧ ∀ m : Module.Free.ChooseBasisIn
   set t : Module.Free.ChooseBasisIndex ℤ (𝓞 F) → ℝ := fun j => (m j : ℝ)
   have hx : mixedEmbedding F x = lb.equivFun.symm t := by
     rw [Module.Basis.equivFun_symm_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [x, t, lb, map_sum, map_zsmul, mixedEmbedding.latticeBasis_apply, Int.cast_smul_eq_zsmul]
+
+    simp only [x, t, lb, map_sum, map_zsmul, mixedEmbedding.latticeBasis_apply, Int.cast_smul_eq_zsmul]
   have hft : f (mixedEmbedding F x) = t := by
     rw [hx]; exact lb.equivFun.apply_symm_apply t
   have h1 : ‖t‖ ≤ ‖f‖ * ‖mixedEmbedding F x‖ := by
@@ -198,8 +235,8 @@ theorem exists_coord (a : F) (x : aL κ a) : ∃ m : κ × Module.Free.ChooseBas
   funext i
   have h1 : ∑ j, (RingOfIntegers.basis F).repr (o i) j • integralBasis F j = l i := by
     have h2 := congrArg (algebraMap (𝓞 F) F) ((RingOfIntegers.basis F).sum_repr (o i))
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zsmul] at h2
+
+    simp only [map_sum, map_zsmul] at h2
     simp only [integralBasis_apply]
     exact h2
   simp only [h1]

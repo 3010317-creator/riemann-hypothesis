@@ -2,11 +2,55 @@ module
 
 public import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.VaceigenDual
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.IsLatRepL
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
+import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.VaceigenAlg
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-set_option synthInstance.maxHeartbeats 200000
+
 
 section
 noncomputable section
@@ -43,8 +87,8 @@ theorem mem_latW_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {W :
       have hz'' : form σ W.J x y = 0 := by
         simpa only [form, y, sigma_sigma hB.cm] using hz'
       have hs : σ (form σ W.J y x) = (-1 : E) * form σ W.J x y := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ, hW.skew, Finset.mul_sum]
+
+        simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ, hW.skew, Finset.mul_sum]
         rw [Finset.sum_comm]
         exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
       rw [hz'', mul_zero] at hs
@@ -84,8 +128,8 @@ theorem mem_latW_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {W :
       simp only [trF_incV, ← hu]
       ext j
       conv_lhs => rw [hid x]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [incV, Finset.sum_apply, Pi.smul_apply, map_sum, algebraMap_smul]
+
+      simp only [incV, Finset.sum_apply, Pi.smul_apply, map_sum, algebraMap_smul]
       exact Finset.sum_congr rfl fun i _ =>
         map_smul (Algebra.TensorProduct.includeRight : E →ₐ[F] AF F ⊗[F] E) _ _
     | zero => simp
@@ -140,8 +184,8 @@ theorem mem_latAtV_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {X
       have hz'' : form σ X.J x y = 0 := by
         simpa only [form, y, sigma_sigma hB.cm] using hz'
       have hs : σ (form σ X.J y x) = (1 : E) * form σ X.J x y := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ, hX.herm, Finset.mul_sum]
+
+        simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ, hX.herm, Finset.mul_sum]
         rw [Finset.sum_comm]
         exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
       rw [hz'', mul_zero] at hs
@@ -167,8 +211,8 @@ theorem mem_latAtV_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {X
   have huL : ∀ i, u i ∈ X.L := fun i => (hX.dual _).2 fun x hx => by
     obtain ⟨c, hc⟩ := hf i x hx
     have e : form σ X.J (u i) x = σ (f i x) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [form_eq, hu, LinearMap.pi_apply_eq_sum_univ (f i) x, map_sum]
+
+      rw [form_eq, hu, LinearMap.pi_apply_eq_sum_univ (f i) x, map_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [smul_eq_mul, map_mul, mul_comm]
       have : (fun j => if k = j then (1 : E) else 0) = Pi.single k 1 := funext fun j => by
@@ -181,8 +225,8 @@ theorem mem_latAtV_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {X
     have e : ∀ k, ∑ i, incV (F := F) (g i) p * incV (a i) k = (1 : Matrix (Fin n) (Fin n) (AE F E)) p k := fun k => by
       have := congrFun (hid (Pi.single k 1)) p
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [incV, ← map_mul, ← map_sum, mul_comm (g _ p), a, ← this, Pi.single_apply, Matrix.one_apply]
+
+      simp only [incV, ← map_mul, ← map_sum, mul_comm (g _ p), a, ← this, Pi.single_apply, Matrix.one_apply]
       split_ifs <;> simp
     simp only [Matrix.sum_apply, Matrix.vecMulVec_apply, Matrix.vecMul, dotProduct, Finset.mul_sum, ← mul_assoc]
     rw [Finset.sum_comm]

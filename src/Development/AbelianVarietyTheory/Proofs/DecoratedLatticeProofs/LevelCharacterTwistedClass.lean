@@ -1,41 +1,65 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodSingle
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MovedReadingSameMapsBaseReadingAgrees
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevIsReadsTw
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TwArgs
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.JoinEquivEqAtReference
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EventuallyNhdsOneAdelicMatrixCongruentOneAtPrime
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCharacterEqOneOfDeepAtSplitBadPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCharacterTrivialNearOneOfLocalBadPlaces
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EventuallyNhdsOneAdelicMatrixCongruentOneAtPrime
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Placed
-public import Formalism.LocalToGlobal.IndefiniteReal.RealRec
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ThetaChr
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ColumnCompatibleSelection
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.STiesR
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SameDegreeZeroFormsSelf
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DivisionPairOfAdelicFormsFaceColumnsData
-public import Formalism.LocalToGlobal.CarriedPlMap
-public import Formalism.LocalToGlobal.SelSide
-public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.TwistedCharacterValue
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TwArgs
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DivRows3GIff
-public import Formalism.LocalToGlobal.Divisibility.ColPins
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.CountsIrreducibilityConstants
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsScaleWithBoundedGamma
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NarrowJetMoments
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicMatrixCongruenceBadPrimeIffCompletion
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BcPrVEqOneOfAdAt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBadPrimeOverBadPlaceOfChain
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAfMemIntUIff
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnitaryAdelicSupportedAtBadPrimePlace
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAfMemIntUIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevIsReadsTw
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalGroupElementEqLevelComponentBadPrime
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddSmulPow
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepLevelContainsDeepCongruenceAtBadPrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SubOneMemMapOfEq
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
+import Formalism.LocalToGlobal.Columns.RecLevelLocP
+import Formalism.LocalToGlobal.Columns.RowFormsSel
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeIndices.CharZeroAdicCompletion
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ValidForConstructedPointClassesEventuallyWorking
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
 
 @[expose] public section
 
@@ -51,7 +75,7 @@ open scoped TensorProduct
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem chi_deep (hc : CMData F E) {n T f : ℕ} {J : Matrix (Fin n) (Fin n) E} (hJ : J = 1) {bad : Set (HeightOneSpectrum (𝓞 F))}
     (S : StepLevel F E hc.sig J T f bad) (m : ℕ) (hm : 0 < m) (hchi : ∀ κ : S.U, S.chi κ ^ m = 1) (P : HeightOneSpectrum (𝓞 E))
     (hne : conjPrime₂ P ≠ P) (hcj : (conjPrime₂ P).under (𝓞 F) = P.under (𝓞 F))
@@ -133,7 +157,7 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 variable {B : Base} {X : PreX B.toPre} (I : TC B X)
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem chi_near_one (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l)) (a : I.ι)
     {bad : Set (HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F))}
     (S : StepLevel (I.rec7 l Z).host.F (I.rec7 l Z).host.E (sigD (I.rec7 l Z)) (gramP (I.rec7 l Z)) 1 (I.rec7 l Z).R.f bad)
@@ -199,7 +223,7 @@ def LevRead (l : I.Laws) (Z : TC.Later B (I.cols l)) {T : Type} (L : LevCh (I.re
       (Lev.levChi _ L.βX (Lev.datY _ (I.rec7 l Z).R.r (I.rec7 l Z).R.t (I.rec7 l Z).R.m r_le_X L.Pg (L.Q t) P L.chi (L.xiR t) Lev.Frm.B))
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem levRead_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l)) {T : Type} (L : LevCh (I.rec7 l Z) T)
     (μ0 : T) (hL : L.Is μ0) (hC : ∀ j, L.C.mu0 j = I.C.mu0 j) (tup : T → I.ι) (hxi : ∀ t, L.xiH t = I.xi (tup t))
     (hPg : L.Pg = (B.primes X).vGs) (hQ : ∀ t, L.Q t = I.Q (tup t)) (hβ : L.βX = 1)
@@ -264,7 +288,7 @@ open Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.L2.DIV Formalism.Ind
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem levRead_rows (K : Ctx) (B : GlobalTheory.Mem.Base) (f : Top.Fr B.toPre) (T : TwDat B) (w : Bl.ColW B f T) (Z : w.Lt)
     (Wt : Set B.places.Pl) (p0 : BaseLevelRowSide (w.D Z)) (t : Bl.RowsT K w Z Wt p0) :
     LevRead w.I w.l Z t.r.z.R.toLevCh (t.r.z.R.toRealDat.levR t.r.z.F.lv2 true) t.r.Y.tup :=
@@ -273,7 +297,7 @@ theorem levRead_rows (K : Ctx) (B : GlobalTheory.Mem.Base) (f : Top.Fr B.toPre) 
     (fun s => (t.r.z.lev.Q s).trans (congrArg w.I.Q (t.r.tup_ix s).symm)) t.r.z.lev.beta.2 t.r.z.R.eG t.r.z.idG
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem levRead_twArgs (K : Ctx) (B : GlobalTheory.Mem.Base) (f : Top.Fr B.toPre) (T : TwDat B) (w : Bl.ColW B f T) (Z : w.Lt)
     (Wt : Set B.places.Pl) (L : SizeData₂ (w.st Z).toD7) (hT : GatTies (w.st Z).toD7) (Gi : G.Inst (w.st Z).toD7 L)
     (Gl : G.LatInst (w.st Z).toD7) (Kc : G.Consts) (Yd : DivX (w.st Z).toD7) (cX : ExtraC)

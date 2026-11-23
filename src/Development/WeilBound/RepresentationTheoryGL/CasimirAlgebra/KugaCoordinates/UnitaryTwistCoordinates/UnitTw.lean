@@ -1,16 +1,54 @@
 module
 
-public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.IsStarRep
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedCuspFormL2Bounded
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieActionSkewAdjointL2
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantHermitianForm
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AuxiliaryCuspLemma
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRightHaarMeasure
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspRapidDecaySiegelGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisRepresentationAdmitted
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.NotIsTemperedGLDetRepTwo
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SubsingletonRankZero
+public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.TensorRelationsGL.ClozelCohomologicalOf
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.NotIsTemperedGLDetRepTwo
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AuxiliaryCuspLemma
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspRapidDecaySiegelGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRightHaarMeasure
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisRepresentationAdmitted
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieActionSkewAdjointL2
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedCuspFormL2Bounded
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SubsingletonRankZero
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ClozelPurity.EopV
 
 @[expose] public section
 
@@ -25,8 +63,8 @@ theorem conj_sum_coord {E : Type} [Field E] [NumberField E] [_root_.NumberField.
   have h1 := GlobalTheory.CompanionTheory.HeckeAlg.dchi_eq_sum (Model.absC E 1) z
   have h2 := GlobalTheory.GKCoh.Tests.dchi_absC (E := E) 1 z
   simp only [Model.expo_absC, one_mul] at h1 h2
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← h1, h2, map_sum]
+
+  rw [← h1, h2, map_sum]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [map_mul, Complex.conj_ofReal, map_ofNat]
 
@@ -70,8 +108,8 @@ theorem unitTw_holds : PositivityTheory.Rg.Cz.UnitTw := by
     simp only [Model.expo_absC, ← Finset.mul_sum]
     congr 1
     refine Finset.sum_congr rfl fun τ _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Matrix.trace, map_sum]
+
+    rw [Matrix.trace, map_sum]
     rfl
   refine ⟨H, -2 * s.re, fun φ ψ => ?_, fun φ hφ => ?_, fun X φ ψ => ?_⟩
   · rw [hH, hH, inner_conj_symm]
@@ -87,8 +125,8 @@ theorem unitTw_holds : PositivityTheory.Rg.Cz.UnitTw := by
       GlobalTheory.CompanionTheory.PeterssonSkew.lie_skew_adjoint E a μ π' hm hb X (U ψ) (U φ)
     rw [hH, hH, hH, hU, hU, inner_sub_left, inner_sub_right, inner_smul_left, inner_smul_right, sk, htr]
     have hr : starRingEnd ℂ (∑ τ : E →+* ℂ, ∑ i, coord τ (X i i)) = ∑ τ : E →+* ℂ, ∑ i, coord τ (X i i) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa only [map_sum] using conj_sum_coord (E := E) (∑ i, X i i)
+
+      simpa only [map_sum] using conj_sum_coord (E := E) (∑ i, X i i)
     set t := ∑ τ : E →+* ℂ, ∑ i, coord τ (X i i) with ht
     have hc : starRingEnd ℂ (s * t) = starRingEnd ℂ s * t := by rw [map_mul, hr]
     rw [hc]

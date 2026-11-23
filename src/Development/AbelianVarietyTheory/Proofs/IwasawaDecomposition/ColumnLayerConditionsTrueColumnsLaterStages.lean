@@ -1,13 +1,42 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemRangeOfPowG
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColsReLev0
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
 public import Formalism.LocalToGlobal.GroupLattices.TiedFamilies.TieTrF
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PositionOfIntro
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermEqExtraTied
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TiedColumnData
-public import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -24,7 +53,7 @@ section Re
 variable {B : Base} {C : Cols B} {Z : Later B C} (Z' : Later B C)
 
 
-set_option maxHeartbeats 4000000 in
+
 def forms0Re {u : B.Word} (T : Forms0 (recOf Z) u) : Forms0 (recOf Z') u :=
   { T with
     atT := atTTRe Z' T.atT
@@ -32,13 +61,13 @@ def forms0Re {u : B.Word} (T : Forms0 (recOf Z) u) : Forms0 (recOf Z') u :=
     val0 := valRe Z' T.val0
     lv0 := lvRe Z' T.lv0 }
 
-set_option maxHeartbeats 4000000 in
+
 theorem columnFormsAlongLaterStages_stageZero_eq (T : ColsTiedSym (recOf Z)) (u : B.Word) :
     ((colsRe Z' T).forms u).to0 = forms0Re Z' (T.forms u).to0 := rfl
 
 
 open Formalism.MainNotions.G in
-set_option maxHeartbeats 4000000 in
+
 theorem forms0Re_setGat (g : ∀ u (w : (recOf Z).what₂.places.Pl),
       GIdx (recOf Z).host ((recOf Z).mem u).A.T ((recOf Z).what₂.places.resChar w) → GAtP ((recOf Z).what₂.places.resChar w))
     (hd : ∀ u w h, (g u w h).d = Module.finrank ℂ ((recOf Z).mem u).A.Mu0) {u : B.Word} (T : Forms0 (recOf Z) u) :
@@ -53,12 +82,12 @@ section Std
 variable (l : I.Laws) {Z : Later B (I.cols l)} (Z' : Later B (I.cols l))
 
 
-set_option maxHeartbeats 8000000 in
+
 theorem stdC_colsRe (T : ColsTiedSym (I.rec7 l Z)) (h : I.StdC l Z T) : I.StdC l Z' (colsRe Z' T) := fun u =>
   { h u with gl := { (h u).gl with } }
 
 
-set_option maxHeartbeats 8000000 in
+
 theorem stdLvC_colsRe (T : ColsTiedSym (I.rec7 l Z)) (u : B.Word) (h : I.StdLvC l Z u (T.forms u)) :
     I.StdLvC l Z' u ((colsRe Z' T).forms u) := h
 

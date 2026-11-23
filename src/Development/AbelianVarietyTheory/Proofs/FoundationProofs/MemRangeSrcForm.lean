@@ -1,18 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodLiftOnto
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InjAndRatOfLi
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
+public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ClassMassEqSumOfBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EOpEqAsAlgebraHom
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasureToRealEqMass
-public import Formalism.LocalToGlobal.Divisibility.LiftLatLemmas
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralEqSumOfSurjective
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemHatSwap
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResidueCharIsOfFinOrder
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlDetEqOneOfMemUnip
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodFormsCoordinateMapMemOfLiftsMem
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKernelFiniteAdelicLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
+import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
+import Formalism.LocalToGlobal.Columns.CoefColLemmas
+import Formalism.LocalToGlobal.Divisibility.ClassSumLemmas
+import Formalism.LocalToGlobal.Divisibility.ProjLemmas
+import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ClassSumDualGeOfFamily
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -47,8 +88,8 @@ theorem invChar_int (g : G) : ∃ a : 𝓞 K, (a : K) = invChar U ψ g := by
   · exact ⟨0, rfl⟩
 
 theorem trU_eigen (f : M) (u : U) : r u (trU r U ψ f) = ((ψ u : Kˣ) : K) • trU r U ψ f := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [trU_apply, map_sum, Finset.smul_sum, ← Equiv.sum_comp (Equiv.mulLeft (u : G)) fun g => ((ψ u : Kˣ) : K) • _]
+
+  rw [trU_apply, map_sum, Finset.smul_sum, ← Equiv.sum_comp (Equiv.mulLeft (u : G)) fun g => ((ψ u : Kˣ) : K) • _]
   refine Finset.sum_congr rfl fun g _ => ?_
   simp only [Equiv.coe_mulLeft, map_smul, map_mul, Module.End.mul_apply, smul_smul]
   congr 1
@@ -360,8 +401,8 @@ theorem clSum_trU [Nontrivial (Fin (R.nW i) → D.what₂.LL)] (f : (A.MtCSD i t
     clSum (presV R i t) (kern R i t) (trU (A.leftGroupActionLift i t) U ψ f) v =
       levelTrace R i U ψ (clSum (presV R i t) (kern R i t) f v) := by
   unfold levelTrace gaL
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [trU_apply, map_sum, Finset.sum_apply, LinearMap.sum_apply]
+
+  rw [trU_apply, map_sum, Finset.sum_apply, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun g _ => ?_
   rw [map_smulₛₗ, h.clSum_equiv, LinearMap.smul_apply, invChar, apply_dite D.what₂.embLL, map_zero]
   rfl
@@ -428,13 +469,13 @@ theorem theta_mem_span {θ} (hθ : OnTies.IsClassSum R i t U ψ ph θ) {y : Fin 
       exact (congrArg (fun g' => kern R i t g' _ v) eg.symm).trans (h.kern_fin hg _ v)
   have hsum : (Nat.card U : D.what₂.LL) • y = ∑ c, (Fintype.card ((A.MtCSD i t).Gam c) : D.what₂.LL)⁻¹ • z c := by
     apply srcForm_injective i t U ψ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_smul, ← trU_of_eigen _ U ψ ((mem_range_srcForm i t U ψ _).1 ⟨y, rfl⟩), map_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [← sum_avgForm _ (srcForm A i t U ψ y), map_sum]
+
+    rw [map_smul, ← trU_of_eigen _ U ψ ((mem_range_srcForm i t U ψ _).1 ⟨y, rfl⟩), map_sum]
+
+    conv_lhs => rw [← sum_avgForm _ (srcForm A i t U ψ y), map_sum]
     exact Finset.sum_congr rfl fun c _ => by rw [map_smul, map_smul, ez]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 Nat.card_pos.ne' : (Nat.card U : D.what₂.LL) ≠ 0), ← map_smul, hsum, map_sum]
+
+  rw [← Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 Nat.card_pos.ne' : (Nat.card U : D.what₂.LL) ≠ 0), ← map_smul, hsum, map_sum]
   exact Submodule.sum_mem _ fun c _ => by
     rw [map_smul]
     exact Submodule.smul_mem _ _ (Submodule.subset_span (hmem c))

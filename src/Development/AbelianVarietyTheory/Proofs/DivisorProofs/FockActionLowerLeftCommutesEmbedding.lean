@@ -1,8 +1,49 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetSNeZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.SemistableReduction.AlgebraicIndependentOfDerivations
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -31,8 +72,8 @@ theorem pderiv_s_mR (a' a : Fin P) (b : Fin Q) (c : Fin R) :
     pderiv (Sum.inl a', Sum.inl c) (mR P Q R a b) =
       if a' = a then X (Sum.inr b, Sum.inl c) else 0 := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [mR, map_sum, Derivation.leibniz, pderiv_X, Pi.single_apply]
+
+  simp [mR, map_sum, Derivation.leibniz, pderiv_X, Pi.single_apply]
   rcases eq_or_ne a' a with rfl | ha
   · simp
   · simp [ha, Ne.symm ha]
@@ -41,8 +82,8 @@ theorem pderiv_w_mR (b' : Fin Q) (a : Fin P) (b : Fin Q) (c : Fin R) :
     pderiv (Sum.inr b', Sum.inl c) (mR P Q R a b) =
       if b' = b then X (Sum.inl a, Sum.inl c) else 0 := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [mR, map_sum, Derivation.leibniz, pderiv_X, Pi.single_apply]
+
+  simp [mR, map_sum, Derivation.leibniz, pderiv_X, Pi.single_apply]
   rcases eq_or_ne b' b with rfl | hb
   · simp
   · simp [hb, Ne.symm hb]
@@ -76,8 +117,8 @@ theorem pderiv_s_detR (h : P ≤ R) (a : Fin P) (c : Fin R) :
     pderiv (Sum.inl a, Sum.inl c) (detR P Q R h) =
       ∑ j : Fin P, if Fin.castLE h j = c then (blockR (Q := Q) h).adjugate j a else 0 := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [detR_eq, Matrix.det_eq_sum_mul_adjugate_row _ a, map_sum]
+
+  rw [detR_eq, Matrix.det_eq_sum_mul_adjugate_row _ a, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   have hadj : pderiv (Sum.inl a, Sum.inl c) ((blockR (Q := Q) h).adjugate j a) = 0 := by
     rw [Matrix.adjugate_apply]
@@ -168,8 +209,8 @@ theorem partial_derivative_weight_space_formula (h : P ≤ R) (k : ℕ) (a : Fin
   have hw : pderiv (Sum.inr b, Sum.inl c) (∑ b' : Fin Q, phiR P Q R (pderiv (a, b') G) *
       X (Sum.inr b', Sum.inl c)) = (∑ b' : Fin Q, (∑ a' : Fin P, phiR P Q R (pderiv (a', b) (pderiv (a, b') G)) *
           X (Sum.inl a', Sum.inl c)) * X (Sum.inr b', Sum.inl c)) + phiR P Q R (pderiv (a, b) G) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Derivation.leibniz, pderiv_w_phiR, pderiv_X, smul_eq_mul, Finset.sum_add_distrib]
+
+    simp only [map_sum, Derivation.leibniz, pderiv_w_phiR, pderiv_X, smul_eq_mul, Finset.sum_add_distrib]
     rw [add_comm]
     congr 1
     · exact Finset.sum_congr rfl fun b' _ => by ring
@@ -229,8 +270,8 @@ theorem fockAct1_embR_inr_inl (P Q R : ℕ) (h : P ≤ R) (k : ℕ) (a : Fin P) 
   rw [embR_eq', embR_eq', opR_down]
   simp only [omE_down, partial_derivative_weight_space_formula, Finset.sum_neg_distrib, Finset.sum_add_distrib, sum_A, sum_C,
     Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_neg, map_add (f := _), map_sum, map_mul, map_smul, phiR, aeval_X]
+
+  simp only [map_neg, map_add (f := _), map_sum, map_mul, map_smul, phiR, aeval_X]
   rw [nsmul_eq_mul, Algebra.smul_def, map_natCast]
   push_cast
   ring

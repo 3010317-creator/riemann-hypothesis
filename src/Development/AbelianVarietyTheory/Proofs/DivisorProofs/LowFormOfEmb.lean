@@ -1,20 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsDeltaDelAtOwnAt
-public import Formalism.LocalToGlobal.Divisibility.NumbersLemmas
-public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthCond
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceLatticeLeThetaLatticeAtPlace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodLiftOnto
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFullLift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTieCoordBase
-public import Development.AbelianVarietyTheory.Counterexamples.RotationExamples.PhaseBreaksTargetParts
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerConjFormsEqCsumAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanEqTopOfTie
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LiftWeightComplexPointEqTwist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePartBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerLeSpanImageKerOfSemilinear
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateTransposeMajorant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapConjTransposeTwist
-public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsRingEquivOfIsTranscendenceBasis
+import Formalism.LocalToGlobal.Divisibility.ProjLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilGramSignature
+import Development.AbelianVarietyTheory.Definitions.Divisors.RealisedChainTorusEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotOntoOfCharAlone
+import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
+import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
+import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.AbelianAt
 
 @[expose] public section
 
@@ -71,8 +102,8 @@ theorem re_inner_self {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H
 theorem csumAt_conj [NumberField K] [StarRing K] (S : CSD K) (σ : K →+* ℂ) (f g : S.Forms) :
     csumAt S ((starRingEnd ℂ).comp σ) f g = starRingEnd ℂ (csumAt S σ f g) := by
   unfold csumAt
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [dotProduct, Matrix.mulVec, Matrix.map_apply, Pi.star_apply, map_sum, map_mul, RingHom.comp_apply]
+
+  simp only [dotProduct, Matrix.mulVec, Matrix.map_apply, Pi.star_apply, map_sum, map_mul, RingHom.comp_apply]
   rfl
 
 end Abstract
@@ -99,8 +130,8 @@ theorem norm_wC (i : Fin D.R.m) (v : InfinitePlace D.what₂.LL) (z : Fin (finra
       (R.HW i (sgAt D.what₂.embLL v)).H)) e0).trans ?_
     refine (congrArg Subtype.val (out_sum _)).trans ((Submodule.coe_sum _ _ _).trans ?_)
     unfold coordMap
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Fintype.linearCombination_apply, map_sum, Finset.smul_sum]
+
+    rw [Fintype.linearCombination_apply, map_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     show cj (twAt D.what₂.embLL v) (v.embedding (z k)) •
       ((((Real.sqrt (RealDat.nP F false))⁻¹ : ℝ) : ℂ) • (R.FW i).j (sgAt D.what₂.embLL v) (R.bL F false i k)) = _

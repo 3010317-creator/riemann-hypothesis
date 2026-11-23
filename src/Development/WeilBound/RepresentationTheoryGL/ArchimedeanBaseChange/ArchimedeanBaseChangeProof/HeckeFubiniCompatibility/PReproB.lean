@@ -1,13 +1,57 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.PSplit
-public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.BridgeSt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryMemGLs
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageDerivativeL1Bound
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelUniqueness
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistence
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.EopW
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegralConjInnerMulInnerOfIsEmptyEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHolds
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryMemGLs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistence
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.Star.Unitary
+import Mathlib.Topology.Sheaves.Init
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DifferentiableAtOfSmooth
 
 @[expose] public section
 
@@ -362,8 +406,8 @@ theorem Epow_clm (L : V →L[ℂ] V') (s : Bool) {f : Mat N → V} (hf : ContDif
     by_cases hab : a = b <;> simp [Epow, hab]
   | succ m ih =>
     intro a b y hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Epow, Finset.sum_apply, map_sum]
+
+    simp only [Epow, Finset.sum_apply, map_sum]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [GlobalTheory.CompanionTheory.WaveAll.Eu_congr GlobalTheory.CompanionTheory.RCalc.isOpen_GLs (ih c b) s a c hy]
     exact Eu_clm L s a c (GlobalTheory.CompanionTheory.RCalc.differentiableAt_of_smooth
@@ -371,8 +415,8 @@ theorem Epow_clm (L : V →L[ℂ] V') (s : Bool) {f : Mat N → V} (hf : ContDif
 
 theorem gel_clm (L : V →L[ℂ] V') (s : Bool) (m : ℕ) {f : Mat N → V} (hf : ContDiffOn ℝ ∞ f (GLs N)) {y : Mat N}
     (hy : y ∈ GLs N) : gel s m (fun z => L (f z)) y = L (gel s m f y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [gel, Finset.sum_apply, map_sum]
+
+  simp only [gel, Finset.sum_apply, map_sum]
   exact Finset.sum_congr rfl fun a _ => Epow_clm L s hf m a a hy
 
 end GelClm

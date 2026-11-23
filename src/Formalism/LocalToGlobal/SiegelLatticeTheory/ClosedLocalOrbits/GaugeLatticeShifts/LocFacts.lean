@@ -1,18 +1,66 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LatExistsOfSteps
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalDiscriminantIsUnit
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocalAdditiveCharContinuous
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.RingInverseAlgebraMap
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.TrDual
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.LGSmall
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.T2SpaceOfNonarchimedeanLocalField
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.DApprox
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatSat
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatEq
-public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.PeriodIntegrals.LocLatEq
+public import Formalism.PeriodIntegrals.LocLatSat
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.DensInertDisplayHolds
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatEq
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatSat
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TrDualLoc
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.DApprox
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.LGSmall
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.RingInverseAlgebraMap
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.T2SpaceOfNonarchimedeanLocalField
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.TrDual
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -448,23 +496,7 @@ theorem lf_form_int {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hU : Formalism.He
     exact mul_mem o.2 h
 
 theorem lf_riesz (φ : (VS D).V →ₗ[D.host.E] D.host.E) : ∃ μ : (VS D).V, ∀ v, (VS D).hT μ v = φ v := by
-  classical
-  obtain ⟨bs, hbs⟩ := Formalism.HermitianLatticesTheory.dualLattice_dualBasis (VS D).hT (VS D).nondeg (VS D).frame
-  refine ⟨∑ j, star (φ ((VS D).frame j)) • bs j, fun v => ?_⟩
-  have key : (VS D).hT (∑ j, star (φ ((VS D).frame j)) • bs j) = φ := by
-    apply (VS D).frame.ext
-    intro i
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, LinearMap.sum_apply]
-    have hs : ∀ j, (VS D).hT (star (φ ((VS D).frame j)) • bs j) ((VS D).frame i) =
-        φ ((VS D).frame j) * (if i = j then 1 else 0) := by
-      intro j
-      rw [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star]
-      congr 1
-      rw [← (VS D).herm.eq ((VS D).frame i) (bs j), hbs]
-      split_ifs <;> simp
-    simp only [hs, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
-  rw [key]
+  apply GlobalTheory.St.Lat.lat_riesz <;> assumption
 
 private theorem lf_span_eq_top_of_unimodular {Λ : Submodule (𝓞 D.host.E) (VS D).V}
     (hL : Λ.FG) (hU : Formalism.HermitianLatticesTheory.IsUnimodular (VS D).hT Λ) :
@@ -529,8 +561,8 @@ theorem lf_riesz_lat {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hL : Submodule.I
       rw [← hb j, ← algebraMap_smul D.host.E (c j), hc j, Algebra.smul_def, ← smul_smul,
         algebraMap_smul]
     have h1 := congrArg (fun z => ((f z : 𝓞 D.host.E) : D.host.E)) hy
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_smul, map_sum, smul_eq_mul] at h1
+
+    simp only [map_smul, map_sum, smul_eq_mul] at h1
     push_cast at h1
     have hd0 : ((d : 𝓞 D.host.E) : D.host.E) ≠ 0 := by
       have := nonZeroDivisors.ne_zero d.2
@@ -596,8 +628,8 @@ theorem locUnimodC_holds (D : D7) (Z : LocDat D) : LocUnimodC D Z := by
         have e : ∀ i, LocFacts₂ Z.M p (baseChange₂ D p v) (baseChange₂ D p (μ i)) = (D.s.atP p).ιE ((VS D).hT (μ i) v) := by
           intro i; rw [baseChangeAt_form Z.M p (Z.hcj p), brS]
         simp only [e, ← baseChange_smul₂]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← map_sum, ← hV v]
+
+        rw [← map_sum, ← hV v]
       | zero => simp [LocFacts.localForm_zero_left₂]
       | add w w' _ _ h1 h2 =>
         simp only [LocFacts.localForm_add_left₂, add_smul, Finset.sum_add_distrib]

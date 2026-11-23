@@ -1,12 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LevelMatchIff
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FrLink
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MiddleLatticeSelfDualAnisotropicPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryDatumLevelPrimeSplitDegreeGramFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalHyperbolicFrameAnisotropicMemSpanTransStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDualVectorNormInvNotMemLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MiddleLatticeSelfDualAnisotropicPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalHyperbolicFrameAnisotropicMemSpanTransStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryDatumLevelPrimeSplitDegreeGramFactsStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -73,9 +115,9 @@ variable {D : D7} {X : HidaSetting D} {u : D.what₂.Word} {wt : (VS D).V ≃ₗ
 theorem mlat_hT_lc (hW : WittX X u wt) (d d' : Fin (D.R.N 0) → D.host.E) :
     (VS D).hT (Fintype.linearCombination D.host.E (qFr wt) d) (Fintype.linearCombination D.host.E (qFr wt) d') =
       Formalism.UG.hform (Formalism.L2.Forms.sigD D : D.host.E →+* D.host.E) (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) d d' := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Fintype.linearCombination_apply, map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply,
-    smul_eq_mul, mlat_gram hW, Formalism.UG.hform, Finset.mul_sum]
+
+  simp only [Fintype.linearCombination_apply, map_sum, map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply,
+  smul_eq_mul, mlat_gram hW, Formalism.UG.hform, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   simp only [RingHom.id_apply]
@@ -86,9 +128,9 @@ theorem mlat_lc_perp (hW : WittX X u wt) (d : Fin (D.R.N 0) → D.host.E) :
     (∀ a, (VS D).hT (X.eX a) (Fintype.linearCombination D.host.E (qFr wt) d) = 0 ∧
       (VS D).hT (X.fY a) (Fintype.linearCombination D.host.E (qFr wt) d) = 0) ∧
       (VS D).hT (X.zu u) (Fintype.linearCombination D.host.E (qFr wt) d) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Fintype.linearCombination_apply, map_sum, map_smul, (mlat_perp hW _).2, ((mlat_perp hW _).1 _).1,
-    ((mlat_perp hW _).1 _).2, smul_zero, Finset.sum_const_zero, and_self, implies_true]
+
+  simp only [Fintype.linearCombination_apply, map_sum, map_smul, (mlat_perp hW _).2, ((mlat_perp hW _).1 _).1,
+  ((mlat_perp hW _).1 _).2, smul_zero, Finset.sum_const_zero, and_self, implies_true]
 
 theorem mlat_mem_dualL {n : ℕ} (J : Matrix (Fin n) (Fin n) D.host.E) (L : Submodule (𝓞 D.host.E) (Fin n → D.host.E))
     (y : Fin n → D.host.E) :
@@ -130,7 +172,7 @@ end GlobalTheory.St.G
 namespace GlobalTheory.St.G
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem mlat_main (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (wt : (VS D).V ≃ₗ[D.host.E] (VS D).V)
     (hW : WittX X u wt) : TLat (Formalism.L2.Forms.sigD D) (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) (D.mem u).A.T D.R.f (Mq wt) ∧ ∃ x₀ ∈ X.Lb, (VS D).hT (X.zu u) x₀ = 1 ∧ ∃ d ∈ dualL (Formalism.L2.Forms.sigD D) (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) (Mq wt), Fintype.linearCombination D.host.E (qFr wt) d = x₀ + (((D.mem u).A.T : D.host.E))⁻¹ • X.zu u ∧ ∀ y ∈ dualL (Formalism.L2.Forms.sigD D) (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _)) (Mq wt), ∃ a : 𝓞 D.host.E, y - (a : D.host.E) • d ∈ Mq wt := by
   obtain ⟨hLb, ⟨x₀, hx₀Lb, hx₀z⟩, -⟩ := GlobalTheory.T.middleLattice_selfDual_anisotropic_pairing D X u

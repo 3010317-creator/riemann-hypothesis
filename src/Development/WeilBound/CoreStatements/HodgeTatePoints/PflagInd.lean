@@ -1,18 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.PluckerCoord
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PHsymmShift
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwistedDualGensExist
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSymmetricSpanHsymm
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NumericalSegreClosed
-public import Development.WeilBound.CoreStatements.IdealCycleValues.ProjIdealIndependentOfBasis
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleListPermInvariant
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.PflagZ
+public import Development.WeilBound.CoreStatements.IdealCycleValues.ProjIdealIndependentOfBasis
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PHsymmShift
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSymmetricSpanHsymm
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwistedDualGensExist
+public import GroundTheory.HeightsAndTheta.Heights.SemipositiveHeights.NumericalSegre
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 
 @[expose] public section
 
@@ -28,9 +66,9 @@ theorem aeval_neg_hsymm (N a : ℕ) :
   have hneg : (fun i : Fin N => (-X i : MvPolynomial (Fin N) ℝ)) = fun i => C (-1) * X i := by
     funext i
     simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hsymm, map_sum, map_multiset_prod, Multiset.map_map, Function.comp_def, aeval_X,
-    Finset.mul_sum]
+
+  simp only [hsymm, map_sum, map_multiset_prod, Multiset.map_map, Function.comp_def, aeval_X,
+  Finset.mul_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [hneg, Multiset.prod_map_mul, Multiset.map_const', Multiset.prod_replicate, ← map_pow]
   simp
@@ -85,11 +123,11 @@ private theorem genNum_mul {N : ℕ} (b : Fin N → K → ℤ) (G H : MvPolynomi
       monomial μ (G.coeff μ) * monomial ν (H.coeff ν) := by
     conv_lhs => rw [G.as_sum, H.as_sum]
     rw [Finset.sum_mul_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hG, hL, map_sum]
+
+  rw [hG, hL, map_sum]
   refine Finset.sum_congr rfl fun μ _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   unfold genNum
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun ν _ => ?_
@@ -260,7 +298,7 @@ private theorem genNum_smul (F : Type) [Field F] (K : Type) [Fintype K] [Decidab
   rw [genNum_eq_sum_of_support_subset F K ι W b (c • P) Q P.support (MvPolynomial.support_smul),
     genNum_eq_sum_of_support_subset F K ι W b P Q P.support subset_rfl, Finset.mul_sum]
   refine Finset.sum_congr rfl fun μ _ => ?_
-  rw [coeff_smul, smul_eq_mul, mul_assoc]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc]
 
 private theorem genNum_hsymm_eq_of_intNumL_rootList_sum_eq (F : Type) [Field F] (K : Type) [Fintype K] [DecidableEq K]
     (ι : K → Type) [∀ k, Fintype (ι k)] (W : Ideal (MRing ι F)) (e : ℕ) (hP : IsMultiProjPrime W)
@@ -308,9 +346,9 @@ theorem field_flag_indep : ∀ (F : Type) [Field F] (Ω : Type) [Field Ω] [Alge
     obtain ⟨μ, rfl⟩ := hx
     have hm : MvPolynomial.map (Int.castRingHom ℝ) (hsymmPart (Fin N) ℤ μ) =
         (μ.parts.map (hsymm (Fin N) ℝ)).prod := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hsymmPart, hsymm, map_multiset_prod, Multiset.map_map, Function.comp_def, map_sum,
-        MvPolynomial.map_X]
+
+      simp only [hsymmPart, hsymm, map_multiset_prod, Multiset.map_map, Function.comp_def, map_sum,
+      MvPolynomial.map_X]
       rfl
     rw [hm]
     exact (agree_prod F K ι (pointIdeal F y) e b u (fun a Q h => hh a Q h) μ.parts).2 Y

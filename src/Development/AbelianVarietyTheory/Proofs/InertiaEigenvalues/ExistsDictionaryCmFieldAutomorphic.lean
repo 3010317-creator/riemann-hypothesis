@@ -1,18 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FinIso
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecProdRecSatakeLL
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
-public import Formalism.SharpRestriction.LevelLetterCocycles.SphericalInertData
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFinite
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanRepMatrixEqTopOfAbsIrreducible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAdelicExtensionOfAlgebraicWeightDefiniteUnStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinitePartMulDefiniteUnitaryInfinitePointStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitaryRationalMatrixOfFirstPresentationPoStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsOpenNhdOneInUnitaryPrincipalCongruenceStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitaryRationalMatrixOfFirstPresentationPoStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanRepMatrixEqTopOfAbsIrreducible
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFinite
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
 
 @[expose] public section
 
@@ -269,8 +304,8 @@ theorem dict_span [FiniteDimensional ℂ W] (hρ : ρ.IsIrreducible) (S : Submod
       have hTinf : ∀ x ∈ infU L n, T (R x) ∈ W' := by
         intro x hx
         have := hst x⁻¹ ψ hψ
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [hψe, map_sum] at this
+
+        rw [hψe, map_sum] at this
         convert this using 1
         rw [hT]
         refine Finset.sum_congr rfl fun i _ => ?_
@@ -299,8 +334,8 @@ theorem dict_span [FiniteDimensional ℂ W] (hρ : ρ.IsIrreducible) (S : Submod
           convert this using 1
           rw [hT]
           change phiL F R μ (∑ i, lp i v • fs i) = _
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum]
+
+          rw [map_sum]
           refine Finset.sum_congr rfl fun i _ => ?_
           rw [map_smul]
           have e : lp i ∘ₗ μ.smulRight v = lp i v • μ := LinearMap.ext fun w => by
@@ -318,14 +353,14 @@ theorem dict_span [FiniteDimensional ℂ W] (hρ : ρ.IsIrreducible) (S : Submod
           = ∑ i, ∑ k, b.repr (R y⁻¹ (fs i (fy F y))) k * lp i (b k) := by
             refine Finset.sum_congr rfl fun i _ => ?_
             conv_lhs => rw [← b.sum_repr (R y⁻¹ (fs i (fy F y)))]
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [map_sum]
+
+            rw [map_sum]
             simp only [map_smul, smul_eq_mul]
         _ = ∑ k, ∑ i, b.repr (R y⁻¹ (fs i (fy F y))) k * lp i (b k) := Finset.sum_comm
         _ = ∑ k, b.repr (R y⁻¹ ((∑ i, lp i (b k) • fs i) (fy F y))) k := by
             refine Finset.sum_congr rfl fun k _ => ?_
-            set_option synthInstance.maxHeartbeats 100000 in
-              simp [Finset.sum_apply, map_sum, map_smul, mul_comm]
+
+            simp [Finset.sum_apply, map_sum, map_smul, mul_comm]
         _ = 0 := by simp only [hF, Pi.zero_apply, map_zero, Finsupp.zero_apply, Finset.sum_const_zero]
     · right
       refine le_antisymm hW' (Submodule.span_le.2 ?_)

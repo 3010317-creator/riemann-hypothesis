@@ -1,14 +1,60 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogLie
-public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogOde
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogQ
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapS
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogSt
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PSepFac
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceMemOfQdetMem
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CommuteCapOfCommuteEop
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliConstantTermVanishing
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliOperatorsCommuteStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermAutomorphicCriterionStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermTranslateFormulaStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermUnipotentIntegralVariant
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuantumDeterminantPolynomialCoefficientsStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PNoLogOde
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PSepFacB
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.ExponentialNegativity.NormalisedExistence.ExistsNormed
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermTranslateFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermAutomorphicCriterionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuantumDeterminantPolynomialCoefficientsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliOperatorsCommuteStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -110,7 +156,7 @@ theorem capS_eq (τ : E →+* ℂ) (u : ℂ) : capS r s τ u = Formalism.REAL.qd
 theorem commute_val {x y : Pa (Vsp r s m) (Isp r s m)} (h : Commute x.1 y.1) : Commute x y := Subtype.ext h
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem trace_ss (hm : ∀ τ, (m τ).Nodup ∧ Multiset.card (m τ) = r + s) (τ : E →+* ℂ) :
     ∃ x : Pa (Vsp r s m) (Isp r s m), x.1 = Tr1 r s τ ∧ IsSS (piQ (Vsp r s m) (Isp r s m) x) := by
   classical
@@ -172,12 +218,12 @@ theorem trace_ss (hm : ∀ τ, (m τ).Nodup ∧ Multiset.card (m τ) = r + s) (�
     intro u
     have e1 : (∑ k ∈ Finset.range (s + 1), (u + 0) ^ k • π (bP k)) =
         π ⟨capS r s τ (u + (r : ℂ) / 2), capS_mem_Pa r s m τ _⟩ := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hSP, map_sum]; simp [map_smul]
+
+      rw [hSP, map_sum]; simp [map_smul]
     have e2 : (∑ k ∈ Finset.range (r + 1), (u + 0) ^ k • π (aP k)) =
         π ⟨capR r s τ (u - (s : ℂ) / 2), capR_mem_Pa r s m τ _⟩ := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hRP, map_sum]; simp [map_smul]
+
+      rw [hRP, map_sum]; simp [map_smul]
     have e3 : π (⟨capS r s τ (u + (r : ℂ) / 2), capS_mem_Pa r s m τ _⟩ *
         ⟨capR r s τ (u - (s : ℂ) / 2), capR_mem_Pa r s m τ _⟩) = algebraMap ℂ _ ((m τ).map (u + ·)).prod := by
       refine piQ_eq_algebraMap V I _ fun v hv => ⟨V.sub_mem (((Pa V I).mul_mem (capS_mem_Pa r s m τ _)
@@ -200,8 +246,8 @@ theorem trace_ss (hm : ∀ τ, (m τ).Nodup ∧ Multiset.card (m τ) = r + s) (�
       hrel k).2 hk
 
   have hR : ∀ u, IsSS (π ⟨capR r s τ u, capR_mem_Pa r s m τ u⟩) := fun u => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hRP, map_sum]
+
+    rw [hRP, map_sum]
     refine IsSS.sum _ _ (fun k hk => ?_) (fun i _ j _ => ?_)
     · rw [map_smul]
       exact (hss k (Nat.lt_succ_iff.1 (Finset.mem_range.1 hk))).smul _
@@ -243,8 +289,8 @@ theorem key (hm : ∀ τ, (m τ).Nodup ∧ Multiset.card (m τ) = r + s) :
   have hc : ∀ τ τ', Commute (π (TP τ)) (π (TP τ')) := fun τ τ' =>
     (commute_val r s m (by rw [hTP1, hTP1]; exact Tr1_comm r s τ τ')).map π
   have hss : IsSS (π LZ) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LZ, map_sum, map_add (f := _)]
+
+    simp only [LZ, map_sum, map_add (f := _)]
     refine IsSS.sum _ _ (fun w _ => (hTP2 _).add (hTP2 _) (hc _ _)) (fun w _ w' _ => ?_)
     exact ((hc _ _).add_left (hc _ _)).add_right ((hc _ _).add_left (hc _ _))
   obtain ⟨S, hS⟩ := hss

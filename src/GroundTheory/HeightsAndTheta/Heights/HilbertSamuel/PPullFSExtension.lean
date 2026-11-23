@@ -1,8 +1,56 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPullFSExtension
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsProjFrameBasePtFree
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ArithModel
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+public import Mathlib.Topology.Algebra.MvPolynomial
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.CNormSt
 
 @[expose] public section
@@ -176,9 +224,9 @@ theorem pr_ne_zero (hBP : ProjFrameBasePtFree.Statement) (hfr : IsProjFrame x e)
     rintro _ ⟨k, rfl⟩
     have hk : z (e k) = 0 := congrFun h0 k
     have he : (⟨(), (e k).2⟩ : Ix κ) = e k := rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [SetLike.mem_coe, RingHom.mem_ker, hψ, RingHom.comp_apply, linForm, map_sum, map_mul,
-      map_C, map_X, eval_C, eval_X, projMat]
+
+    simp only [SetLike.mem_coe, RingHom.mem_ker, hψ, RingHom.comp_apply, linForm, map_sum, map_mul,
+    map_C, map_X, eval_C, eval_X, projMat]
     simp only [eq_intCast, Int.cast_ite, Int.cast_one, Int.cast_zero, ite_mul, one_mul, zero_mul]
     rw [Finset.sum_eq_single (e k).2 (fun i _ hi => if_neg (Ne.symm hi))
       (fun h => absurd (Finset.mem_univ _) h), if_pos rfl, he]

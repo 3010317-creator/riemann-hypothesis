@@ -1,6 +1,55 @@
 module
 
-public import Mathlib
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.IntegralClosure.IntegralRestrict
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -38,8 +87,8 @@ private theorem key1 {S : Type} [CommRing S] [IsDomain S] [CharZero S] {ι : Typ
     simp only [← hg]
     have h1 : (d : ZMod (p ^ R)) * g a = g (d • a) := by
       rw [map_zsmul, zsmul_eq_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, hdual, map_sum, Finset.mul_sum, map_sum, Int.cast_sum]
+
+    rw [h1, hdual, map_sum, Finset.mul_sum, map_sum, Int.cast_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     have h2 : a * (((g (b k)).val : S) * w k) = ((g (b k)).val : ℕ) • (a * w k) := by
       rw [nsmul_eq_mul]; ring
@@ -63,10 +112,10 @@ private theorem key1 {S : Type} [CommRing S] [IsDomain S] [CharZero S] {ι : Typ
           Pi.single i (c.symm (y j) * x i) := by
         rw [← Pi.single_smul, smul_eq_mul]
       rw [h1, ← hadj, h2, star, mul_assoc]
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [hxs, map_sum, AddMonoidHom.finsetSum_apply, hys]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Finset.mul_sum, Int.cast_sum]
+
+    conv_lhs => rw [hxs, map_sum, AddMonoidHom.finsetSum_apply, hys]
+
+    simp only [map_sum, Finset.mul_sum, Int.cast_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => ?_
     exact term i j
@@ -132,8 +181,8 @@ private theorem key2 {S : Type} [CommRing S] {N p : ℕ} [Finite (S ⧸ Ideal.sp
       refine hker _ ?_
       have := congrFun h0 j
       simp only [Matrix.vecMul, dotProduct, Pi.zero_apply] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, ← this]
+
+      rw [map_sum, ← this]
       exact Finset.sum_congr rfl fun i _ => by rw [map_mul, hx]; rfl)
     refine sub_eq_zero.mp (funext fun i => ?_)
     rw [← hx, hx']
@@ -186,8 +235,8 @@ private theorem key4 (E : Type) [Field E] [NumberField E] :
   have hTw : ∀ m k, T (b m * w k) = if k = m then discr E else 0 := by
     intro m k
     have h1 : T (b m * w k) = (Q.adjugate * Q) k m := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [w, Finset.mul_sum, map_sum, Matrix.mul_apply]
+
+      simp only [w, Finset.mul_sum, map_sum, Matrix.mul_apply]
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [mul_smul_comm, map_zsmul, mul_comm (b m), hQ', smul_eq_mul]
     rw [h1, Matrix.adjugate_mul, hQ, Matrix.smul_apply, Matrix.one_apply]
@@ -222,8 +271,8 @@ private theorem key4 (E : Type) [Field E] [NumberField E] :
     have hTa : ∀ k, T (a * w k) = b.repr a k * discr E := by
       intro k
       conv_lhs => rw [← b.sum_repr a]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [Finset.sum_mul, map_sum]
+
+      rw [Finset.sum_mul, map_sum]
       simp only [smul_mul_assoc, map_zsmul, hTw, smul_eq_mul]
       simp
     change discr E • a = ∑ k, T (a * w k) • b k
@@ -311,8 +360,8 @@ theorem UpperTheory.Reformulated.B.DualIntegralLattice.main :
     ⟨((NumberField.discr E : ℤ) : O) * Wo⁻¹ i j, by simp⟩, hfin _ fun i j => ?_⟩
   have h2 : algebraMap O Ω (Wo i j) = σ ((W i j : NumberField.RingOfIntegers E) : E) := ht _
   rw [h2]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [W, Matrix.of_apply, map_sum, map_mul, hw, Finset.mul_sum]
+
+  simp only [W, Matrix.of_apply, map_sum, map_mul, hw, Finset.mul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [map_natCast, map_mul, map_intCast]
   ring

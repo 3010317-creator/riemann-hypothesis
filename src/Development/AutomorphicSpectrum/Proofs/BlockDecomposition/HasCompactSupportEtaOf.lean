@@ -1,13 +1,57 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LastRowMulRowGLInv
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicLatticeOpenCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorAdelicLatticeCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoxFourierIntegralBoundStatement
+public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.ColumnConjugationMeasure
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicGLHomeomorphInfiniteFinite
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicVectorIntegralProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteVectorMeasureIsAddHaarStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorAdelicLatticeCompactStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterRealPairingStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoxFourierIntegralBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicLatticeOpenCompactStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteVectorMeasureIsAddHaarStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothCutoffTranslateContDiffStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 @[expose] public section
 
@@ -243,8 +287,8 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 theorem lastRowM_map {R T : Type} [CommRing R] [CommRing T] (p : R →+* T) (A : GL (Fin k) R) (c : Fin k) :
     p (lastRowM A.val c) = lastRowM (GeneralLinearGroup.map p A).val c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [lastRowM, map_sum]
+
+  simp only [lastRowM, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs
   · rfl
@@ -480,11 +524,11 @@ theorem cut_of (h0 : PositivityTheory.jumpWindows.G0) (h4 : S4) (h8 : S8) (hk : 
       refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
       have hψs : ψ (∑ i, y i * z i) = ψ (sInf E (∑ i, pInf E (y i) * zi i)) * ψ (sFin E (∑ i, pFin E (y i) * zf i)) := by
         have e1 : pInf E (∑ i, y i * z i) = ∑ i, pInf E (y i) * zi i := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum]; exact Finset.sum_congr rfl fun i _ => map_mul _ _ _
+
+          rw [map_sum]; exact Finset.sum_congr rfl fun i _ => map_mul _ _ _
         have e2 : pFin E (∑ i, y i * z i) = ∑ i, pFin E (y i) * zf i := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum]; exact Finset.sum_congr rfl fun i _ => map_mul _ _ _
+
+          rw [map_sum]; exact Finset.sum_congr rfl fun i _ => map_mul _ _ _
         rw [← e1, ← e2, ← AddChar.map_add_eq_mul, ← ad_split]
       have hφ' : (etaOf b (latS S B : Set (Af E)) y : ℂ) * φ (g * (sOf S y)⁻¹) =
           (etaOf b (latS S B : Set (Af E)) y : ℂ) * φ (g * (infGL E k (rowGL fun i => pInf E (y i)))⁻¹) := by

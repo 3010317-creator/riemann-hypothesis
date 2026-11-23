@@ -2,6 +2,50 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.SecondColumnOperator
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.GaugeExp
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ChartChg
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -42,7 +86,7 @@ def lamL (W : (σ →₀ ℕ) → k) : MvPolynomial σ k →ₗ[k] k where
     simp only [RingHom.id_apply, smul_eq_mul]
     rw [lam_eq W (r • P) P.support support_smul, lam, mul_sum]
     refine sum_congr rfl fun m _ => ?_
-    rw [coeff_smul, smul_eq_mul, mul_assoc]
+    rw [AddMonoidAlgebra.coeff_smul_apply, smul_eq_mul, mul_assoc]
 
 theorem lamL_apply (W : (σ →₀ ℕ) → k) (R : MvPolynomial σ k) : lamL W R = lam W R := rfl
 
@@ -59,8 +103,8 @@ theorem nabVal_eq_lam {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] 
     B.nabVal k h w0 m f u Q = lam (fun e => B.nabVal k h w0 m f u (monomial e 1)) Q := by
   classical
   unfold FB.nabVal lam
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [DpolyOf, map_sum, map_mul, MvPowerSeries.constantCoeff_C]
+
+  simp only [DpolyOf, map_sum, map_mul, MvPowerSeries.constantCoeff_C]
   refine Finset.sum_congr rfl fun e _ => ?_
   congr 1
   simp [MvPolynomial.support_monomial, MvPolynomial.coeff_monomial]
@@ -112,8 +156,8 @@ theorem lam_prodQ (V : Fin n → (ι →₀ ℕ) → k) (Q : Fin n → MvPolynom
         (monomial (Finsupp.mapDomain (fun l => (l, b)) e) ((Q b).coeff e) : MvPolynomial (ι × Fin n) k) := by
       intro b
       conv_lhs => rw [(Q b).as_sum]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine Finset.sum_congr rfl fun e _ => ?_
       exact MvPolynomial.rename_monomial _ _ _
     unfold prodQ
@@ -123,8 +167,8 @@ theorem lam_prodQ (V : Fin n → (ι →₀ ℕ) → k) (Q : Fin n → MvPolynom
     rw [glue, MvPolynomial.monomial_sum_index, map_prod, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [MvPolynomial.C_mul_monomial, mul_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hP, ← lamL_apply, map_sum]
+
+  rw [hP, ← lamL_apply, map_sum]
   simp only [lamL_apply, lam_monomial, colM_glue]
   simp only [lam]
   rw [Finset.prod_univ_sum]
@@ -141,8 +185,8 @@ private lemma totalDegree_pderiv_le_of_le_succ {σ : Type} (l : σ) (q : MvPolyn
     (hq : q.totalDegree ≤ D + 1) : (pderiv l q).totalDegree ≤ D := by
   classical
   conv_lhs => rw [q.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine (MvPolynomial.totalDegree_finsetSum _ _).trans (Finset.sup_le fun s hs => ?_)
   rw [MvPolynomial.pderiv_monomial]
   by_cases hsl : s l = 0
@@ -286,8 +330,8 @@ theorem gauge_second_columns_of_exp (hG : GaugeExpSt) : GaugeIndependenceColumns
       ∏ b, B.nabVal k h' w0 mm (f b) u (monomial (colM mo b) 1)) = lam W (TL cD t N P) := by
     rw [sum_congr rfl fun mo hmo => by rw [key mo hmo]]
     conv_rhs => rw [as_sum P]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ← lamL_apply, map_sum]
+
+    rw [map_sum, ← lamL_apply, map_sum]
     refine sum_congr rfl fun mo _ => ?_
     rw [show (monomial mo (P.coeff mo) : MvPolynomial (ι × Fin n) k) = P.coeff mo • monomial mo 1 by
       rw [smul_monomial, smul_eq_mul, mul_one], map_smul, map_smul, lamL_apply, smul_eq_mul]

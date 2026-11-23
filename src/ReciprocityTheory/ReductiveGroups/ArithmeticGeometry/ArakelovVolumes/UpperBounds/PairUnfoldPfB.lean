@@ -1,6 +1,53 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PairUnfoldPfA
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsIntegralCc
 
 @[expose] public section
 
@@ -187,7 +234,6 @@ private theorem FD_mat_inv_mem_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
   · show ((ReciprocityTheory.ChartRestriction.G.FD.mat b τ)⁻¹).det ≠ 0
     first
       | exact (Matrix.isUnit_nonsing_inv_det _ (Ne.isUnit hd)).ne_zero
-      | (rw [Matrix.det_nonsing_inv, Ring.inverse_eq_inv]; exact inv_ne_zero hd)
   · haveI := (ReciprocityTheory.ChartRestriction.G.FD.mat b τ).invertibleOfIsUnitDet (Ne.isUnit hd)
     have hT : (ReciprocityTheory.ChartRestriction.G.FD.mat b τ).BlockTriangular id := fun a c h => ht a c h
     exact Matrix.blockTriangular_inv_of_blockTriangular hT hca
@@ -257,8 +303,6 @@ theorem ind_rmul {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) {x b : Frame X.Ψ r} (h
   · first
       | rw [Set.indicator_of_notMem h,
           Set.indicator_of_notMem (fun h' => h ((rmul_mem_T_iff D FF hy hb).1 h'))]
-      | rw [Set.indicator_of_not_mem h,
-          Set.indicator_of_not_mem (fun h' => h ((rmul_mem_T_iff D FF hy hb).1 h'))]
 
 theorem ind_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {M : Type*} [One M] [Zero M] :
     (T D FF).indicator (1 : Frame X.Ψ r → M) (cpt X x0 z) = FF.indicator 1 z := by
@@ -271,7 +315,6 @@ theorem ind_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {M : Type*} [One M] [Zero M
     funext τ
     first
       | exact Matrix.mul_one _
-      | simp [ReciprocityTheory.ChartRestriction.G.FD.rmul, ReciprocityTheory.ChartRestriction.G.FD.mat]
   obtain ⟨hΔ, hzz, -⟩ := D.uniq z hz _ hb
   rw [h1] at hΔ hzz
   have hiff : cpt X x0 z ∈ T D FF ↔ z ∈ FF := by
@@ -290,7 +333,6 @@ theorem ind_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {M : Type*} [One M] [Zero M
     rfl
   · first
       | rw [Set.indicator_of_notMem (fun h => hF (hiff.1 h)), Set.indicator_of_notMem hF]
-      | rw [Set.indicator_of_not_mem (fun h => hF (hiff.1 h)), Set.indicator_of_not_mem hF]
 
 private theorem continuous_cpt_apply (y0 : Frame X.Ψ r) : Continuous fun z => cpt X y0 z := by
   unfold ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt ReciprocityTheory.ChartRestriction.G.FD.rmul ReciprocityTheory.ChartRestriction.G.AR.Inst.nmat
@@ -302,7 +344,6 @@ private theorem continuous_cpt_apply (y0 : Frame X.Ψ r) : Continuous fun z => c
   split_ifs
   · first
       | fun_prop
-      | exact (EuclideanSpace.proj _).continuous
   · exact continuous_const
   · exact continuous_const
 
@@ -486,7 +527,6 @@ private theorem eq_of_lact_inv_cpt_mem_T (hFF : IsFundSet X x0 FF) {z : V (nd X)
       _ = rmul (lact (γ2⁻¹ * γ1) (rmul (cpt X x0 (D.zOf y1)) (D.bOf y1))) (fun τ => ((ReciprocityTheory.ChartRestriction.G.FD.mat (D.bOf y1) τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ) : Frame X.Ψ r) := by
         first
           | rw [lact_rmul_eq_rmul_lact]
-          | exact congrArg (fun w => rmul w _) (lact_rmul_eq_rmul_lact _ _ _).symm
       _ = rmul (rmul (cpt X x0 (D.zOf y2)) (D.bOf y2)) (fun τ => ((ReciprocityTheory.ChartRestriction.G.FD.mat (D.bOf y1) τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ) : Frame X.Ψ r) := by rw [← he1, hB', ← he2]
       _ = rmul (cpt X x0 (D.zOf y1)) (rmul (D.bOf y2) (fun τ => ((ReciprocityTheory.ChartRestriction.G.FD.mat (D.bOf y1) τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ) : Frame X.Ψ r)) := by
         rw [← hw]
@@ -519,7 +559,6 @@ theorem lunfold_one (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) (hFF : 
     · rw [Set.indicator_of_mem h, Set.indicator_of_mem h, Pi.one_apply, one_mul]
     · first
         | rw [Set.indicator_of_notMem h, Set.indicator_of_notMem h, zero_mul]
-        | rw [Set.indicator_of_not_mem h, Set.indicator_of_not_mem h, zero_mul]
   rw [← lintegral_indicator hFF.1]
   calc ∫⁻ z, FF.indicator (fun z => φ (lact γ (cpt X x0 z))) z ∂muF X x0
       = ∫⁻ z, Fn (lact γ (cpt X x0 z)) ∂muF X x0 :=
@@ -564,7 +603,6 @@ theorem lunfold (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) (hFF : IsFu
         hne (Subtype.ext (eq_of_lact_inv_cpt_mem_T D FF hFF hz γ.2 hγ0 hγT hxT))
       first
         | exact Set.indicator_of_notMem hnT 1
-        | exact Set.indicator_of_not_mem hnT 1
   show ∑' γ : X.Γ, (T D FF).indicator (1 : Frame X.Ψ r → ℝ≥0∞) (lact γ.1⁻¹ (cpt X x0 z)) *
     φ (cpt X x0 z) = φ (cpt X x0 z)
   rw [ENNReal.tsum_mul_right, hsum, one_mul]
@@ -661,7 +699,6 @@ theorem cunfold_one (hM : MeasInvStatement (E := E)) (hx0 : IsOrth X x0) (hFF : 
     · rw [Set.indicator_of_mem h, Set.indicator_of_mem h, Pi.one_apply, one_mul]
     · first
         | rw [Set.indicator_of_notMem h, Set.indicator_of_notMem h, zero_mul]
-        | rw [Set.indicator_of_not_mem h, Set.indicator_of_not_mem h, zero_mul]
   rw [← integral_indicator hFF.1]
   calc ∫ z, FF.indicator (fun z => G (lact γ (cpt X x0 z))) z ∂muF X x0
       = ∫ z, Fn (lact γ (cpt X x0 z)) ∂muF X x0 :=

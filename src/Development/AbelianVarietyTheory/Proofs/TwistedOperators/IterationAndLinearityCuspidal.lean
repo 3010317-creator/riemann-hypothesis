@@ -1,21 +1,62 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QEqColPer
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChainDownEqLiftAlongPath
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankOneLessEqTopBesselLevelPeriod
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalVectorsRowAndColumnPaths
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlippedFiniteTensorOfRepresentingOppositePath
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankConvergesColumn
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridVertexMeasureEqOfSameNormalisation
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaFunctionFockVectorRightwardArrow
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RangeSndRel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ErrorExponentStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselColumnScalarFunctionContinuousLeftInvariant
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ColconSplitFamAppend
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftTOppTens
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevJGridSuccIndep
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsIteratedInvariantIntegralLinearAndCongr
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsClosedOfLocallyCompactSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLowestKTypeFockMapThetaVectors
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsClosedNFlag
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankOneLessEqTopBesselLevelPeriod
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChainDownEqLiftAlongPath
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlippedFiniteTensorOfRepresentingOppositePath
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridVertexMeasureEqOfSameNormalisation
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevJGridSuccIndep
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalVectorsRowAndColumnPaths
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QEqColPer
+import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.UnfoldAbs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -70,16 +111,16 @@ theorem per_indep {ρ : ℕ} (B : GlobalTheory.Unf.BesLev D ρ) {ψ : AddChar (A
 
 theorem hN_top {M : Vol G} {t : T} (hM : M.Is t) : NFlag (G.V (.grid D.R.m 0)) G.besTop.e = flagN (topLev G hM).d :=
   by
-  set_option maxHeartbeats 20000000 in
-   exact (nFlag_diag (GlobalTheory.RowUnf.rowBes G 0 (by have := D.R.two_le_m; omega) ((D.R.m - 2) / 2)
-    (by have := top_idx (D := D); omega)).e (lam _) (lam_ne _)).symm
+
+  exact (nFlag_diag (GlobalTheory.RowUnf.rowBes G 0 (by have := D.R.two_le_m; omega) ((D.R.m - 2) / 2)
+   (by have := top_idx (D := D); omega)).e (lam _) (lam_ne _)).symm
 
 def topVNRow {M₀ : Vol G} (h₀ : M₀.IsRow) : GlobalTheory.Unf.VolN (besDecAt G 0 ((D.R.m - 2) / 2) top_idx) :=
   by
-  set_option maxHeartbeats 20000000 in
-   exact volNOf (d := GlobalTheory.RowUnf.rowBes G 0 (by have := D.R.two_le_m; omega) ((D.R.m - 2) / 2) (by have := top_idx (D := D); omega))
-    (nFlag_diag _ (lam _) (lam_ne _)).symm
-    (GlobalTheory.RowUnf.topVolN G M₀ h₀ (by have := D.R.two_le_m; omega) (by have := top_idx (D := D); omega))
+
+  exact volNOf (d := GlobalTheory.RowUnf.rowBes G 0 (by have := D.R.two_le_m; omega) ((D.R.m - 2) / 2) (by have := top_idx (D := D); omega))
+   (nFlag_diag _ (lam _) (lam_ne _)).symm
+   (GlobalTheory.RowUnf.topVolN G M₀ h₀ (by have := D.R.two_le_m; omega) (by have := top_idx (D := D); omega))
 
 theorem bplus_eq_besPer (W : G.Weil) {M₀ : Vol G} (h₀ : M₀.IsRow) {M : Vol G} {t : T} (hM : M.Is t) (φ : Fn G (.top 0))
     (F : Fn G (.grid D.R.m 0)) : Bplus W M₀ φ F = besPer W.ψ 1 (topLev G hM).d (topLev G hM).o (topLev G hM).ζ (M₀.ν (.top 0))
@@ -159,11 +200,11 @@ theorem liftT_oppTens (W : G.Weil) (M : Vol G) (t : T) (τi : PolRow G × PolDow
   let l : TotT G (oppPath t D.R.m) →+ Fn G (.grid D.R.m 0) :=
     AddMonoidHom.mk' (fun τ => liftT W M (oppPath t D.R.m) τ F) fun τ τ' => liftT_add W M _ τ τ' F
   show l (oppTens W t τi τf) = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [oppTens, Finsupp.sum, map_sum, Finset.sum_product]
+
+  rw [oppTens, Finsupp.sum, map_sum, Finset.sum_product]
   refine Finset.sum_congr rfl fun P _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Finsupp.sum, map_sum]
+
+  rw [Finsupp.sum, map_sum]
   exact Finset.sum_congr rfl fun d _ => liftT_single W M _ _ _ F
 
 theorem all_append {S : Arrow T → Type} {P : ∀ a, S a → Prop} {X Y : Node} {p : Path T X Y} {d : p.Fam S} (hd : Path.Fam.All P d) :

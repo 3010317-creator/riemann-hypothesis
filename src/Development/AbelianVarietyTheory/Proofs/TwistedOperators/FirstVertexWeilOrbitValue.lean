@@ -1,22 +1,60 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.StepUnfold
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairPtsClasses
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowMapVUpdateZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EdgeFactorNeZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StepType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridRowLevelZeroInfUnitaryEqDatumLevel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetUnitaryConjAtPlaceEqDetLatticeBasisComponent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridStandardVacuumScalarEqProdLocalPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatHatStabOfHatL
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowPt0InvMemStdLatIff
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdeleConjugatedTopPointEqProdLocal
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetUnitaryConjAtPlaceEqDetLatticeBasisComponent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderMemAndPlaceAboveEqOfMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridRowLevelZeroInfUnitaryEqDatumLevel
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FinPartDetAtInvInt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowMapVUpdateZero
+import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
 
 @[expose] public section
 
@@ -72,8 +110,8 @@ private theorem eq_locIdele_of_idemAt {e : AE D} {w : Pl D.host.E} (he : Formali
       ring
 
 
-set_option maxHeartbeats 1000000 in
-set_option synthInstance.maxHeartbeats 200000 in
+
+
 theorem detIdl_conj {e : AE D} {w : Pl D.host.E} (he : Formalism.L2.NTheta.IsIdemAt e w) (V : HSp D) (k u : GfC V) {n : ℕ}
     (h : n = V.rank) (β : GL (Fin V.rank) (Lev.EAf D)) :
     detIdl e V ((u⁻¹ * k * u : GfC V) : GA D V) = GlobalTheory.LFun.locIdele D.host.F w (gdet (inBasis h β w (finG V k))) := by
@@ -96,7 +134,7 @@ theorem kapAt_mem (S : GridChoice W U) {t : T} {k : FinPt G (.grid 0 D.R.m)}
   exact Subgroup.mem_iInf.mp (Subgroup.mem_inf.mp hk).1 w
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem splitScal_eq (S : GridChoice W U) {μ₀ : T} (hL : L.Is μ₀) {t : T} {k : FinPt G (.grid 0 D.R.m)}
     (hk : finG (G.V (.grid 0 D.R.m)) k ∈ S.levRow t 0 (Nat.zero_le _)) (w : locPl G t) :
     splitScal G (.chi 0 D.R.m) w.1 1 ((S.N.u (.grid 0 D.R.m))⁻¹ * k * S.N.u (.grid 0 D.R.m)).1 =
@@ -157,7 +195,7 @@ theorem toPair_zero (G : GridData L sc) (x : GA D (G.V (.grid 0 D.R.m))) :
   simp [GridData.toPair]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem moved_latT (S : GridChoice W U) {μ₀ : T} (hL : L.Is μ₀) {t : T} {k : FinPt G (.grid 0 D.R.m)}
     (hk : finG (G.V (.grid 0 D.R.m)) k ∈ S.levRow t 0 (Nat.zero_le _)) (y) :
     y ∈ latHat D.host.F D.host.E (S.N.latT (.chi 0 D.R.m) : Set (Fin (G.pT (.chi 0 D.R.m)).rank → D.host.E)) ↔
@@ -179,7 +217,7 @@ theorem moved_latT (S : GridChoice W U) {μ₀ : T} (hL : L.Is μ₀) {t : T} {k
   simp only [mul_assoc, mul_inv_cancel_left]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem vac_scalar (S : GridChoice W U) {μ₀ : T} (hL : L.Is μ₀) {t : T} {k : FinPt G (.grid 0 D.R.m)}
     (hk : finG (G.V (.grid 0 D.R.m)) k ∈ S.levRow t 0 (Nat.zero_le _)) (c : ℂ)
     (hc : W.om (.chi 0 D.R.m) (G.toPair (.chi 0 D.R.m) ((S.N.u (.grid 0 D.R.m))⁻¹ * k * S.N.u (.grid 0 D.R.m)).1 1)
@@ -378,7 +416,7 @@ theorem stepType_lam {μ₀ : T} (hL : L.Is μ₀) (t : T) {j n : ℕ} (hj : j �
       rfl
 
 
-set_option maxHeartbeats 1000000 in
+
 open GlobalTheory.FunObj.Comparison₂ Classical in
 theorem endLamAt_eq {μ₀ : T} (hL : L.Is μ₀) (G : GridData L sc) (t : T) {j n : ℕ} (hj : j ≤ D.R.m) (w : Pl D.host.E)
     (h : (locGrid G t w).rank (0, j) = n) (β x : GL (Fin n) (Lev.EAf D)) (hx : x ∈ St β)
@@ -414,7 +452,7 @@ theorem endLamAt_eq {μ₀ : T} (hL : L.Is μ₀) (G : GridData L sc) (t : T) {j
   rw [dif_pos hk', hlam, Units.val_inv_eq_inv_val]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem levFn_mul_endLamAt {μ₀ : T} (hL : L.Is μ₀) (G : GridData L sc) (t : T)
     (h : ∀ w, (locGrid G t w).rank (0, D.R.m) = D.sp.X'.rank) (x : GL (Fin D.sp.X'.rank) (Lev.EAf D))
     (hx : x ∈ lev D.sp.cm D.sp.X'.gram L.βX (Lev.flag1L (L.datXt t)))
@@ -469,7 +507,7 @@ private theorem reGL_symm_mem_of_mem_givenLevel (G : GridData L sc) (t : T) (w :
     simpa using hy
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem chi_mul_endLam {G : GridData L sc} {W : G.Weil} {U : Set T} (S : GridChoice W U) {μ₀ : T} (hL : L.Is μ₀) {t : T}
     {k : FinPt G (.grid 0 D.R.m)} (hk : finG (G.V (.grid 0 D.R.m)) k ∈ S.levRow t 0 (Nat.zero_le _))
     (hk' : toXf k ∈ (levEnv D.sp.X' L.βX (L.datXt t)).J) :

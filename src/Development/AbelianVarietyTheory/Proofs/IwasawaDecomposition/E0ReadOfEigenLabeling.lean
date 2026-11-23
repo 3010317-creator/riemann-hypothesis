@@ -1,18 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CenLocOfCenReal
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoreEq
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoFormsOff
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.DepthZeroWild
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.DepthZeroSupport
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGlobalAboveL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTied
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodVOfGoodL
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubOrthProjPerpMem
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.GoodIdempotentFixesOfOnlySeriesOfLabelActs
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnitaryRealisationReadingOfIdempotentActsViaLeve
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubOrthProjPerpMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodVOfGoodL
+import Formalism.LocalToGlobal.Divisibility.ProjLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EtaJUntw
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NotBaseCondFalse
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PositionOfIntro
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowsRestWordColumnUnitBaseTupleAlt
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 
 @[expose] public section
 
@@ -25,7 +59,7 @@ noncomputable section
 namespace GlobalTheory.HeightCounting.Up.IdempotentAdelicReading
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem gaL_jV {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (hr : R.grp_red_L)
     (hj : R.models_jV) (j : Fin D.R.m) (hc : (R.cV j).Is) (t : T) (y : (A.fam.L j t).S.Forms)
@@ -41,13 +75,13 @@ theorem gaL_jV {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : Fam
     (GlobalTheory.GoodModelVec.actL_coord R hr hj j hc t a y l).symm
   show gaL (Vc D j) (R.βV j) (R.datVt j t) R.eG (RealDat.eC (A := A) (sg0 D A)) (Φ (R.jV j t y)) =
     Φ (R.jV j t (∑ a, (idemOf A.X).coeff a • (A.fam.L j t).r a y))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum]
+
+  rw [map_sum, map_sum]
   simp only [LinearMap.map_smulₛₗ, key, gaL, LinearMap.sum_apply, LinearMap.smul_apply, hs, RingHom.id_apply]
   rfl
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem act_of_read {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
     {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
     (R : RealDat D A3.A Ks) (F : Face D A3.A) {X0 : BaseLevelRowSide D} (Y : GlobalTheory.Mem.R3.Read (A3 := A3) R F X0)

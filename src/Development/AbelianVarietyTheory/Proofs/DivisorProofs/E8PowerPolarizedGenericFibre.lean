@@ -1,17 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.E8LB
-public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
-public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.ToATotal
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPolAVHypSRetract
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RelAmpleFormBundlePowerOfPosDef
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqOneOfUnimodular
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsSharpAndPrim
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegPreOfPolAV
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RelAmpleFormBundlePowerOfPosDef
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubePolAbelianScheme
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SmoothIsMultiplicative
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
 
 @[expose] public section
 
@@ -117,9 +153,9 @@ theorem exists_polAV_gen : Laws → Laws2 → GlobalTheory.LN.Ega → ∀ (V₁ 
     have hlam : cls c.P c.isLB = lam (cls _ hA) (fst A₀.A A₀.A) (snd A₀.A A₀.A) := cls_cube_two hA _ _ c.isLB
     have eL : pull gen.hom.left (cls Q.L hQ) =
         ∑ uv : Fin 8 × Fin 8, W uv.1 uv.2 • lam (cls _ hA) (y uv.1) (y uv.2) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [show cls Q.L hQ = _ from cls_linComb c.isLB
-        (fun uv : Fin 8 × Fin 8 => (lift (powPr A₀.A uv.1) (powPr A₀.A uv.2)).left) (fun uv => W uv.1 uv.2) hQ, map_sum]
+
+      rw [show cls Q.L hQ = _ from cls_linComb c.isLB
+      (fun uv : Fin 8 × Fin 8 => (lift (powPr A₀.A uv.1) (powPr A₀.A uv.2)).left) (fun uv => W uv.1 uv.2) hQ, map_sum]
       refine Finset.sum_congr rfl fun uv _ => ?_
       rw [map_zsmul, hlam]
       erw [pull_lam, pull_lam]
@@ -130,8 +166,8 @@ theorem exists_polAV_gen : Laws → Laws2 → GlobalTheory.LN.Ega → ∀ (V₁ 
       rw [show cls _ hE = _ from cls_linComb hLG (K := (Fin 8 × Fin 8) × Fin 4)
         (fun k => GlobalTheory.PolDeg.lamPts (powPr G₀ k.1.1) (powPr G₀ k.1.2) k.2)
         (fun k => -(W k.1.1 k.1.2 * GlobalTheory.PolDeg.negε k.2)) hE, Fintype.sum_prod_type]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [sum_lamPts, map_sum, map_zsmul, key, y]
+
+      simp only [sum_lamPts, map_sum, map_zsmul, key, y]
     refine (cls_eq_iff (pull_isLB hQ _) (pull_isLB hE _)).1 ?_
     rw [cls_pull hQ, cls_pull hE, eL, eR]
 

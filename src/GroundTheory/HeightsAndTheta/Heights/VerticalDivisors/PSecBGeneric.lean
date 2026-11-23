@@ -1,7 +1,49 @@
 module
 
-public import Mathlib
+import GroundTheory.HeightsAndTheta.Heights.VerticalDivisors.PSecBFinite
 public import GroundTheory.HeightsAndTheta.Heights.VerticalDivisors.IntToFracInjective
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -32,33 +74,12 @@ theorem parToFrac_parY (e n : ℕ) (v : HeightOneSpectrum (𝓞 K)) (p : Par e n
 
 theorem map_linForm {R S : Type*} [CommRing R] [CommRing S] {n : ℕ} (f : R →+* S) (u : Fin n → R) :
     MvPolynomial.map f (linForm u) = linForm (fun j => f (u j)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [linForm, map_sum]
+
+  simp [linForm, map_sum]
 
 theorem map_integralModel {n : ℕ} (I : Ideal (MvPolynomial (Fin n) K)) :
     (integralModel I).map (MvPolynomial.map (algebraMap (𝓞 K) K)) = I := by
-  refine le_antisymm (Ideal.map_le_iff_le_comap.mpr le_rfl) fun f hf => ?_
-  obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors (𝓞 K)) f.coeffs
-  have hb0 : (algebraMap (𝓞 K) K b) ≠ 0 :=
-    (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors b.2)
-  have hrange : C (algebraMap (𝓞 K) K b) * f ∈ Set.range (MvPolynomial.map (algebraMap (𝓞 K) K)) := by
-    rw [mem_range_map_iff_coeffs_subset]
-    intro x hx
-    obtain ⟨m, hm, rfl⟩ := mem_coeffs_iff.mp hx
-    rw [coeff_C_mul]
-    by_cases h0 : AddMonoidAlgebra.coeff f m = 0
-    · rw [h0, mul_zero]; exact ⟨0, map_zero _⟩
-    · obtain ⟨y, hy⟩ := hb _ (coeff_mem_coeffs m h0)
-      exact ⟨y, by rw [hy, Algebra.smul_def]⟩
-  obtain ⟨g, hg⟩ := hrange
-  have hgI : g ∈ integralModel I := by
-    show MvPolynomial.map (algebraMap (𝓞 K) K) g ∈ I
-    rw [hg]
-    exact I.mul_mem_left _ hf
-  have : f = C (algebraMap (𝓞 K) K b)⁻¹ * MvPolynomial.map (algebraMap (𝓞 K) K) g := by
-    rw [hg, ← mul_assoc, ← C_mul, inv_mul_cancel₀ hb0, C_1, one_mul]
-  rw [this]
-  exact Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hgI)
+  apply GroundTheory.Heights₂.Heights.Vertical.SecBFinite.map_integralModel <;> assumption
 
 theorem map_secIdeal {n : ℕ} (e : ℕ) (I : Ideal (MvPolynomial (Fin n) K)) (v : HeightOneSpectrum (𝓞 K)) :
     (secIdeal (modelR e I v) (parY e n v)).map (MvPolynomial.map (parToFrac e n v)) =

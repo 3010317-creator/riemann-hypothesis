@@ -1,9 +1,47 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialOfLocal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCoordField
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -64,15 +102,15 @@ theorem eps_eq_sum (S : Finset (HeightOneSpectrum (𝓞 F))) :
   classical
   have hext : ∀ a b : AF F, fstA F a = fstA F b → sndA F a = sndA F b → a = b := fun a b h1 h2 => Prod.ext h1 h2
   refine hext _ _ ?_ (fin_ext fun u => ?_)
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_add (f := _), map_sum]
-      change (1 : Ainf F) = 1 + ∑ v ∈ S, (0 : Ainf F)
-      rw [Finset.sum_const_zero, add_zero]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_add (f := _), map_sum, map_add (f := _), map_sum]
-      change evalV F u (ind S) = evalV F u 0 + ∑ v ∈ S, evalV F u (ind {v})
-      simp_rw [ev_ind, Finset.mem_singleton, map_zero, zero_add]
-      rw [Finset.sum_ite_eq]
+
+  · rw [map_add (f := _), map_sum]
+    change (1 : Ainf F) = 1 + ∑ v ∈ S, (0 : Ainf F)
+    rw [Finset.sum_const_zero, add_zero]
+
+  · rw [map_add (f := _), map_sum, map_add (f := _), map_sum]
+    change evalV F u (ind S) = evalV F u 0 + ∑ v ∈ S, evalV F u (ind {v})
+    simp_rw [ev_ind, Finset.mem_singleton, map_zero, zero_add]
+    rw [Finset.sum_ite_eq]
 
 variable {E : Type} [Field E] [Algebra F E] [FiniteDimensional F E]
 
@@ -102,8 +140,8 @@ theorem finite_maximal_not_mem_eps (S : Finset (HeightOneSpectrum (𝓞 F))) :
   by_contra hn
   simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_and, not_not, not_exists] at hn
   apply hem
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [eps_eq_sum, map_add (f := _), map_sum]
+
+  rw [eps_eq_sum, map_add (f := _), map_sum]
   exact m.add_mem (hn.1 hm) (m.sum_mem fun v hv => hn.2 v hv hm)
 
 end GlobalTheory.DenseAvoid

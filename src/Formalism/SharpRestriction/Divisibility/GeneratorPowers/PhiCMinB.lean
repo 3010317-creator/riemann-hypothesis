@@ -2,6 +2,46 @@ module
 
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.PhiCMinA
 public import Formalism.SharpRestriction.Divisibility.ModuliIntegralCharts
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -64,11 +104,11 @@ theorem comp_smul (η : Y →ₗ[ℤ] ℝ) (σ : E →+* ℂ) (u : 𝓞 E) (a : 
   have hk : ∀ j, ∑ i, (((RingOfIntegers.basis E).repr (RingOfIntegers.basis E i * u) j : ℤ) : ℂ)
       * σ (ed E i) = σ (ed E j) * σ (u : E) := fun j => by
     have := congrArg σ (key_exp u j)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [map_sum, map_mul, map_intCast] using this
+
+    simpa [map_sum, map_mul, map_intCast] using this
   unfold comp
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp_rw [smul_expand u _ a, map_sum, map_zsmul, zsmul_eq_mul]
+
+  simp_rw [smul_expand u _ a, map_sum, map_zsmul, zsmul_eq_mul]
   push_cast
   simp_rw [Finset.sum_mul]
   rw [Finset.sum_comm, Finset.mul_sum]
@@ -89,9 +129,9 @@ theorem sum_comp (η : Y →ₗ[ℤ] ℝ) (a : Y) : ∑ σ : E →+* ℂ, comp �
   rw [Finset.sum_comm]
   simp_rw [← Finset.mul_sum, htr, htr1]
   conv_rhs => rw [← h1]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_zsmul, zsmul_eq_mul, Complex.ofReal_sum, Complex.ofReal_mul,
-    Complex.ofReal_intCast, Rat.cast_intCast]
+
+  simp only [map_sum, map_zsmul, zsmul_eq_mul, Complex.ofReal_sum, Complex.ofReal_mul,
+  Complex.ofReal_intCast, Rat.cast_intCast]
   exact Finset.sum_congr rfl fun i _ => by ring
 
 def smulZ (u : 𝓞 E) : Y →ₗ[ℤ] Y where

@@ -1,17 +1,78 @@
 module
 
-public import Mathlib
 public import Formalism.QuotientMetricDivisors.RatHermLcvTwist
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.DivIntoDual
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.BoundsChain
 public import Formalism.QuotientMetricDivisors.ProdFormula
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.RatHerm
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.LocBasis
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ImageLcv
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+public import Formalism.HermitianLattices.HermitianLatticesProofs.IndexBasic
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.BoundsChain
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.BoundsSum
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.IdxChange
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.DualMu
-public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.TheoremDivIneq
-import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ImageLcv
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.LcvBasis
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.LocBasis
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ProdFormula
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.RatHerm
+public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ReductionSecondStep
+import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
+public import Formalism.QuotientMetricDivisors.ReductionLemmaZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
 
 @[expose] public section
 
@@ -49,8 +110,8 @@ theorem jwGramW_of (hIC : IdxChange) : JwGramW := by
     have hmul : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hMu
     have := congrFun (congrFun hmul a) b
     rw [Matrix.mul_apply, Matrix.one_apply] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← this, hfs, map_sum]
+
+    rw [← this, hfs, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, smul_eq_mul, mul_comm]
     rfl
@@ -58,8 +119,8 @@ theorem jwGramW_of (hIC : IdxChange) : JwGramW := by
     rw [Fintype.linearIndependent_iff]
     intro g hg i
     have := congrArg (h (f i)) hg
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_zero] at this
+
+    rw [map_sum, map_zero] at this
     simp only [map_smul, hpair, smul_eq_mul, mul_ite, mul_one, mul_zero,
       Finset.sum_ite_eq, Finset.mem_univ, if_true] at this
     exact this
@@ -183,9 +244,9 @@ theorem gram_hermAt {d : ℕ} (H : Matrix (Fin d) (Fin d) K)
   rw [gramR, RingHom.map_det]
   congr 1
   ext a b
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [gram, Formalism.HN.gramPl, Matrix.of_apply, StepBAux.majAt_eq, hm, RingHom.mapMatrix_apply,
-    Matrix.map_apply, dotProduct, Matrix.mulVec, cvec, Pi.star_apply, map_sum, map_mul]
+
+  simp only [gram, Formalism.HN.gramPl, Matrix.of_apply, StepBAux.majAt_eq, hm, RingHom.mapMatrix_apply,
+  Matrix.map_apply, dotProduct, Matrix.mulVec, cvec, Pi.star_apply, map_sum, map_mul]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [hv0, Complex.star_def]
 
@@ -597,7 +658,7 @@ theorem exists_reduced {F : Type} [Field F] {n : ℕ} (Z : Submodule F (Fin n �
   have hrank : A.rank = d := by simpa using hrow.rank_matrix
   have hcols : Submodule.span F (Set.range A.col) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
-    rw [← Matrix.rank_eq_finrank_span_cols, hrank]
+    rw [Matrix.finrank_span_range_col, hrank]
     simp
   obtain ⟨s, hs, hspan, hli⟩ := exists_linearIndependent F (Set.range A.col)
   have hsp : ⊤ ≤ Submodule.span F (Set.range (Subtype.val : s → Fin d → F)) := by

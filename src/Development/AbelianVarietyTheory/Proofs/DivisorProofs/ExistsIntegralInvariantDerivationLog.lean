@@ -1,14 +1,56 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TypicalCurveStructureConstants
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.RootStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.FactorialWeightedSumBound
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.OmBStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.WtSubOneLe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
+public import Mathlib.RingTheory.MvPowerSeries.Derivative
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupExpTwoSidedInverseUniqueStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogChain
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Presheaf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TangentEqLcZero
 
 @[expose] public section
 
@@ -153,8 +195,8 @@ theorem jac_lg_mul_jacEntry (G : LogFGL v d) (a k : Fin d) :
   simp only [pderiv_X, Pi.single_apply, reduceCtorEq, ite_false, mul_zero, Finset.sum_const_zero,
     zero_add, Sum.inr.injEq, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
   have h2 := congrArg (subst (substSecondBlockZero (C := C) d)) h
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [subst_substSecondBlockZero_secondBlock G, ← coe_substAlgHom (hasSubst_substSecondBlockZero d), map_sum] at h2
+
+  rw [subst_substSecondBlockZero_secondBlock G, ← coe_substAlgHom (hasSubst_substSecondBlockZero d), map_sum] at h2
   simp only [map_mul, coe_substAlgHom] at h2
   simp only [subst_comp_subst_apply (hasSubst_of_constantCoeff_zero G.F_const) (hasSubst_substSecondBlockZero d), formalGroupLaw_subst_secondBlock_zero,
     subst_self, id] at h2
@@ -184,8 +226,8 @@ theorem pderiv_expOf (G : LogFGL v d) (l k : Fin d) :
   have hJN : J * N = 1 := by
     refine Matrix.ext fun a k => ?_
     have h := congrArg (subst (expOf G)) (jac_lg_mul_jacEntry G a k)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← coe_substAlgHom hE, map_sum] at h
+
+    rw [← coe_substAlgHom hE, map_sum] at h
     simp only [map_mul, coe_substAlgHom] at h
     simp only [J, N, Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply, h]
     split_ifs
@@ -211,8 +253,8 @@ theorem exists_integral_invariant_derivation : ∀ (C : Type) [Field C] [CharZer
   rw [mul_comm, ← coeff_pderiv, hchain hE0]
   simp only [pderiv_expOf]
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← substAlgHom_apply hE, map_sum]
+
+  rw [← substAlgHom_apply hE, map_sum]
   simp only [map_mul, substAlgHom_apply]
   exact Finset.sum_congr rfl fun l _ => mul_comm _ _
 

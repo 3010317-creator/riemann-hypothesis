@@ -1,12 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsFlagIndependence
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Cartier
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsCompactUnitaryPointsAtPlaceFstMemCompact
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
 
 @[expose] public section
 
@@ -71,14 +111,14 @@ theorem lineVert_cone_homog [Fintype K] (y : (Σ k, ι k) → Ω) {h : MRing ι 
     simp [mul_assoc]
   calc pointConeMap ℤ y h = ∑ m ∈ h.support, pointConeMap ℤ y (monomial m (AddMonoidAlgebra.coeff h m)) := by
         conv_lhs => rw [h.as_sum]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum]
+
+        rw [map_sum]
     _ = ∑ m ∈ h.support, C (aeval y (monomial m (AddMonoidAlgebra.coeff h m) : MRing ι ℤ)) * ∏ k, X k ^ b k :=
         Finset.sum_congr rfl key
     _ = C (aeval y h) * ∏ k, X k ^ b k := by
         conv_rhs => rw [h.as_sum]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum, map_sum, Finset.sum_mul]
+
+        rw [map_sum, map_sum, Finset.sum_mul]
 
 theorem lineVert_mem_of_homog [Fintype K] (y : (Σ k, ι k) → Ω) {h : MRing ι ℤ} {b : K → ℕ}
     (hh : IsMultiHomog h b) (h0 : aeval y h = 0) : h ∈ pointIdeal ℤ y := by

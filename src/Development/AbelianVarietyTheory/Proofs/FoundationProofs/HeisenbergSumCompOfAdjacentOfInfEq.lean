@@ -1,11 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PerfectPairingQuotients
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumEqZeroAddUnits
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdjacentSelfDualLatticesIndexSimple
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PerfectPairingQuotients
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumEqZeroAddUnits
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -175,14 +218,14 @@ theorem _root_.GlobalTheory.FinWeil.sumOp_comp_of_adj_of_inf_eq : ∀ {R X M : T
     have h1 : ∀ i, W (f i) (W c v) = W c (W (f i) v) := fun i => by
       rw [hW.comm,
         hW.iso hC (hfC i) hc, one_smul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_congr rfl (fun i _ => h1 i), ← map_sum, ← hACsum]
+
+    rw [Finset.sum_congr rfl (fun i _ => h1 i), ← map_sum, ← hACsum]
     exact hSfix c hc
   have hstep : ∀ i, W (f i) (∑ q : R ⧸ P, W (Quotient.out q • x) v) =
       ∑ q : R ⧸ P, χ (w * Quotient.out q * σ (Quotient.out q)) •
         W (f i) (W (Quotient.out q • c₀) v) := fun i => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl (fun q _ => ?_)
     rw [hterm, map_smul]
   have hstep' : ∀ q : R ⧸ P, ∑ i, χ (w * Quotient.out q * σ (Quotient.out q)) •

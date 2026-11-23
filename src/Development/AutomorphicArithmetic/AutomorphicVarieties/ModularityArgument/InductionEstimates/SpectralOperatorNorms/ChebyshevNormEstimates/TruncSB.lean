@@ -1,7 +1,47 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.SpectralOperatorNorms.KillExempt
-public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockEvaluation.TruncSpecAlt
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PolynomialCoefficientBounds.ExistsFinMap
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PolynomialCoefficientBounds.GenPiecesK
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -32,8 +72,8 @@ private theorem trunc_eq {K : Type} [Field K] [NumberField K] {n : ℕ} (d : ℕ
     (h : ∀ k, (G k).support ⊆ s) :
     trunc d G = ∑ β ∈ s, monomial β (∑ k ∈ Finset.range (d + 1), homog d ((G k).coeff β)) := by
   unfold trunc
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum]
+
+  simp only [map_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_subset (h k) fun β _ hβ => ?_
   rw [notMem_support_iff.mp hβ]
@@ -62,8 +102,8 @@ private theorem homog_norm {ι : Type} {H : Type} [NormedAddCommGroup H] [Normed
     (ψ : MvPolynomial (Option ι) ℂ →+* (H →L[ℂ] H)) (hψ : ∀ c : ℂ, ψ (C c) = c • 1) {D : ℝ} (hD : 1 ≤ D)
     (hX : ∀ i, ‖ψ (X i)‖ ≤ D) (d : ℕ) (p : MvPolynomial ι ℂ) (hp : p.totalDegree ≤ d) :
     ‖ψ (homog d p)‖ ≤ l1 p * D ^ d := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [homog_eq, map_sum, l1, Finset.sum_mul]
+
+  rw [homog_eq, map_sum, l1, Finset.sum_mul]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun α hα => ?_)
   rw [← mul_one (p.coeff α), ← C_mul_monomial, map_mul, hψ, smul_mul_assoc, one_mul, norm_smul, mul_one]
   refine mul_le_mul_of_nonneg_left ((mon_norm ψ hD hX _).trans (le_of_eq ?_)) (norm_nonneg _)
@@ -117,8 +157,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.truncSB :
   have h1 : ∀ β, ‖ev (C (∑ k ∈ Finset.range (d + 1), homog d ((G k).coeff β)))‖
       ≤ 2 ^ (d + 1) * E ^ (d + 1) * D ^ (d + 1) := by
     intro β
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, map_sum]
+
+    rw [map_sum, map_sum]
     refine (norm_sum_le _ _).trans ?_
     have h2 : ∀ k ∈ Finset.range (d + 1), ‖ev (C (homog d ((G k).coeff β)))‖ ≤ E ^ (d + 1) * D ^ (d + 1) := by
       intro k hk
@@ -136,8 +176,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.truncSB :
     rw [Finset.card_range, nsmul_eq_mul, mul_assoc]
     refine mul_le_mul_of_nonneg_right ?_ (by positivity)
     exact_mod_cast (Nat.lt_two_pow_self (n := d + 1)).le
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hT, map_sum]
+
+  rw [hT, map_sum]
   refine (norm_sum_le _ _).trans ?_
   have h6 : ∀ β ∈ Φ.support, ‖ev (monomial β (∑ k ∈ Finset.range (d + 1), homog d ((G k).coeff β)))‖
       ≤ 2 ^ (d + 1) * E ^ (d + 1) * D ^ (d + 1) * |Mβ β| := by

@@ -1,7 +1,55 @@
 module
 
-public import Mathlib
 public import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.StSandwich
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Analysis.Normed.Group.Ultra
+public import Mathlib.LinearAlgebra.Basis.SMul
 
 @[expose] public section
 
@@ -28,8 +76,8 @@ theorem herm_eq_sum {s : L →+* L} {h : V → V → L} (hh : IsHerm s h) {ι : 
   calc h z y = hLin hh z y := rfl
     _ = hLin hh z (∑ j, b.repr y j • b j) := by rw [b.sum_repr]
     _ = ∑ j, b.repr y j * h z (b j) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_smul]
       rfl
@@ -71,7 +119,6 @@ theorem exists_basis_herm_le_one [FiniteDimensional L V] {s : L →+* L} {h : V 
     rw [lt_div_iff₀ (by positivity)] at ht
     exact ht.le
   have ht1 : ‖t‖ ≤ 1 := by nlinarith [norm_nonneg t]
-  have htK' : ‖t‖ * K ≤ 1 := by nlinarith [norm_nonneg t]
   have tne : t ≠ 0 := norm_pos_iff.1 ht0
   have hu : ∀ i : Fin (Module.finrank L V), IsUnit ((fun _ => t) i : L) :=
     fun _ => isUnit_iff_ne_zero.2 tne
@@ -108,7 +155,6 @@ theorem IsLat.smul_mem {Λ : AddSubgroup V} (hΛ : IsLat L Λ) {a : L} (ha : ‖
 theorem ball_absorbing {m : ℕ} (b : Module.Basis (Fin m) L V) (x : V) :
     ∃ a : L, a ≠ 0 ∧ a • x ∈ ball b := by
   let K : ℝ := ∑ i, ‖b.repr x i‖
-  have hK0 : 0 ≤ K := Finset.sum_nonneg fun _ _ => norm_nonneg _
   obtain ⟨t, ht0, ht⟩ := NormedField.exists_norm_lt L (show (0 : ℝ) < 1 / (K + 1) by positivity)
   have htK : ‖t‖ * (K + 1) ≤ 1 := by
     rw [lt_div_iff₀ (by positivity)] at ht
@@ -150,7 +196,6 @@ theorem exists_scale {s : L →+* L} {h : V → V → L} (hh : IsHerm s h) (B : 
     rw [h1] at h2
     exact h2
   let C : ℝ := ∑ k, ∑ i, ‖b.repr (w k) i‖
-  have hC0 : 0 ≤ C := Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => norm_nonneg _
   have hCki : ∀ k i, ‖b.repr (w k) i‖ ≤ C := fun k i =>
     (Finset.single_le_sum (f := fun i => ‖b.repr (w k) i‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ i)).trans
@@ -164,8 +209,8 @@ theorem exists_scale {s : L →+* L} {h : V → V → L} (hh : IsHerm s h) (B : 
   refine ⟨c, norm_pos_iff.1 hc0, fun x hxB i => ?_⟩
   have hr : b.repr x i = ∑ k, h (b k) x * b.repr (w k) i := by
     conv_lhs => rw [hx x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, Finsupp.finsetSum_apply]
+
+    simp [map_sum, Finsupp.finsetSum_apply]
   have hbound : ‖b.repr x i‖ ≤ B * C := by
     rw [hr]
     refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (by positivity) fun k _ => ?_

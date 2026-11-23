@@ -1,6 +1,52 @@
 module
 
-public import Mathlib
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.Topology.UniformSpace.Uniformizable
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 @[expose] public section
 
@@ -50,11 +96,9 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
   haveI : MeasurableConstSMul N H := by
     first
       | infer_instance
-      | exact ⟨fun n => measurable_const_mul (n : H)⟩
   haveI : SMulInvariantMeasure N H μ := by
     first
       | infer_instance
-      | exact ⟨fun n ⦃s⦄ _ => measure_preimage_mul μ (n : H) s⟩
 
   have hΩ : IsFundamentalDomain N Ω μ := by
     refine isFund_of_exact μ N Ω hΩm (fun x => ?_) (fun x hx g hg hgx => ?_)
@@ -114,10 +158,8 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
     by_cases h : p.2⁻¹ • y ∈ ΩJ p.1
     · first
         | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte, hFeq']
-        | simp [Set.indicator_apply, h, hFeq']
     · first
         | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte]
-        | simp [Set.indicator_apply, h]
   have hΨe : ∀ y p, ‖Ψ p y‖ₑ = ({p : J × N | p.2⁻¹ • y ∈ ΩJ p.1} : Set (J × N)).indicator
       (fun p => ‖F (act p.2 (r p.1)) y‖ₑ) p := by
     intro y p
@@ -125,10 +167,8 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
     by_cases h : p.2⁻¹ • y ∈ ΩJ p.1
     · first
         | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte]
-        | simp [Set.indicator_apply, h]
     · first
         | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte, enorm_zero]
-        | simp [Set.indicator_apply, h]
   have hΨm : ∀ p, Measurable (Ψ p) := by
     intro p
     subst hΨdef
@@ -178,7 +218,6 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
     rw [← integral_tsum (fun p => (hΨm p).aestronglyMeasurable) hTfin]
     first
       | simp only [sumC]
-      | exact integral_congr_ae (Filter.Eventually.of_forall fun y => (sumC y).symm)
   have hsplit : ∑' p : J × N, ∫ y in Ω, Ψ p y ∂μ
       = ∑' j, ∑' n : N, ∫ y in Ω, Ψ (j, n) y ∂μ := by
     have hasum : Summable fun p : J × N => ∫ y in Ω, Ψ p y ∂μ := by
@@ -187,8 +226,6 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
       have h0 := norm_integral_le_lintegral_norm (μ := μ.restrict Ω) (Ψ p)
       first
         | simpa only [ofReal_norm_eq_enorm] using h0
-        | simpa using h0
-        | exact h0
     exact ((hasum.hasSum.prod_fiberwise fun j => (hasum.prod_factor j).hasSum).tsum_eq).symm
   refine ⟨?_, ?_⟩
   · have hEm : Measurable fun y => ∑' c, ‖F c y‖ₑ :=
@@ -199,7 +236,6 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
       have h0 := ENNReal.summable_toReal hy.ne
       first
         | simpa only [toReal_enorm] using h0
-        | simpa using h0
     have hgint : Integrable (fun y => (∑' c, ‖F c y‖ₑ).toReal) (μ.restrict Ω) :=
       integrable_toReal_of_lintegral_ne_top hEm.aemeasurable hint.ne
     have hbound : ∀ᵐ y ∂(μ.restrict Ω), ‖∑' c, F c y‖ ≤ (∑' c, ‖F c y‖ₑ).toReal := by

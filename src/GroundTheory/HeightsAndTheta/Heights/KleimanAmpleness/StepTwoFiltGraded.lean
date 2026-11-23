@@ -1,7 +1,46 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.Objects
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -228,8 +267,8 @@ theorem quotPiece_isInternal : DirectSum.IsInternal (quotPiece M₁ M₂) := by
   · intro y
     obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective _ y
     refine AddMonoidHom.mem_mrange.mp ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [laurent_eq_sum M₁ m, ← Submodule.mkQ_apply, map_sum]
+
+    rw [laurent_eq_sum M₁ m, ← Submodule.mkQ_apply, map_sum]
     refine AddSubmonoid.sum_mem _ fun c _ => ⟨DirectSum.of (fun c => quotPiece M₁ M₂ c) c
       ⟨quotIota M₁ M₂ c ⟨_, FinGradedSub.mem_laurent.mp m.2 c⟩, LinearMap.mem_range_self _ _⟩, ?_⟩
     rw [DirectSum.coeAddMonoidHom_of]
@@ -355,8 +394,8 @@ theorem filtPiece_smul_mem (A : Submodule (Poly S N) (quotLaurent M₁ M₂)) {d
 theorem quotProj_smul_iota (r : Poly S N) {e : ℤ} (g : M₁.piece e) (c : ℤ) :
     quotProj M₁ M₂ c (r • quotIota M₁ M₂ e g) = ∑ i ∈ Finset.range (r.totalDegree + 1),
       if e + i = c then homogeneousComponent i r • quotIota M₁ M₂ e g else 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_lhs => rw [← sum_homogeneousComponent r, Finset.sum_smul, map_sum]
+
+  conv_lhs => rw [← sum_homogeneousComponent r, Finset.sum_smul, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs with h
   · subst h

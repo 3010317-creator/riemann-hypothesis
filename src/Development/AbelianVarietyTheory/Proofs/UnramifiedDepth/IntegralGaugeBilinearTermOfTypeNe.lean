@@ -1,12 +1,58 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.CharacterGerms.NondegenerateCharts
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
-public import Formalism.LocalToGlobal.CharacterGerms.BlockAdmissibleChart
-public import Formalism.LocalToGlobal.CharacterGerms.NegMem
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPureTypicalCurveWithIntegralTangent
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
+public import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+public import Formalism.LocalToGlobal.CharacterGerms.ValNonnegLeadingCoeffOfMemTySet
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -33,8 +79,8 @@ theorem coeff_subst_eq_zero_of_lt_order {σ τ : Type} [Finite σ] {a : σ → M
 theorem subst_sum_smul {σ τ ι : Type} {a : σ → MvPowerSeries τ C} (ha : HasSubst a) (s : Finset ι)
     (c : ι → C) (f : ι → MvPowerSeries σ C) :
     subst a (∑ i ∈ s, c i • f i) = ∑ i ∈ s, c i • subst a (f i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← coe_substAlgHom ha, map_sum]
+
+  rw [← coe_substAlgHom ha, map_sum]
   simp only [map_smul]
 
 theorem coeff_single_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ C}
@@ -46,8 +92,8 @@ theorem coeff_single_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries
   have hr : ((2 : ℕ) : ℕ∞) ≤ (subst a (f - L)).order := by
     apply coeff_subst_eq_zero_of_lt_order ha
     intro e he
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, hL, map_sum, sub_eq_zero]
+
+    rw [map_sub, hL, map_sum, sub_eq_zero]
     simp only [coeff_smul, coeff_X]
     by_cases h0 : e.degree = 0
     · rw [Finsupp.degree_eq_zero_iff] at h0
@@ -67,8 +113,8 @@ theorem coeff_single_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries
   have hz : coeff (Finsupp.single t 1) (subst a (f - L)) = 0 :=
     coeff_of_lt_order (lt_of_lt_of_le (by rw [Finsupp.degree_single]; exact_mod_cast one_lt_two) hr)
   rw [subst_sub hs, map_sub, sub_eq_zero] at hz
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hz, hL, subst_sum_smul hs, map_sum]
+
+  rw [hz, hL, subst_sum_smul hs, map_sum]
   simp only [coeff_smul, subst_X hs]
 
 def bexp {κ : Type} (a b : κ) : Fin 2 × κ →₀ ℕ := Finsupp.single (0, a) 1 + Finsupp.single (1, b) 1
@@ -125,8 +171,8 @@ theorem hAt_order (Y : RawChart C d I κ)
   have key := coeff_subst_eq_zero_of_lt_order hc (n := 3)
     (f := Y.h - ∑ p : κ × κ, coeff (bexp p.1 p.2) Y.h • (X (0, p.1) * X (1, p.2))) (by
       intro e he
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sub, map_sum, sub_eq_zero]
+
+      rw [map_sub, map_sum, sub_eq_zero]
       simp only [coeff_smul, X_mul_X_eq, coeff_monomial]
       by_cases h : ∃ x y, e = bexp x y
       · obtain ⟨x, y, rfl⟩ := h
@@ -164,23 +210,7 @@ theorem coeff_mvExp_two {τ : Type} {F : MvPowerSeries τ C} (hF : ((2 : ℕ) : 
   simp [Finset.sum_range_succ, h2, coeff_one, hm0]
 
 theorem ge_zero_of_pow_eq_one (V : VF C) {N : ℕ} (hN : N ≠ 0) {a : C} (ha : a ^ N = 1) : V.Ge 0 a := by
-  have h := V.v.map_pow a N
-  rw [ha, V.v.map_one] at h
-  unfold VF.Ge
-  induction hv : V.v a using WithTop.recTopCoe with
-  | top => exact le_top
-  | coe t =>
-    rw [hv] at h
-    have h' : ((0 : ℝ) : WithTop ℝ) = ((N • t : ℝ) : WithTop ℝ) := by
-      rw [WithTop.coe_nsmul]; exact h
-    have h'' : (0 : ℝ) = N • t := by exact_mod_cast h'
-    rw [nsmul_eq_mul] at h''
-    have hN' : (N : ℝ) ≠ 0 := by exact_mod_cast hN
-    have : t = 0 := by
-      rcases mul_eq_zero.1 h''.symm with h | h
-      · exact absurd h hN'
-      · exact h
-    rw [this]
+  apply GlobalTheory.RowLaw.PureTypical.ge_of_pow_eq_one <;> assumption
 
 theorem ge_zero_of_sub_mul (V : VF C) {N : ℕ} (hN : V.v (N : C) = 0) {a b z : C} (ha : a ^ N = 1)
     (hb : b ^ N = 1) (hab : a ≠ b) (hz : V.Ge 0 ((a - b) * z)) : V.Ge 0 z := by
@@ -242,8 +272,8 @@ theorem RLaw.coeff_single_ex (h : RLaw Y V) (i s : κ) :
 
 theorem RLaw.constantCoeff_lin (h : RLaw Y V) (M : Matrix κ κ C) {τ : Type} {a : κ → MvPowerSeries τ C}
     (ha : ∀ x, constantCoeff (a x) = 0) (x : κ) : constantCoeff (∑ y, M x y • subst a (Y.lg y)) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_eq_zero fun y _ => ?_
   rw [constantCoeff_smul, Formalism.L2.FormalSeriesBounds.constantCoeff_subst_zero ha (h.constantCoeff_lg y), smul_zero]
 
@@ -257,8 +287,8 @@ theorem RLaw.coeff_single_endP (h : RLaw Y V) (M : Matrix κ κ C) {τ : Type} {
   unfold endP
   rw [coeff_single_subst (h.constantCoeff_lin M ha) (h.exc x)]
   simp only [h.coeff_single_ex, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [coeff_smul, coeff_single_subst ha (h.constantCoeff_lg y)]
   simp only [h.coeff_single_lg, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
@@ -288,8 +318,8 @@ theorem two_le_order_hAt (h : RLaw Y V) {τ : Type} {a b : κ → MvPowerSeries 
     (he : e.degree < 2) : coeff e (hAt Y a b) = 0 := by
   have h3 := coeff_of_lt_order (d := e) (lt_of_lt_of_le (by exact_mod_cast (by omega : e.degree < 3))
     (hAt_order Y h.axes ha hb))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, sub_eq_zero, map_sum] at h3
+
+  rw [map_sub, sub_eq_zero, map_sum] at h3
   rw [h3]
   refine Finset.sum_eq_zero fun p _ => ?_
   rw [coeff_smul, coeff_of_lt_order (d := e), mul_zero]
@@ -312,8 +342,8 @@ theorem IsEnd.bilinear (h : RLaw Y V) {M M' : Matrix κ κ C} (hE : IsEnd Y V M 
     (hAt_order Y h.axes (h.constantCoeff_endP M (hg 0)) (hg 1)))
   have h2 := coeff_of_lt_order (lt_of_lt_of_le hlt
     (hAt_order Y h.axes (hg 0) (h.constantCoeff_endP M' (hg 1))))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, sub_eq_zero, map_sum] at h1 h2
+
+  rw [map_sub, sub_eq_zero, map_sum] at h1 h2
   rw [h1, h2] at h0
   have hX : ∀ (j : Fin 2) (y s : κ), coeff (Finsupp.single (j, s) 1) (gp C κ j y) = if s = y then 1 else 0 := by
     intro j y s

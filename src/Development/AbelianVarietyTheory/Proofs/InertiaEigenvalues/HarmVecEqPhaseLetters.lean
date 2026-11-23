@@ -1,12 +1,60 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRatConstMul
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsInertTop
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.TwistSeries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefMapNormEquivariantBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelExtensionFirst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PureTensorOInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PureTensorOMulSource
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalPointsGenerate
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexCoefficientMapCoreFieldPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LowestWeightVectorsAtRows
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarmonicCoefficientMapAtWeights
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PureTensorOSmul
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FFVMap
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHomogeneousOfRowDeg
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
+import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.RationalRayLevels
 
 @[expose] public section
 
@@ -34,8 +82,8 @@ theorem coord_mem_fieldRange {ι K J : Type} [Field K] [Fintype J] (σ : K →+*
   have hsum : ∑ k, π (a k) • e k = 0 := by
     ext m
     have h1 := hπ0 _ (hp _ (hx m))
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, MvPolynomial.coeff_map, smul_eq_mul, map_sum] at h1
+
+    simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, MvPolynomial.coeff_map, smul_eq_mul, map_sum] at h1
     simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul, MvPolynomial.coeff_zero]
     change (∑ x, π (a x) * (e x).coeff m) = 0
     rw [← h1]
@@ -45,8 +93,8 @@ theorem coord_mem_fieldRange {ι K J : Type} [Field K] [Fintype J] (σ : K →+*
     rw [e1, map_smul, smul_eq_mul, mul_comm]
   have h2 : ∑ k, σ (π (a k)) • MvPolynomial.map σ (e k) = 0 := by
     have := congrArg (MvPolynomial.map σ) hsum
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [map_sum, MvPolynomial.smul_eq_C_mul, MvPolynomial.map_C] using this
+
+    simpa [map_sum, MvPolynomial.smul_eq_C_mul, MvPolynomial.map_C] using this
   have h3 := Fintype.linearIndependent_iff.1 hli _ h2 j
   exact hπ ((map_eq_zero σ).1 h3)
 

@@ -1,8 +1,63 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolEqOfAedisjoint
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InfiniteGLHaarMeasureEqPiLocal
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.MeasureTheory.Measure.WithDensity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolEqOfAedisjoint
+import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 
 @[expose] public section
 
@@ -16,24 +71,7 @@ namespace GlobalTheory.PiCoord
 theorem lintegral_pi_fin {E : Type*} [MeasurableSpace E] (n : ℕ) (μ : Measure E) [SigmaFinite μ]
     (f : Fin n → E → ℝ≥0∞) (hf : ∀ i, Measurable (f i)) :
     ∫⁻ x : Fin n → E, ∏ i, f i (x i) ∂(Measure.pi fun _ => μ) = ∏ i, ∫⁻ t, f i t ∂μ := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    have e : MeasurePreserving (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => E) 0).symm
-        (μ.prod (Measure.pi fun _ : Fin n => μ)) (Measure.pi fun _ : Fin (n + 1) => μ) :=
-      (measurePreserving_piFinSuccAbove (fun _ : Fin (n + 1) => μ) 0).symm
-    rw [← e.lintegral_comp_emb (MeasurableEquiv.measurableEmbedding _)]
-    have split : ∀ p : E × (Fin n → E),
-        (∏ i, f i ((MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => E) 0).symm p i)) =
-          f 0 p.1 * ∏ j : Fin n, f j.succ (p.2 j) := by
-      intro p
-      rw [Fin.prod_univ_succ]
-      simp [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
-    simp_rw [split]
-    have hrest : Measurable fun z : Fin n → E => ∏ j : Fin n, f j.succ (z j) :=
-      Finset.measurable_prod _ fun j _ => (hf j.succ).comp (measurable_pi_apply j)
-    rw [lintegral_prod_mul (hf 0).aemeasurable hrest.aemeasurable,
-      ih (fun j => f j.succ) (fun j => hf j.succ), Fin.prod_univ_succ]
+  apply GlobalTheory.HaarPi.lintegral_pi_fin <;> assumption
 
 theorem lintegral_pi_prod {ι E : Type*} [Fintype ι] [MeasurableSpace E] (μ : Measure E) [SigmaFinite μ]
     (f : ι → E → ℝ≥0∞) (hf : ∀ i, Measurable (f i)) :
@@ -55,22 +93,7 @@ theorem pi_withDensity {ι E : Type*} [Fintype ι] [MeasurableSpace E] (μ : Mea
     (f : E → ℝ≥0∞) (hf : Measurable f) [SigmaFinite (μ.withDensity f)] :
     (Measure.pi fun _ : ι => μ.withDensity f) =
       (Measure.pi fun _ : ι => μ).withDensity fun x => ∏ i, f (x i) := by
-  refine Measure.pi_eq fun s hs => ?_
-  rw [withDensity_apply _ (MeasurableSet.univ_pi hs), ← lintegral_indicator (MeasurableSet.univ_pi hs)]
-  have hind : ∀ x : ι → E, (Set.univ.pi s).indicator (fun x => ∏ i, f (x i)) x =
-      ∏ i, (s i).indicator f (x i) := by
-    intro x
-    by_cases hx : x ∈ Set.univ.pi s
-    · rw [Set.indicator_of_mem hx]
-      exact Finset.prod_congr rfl fun i _ => (Set.indicator_of_mem (hx i (Set.mem_univ i)) f).symm
-    · rw [Set.indicator_of_notMem hx]
-      simp only [Set.mem_pi, Set.mem_univ, true_implies, not_forall] at hx
-      obtain ⟨i, hi⟩ := hx
-      exact (Finset.prod_eq_zero (Finset.mem_univ i) (Set.indicator_of_notMem hi f)).symm
-  simp_rw [hind]
-  rw [lintegral_pi_prod μ (fun i => (s i).indicator f) fun i => hf.indicator (hs i)]
-  refine Finset.prod_congr rfl fun i _ => ?_
-  rw [withDensity_apply _ (hs i), lintegral_indicator (hs i)]
+  apply GlobalTheory.HaarPi.pi_withDensity <;> assumption
 
 private theorem lintegral_indicator_one_mul_eq_setLIntegral {X : Type*} [MeasurableSpace X] (m : Measure X) {t : Set X}
     (ht : MeasurableSet t) (w : X → ℝ≥0∞) :

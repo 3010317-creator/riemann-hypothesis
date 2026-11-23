@@ -1,8 +1,57 @@
 module
 
-public import Mathlib
+import Formalism.SharpRestriction.LevelLetterCocycles.RingConditionOfDeltaInvariants
 public import Formalism.SharpRestriction.LevelLetterCocycles.AnnihilatorLevelsOfGrading
+public import Formalism.SharpRestriction.LevelLetterCocycles.LemmasUnramifiedOfRingCondition
+public import Mathlib.RingTheory.PowerSeries.Binomial
+import Formalism.SharpRestriction.LevelLetterCocycles.AnnihilatorGeneralOfRingCondition
+public import Formalism.SharpRestriction.LevelLetterCocycles.ExistsPosConstLagrangeCondition
 public import Formalism.SharpRestriction.LevelLetterCocycles.LevelClauseOfOpenTool
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.NumberTheory.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Padics.MahlerBasis
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -25,27 +74,7 @@ theorem exists_trunc_add (f : PowerSeries O) (N : ℕ) :
 
 theorem algHom_ext_X (τ σ : PowerSeries O →ₐ[O] PowerSeries O) (hX : τ X = σ X)
     (h0 : constantCoeff (τ X) = 0) : τ = σ := by
-  have hpoly : ∀ p : Polynomial O, τ (p : PowerSeries O) = σ (p : PowerSeries O) := by
-    intro p
-    have := congrArg (fun φ : Polynomial O →ₐ[O] PowerSeries O => φ p)
-      (Polynomial.algHom_ext (f := τ.comp (Polynomial.coeToPowerSeries.algHom O))
-        (g := σ.comp (Polynomial.coeToPowerSeries.algHom O))
-        (by simp [Polynomial.coeToPowerSeries.algHom_apply, hX]))
-    simpa [Polynomial.coeToPowerSeries.algHom_apply] using this
-  have hd : X ∣ τ X := X_dvd_iff.mpr h0
-  ext f k
-  obtain ⟨g, hg⟩ := exists_trunc_add f (k + 1)
-  have h1 : X ^ (k + 1) ∣ τ X ^ (k + 1) * τ g := Dvd.dvd.mul_right (pow_dvd_pow_of_dvd hd _) _
-  have h2 : X ^ (k + 1) ∣ σ X ^ (k + 1) * σ g := by
-    rw [← hX]; exact Dvd.dvd.mul_right (pow_dvd_pow_of_dvd hd _) _
-  have hτ : τ f = τ (trunc (k + 1) f : PowerSeries O) + τ X ^ (k + 1) * τ g := by
-    conv_lhs => rw [hg]
-    rw [map_add (f := _), map_mul, map_pow]
-  have hσ : σ f = σ (trunc (k + 1) f : PowerSeries O) + σ X ^ (k + 1) * σ g := by
-    conv_lhs => rw [hg]
-    rw [map_add (f := _), map_mul, map_pow]
-  rw [hτ, hσ, map_add (f := _), map_add (f := _), hpoly,
-    X_pow_dvd_iff.mp h1 k (Nat.lt_succ_self k), X_pow_dvd_iff.mp h2 k (Nat.lt_succ_self k)]
+  apply Formalism.MainNotions.WachCoordinates.Br.algHom_ext_X <;> assumption
 
 theorem algHom_eq_subst (τ : PowerSeries O →ₐ[O] PowerSeries O) (h0 : constantCoeff (τ X) = 0)
     (f : PowerSeries O) : τ f = subst (τ X) f := by
@@ -286,8 +315,8 @@ theorem func_unique (φ₀ : PowerSeries O →ₐ[O] PowerSeries O) (l : ℕ) (h
         rw [mul_pow] at e1
         linear_combination e1
       have e3 := congrArg constantCoeff e2
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_mul, map_mul, map_pow, cc_map φ₀ hφ0, hq0, map_sum] at e3
+
+      rw [map_mul, map_mul, map_pow, cc_map φ₀ hφ0, hq0, map_sum] at e3
       simp only [map_mul, map_pow, h0U, h0V, one_pow, mul_one, Finset.sum_const, Finset.card_range,
         nsmul_eq_mul] at e3
       have hne : ((l : O) ^ (m + 2) - l) ≠ 0 := by

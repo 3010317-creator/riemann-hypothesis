@@ -1,11 +1,62 @@
 module
 
 public import Formalism.HermitianCurvature.StatementTop
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RealInputsBuiltClosedForm
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
+public import Formalism.HermitianCurvature.FrameExists2
+import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DifferentialOperatorBracket
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HighestWeightPolynomials
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameCompletion
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameCompletion
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.HighestWeightPolynomials
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LeftDerivativeCurves
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -88,8 +139,8 @@ theorem act_mul {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type} 
     (M N : Wd.SlopeTestRemainingChoices S (Q.Pr (Q.RadSp k r z z' π π'))) (x : Wd.Ix S → Q.RadSp k r z z' π π') :
     P5.act (M * N) x = P5.act M (P5.act N x) := by
   funext a
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [P5.act, Matrix.mul_apply, map_sum]
+
+  simp only [P5.act, Matrix.mul_apply, map_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun b _ => ?_
   have key : ∀ s : Finset (Wd.Ix S),
@@ -689,8 +740,8 @@ theorem vecw_qmF {X Y : Type*} [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] 
     (hE : ∀ i j x, E' i j (V x) = V (E i j x)) (a b : Fin t → Fin n) (u : ℂ) (x : X) :
     Q.qmF E' a b u (V x) = V (Q.qmF E a b u x) := by
   unfold Q.qmF
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun σ _ => ?_
   rw [map_smul]
   congr 1
@@ -1023,8 +1074,8 @@ theorem vecw_good_of_eig {P : M.Par} (hOK : P.OK) {π : B.Mat P.k P.r → (Wp �
         simp only [sub_smul, Finset.sum_sub_distrib]
         rw [← Finset.smul_sum, hμ]
         simp only [← h2]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← map_sum, hμ, h1, sub_self]
+
+        rw [← map_sum, hμ, h1, sub_self]
       have hind := (iSupIndep_iff_finsetSum_eq_zero_imp_eq_zero S).1 hInt.submodule_iSupIndep Finset.univ
         (fun τ' => (M.xC (parametersUForUPrime P) τ' Y - M.xC (parametersUPrimeForU P) σ Y) • (μ τ' : Wp))
         (fun τ' _ => Submodule.smul_mem _ _ (μ τ').2) hsum τ (Finset.mem_univ τ)
@@ -1035,8 +1086,8 @@ theorem vecw_good_of_eig {P : M.Par} (hOK : P.OK) {π : B.Mat P.k P.r → (Wp �
       rw [hz0]
       simp
   rw [← hμ]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum]
+
+  simp only [map_sum]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun τ _ => hcomp τ
 

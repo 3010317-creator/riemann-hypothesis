@@ -1,12 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SignedInvolutionStableLatticeSumMulFixedUnit
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DltEqZero
+public import Mathlib.Algebra.Module.Lattice.Full
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyDvdPowOfAevalEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyLeftMulBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SgnLatSpanBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyDvdPowOfAevalEqZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Charpoly.ToMatrix
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DltEqZero
 
 @[expose] public section
 
@@ -73,47 +122,15 @@ theorem det_trace_ne_zero {K : UQ} (B : InvAlg K) (hsep : B.P.Separable)
     (e : Module.Basis (Fin (Module.finrank K.E B.A)) K.E B.A) :
     (Matrix.of fun k l : Fin (Module.finrank K.E B.A) =>
       Algebra.trace K.E B.A (B.g ^ (k : ℕ) * e l)).det ≠ 0 := by
-  intro h0
-  obtain ⟨c, hc, hvm⟩ := Matrix.exists_vecMul_eq_zero_iff.2 h0
-  set q : K.E[X] := ∑ k : Fin (Module.finrank K.E B.A), C (c k) * X ^ (k : ℕ) with hq
-  have hz : ∀ l, Algebra.trace K.E B.A (aeval B.g q * e l) = 0 := by
-    intro l
-    have := congrFun hvm l
-    simp only [Matrix.vecMul, dotProduct, Matrix.of_apply, Pi.zero_apply] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← this, hq, map_sum, Finset.sum_mul, map_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    have ha : aeval B.g (C (c k) * X ^ (k : ℕ)) = c k • B.g ^ (k : ℕ) := by
-      rw [← smul_eq_C_mul, map_smul, aeval_X_pow]
-    rw [ha, smul_mul_assoc, map_smul, smul_eq_mul]
-  have hz' : aeval B.g q = 0 := by
-    apply GlobalTheory.UnitLemma.Centraliser.eq_zero_of_trace_mul B hsep
-    intro y
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← e.sum_repr y, Finset.mul_sum, map_sum]
-    refine Finset.sum_eq_zero fun l _ => ?_
-    rw [mul_smul_comm, map_smul, hz l, smul_zero]
-  have hdvd := GlobalTheory.UnitLemma.Centraliser.P_dvd_of_aeval_eq_zero B hsep q hz'
-  have hdeg : q.degree < B.P.degree := by
-    have hm : B.P.Monic := LinearMap.charpoly_monic _
-    have hn : B.P.natDegree = Module.finrank K.E B.A := LinearMap.charpoly_natDegree _
-    rw [degree_eq_natDegree hm.ne_zero, hn]
-    exact degree_sum_fin_lt c
-  have hq0 : q = 0 := eq_zero_of_dvd_of_degree_lt hdvd hdeg
-  apply hc
-  funext k
-  have := congrArg (fun p : K.E[X] => p.coeff k) hq0
-  simp only [hq, Polynomial.finsetSum_coeff, coeff_C_mul_X_pow, coeff_zero] at this
-  rw [Finset.sum_eq_single k (fun b _ hb => if_neg (fun h => hb (Fin.ext h.symm))) (by simp)] at this
-  simpa using this
+  apply GlobalTheory.UnitLemma.Move.det_trace_ne_zero <;> assumption
 
 theorem trace_mat_toMatrix {E A : Type} [Field E] [CommRing A] [Algebra E A] {ι κ : Type} [Fintype ι]
     [DecidableEq ι] (b : Module.Basis ι E A) (x : κ → A) (f : ι → A) :
     (Matrix.of fun k l => Algebra.trace E A (x k * f l)) =
       (Matrix.of fun k i => Algebra.trace E A (x k * b i)) * b.toMatrix f := by
   ext k l
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.of_apply, Matrix.mul_apply, ← b.sum_toMatrix_smul_self f l, Finset.mul_sum, map_sum]
+
+  rw [Matrix.of_apply, Matrix.mul_apply, ← b.sum_toMatrix_smul_self f l, Finset.mul_sum, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [mul_smul_comm, map_smul, smul_eq_mul, Matrix.of_apply, mul_comm]
 

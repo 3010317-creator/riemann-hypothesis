@@ -1,10 +1,44 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberGeneratorOfTorsorCoboundary
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PtAlgSpOver
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberPointPreimageTopOfReduction
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -61,28 +95,7 @@ variable {A B : Over (Sp R)} [GrpObj A] [GrpObj B]
 theorem epsGen_red_ptV {v : epsR R ⟶ B} (hv : IsTangent v) {E : Type} [CommRing E] [Algebra R E] (x : Pt A E) :
     spOver (TrivSqZeroExt.fstHom R E E) ≫ ptV (R := R) (D := E) v x =
       x ≫ AbDual.inl A B := by
-  have hv' : spOver (TrivSqZeroExt.fstHom R R R) ≫ v = (1 : SpAlg R R ⟶ B) := by
-    apply Over.OverMorphism.ext
-    rw [Over.comp_left, spOver_left]
-    refine hv.trans ?_
-    rw [Hom.one_def, Over.comp_left, Over.toUnit_left]
-    change η[B].left = spMap (RingHom.id R) ≫ η[B].left
-    rw [Cris.spMap_id, Category.id_comp]
-  rw [AbDual.inl, comp_lift, Category.comp_id, MonObj.comp_one]
-  apply CartesianMonoidalCategory.hom_ext
-  · simp only [ptV, Category.assoc, lift_fst]
-    rw [← Category.assoc, spOver_comp]
-    have : (TrivSqZeroExt.fstHom R E E).comp (TrivSqZeroExt.inlAlgHom R E E) = AlgHom.id R E := by
-      ext a
-      simp
-    rw [this, spOver_id, Category.id_comp]
-  · simp only [ptV, Category.assoc, lift_snd]
-    rw [← Category.assoc, spOver_comp]
-    have : (TrivSqZeroExt.fstHom R E E).comp (EpsWeil.epsMap R E) =
-        (Algebra.ofId R E).comp (TrivSqZeroExt.fstHom R R R) := by
-      apply DualNumber.algHom_ext
-      simp [EpsWeil.epsMap]
-    rw [this, ← spOver_comp, Category.assoc, hv', MonObj.comp_one]
+  apply GlobalTheory.PtExt.EpsGenCob.red_ptV <;> assumption
 
 theorem epsGen_key (v : epsR R ⟶ B) {E : Type} [CommRing E] [Algebra R E] (z : Pt (A ⊗ epsR R) E) :
     z ≫ lift (fst A (epsR R)) (snd A (epsR R) ≫ v) =

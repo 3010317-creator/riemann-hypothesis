@@ -1,26 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
-public import Formalism.LocalToGlobal.IndefiniteReal.NormalDecomposition.LiftHeckeOperators
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
 public import Formalism.LocalToGlobal.IndefiniteReal.IsMultMapUnivZero
-public import Formalism.LocalToGlobal.IndefiniteReal.PartsRow
-public import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormLiftFormsFiniteGroupAction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesApart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterConjugate
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslateLiftLinearIsometry
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThGEquiv
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GWEqChiSmul
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExtVMemLevSubVOfLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPToLiftReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankWeightComponentEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterConjugate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicitySpaceEqZeroOfLowestKTypes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlacesApart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankWeightComponentEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaAdjointAtLiftEqLowestKTypeRestriction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExtVMemLevSubVOfLift
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GWEqChiSmul
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormLiftFormsFiniteGroupAction
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThGEquiv
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslateLiftLinearIsometry
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothVecLowKSub
 
 @[expose] public section
@@ -100,7 +130,7 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.w
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem ipWc_lift (R : RealDat D A Ks) (hW : R.models_HW) (F : Face D A) (tupT : D.what₂.Tup → T) (hm : 0 < D.R.m)
     (hTop : TopMultH R) (hinj : ∀ i t, Function.Injective (R.extV i t)) (i : Fin D.R.m) (a b : (R.HW i (sg0 D A)).H) :
     (toLiftReal R F tupT hm hTop hinj).ipWc i (PiTensorProduct.lift ((R.HW i (sg0 D A)).e a))
@@ -127,7 +157,7 @@ theorem ipVia_self' {H N : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H
   · exact absurd ⟨⟨u, rfl⟩, ⟨v, rfl⟩⟩ h
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem ipA_ext (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup → T) (hm : 0 < D.R.m)
     (hTop : TopMultH R) (hinj : ∀ i t, Function.Injective (R.extV i t)) (μ : D.what₂.Tup) (i : Fin D.R.m)
     (a b : (R.HV i (tupT μ)).H) :
@@ -158,7 +188,7 @@ theorem lift_postOn' {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S)
   simp [postOn]
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem thetaP_read (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup → T) (hm : 0 < D.R.m)
     (hTop : TopMultH R) (hinj : ∀ i t, Function.Injective (R.extV i t)) (hlev : R.toLevCh.Is A.μ0) (hgrp : R.IsGrp F)
     (hM : R.IsModels) (hE : R.IsThP) (IL : LiftIds (toLiftReal R F tupT hm hTop hinj))
@@ -217,7 +247,7 @@ theorem adjoint_eigen {E F : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ
     inner_smul_left]
 
 
-set_option maxHeartbeats 400000 in
+
 theorem adjoint_mem_levSubV {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (hLev : R.toLevCh.Is A.μ0)
     (hMod : R.IsModels) (hThP : R.IsThP) (hgr : R.grp_record) (hv : A.v0 = InfinitePlace.mk D.what₂.embLL)
@@ -251,7 +281,7 @@ theorem adjoint_mem_levSubV {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : T
     (congrArg (fun c : ℂ => levChi _ (R.βV i) (flagL (R.datVt i t)) κ • (c • R.extV i t (LinearMap.adjoint (R.thG i t) w) h)) hc))
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem adjoint_mem_base_level : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3), GlobalTheory.Published.CuspRapidDecay → R.WeakCharacterisation F → R.toRealDat.ExAt → R.PGEquiv F → ∀ (tupT : D.what₂.Tup → T) (hm : 0 < D.R.m) (hTop : RecTie.TopMultH R.toRealDat) (hinj : ∀ i t, Function.Injective (R.toRealDat.extV i t)) (i : Fin D.R.m) (w : (R.HW i (sg0 D A3.A)).H), PiTensorProduct.lift ((R.HW i (sg0 D A3.A)).e w) ∈ (RecTie.toLiftReal R.toRealDat F.lv2 tupT hm hTop hinj).Wc i → R.toRealDat.extV i (tupT D.what₂.mu0) (LinearMap.adjoint (R.thG i (tupT D.what₂.mu0)) w) ∈ (RecTie.toLiftReal R.toRealDat F.lv2 tupT hm hTop hinj).Amt D.what₂.mu0 i := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F _hCusp hC hEx _hPG tupT hm hTop hinj i w hw
   have hLev := hC.base.lev

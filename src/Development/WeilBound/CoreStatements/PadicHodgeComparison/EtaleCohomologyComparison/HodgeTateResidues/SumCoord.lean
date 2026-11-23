@@ -1,13 +1,57 @@
 module
 
-public import Mathlib
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.HodgeTateResidues.IsEtaleFirstChernUntwisted
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.HodgeTateResidues.KProps
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPrimitiveCl
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.AdmissibleMinors.ConnAbs
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.AdmissibleMinors.RedAbs
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.IsFirstChernDeRhamUnique
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.RSubOneMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPrimitiveCl
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.RSubOneMem
+import GroundTheory.PAdicHodge.NormalizedTraceTower
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -30,9 +74,9 @@ theorem sum_coord' {K B V V' V'' : Type _} [Field K] [CommRing B] [AddCommGroup 
     (μ : V →ₗ[K] V' →ₗ[K] V'') (φ : Module.Dual K V'') (x : V) (y : V') :
     ∑ s, ∑ s', o (b.coord s x) * o (b'.coord s' y) * o (φ (μ (b s) (b' s'))) = o (φ (μ x y)) := by
   conv_rhs => rw [← b.sum_repr x, ← b'.sum_repr y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, map_smul, LinearMap.smul_apply, smul_eq_mul, map_mul, Module.Basis.coord_apply,
-    Finset.mul_sum]
+
+  simp only [map_sum, LinearMap.sum_apply, map_smul, LinearMap.smul_apply, smul_eq_mul, map_mul, Module.Basis.coord_apply,
+  Finset.mul_sum]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun s' _ => by ring
 
@@ -205,8 +249,8 @@ theorem conn0 (P : HTPre l K) {M : Model l K} (hM : M.Sm) {d : ℕ} (hD : M.Dual
     by_contra hall
     push Not at hall
     apply hu
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hc, map_sum, AddMonoidHom.finsetSum_apply]
+
+    rw [← hc, map_sum, AddMonoidHom.finsetSum_apply]
     exact Finset.sum_eq_zero fun s _ => by rw [P.lin, hall, mul_zero]
   have hall : ∀ s, P.h M d (n + j) (g s) φ ≠ 0 := by
     intro s h0
@@ -226,8 +270,8 @@ theorem red_sum (P : HTPre l K) {M N : Model l K} (u : M.X ⟶ N.X) (hu : u ≫ 
   have hexp : ∀ v, P.h M p n v φ = ∑ j, qC l (e.coord j v) * P.h M p n (e j) φ := by
     intro v
     conv_lhs => rw [← e.sum_repr v]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, AddMonoidHom.finsetSum_apply]
+
+    rw [map_sum, AddMonoidHom.finsetSum_apply]
     simp only [P.lin, Module.Basis.coord_apply]
   simp_rw [← P.nat M N u hu hM hN, Finset.sum_mul]
   rw [Finset.sum_comm]

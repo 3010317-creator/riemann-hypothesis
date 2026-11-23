@@ -1,11 +1,52 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
+public import Development.AbelianVarietyTheory.BlockTheory.JetGauges.ThetaSpanAdjoint
+public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.UnimodularStandardLattice
+public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.ZeroNotAdmissibleOfRankPos
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsEqSumIndicatorOfRightInvariant
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ProjectiveOfFg
-public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.ZeroNotAdmissibleOfRankPos
-public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.UnimodularStandardLattice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
 
 @[expose] public section
 
@@ -47,8 +88,8 @@ theorem exists_matrix_det_notMem (I : Ideal O) [I.IsMaximal] (a b : n → Q)
     simp only [Function.comp_apply, Submodule.mkQ_apply] at this
     rw [this]
     show _ = (I • ⊤ : Submodule O Q).mkQ (∑ i, g1 i j • b i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, Submodule.mkQ_apply, ← hg1 i j, ← Ideal.Quotient.algebraMap_eq, algebraMap_smul]
   choose c hcI hc using fun j => (Submodule.mem_ideal_smul_span_iff_exists_sum I b _).1 (hmem j)
@@ -135,15 +176,15 @@ theorem exists_matrix_inv_mod (I : Ideal O) (hI : {P : Ideal O | P.IsMaximal ∧
       have h1 : g i j = ∑ Q ∈ s, e Q * G Q i j + (1 - ∑ Q ∈ s, e Q) * H0 i j := by
         simp [g, Matrix.sum_apply]
       have hsum : Ideal.Quotient.mk P (∑ Q ∈ s, e Q) = 1 := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum, Finset.sum_eq_single P]
+
+        rw [map_sum, Finset.sum_eq_single P]
         · exact (Ideal.Quotient.eq.2 (he1 P hP)).trans (map_one _)
         · intro Q hQ hQP
           exact Ideal.Quotient.eq_zero_iff_mem.2 (he2 Q hQ P hP (Ne.symm hQP))
         · intro h; exact absurd hP h
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [h1, map_add (f := _), map_mul, map_sub, map_one, hsum, sub_self, zero_mul, add_zero, map_sum,
-        Finset.sum_eq_single P]
+
+      rw [h1, map_add (f := _), map_mul, map_sub, map_one, hsum, sub_self, zero_mul, add_zero, map_sum,
+      Finset.sum_eq_single P]
       · rw [map_mul, (Ideal.Quotient.eq.2 (he1 P hP)), map_one, one_mul]
       · intro Q hQ hQP
         rw [map_mul, Ideal.Quotient.eq_zero_iff_mem.2 (he2 Q hQ P hP (Ne.symm hQP)), zero_mul]
@@ -212,7 +253,6 @@ theorem exists_unitary_of_mod (H : Host E) {M bad : ℕ} (hM : 0 < M) (hbad : 0 
     first
       | exact Matrix.mul_eq_one_comm.1 h1
       | exact mul_eq_one_comm.1 h1
-      | exact Matrix.mul_eq_one_comm.mp h1
   let e := LinearEquiv.ofBijective (GlobalTheory.RepTrivial.inc E n)
     ⟨GlobalTheory.RepTrivial.inc_injective, GlobalTheory.RepTrivial.inc_surjective⟩
   let ι : (stdLat E n) →ₗ[𝓞 E] StdMod E n M := GlobalTheory.RepTrivial.red E n M ∘ₗ B.mulVecLin ∘ₗ e.symm.toLinearMap
@@ -283,8 +323,6 @@ theorem exists_unitary_of_mod (H : Host E) {M bad : ℕ} (hM : 0 < M) (hbad : 0 
         have h2 : a k = (M : 𝓞 E) * b k := by
           first
             | exact NumberField.RingOfIntegers.coe_injective h3
-            | exact NumberField.RingOfIntegers.ext h3
-            | exact_mod_cast h3
         rw [h2]
         exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
     · intro v w x y hx hy
@@ -302,8 +340,8 @@ theorem exists_unitary_of_mod (H : Host E) {M bad : ℕ} (hM : 0 < M) (hbad : 0 
         exact Ideal.Quotient.eq.1 this.symm
       have hbarv : ∀ j, H.bar ((B *ᵥ a') j) = ((B.map H.bar) *ᵥ (fun l => H.bar (a' l))) j := by
         intro j
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
+
+        simp [Matrix.mulVec, dotProduct, map_sum, map_mul]
       have hT : ∀ i j, ((Bᵀ * B.map H.bar) - 1) i j ∈ S := by
         intro i j
         have e1 : ((Bᵀ * B.map H.bar) - 1) i j = ((B.map H.bar)ᵀ * B - 1) j i := by
@@ -339,8 +377,8 @@ theorem exists_unitary_of_mod (H : Host E) {M bad : ℕ} (hM : 0 < M) (hbad : 0 
       refine ⟨t, ?_⟩
       simp only [hecoe]
       have := congrArg (fun z : 𝓞 E => (z : E)) ht
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sub, map_sum, map_mul, H.bar_eq] at this
+
+      simp only [map_sub, map_sum, map_mul, H.bar_eq] at this
       push_cast [H.bar_eq] at this
       linear_combination -this
   obtain ⟨γ, hγ, h1, h2, h3⟩ := GlobalTheory.RepTrivial.repExists E n H.unram M bad hM hbad ⟨stdLat E n⟩ ι
@@ -404,8 +442,6 @@ theorem exists_levOK {γ : Matrix (Fin n) (Fin n) E} {Λ : GenLat E n} {N M : �
   have hko : Odd k := by
     first
       | exact Nat.Coprime.odd_of_right hk
-      | exact Nat.coprime_two_right_iff_odd.1 hk
-      | exact (Nat.coprime_two_right_iff_odd k).1 hk
   refine ⟨N * k, hN.mul hko, Dvd.dvd.mul_right hMN k, (span_singleton_smul_le_iff _ _ _).2 fun y hy => ?_⟩
   refine Submodule.mem_inf.2 ⟨?_, (stdLat E n).smul_mem _ hy⟩
   obtain ⟨x, hx, hxy⟩ := Submodule.mem_map.1 (h1' y hy)
@@ -449,11 +485,11 @@ theorem exists_unitary_mod (g g' : Matrix (Fin n) (Fin n) (𝓞 E)) (h : ∀ i j
         exact Ideal.Quotient.eq.2 hc1
       have e2 : Ideal.Quotient.mk l.Mb (H.bar (cSep l)) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 (bar_mem_Mb hc0)
       have key := Ideal.Quotient.eq_zero_iff_mem.2 (bar_mem_Mb (h i j))
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.one_apply,
-        map_sub, map_sum, map_mul, map_add, map_one, bar_bar, apply_ite (H.bar), map_zero,
-        apply_ite (Ideal.Quotient.mk l.Mb), e1, e2, sub_self, zero_mul, one_mul, add_zero, zero_add, mul_zero,
-        mul_one, sub_zero] at key ⊢
+
+      simp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.one_apply,
+      map_sub, map_sum, map_mul, map_add, map_one, bar_bar, apply_ite (H.bar), map_zero,
+      apply_ite (Ideal.Quotient.mk l.Mb), e1, e2, sub_self, zero_mul, one_mul, add_zero, zero_add, mul_zero,
+      mul_one, sub_zero] at key ⊢
       exact key
     · rw [← Ideal.Quotient.eq_zero_iff_mem]
       have e1 : Ideal.Quotient.mk (Mfr l) (cSep l) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hc0
@@ -467,11 +503,11 @@ theorem exists_unitary_mod (g g' : Matrix (Fin n) (Fin n) (𝓞 E)) (h : ∀ i j
       have key0 := h j i
       rw [Matrix.sub_apply, hsym] at key0
       have key := Ideal.Quotient.eq_zero_iff_mem.2 key0
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.one_apply,
-        map_sub, map_sum, map_mul, map_add, map_one, bar_bar, apply_ite (H.bar), map_zero,
-        apply_ite (Ideal.Quotient.mk (Mfr l)), e1, e2, sub_self, zero_mul, one_mul, add_zero, zero_add, mul_zero,
-        mul_one, sub_zero] at key ⊢
+
+      simp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.of_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.one_apply,
+      map_sub, map_sum, map_mul, map_add, map_one, bar_bar, apply_ite (H.bar), map_zero,
+      apply_ite (Ideal.Quotient.mk (Mfr l)), e1, e2, sub_self, zero_mul, one_mul, add_zero, zero_add, mul_zero,
+      mul_one, sub_zero] at key ⊢
       simpa [mul_comm] using key
   · show cSep l * H.bar (g i j) + (1 - cSep l) * g' j i - H.bar (g i j) ∈ l.Mb
     have : cSep l * H.bar (g i j) + (1 - cSep l) * g' j i - H.bar (g i j) =
@@ -512,9 +548,6 @@ theorem levMoves_eq {γ : Matrix (Fin n) (Fin n) E} {B : Matrix (Fin n) (Fin n) 
     have e : (k' : 𝓞 E) * (g i j - (k : 𝓞 E) * B i j) = ((l.M : ℕ) : 𝓞 E) * ((k : 𝓞 E) * b) := by
       first
         | exact NumberField.RingOfIntegers.coe_injective e0
-        | exact NumberField.RingOfIntegers.ext e0
-        | exact Subtype.ext e0
-        | exact_mod_cast e0
     apply hcan k' hk'
     rw [smul_smul, e, mul_smul, hM]
   rw [← sub_eq_zero]
@@ -547,7 +580,6 @@ theorem exists_unitary_moving (c : Coeff l) {bad : ℕ} (hbad : 0 < bad) (x0 x1 
     haveI : Finite (𝓞 E ⧸ Mfr l) := by
       first
         | exact Ideal.finiteQuotientOfFreeOfNeBot _ hne
-        | infer_instance
     haveI : Finite (Ideal (𝓞 E ⧸ Mfr l)) := Finite.of_injective _ SetLike.coe_injective
     refine Set.Finite.of_finite_image (f := fun P => P.map (Ideal.Quotient.mk (Mfr l))) (Set.toFinite _) ?_
     intro P hP Q hQ hPQ
@@ -572,9 +604,6 @@ theorem exists_unitary_moving (c : Coeff l) {bad : ℕ} (hbad : 0 < bad) (x0 x1 
     unfold qRep
     first
       | exact Classical.choose_spec (Submodule.Quotient.mk_surjective _ z)
-      | exact Classical.choose_spec (Submodule.mkQ_surjective _ z)
-      | (generalize_proofs _ hp; simpa using Classical.choose_spec hp)
-      | (generalize_proofs _ _ hp; simpa using Classical.choose_spec hp)
   set X1 : Fin n → Dw.La := fun b => qRep (x1 b) with hX1
   set X0 : Fin n → Dw.La := fun b => qRep (x0 b) with hX0
   set Y : Fin n → Dw.La := fun b => levRep (q b) with hY
@@ -588,13 +617,13 @@ theorem exists_unitary_moving (c : Coeff l) {bad : ℕ} (hbad : 0 < bad) (x0 x1 
     · intro b
       rw [← Submodule.Quotient.eq]
       show Submodule.Quotient.mk (levRep (q' b)) = Submodule.Quotient.mk (∑ j, B b j • levRep (q j))
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hLq, levMoves_eq hcong hmv b, ← Submodule.mkQ_apply, map_sum]
+
+      rw [hLq, levMoves_eq hcong hmv b, ← Submodule.mkQ_apply, map_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_smul, Submodule.mkQ_apply, hLq]
   have stepB : pairL (l := l) X1 Y'' = pairL (l := l) X2 Y := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [pairL, Y'', X2, Finset.smul_sum, map_sum, LinearMap.sum_apply]
+
+    simp only [pairL, Y'', X2, Finset.smul_sum, map_sum, LinearMap.sum_apply]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun b _ => ?_
     rw [Dw.adj, bar_bar, smul_comm (cSep l) (B b j)]
@@ -603,8 +632,8 @@ theorem exists_unitary_moving (c : Coeff l) {bad : ℕ} (hbad : 0 < bad) (x0 x1 
     · intro j
       rw [← Submodule.Quotient.eq]
       show Submodule.Quotient.mk (∑ b, H.bar (B b j) • qRep (x1 b)) = Submodule.Quotient.mk (qRep (x0 j))
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hQc, hg j, ← Submodule.mkQ_apply, map_sum]
+
+      rw [hQc, hg j, ← Submodule.mkQ_apply, map_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       rw [map_smul, Submodule.mkQ_apply, hQc, ← sub_eq_zero, ← sub_smul]
       obtain ⟨y, hy⟩ := Submodule.Quotient.mk_surjective _ (x1 b)

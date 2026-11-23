@@ -1,21 +1,53 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DecompositionData
-public import Formalism.CharacterColumnKernels.Assemble
-public import Formalism.CharacterColumnKernels.Statement
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.CharacterColumnKernelsOfBlockChiCOfBlockChiOne
-public import Formalism.TruncatedSeriesCounting.TruncatedSeriesProofs.LemmaDetPoly
-public import Formalism.TruncatedSeriesCounting.TruncatedSeriesProofs.BridgeDet
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.IsUnitDetOfConst
-public import Mathlib
+public import Formalism.CharacterColumnKernels.StatementN
 public import Formalism.CharacterColumnKernels.IdempotentNormalForms.CharacterColumnKernelLengthBound
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.MemCcIdealIffForall
+public import Formalism.CharacterColumnKernels.IdempotentNormalForms.LengthKerOfDetEqZero
+public import Formalism.CharacterColumnKernels.IdempotentNormalForms.LengthQuotSmulRangeFree
 public import Formalism.CharacterColumnKernels.IdempotentNormalForms.SumIteLe
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.SplitFibre
-public import Formalism.CharacterColumnKernels.StatOntoLattice
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.IdemNormalForm
-public import Formalism.CharacterColumnKernels.StatementMF
-public import Formalism.CharacterColumnKernels.IdempotentNormalForms.RightMulEpsAlgebraMap
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -186,9 +218,9 @@ theorem eigSpan (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y) :
   have hCK : algebraMap O (FractionRing O) C ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective O (FractionRing O))).mpr hC
   have hv : algebraMap O (FractionRing O) C • v = ∑ x, actK T act (e x) v := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, hsum, AlgHom.commutes, Module.algebraMap_end_apply,
-      algebraMap_smul]
+
+    rw [← LinearMap.sum_apply, ← map_sum, hsum, AlgHom.commutes, Module.algebraMap_end_apply,
+    algebraMap_smul]
   have h1 : algebraMap O (FractionRing O) C • v ∈ ⨆ x, Vx T (actK T act).toRingHom x := by
     rw [hv]
     exact Submodule.sum_mem _ fun x _ => Submodule.mem_iSup_of_mem x (hmemV x v)
@@ -255,16 +287,16 @@ theorem len_le (hsep : ∀ x y : X, x ≠ y → ∃ f ∈ T, f x ≠ f y)
     simp
   have hPA' : ∀ v, actK T act (∑ x ∈ S, e x) v ∈ VS T (actK T act).toRingHom (S : Set X) := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, LinearMap.sum_apply]
+
+    rw [map_sum, LinearMap.sum_apply]
     refine Submodule.sum_mem _ fun x hx => ?_
     unfold Formalism.NG.VS
     exact Submodule.mem_iSup_of_mem x (Submodule.mem_iSup_of_mem (Finset.mem_coe.mpr hx) (hmemV x v))
   have hrest : ∀ v, actK T act (∑ x ∈ Finset.univ \ S, e x) v ∈
       VS T (actK T act).toRingHom ((S : Set X)ᶜ) := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, LinearMap.sum_apply]
+
+    rw [map_sum, LinearMap.sum_apply]
     refine Submodule.sum_mem _ fun x hx => ?_
     have hx' : x ∈ ((S : Set X)ᶜ) := fun h => (Finset.mem_sdiff.mp hx).2 (Finset.mem_coe.mp h)
     unfold Formalism.NG.VS

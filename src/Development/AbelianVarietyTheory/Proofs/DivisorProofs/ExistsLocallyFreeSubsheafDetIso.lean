@@ -1,8 +1,44 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBidualNaturalityDualSheafTranspose
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenDecompositionVectorBundle
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -29,8 +65,8 @@ theorem resM_mem_spanRes (s : ∀ k : L.ι, Fin r → Γ(F, L.U k)) {k : L.ι} {
     resM F hW x ∈ spanRes s k (hW.trans hk) := by
   obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hx
   refine (Submodule.mem_span_range_iff_exists_fun _).2 ⟨fun i => resG X hW (c i), ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, resM_smul, resM_resM]
+
+  simp only [map_sum, resM_smul, resM_resM]
 
 theorem spanRes_le (s : ∀ k : L.ι, Fin r → Γ(F, L.U k))
     (A : ∀ k k' : L.ι, Matrix (Fin r) (Fin r) Γ(X, L.U k ⊓ L.U k'))
@@ -41,8 +77,8 @@ theorem spanRes_le (s : ∀ k : L.ι, Fin r → Γ(F, L.U k))
   rw [spanRes, Submodule.span_le]
   rintro _ ⟨i, rfl⟩
   have e := congrArg (resM F (le_inf hk hk')) (hA k k' i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [resM_resM, map_sum, resM_smul] at e
+
+  simp only [resM_resM, map_sum, resM_smul] at e
   change resM F hk' (s k' i) ∈ spanRes s k hk
   rw [show resM F hk' (s k' i) = _ from e]
   exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
@@ -108,14 +144,14 @@ theorem mem_spanRes_of_mem (hL : L.IsLB) (s : ∀ k : L.ι, Fin r → Γ(F, L.U 
     have hl := hli k (W p ⊓ W q) (inf_le_left.trans ((hW p).trans hV))
     have e1 := congrArg (resM F (inf_le_left : W p ⊓ W q ≤ W p)) (hc' p)
     have e2 := congrArg (resM F (inf_le_right : W p ⊓ W q ≤ W q)) (hc' q)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, resM_smul, resM_resM] at e1 e2
+
+    simp only [map_sum, resM_smul, resM_resM] at e1 e2
     exact Fintype.linearIndependent_iffₛ.1 hl _ _ (e1.trans e2.symm) i
   choose b hb using fun i => exists_fun_of_cover W hW hc (fun p => c p i) fun p q => key p q i
   refine (Submodule.mem_span_range_iff_exists_fun _).2 ⟨b, ?_⟩
   refine sec_ext_of_cover W hW hc fun p => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, resM_smul, resM_resM, hb]
+
+  simp only [map_sum, resM_smul, resM_resM, hb]
   exact hc' p
 
 end GlobalTheory.SubGlue
@@ -140,8 +176,8 @@ theorem exists_sub_isVB_lbIso_det : ∀ (X : Scheme.{0}) (F : X.Modules) (r : �
     rw [VB.IsFrame.basis_equivFun_symm]
     apply N.incl_app_injective
     rw [app_resM, VB.Sub.incl_app_mkSec, hA]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← appLinear_apply, map_sum]
+
+    rw [← appLinear_apply, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_smul, appLinear_apply, app_resM, VB.Sub.incl_app_mkSec]
   refine ⟨N.toMod, N.incl, inferInstance, ?_⟩

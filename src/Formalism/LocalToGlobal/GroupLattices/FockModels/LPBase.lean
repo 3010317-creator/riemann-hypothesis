@@ -1,6 +1,49 @@
 module
 
+import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.Tensor
 public import Formalism.LocalToGlobal.GroupLattices.FockModels.NablaLTwEqMap
+public import Formalism.LocalToGlobal.GroupLattices.FockModels.MkP
+import Formalism.SharpRestriction.GrowthBounds.LatticeSystems
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -100,16 +143,16 @@ include hx in
 theorem deltaS_apply (G : Module.Dual K V) (F : V) : deltaS φK x x' G (ν F) = φK (G F) := by
   have h1 : ν F = ∑ i, φK (x.repr F i) • x' i := by
     conv_lhs => rw [← x.sum_repr F]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [map_smulₛₗ, hx]
   have h2 : G F = ∑ i, x.repr F i * G (x i) := by
     conv_lhs => rw [← x.sum_repr F]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [map_smul, smul_eq_mul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h1, h2, map_sum, map_sum]
+
+  rw [h1, h2, map_sum, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, smul_eq_mul, map_mul]
   congr 1
@@ -183,21 +226,7 @@ theorem bc_Hten (hinj : Function.Injective (algebraMap O Kf)) (hinj' : Function.
 theorem Hten_le_V {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1) → ℤ) (hd : IsDominant lam0)
     (Λ : Fin n' → Submodule O (Fin (m + 1) → Kf)) (hΛ : ∀ s, IsLattice O (Λ s)) :
     ∀ z ∈ Hten O lam0 Λ, z ∈ Vsp Kf lam0 := by
-  have hle : Hten O lam0 Λ ≤ (Vsp Kf lam0).restrictScalars O := by
-    unfold Hten tensorLat
-    rw [Submodule.span_le]
-    rintro _ ⟨F, hF, rfl⟩
-    apply Submodule.subset_span
-    refine ⟨F, fun s => ?_, rfl⟩
-    have hanti := kp_lamAt_antitone lam0 hd s
-    beta_reduce
-    rw [if_pos hanti]
-    have h1 := hF s
-    beta_reduce at h1
-    obtain ⟨g, hg, hge⟩ := hΛ s
-    rw [hge] at h1
-    exact la_nablaLTw_le _ _ _ hg _ (H0_le_twisted_nabla _ _ hanti _ hg h1)
-  exact fun z hz => hle hz
+  apply Formalism.MainNotions.flipOneThree.Pf.tn_Hten_le <;> assumption
 
 theorem bc_Vsp {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1) → ℤ) (hd : IsDominant lam0) :
     BC (MvPolynomial.map φK) (Vsp Kf lam0) (Vsp Kf' lam0) := by
@@ -371,8 +400,8 @@ theorem lpAt_dom (hφ : ∀ x : O, φK (algebraMap O Kf x) = algebraMap O' Kf' (
     have e2 : ∀ l : Fin n, ∑ i, algebraMap O' Kf' (φ (Mat jj i)) * φK (be p r lam0 (F i) (u (Pi.single l 1)).1) =
         algebraMap O' Kf' (φ ((p : O) ^ D * (Pi.single l (1 : O) : Fin n → O) jj)) := by
       intro l
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hφ, ← hu (Pi.single l 1) jj, map_sum]
+
+      rw [← hφ, ← hu (Pi.single l 1) jj, map_sum]
       exact Finset.sum_congr rfl fun i _ => by rw [map_mul, hφ]
     simp only [e1, Matrix.map_apply]
     calc ∑ i, algebraMap O' Kf' (φ (Mat jj i)) *

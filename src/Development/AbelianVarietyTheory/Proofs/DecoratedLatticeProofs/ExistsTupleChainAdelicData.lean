@@ -1,27 +1,68 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SplitPart
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LevChiEqOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsChartsReadingStepZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteOrderChartsMiddleSteps
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartLastStepTwistBasePoint
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFiCComp
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsDetRoot
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryGroupAdelicClassesViaFiniteAdelicPart
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MoveCompactLevelInvariant
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelFamilyCharacterExponent
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnChainsSatisfyConditions
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeChar
+public import Formalism.LocalToGlobal.Columns.RecLevel
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NotTopPtOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemberLevelPrimeNotUnderTwistPrime
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsPtOfOfRat
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicUnitaryLiftOfChartBasePointStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelCharacterRepsOnAdelicUnitaryPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastStepChartBasePointCarriesStdPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicUnitaryLiftOfChartBasePointStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStepPointOfChartBasePointStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastStepChartBasePointCarriesStdPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceIdempotentVacuumHyperspecialDictionary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameOnBaseCharacter
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartLastStepTwistBasePoint
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EmbFColZeroMemMram
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsChartsReadingStepZero
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmAdeleUnitCharacterReadingHeckeChar
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteOrderChartsMiddleSteps
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsPtOfOfRat
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelFamilyCharacterExponent
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFiCComp
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemberLevelPrimeNotUnderTwistPrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnChainsSatisfyConditions
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftLevelsGoodPrimesProperties
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsDetRoot
+import Formalism.LocalToGlobal.Columns.RecLevelLocP
+import Formalism.LocalToGlobal.Columns.RecLevelStep
+import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -93,7 +134,7 @@ open GlobalTheory.Mem.Col2.MemChart GlobalTheory.Mem.Col2.TC.Chart0
 attribute [local instance] GlobalTheory.Mem.Col2.starE
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem stepCh_zero {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (u : B.Word) (a : I.ι) : StepCh I l Z u a 0 := by
   have hPr := l.pr
@@ -166,7 +207,7 @@ open GlobalTheory.Mem.Col2.MemChart
 attribute [local instance] GlobalTheory.Mem.Col2.starE
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem stepCh_mid {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (u : B.Word) (a : I.ι) (i : ℕ) (h1 : 1 ≤ i) (h2 : i < B.R.m) : StepCh I l Z u a i := by
   classical
@@ -184,7 +225,7 @@ theorem stepCh_mid {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : 
     fun _ v hv => hv.imp id (hQ v).1, fun h => absurd h (by omega), fun h => absurd h (by omega), fun _ _ => rfl⟩
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem stepCh_top {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (u : B.Word) (a : I.ι) : StepCh I l Z u a B.R.m := by
   classical
@@ -249,7 +290,7 @@ theorem pointOf {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.
   GlobalTheory.T.exists_stepPoint_of_chartBasePoint I hI hP u a i hi chOf Lb U chi y st k hR β hb.1 hb.2
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem comp {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l))
     (u : B.Word) (a : I.ι) (i : ℕ) (hi : i ≤ B.R.m) {C : Type} {bad : Set (HeightOneSpectrum (𝓞 B.host.F))} (chOf : (I.stp u a i).Cl → C)
     (K : ∀ β : C, LevelChart (I.rec7 l Z) (B.T u) bad i hi (fun c : {c // chOf c = β} => (I.chain l u a).stab i c.1)
@@ -330,7 +371,7 @@ theorem exists_idem {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (l : 
 end GlobalTheory.AdForm.TupEx
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem GlobalTheory.AdForm.exists_twDat : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι), ∃ (Ch : ℕ → Type) (_ : ∀ i, Fintype (Ch i)) (A : TwDat I l Z u a Ch), A.Is ∧ Nonempty (Unique (Ch B.R.m)) ∧ ∀ i, i < B.R.m → ∀ β, A.kb i β = TC.kStd X u (B.R.N i) := by
   intro B X I hI hP l Z u a
   choose C hC bad chOf K k kA xr b0 p0 U chi h hS hU hT hStd using fun i => GlobalTheory.AdForm.TupEx.fullStep I hI hP l Z u a i

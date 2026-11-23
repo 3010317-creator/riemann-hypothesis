@@ -1,15 +1,57 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqTopOfTranslates
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionZeroOfInvariantFunctionalsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTransvectionSubgroupEqAdelesClosed
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.BesselDatum
+public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMemSpanOfCommute
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.ContinuousOfHeisenbergLevelAndSmooth
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceAnnihilatorRelativelyCompact
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardAdelicCharacterLocalComponentNeOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTransvectionSubgroupEqAdelesClosed
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMemSpanOfCommute
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionZeroOfInvariantFunctionalsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
+import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.MetricSpace.Ultra.Pi
 
 @[expose] public section
 
@@ -156,9 +198,9 @@ theorem hO_along (ξ : Fin T.rank → D.host.E) (t : WO S T) (s : Fin S.rank →
     hO S T t (along S T ξ fun b => cA D (s b)) = (rowOf S T ξ t ᵥ* (S.gram⁻¹).map (incA D)) ⬝ᵥ s := by
   have e : ∀ x, incA D ((D.sp.cm.sig : D.host.E →+* D.host.E) x) = cA D (incA D x) :=
     fun x => (GlobalTheory.DualPairCheck.cA_incA x).symm
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hO, along, rowOf, vecMulVec_apply, vecMul, dotProduct, Matrix.map_apply, RingHom.map_mul, map_sum,
-    GlobalTheory.DualPairCheck.cA_cA, e, Finset.sum_mul]
+
+  simp only [hO, along, rowOf, vecMulVec_apply, vecMul, dotProduct, Matrix.map_apply, RingHom.map_mul, map_sum,
+  GlobalTheory.DualPairCheck.cA_cA, e, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.sum_comm]
@@ -179,14 +221,14 @@ theorem det_eq_one {ξ : Fin T.rank → D.host.E} (h : IsoVec T ξ) {z : GA D T}
     simp only [Matrix.map_apply, vecMulVec_apply, RingHom.map_mul, Matrix.smul_apply, Pi.smul_apply, smul_eq_mul,
       mul_assoc]
   have h2 := congrArg (incA D) h.2
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.dotProduct_mulVec, dotProduct, map_sum, RingHom.map_zero] at h2
+
+  rw [Matrix.dotProduct_mulVec, dotProduct, map_sum, RingHom.map_zero] at h2
   simp only [RingHom.map_mul] at h2
   rw [Formalism.L2.Theta.mt, ha, e, vecMulVec_eq Unit, det_one_add_replicateCol_mul_replicateRow, dotProduct_smul,
     dotProduct, h2, smul_zero, add_zero]
 
 
-set_option maxHeartbeats 800000 in
+
 open GlobalTheory.SplitScalar in
 theorem eq_zero_of_small (hψ : IsStdChar D ψ (-1)) {ξ : Fin T.rank → D.host.E} {e : AE D} (he : IsSplitIdem D e)
     {g : WO S T → ℂ} (hg : IsThetaFunO ψ S T g) {V : Set (Fin S.rank → AE D)} (hV : V ∈ nhds (0 : Fin S.rank → AE D))
@@ -258,8 +300,8 @@ theorem eq_zero_of_small (hψ : IsStdChar D ψ (-1)) {ξ : Fin T.rank → D.host
           (smul_dual _ _ _ ((rowOf_smul ξ e t).symm.trans (congrArg _ ((isHalf_iff _ _).1 ht))))
           fun s hs => (congrArg ψ (symplO_along ξ t s)).trans (hb ⟨s, hs⟩)
         rwa [Set.mem_preimage, undo_dual (incA D) (GlobalTheory.IndefiniteRowSideFullHecke.BesselData.embedding_xi_zero_ne_zero D) (gram_det_ne S)] at h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [heisO_sum, map_sum]
+
+      rw [heisO_sum, map_sum]
       exact Finset.sum_eq_zero fun i _ => by rw [key _ _ hg, H m hm t ht hrow, mul_zero]
     · obtain ⟨s, hs⟩ := not_forall.1 hb
       have h1 := key s _ hth
@@ -269,8 +311,8 @@ theorem eq_zero_of_small (hψ : IsStdChar D ψ (-1)) {ξ : Fin T.rank → D.host
       rw [h2] at h1
       exact (mul_left_eq_self₀.1 h1.symm).resolve_left hs
   have h1 := congrArg ℓ h0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero, Finset.sum_congr rfl fun i _ => hℓ _ g hg, Finset.sum_const, nsmul_eq_mul] at h1
+
+  rw [map_sum, map_zero, Finset.sum_congr rfl fun i _ => hℓ _ g hg, Finset.sum_const, nsmul_eq_mul] at h1
   exact (mul_eq_zero.1 h1).resolve_left (Nat.cast_ne_zero.2 Fintype.card_ne_zero)
 
 

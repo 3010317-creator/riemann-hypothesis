@@ -1,27 +1,56 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPreimmersionFst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapPairDetCovec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntFrExtension
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ModuliPointIntegralFrameAfterFiniteExtension
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralPointModelOverDvr
+public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.MatchingNotVacuous
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralPointPullbackComparison
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalSystemBasesNonempty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentFrameBaseChange
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsCombAtGMulVec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrOverHeightOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PropertyOfCodimOneLocalUnits
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.MemRangeOfForallHeightEqOneOfIsReflexive
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBasisChangeInvariaStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReFrameIffReframeIntegral
-public import Formalism.LocalToGlobal.ProjectiveLattices.GenFrPf
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointFieldFromTestRing
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFrameChangeIntegralInvertibleMatrix
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IntegralOfFrChg
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.MemRangeOfForallHeightEqOneOfIsReflexive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetMulExpandAlt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrOverHeightOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFrameExtensionExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralPointModelOverDvr
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectionStatementHolds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PropertyOfCodimOneLocalUnits
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartFlagBaseHolds
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalSystemBasesNonempty
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalSystemModelMap
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsCombAtGMulVec
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianDvrExtensionsIsoCompatible
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
 
 @[expose] public section
 
@@ -193,8 +222,8 @@ theorem eig_of_comb (hv : ∀ i, IsTanAtG t x (v i)) {s : 𝓞 E →+* S} (he : 
     rw [← GlobalTheory.ShFam.Pad.Pull.eig_iff]
     exact he i b
   rw [GlobalTheory.ShFam.Pad.Pull.eig_iff]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, h1, Finset.smul_sum]
+
+  simp only [map_sum, map_smul, h1, Finset.smul_sum]
   exact Finset.sum_congr rfl fun i _ => smul_comm _ _ _
 
 theorem isEigG_push {X' : Scheme.{0}} {t' : SAB H X'} {f : X' ⟶ X} (ν : SABMap t' t f) {x' : Sp S ⟶ X'}
@@ -216,7 +245,7 @@ end Tan
 
 
 open GlobalTheory.LocM.BaseMdl in
-set_option maxHeartbeats 1000000 in
+
 theorem exists_change {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F}
     (Y : Model Xo c β) {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
@@ -315,7 +344,7 @@ theorem value_map : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
 
 
 open GlobalTheory.ModelFrameCompare MonObj in
-set_option maxHeartbeats 1000000 in
+
 theorem images_eigenBasis {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (Y : Model Xo c (algebraMap (𝓞 c.F) c.F))
     (σ : E →+* ℂ) (T : CDVR) (io : c.F →+* T.Fr) (y₀ : IntFr Xo c T io) (xV : Sp T.V ⟶ Y.X)

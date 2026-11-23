@@ -1,28 +1,75 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ValIrreducible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ToMatrixTwRight
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactIntMatrix
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralRightCosetFunEqFinsum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemRangeAlgebraMapOfStarEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormLeIffValuationLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFixedBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SgnLatSpanBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanSelfDual
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowerBasisOfCharpolySeparable
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ValIrreducible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DetTracePowAddMulUnitNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermBasisOrthonormal
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrthonormalIffUnitary
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryGroupPositiveCharacterTrivialAndUnimodulaStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFixedBasis
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowerBasisOfCharpolySeparable
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeneralLinearHaarIsMulRightInvariantUnramified
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermBasisOrthonormal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralRightCosetFunEqFinsum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactIntMatrix
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariants
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisTransferFactorKrylovDet
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualHermitianLatticeBasisExistsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocallyCompactOfComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemRangeAlgebraMapOfStarEqStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormLeIffValuationLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrthonormalIffUnitary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualHermitianLatticeBasisExistsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SgnLatSpanBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanSelfDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryGroupPositiveCharacterTrivialAndUnimodulaStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+public import Mathlib.Data.Set.Card.Arithmetic
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -62,8 +109,8 @@ theorem repr_sigma {n : ℕ} (e : Basis (Fin n) K.E B.A) (he : ∀ i, B.σ (e i)
     e.repr (B.σ y) i = K.c (e.repr y i) := by
   have : B.σ y = ∑ j, K.c (e.repr y j) • e j := by
     conv_lhs => rw [← e.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, sigma_smul, he]
+
+    simp only [map_sum, sigma_smul, he]
   rw [this]; simp [Finsupp.single_apply]
 
 theorem norm_eta (a : K.E) : ‖((K.eta a : ℚ) : ℂ)‖ = 1 := by
@@ -127,8 +174,8 @@ theorem tw_fixed {n : ℕ} {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ
     (e : Basis (Fin n) K.E B.A) (he : ∀ i, B.σ (e i) = e i) (γ : GL (Fin n) F) (j : Fin n) :
     B.σ (tw e (Matrix.GeneralLinearGroup.map (iota F φ) γ) j) =
       tw e (Matrix.GeneralLinearGroup.map (iota F φ) γ) j := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [tw_apply, map_sum]
+
+  rw [tw_apply, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [sigma_smul, he, ← map_inv, Matrix.GeneralLinearGroup.map_apply, c_iota hs]
 
@@ -324,8 +371,8 @@ theorem repr_orth {n : ℕ} {x : B.A} (b : Basis (Fin n) K.E B.A)
   have h2 : ∀ j, (Algebra.trace K.E B.A ∘ₗ LinearMap.mulLeft K.E (x * B.σ (b i))) (b j) = if j = i then 1 else 0 :=
     fun j => by rw [← this, hb]
   rw [this]
-  set_option synthInstance.maxHeartbeats 100000 in
-    conv_rhs => rw [← b.sum_repr y, map_sum]
+
+  conv_rhs => rw [← b.sum_repr y, map_sum]
   simp only [map_smul, h2]
   simp
 

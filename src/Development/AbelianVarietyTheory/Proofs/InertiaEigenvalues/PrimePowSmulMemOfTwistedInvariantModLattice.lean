@@ -1,12 +1,61 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleTwistCoboundaryOnBallStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleTwistCoboundaryOnBall
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTateOperatorLevelComplement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwist
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Padics.LocalField
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Algebra.Nonarchimedean.Completion
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -143,8 +192,8 @@ private theorem twistedAction_mul_lemma_2 (hact : _root_.GlobalTheory.Cyc.IsActC
     ← Matrix.mulVec_smul]
   congr 2
   funext a
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [Matrix.mulVec, dotProduct, map_sum, map_mul, hfix, hc, Finset.mul_sum]
+
+  simp [Matrix.mulVec, dotProduct, map_sum, map_mul, hfix, hc, Finset.mul_sum]
 
 open scoped Matrix in
 variable {l : ℕ} [Fact l.Prime] in
@@ -223,10 +272,10 @@ private theorem eq_zero_of_twistedInvariant_offJumps_lemma_5 (hact : _root_.Glob
       _root_.GlobalTheory.Cyc.twAct act χ i U σ (∑ k, c k • B k) =
         ∑ k, (_root_.GlobalTheory.Cyc.chiC χ (i - u k) σ * act σ (c k)) • B k := by
     intro σ hσ c
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show _root_.GlobalTheory.Cyc.twAct act χ i U σ (∑ k, c k • B k) =
-        (AddMonoidHom.mk' (_root_.GlobalTheory.Cyc.twAct act χ i U σ)
-          (twistedAction_add_lemma_12 act χ i U σ)) (∑ k, c k • B k) from rfl, map_sum]
+
+    rw [show _root_.GlobalTheory.Cyc.twAct act χ i U σ (∑ k, c k • B k) =
+      (AddMonoidHom.mk' (_root_.GlobalTheory.Cyc.twAct act χ i U σ)
+        (twistedAction_add_lemma_12 act χ i U σ)) (∑ k, c k • B k) from rfl, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [AddMonoidHom.mk'_apply, twistedAction_smul_lemma_3, hB,
       twistedAction_eq_charPow_smul_lemma_13 act χ i U (u k), he σ hσ k, smul_smul, mul_comm]

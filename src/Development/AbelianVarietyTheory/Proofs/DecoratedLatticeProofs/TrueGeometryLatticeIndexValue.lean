@@ -1,35 +1,58 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Live
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Placed
-public import Formalism.LocalToGlobal.IndefiniteReal.RealRec
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StepIndexLeS
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsContinuousLocalGLEmbeddingSplitPlace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsTwIffCanonEq
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LevChiEqOne
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLocHom
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneSubIdemQMulSelf
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdAtToEAfOfIsIdemSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGAtAllPlacesMul
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ColNone
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PlaceIdempotentUnderEqOfLiesOver
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdAtToEAfEqZero
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryClassRepresentativesBijective
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentMulEntryEqZeroOfCutInverse
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EmbFColZeroMemMram
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryClassRepresentativesBijective
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsPtOfOfRat
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsUnique
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryLatticeOpen
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CxTiesOf
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOpenKerUnramMulTame
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
 
 @[expose] public section
 
@@ -46,7 +69,7 @@ section Cut
 
 open GlobalTheory.FinPl GlobalTheory.FinPl.SetCut
 
-set_option synthInstance.maxHeartbeats 200000
+
 
 variable {D : D7}
 
@@ -151,7 +174,7 @@ variable {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws
   {Ch : ℕ → Type} {A : TwDat I l Z u a Ch}
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem mem_U_iff (hA : A.Is) (j : ℕ) (hj : j ≤ B.R.m) (β : Ch j) (g : GA (I.rec7 l Z) ((I.rec7 l Z).sp.X j)) :
     g ∈ A.U j β ↔ g ∈ GfC _ ∧ ∀ v, cutAt _ v g ∈ A.U j β := by
   have ex := GlobalTheory.AdForm.RdVal.finM_mem ((I.rec7 l Z).sp.X j) (rankN (I.rec7 l Z) j hj) (gramN (I.rec7 l Z) j hj) rfl
@@ -223,7 +246,7 @@ theorem levGAt_eq (hTw : I.IsTw) (a : I.ι) (j : ℕ) (hj : j < B.R.m) (b : Idx 
   rw [h1, h2]
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem mem_lev_iff (hI : I.Ok) (hTw : I.IsTw) (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) (j : ℕ) (hj : j + 1 < B.R.m)
     [NeZero (B.R.N j)] {Ch : Type} {chOf : (I.stp u a j).Cl → Ch}
     {Lb : Ch → Submodule (𝓞 B.host.E) (Fin (B.R.N j) → B.host.E)} {U : Ch → Subgroup (TC.GA B (B.R.N j))} {chi : ∀ β, U β →* ℂˣ}

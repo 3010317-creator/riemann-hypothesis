@@ -1,9 +1,59 @@
 module
 
-public import Mathlib
-public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.HypJ
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IntegralAlmostAllPlaces
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSquareOfValuedSubOneLt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 
 @[expose] public section
 
@@ -286,7 +336,6 @@ theorem split_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
     · simp only [Fin.mk_one]; rw [c.2, wi2 t ht]
   have he_int := hei s hws
   have hf_int := hei (-s) (by rw [Valuation.map_neg, hws])
-  have h10 : (1 : K) ≠ 0 := h0 ▸ B.ne_zero 0
   have he0 : e ≠ 0 := fun h => by
     have := (ev_idm (B := B) h20 hs0).1
     rw [← he_def, h] at this
@@ -337,7 +386,6 @@ theorem split_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
     rw [huy]
     exact int_ef w he_int hf_int (hle _ _ (hi k) hpi') (hle _ _ (hj k) hqj') l
   · intro k l
-    have hz0 : ∀ l, w (B.repr (0 : K) l) ≤ 1 := fun l => by simp
     have h1' : ∀ (g : K) (m : Fin M), (∀ l, w (B.repr g l) ≤ 1) →
         w (B.repr ((Pi.single m g : Fin M → K) k) l) ≤ 1 := by
       intro g m hg
@@ -436,8 +484,8 @@ theorem change_basis {d d' : ℕ} (b : Module.Basis (Fin d) F E) (b' : Module.Ba
         (Algebra.TensorProduct.basis (Fv F v) b').repr
           ((Algebra.TensorProduct.basis (Fv F v) b) j) k := by
     conv_lhs => rw [← (Algebra.TensorProduct.basis (Fv F v) b).sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, Finsupp.finsetSum_apply]
+
+    simp [map_sum, Finsupp.finsetSum_apply]
   rw [key]
   refine sum_mem fun j _ => mul_mem (hx j) ?_
   have e : (Algebra.TensorProduct.basis (Fv F v) b) j = inclR (Fv F v) (b j) := by

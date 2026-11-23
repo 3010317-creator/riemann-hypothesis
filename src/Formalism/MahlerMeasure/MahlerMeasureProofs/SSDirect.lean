@@ -1,6 +1,56 @@
 module
 
 public import Formalism.MahlerMeasure.LevelLattice
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -270,7 +320,7 @@ theorem absSat (V : ι' → Submodule K (MvPolynomial σ K)) (a : ι' → ι →
     apply ih (s.erase L) (Finset.erase_ssubset hL) (fun i hi => hv i (mem_of_mem_erase hi))
     intro m
     have : ∑ i ∈ s.erase L, v i = ∑ i ∈ s, v i - v L := by rw [← hsplit]; ring
-    rw [this, coeff_sub]
+    rw [this, MvPolynomial.coeff_sub]
     exact C.sub_mem (hC m) (hT _ key m)
   rw [← hsplit]
   exact T.add_mem key hrest
@@ -306,7 +356,7 @@ lemma kap_add (F : (τ →₀ ℕ) → (σ →₀ ℕ)) (hF : Function.Injective
 
 lemma kap_smul (F : (τ →₀ ℕ) → (σ →₀ ℕ)) (hF : Function.Injective F) (c : K) (Q : MvPolynomial σ K) :
     kap F hF (c • Q) = c • kap F hF Q := by
-  ext n; simp only [coeff_kap, coeff_smul]
+  ext n; simp only [coeff_kap, MvPolynomial.coeff_smul]
 
 lemma kap_zero (F : (τ →₀ ℕ) → (σ →₀ ℕ)) (hF : Function.Injective F) :
     kap F hF (0 : MvPolynomial σ K) = 0 := by
@@ -354,7 +404,7 @@ lemma kap_gen (he : Function.Injective e) (zm μ : σ →₀ ℕ) (hμ : ∀ x, 
     (g : MvPolynomial σ K) (hg : ∀ w ∈ g.support, ∀ x, w (e x) = 0) :
     kap _ (F_inj e he zm μ) (monomial zm 1 * rename e y * g) = AddMonoidAlgebra.coeff g μ • y := by
   ext n
-  rw [coeff_kap, coeff_smul, smul_eq_mul, mul_assoc, add_assoc, coeff_monomial_mul, one_mul,
+  rw [coeff_kap, MvPolynomial.coeff_smul, smul_eq_mul, mul_assoc, add_assoc, coeff_monomial_mul, one_mul,
     coeff_rename_mul e he n μ hμ y g hg, mul_comm]
 
 end Kap

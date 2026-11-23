@@ -1,16 +1,63 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FinIso
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecProdRecSatakeLL
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
-public import Formalism.SharpRestriction.LevelLetterCocycles.SphericalInertData
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarySatakeEqOfSameUnramifiedBaseChange
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitarySatakeTransformIsLaurentPolynomial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryIwasawaCellBoundSmallTorusDoubleCoset
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAntiJFrame
+public import Formalism.SatakeDualWeyl.StatementF
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalHeckeValuesSameParameters
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryIwasawaCellBoundSmallTorusDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitarySatakeTransformIsLaurentPolynomial
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarySatakeEqOfSameUnramifiedBaseChange
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeC
+import Formalism.SatakeDualWeyl.KpqSubgroupCompact
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FinIso
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitAtOfIsSplitPl
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
+import Formalism.AlgebraicWeights.IsAlgWeight
+import ReciprocityTheory.Automorphisms.PlaceA
 
 @[expose] public section
 
@@ -86,8 +133,8 @@ def lin (c₀ : ℂ) (a b : Fin m → ℂ) : (Fin m → ℤ) →₀ ℂ :=
 
 theorem laurentCoeffEval_linearCoeffsAtBasis (α : Fin m → ℂ) (c₀ : ℂ) (a b : Fin m → ℂ) :
     ev0 α (lin c₀ a b) = c₀ + ∑ k, (a k * α k + b k * (α k)⁻¹) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [lin, map_add (f := _), map_sum, laurentCoeffEvalLinear_single, mon_zero, mon_e, mon_ne, mul_one]
+
+  simp only [lin, map_add (f := _), map_sum, laurentCoeffEvalLinear_single, mon_zero, mon_e, mon_ne, mul_one]
 
 def sqCoeff (c₀ A : ℂ) : (Fin m → ℤ) →₀ ℂ :=
   Finsupp.single 0 (c₀ ^ 2) + ∑ k, (Finsupp.single (Pi.single k 1) (2 * c₀ * A) +
@@ -108,9 +155,9 @@ theorem laurentCoeffEval_squareSymmetricCoeffs (α : Fin m → ℂ) (c₀ A : �
     rw [← quad]
     simp only [map_add (f := _), laurentCoeffEvalLinear_single]
     ring
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [sqCoeff, map_add (f := _), map_add (f := _), map_sum, map_sum, Finset.sum_congr rfl fun j _ =>
-    (map_sum _ _ _).trans (Finset.sum_congr rfl fun k _ => e j k)]
+
+  rw [sqCoeff, map_add (f := _), map_add (f := _), map_sum, map_sum, Finset.sum_congr rfl fun j _ =>
+  (map_sum _ _ _).trans (Finset.sum_congr rfl fun k _ => e j k)]
   simp only [map_add (f := _), laurentCoeffEvalLinear_single, mon_zero, mon_e, mon_ne, mul_one]
   have h1 : ∑ j, ∑ k, A ^ 2 * ((α j + (α j)⁻¹) * (α k + (α k)⁻¹) + if j = k then 2 * (1 - α j * (α j)⁻¹) else 0) =
       A ^ 2 * (∑ k, (α k + (α k)⁻¹)) ^ 2 + 2 * A ^ 2 * ∑ k, (1 - α k * (α k)⁻¹) := by

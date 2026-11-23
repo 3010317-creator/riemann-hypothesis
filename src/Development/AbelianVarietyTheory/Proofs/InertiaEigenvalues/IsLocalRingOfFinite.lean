@@ -1,9 +1,62 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.ExistsPowIdem
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.FiniteAlgebraLocalCompletion
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Ideal.Norm.RelNorm
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 
 @[expose] public section
 
@@ -30,25 +83,7 @@ theorem precomplete_of_finite (O : Type) [CommRing O] (I : Ideal O) [IsPrecomple
 
 theorem exists_pow_idem (M : Type) [Monoid M] [Finite M] (x : M) :
     ∃ n : ℕ, 0 < n ∧ x ^ n * x ^ n = x ^ n := by
-  have key : ∀ i j : ℕ, i < j → x ^ i = x ^ j → ∃ n : ℕ, 0 < n ∧ x ^ n * x ^ n = x ^ n := by
-    intro i j hij h
-    obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_lt hij
-    have h1 : ∀ k : ℕ, x ^ (i + k * (d + 1)) = x ^ i := by
-      intro k
-      induction k with
-      | zero => simp
-      | succ k ih =>
-        have : i + (k + 1) * (d + 1) = (i + d + 1) + k * (d + 1) := by ring
-        rw [this, pow_add, ← h, ← pow_add, ih]
-    refine ⟨(i + 1) * (d + 1), by positivity, ?_⟩
-    have e1 : (i + 1) * (d + 1) = i + (i * d + d + 1) := by ring
-    have e2 : (i + 1) * (d + 1) + (i + 1) * (d + 1)
-        = (i + (i + 1) * (d + 1)) + (i * d + d + 1) := by ring
-    rw [← pow_add, e2, pow_add, h1, ← pow_add, ← e1]
-  obtain ⟨i, j, hne, h⟩ := Finite.exists_ne_map_eq_of_infinite (fun n : ℕ => x ^ n)
-  rcases lt_or_gt_of_ne hne with hlt | hlt
-  · exact key i j hlt h
-  · exact key j i hlt h.symm
+  apply PositivityTheory.ThKG.Loc.Cone.Vf.exists_pow_idem <;> assumption
 
 theorem isLocalRing_of_finite (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (IsLocalRing.maximalIdeal O) O] [Finite (IsLocalRing.ResidueField O)]

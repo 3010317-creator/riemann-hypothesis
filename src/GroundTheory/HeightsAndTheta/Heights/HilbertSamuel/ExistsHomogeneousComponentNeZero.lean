@@ -1,9 +1,57 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsSegreArith
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.LemCone
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGoodB
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.LemCone
+import Std.Tactic.BVDecide.Normalize.Prop
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.ProjDefs
 
 @[expose] public section
 
@@ -123,8 +171,8 @@ theorem isMultiHomog_segreSub_linear (n : Ix ((k : K) → ι k) → ℤ) :
     IsMultiHomog (segreSub (∑ i, C (n i) * X i)) (fun _ : K => 1) := by
   apply isMultiHomog_of_weighted
   intro k
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, algHom_C, segreSub_X]
+
+  simp only [map_sum, map_mul, algHom_C, segreSub_X]
   exact IsWeightedHomogeneous.sum _ _ _ fun i _ => (isWeightedHomogeneous_segreMonomial k i.2).C_mul _
 
 theorem exists_segre_prod (m : ℕ) (e : (Σ k, ι k) → ℕ) (he : ∀ k, ∑ i, e ⟨k, i⟩ = m) :
@@ -195,8 +243,8 @@ theorem exists_segre_form {f : MRing ι} {df : K → ℕ} (hf : IsMultiHomog f d
   choose! M hM hMe using key
   refine ⟨∑ μ ∈ f.support, C (f.coeff μ) * M μ,
     IsHomogeneous.sum _ _ _ fun μ hμ => (hM μ hμ).C_mul _, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   conv_rhs => rw [f.as_sum]
   rw [Finset.sum_mul]
   refine Finset.sum_congr rfl fun μ hμ => ?_
@@ -274,8 +322,8 @@ theorem key_relation {D : ℕ} (y : (Σ k, ι k) → Ω) (w : Fin (D + 1) → Ω
   have hQx : aeval x Q = 0 := by
     have hc := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q N) hp
     simp only [Polynomial.aeval_eq_sum_range, Polynomial.finsetSum_coeff, Polynomial.coeff_zero] at hc
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hc, hQdef, map_sum]
+
+    rw [← hc, hQdef, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [coneMap_of_isHomogeneous ℚ x hP, Algebra.smul_def]
     have hcoe : algebraMap (coneRing ℚ w) (Polynomial Ω) (p.coeff k) = coneMap ℚ w (g k) := (hg k).symm
@@ -286,8 +334,8 @@ theorem key_relation {D : ℕ} (y : (Σ k, ι k) → Ω) (w : Fin (D + 1) → Ω
       ring
     · rw [map_zero]
   have h0 := aeval_segre_eq_zero y hQ hQx hz
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hQdef, map_sum] at h0
+
+  rw [hQdef, map_sum] at h0
   refine Eq.trans (Finset.sum_congr rfl fun k _ => ?_) h0
   split_ifs
   · rw [map_mul, map_pow, aeval_aeval_eq]

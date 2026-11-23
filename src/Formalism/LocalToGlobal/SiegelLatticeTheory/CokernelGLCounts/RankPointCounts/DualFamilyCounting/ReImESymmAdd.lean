@@ -1,11 +1,53 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.MeasurablePinv
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LeadingMinorIntegrality
-public import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.TermTiesEmptyOfLargeIndex
-public import Formalism.LocalRingCardinality.ConjSqrtMinusD
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CovolBR
+import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LintegralFinProd
 
 @[expose] public section
 
@@ -29,8 +71,6 @@ local notation "FIF" => FractionalIdeal (nonZeroDivisors (𝓞 D.host.F)) D.host
 theorem conj_conj (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
   first
     | exact Formalism.HC.HostRaw.conj_conj _ x
-    | exact Formalism.HC.HostRaw.conj_conj x
-    | exact D.host.conj_conj x
 
 theorem ddS_eq : ddS D = ((dI D : Ideal (𝓞 D.host.E)) : FIE) := rfl
 
@@ -57,8 +97,6 @@ theorem mem_inv_coeF {J : Ideal (𝓞 D.host.F)} (hJ : J ≠ ⊥) (x : D.host.F)
     forall_apply_eq_imp_iff₂]
   first
     | done
-    | exact Iff.rfl
-    | rfl
 
 theorem dF_ne (n : ℕ) : differentIdeal ℤ (𝓞 D.host.F) ^ n ≠ ⊥ := by
   first
@@ -92,7 +130,6 @@ theorem contr (n : ℕ) (y : D.host.F) :
     have hint' : IsIntegral ℤ (y * w : D.host.F) := by
       first
         | exact (isIntegral_algHom_iff (D.host.F.subtype.toIntAlgHom) Subtype.val_injective).mp hint
-        | exact (isIntegral_algHom_iff (D.host.F.subtype.toIntAlgHom) (RingHom.injective _)).mp hint
     exact ⟨⟨y * w, hint'⟩, rfl⟩
   · intro hy
     rw [mem_inv_coeF (dF_ne n) y] at hy
@@ -108,7 +145,6 @@ theorem contr (n : ℕ) (y : D.host.F) :
       rw [coe_algO, coe_algO, ho', Subfield.coe_mul]
     · first
         | exact ⟨0, by simp⟩
-        | exact ⟨0, (mul_zero _).symm⟩
     · rintro a b _ _ ⟨oa, ha⟩ ⟨ob, hb⟩
       refine ⟨oa + ob, ?_⟩
       show (oa : D.host.E) + ob = _ * ((a : D.host.E) + b)
@@ -125,15 +161,11 @@ def omg (D : D7) : D.host.E := (1 + D.host.sqrtMinusD) / 2
 private theorem conj_sqrtMinusD' : D.host.conj D.host.sqrtMinusD = -D.host.sqrtMinusD := by
   first
     | exact D.host.conj_sqd
-    | exact Formalism.HC.HostRaw.conj_sqd _
-    | exact Formalism.HC.HostRaw.conj_sqd
 
 theorem omg_int : IsIntegral ℤ (omg D) := by
   have hd : D.host.d % 8 = 7 := by
     first
       | exact D.host.d_mod_eight
-      | exact Formalism.HC.HostRaw.d_mod_eight _
-      | exact Formalism.HC.HostRaw.d_mod_eight
   have h2 : D.host.sqrtMinusD ^ 2 = -(D.host.d : D.host.E) := D.host.sqd_sq
   have hk : (D.host.d + 1) / 4 * 4 = D.host.d + 1 := Nat.div_mul_cancel (by omega)
   have hk' : ((((D.host.d + 1) / 4 : ℕ) : ℤ) : D.host.E) * 4 = (D.host.d : D.host.E) + 1 := by
@@ -155,7 +187,6 @@ private theorem embS_conj' (τ : D.what₂.Tau) (x : D.host.E) :
   rw [← Formalism.MainNotions.S.Inh.tie_star]
   first
     | exact (NumberField.IsCMField.isConj_complexConj D.host.E (embS D τ)).eq x
-    | exact NumberField.ComplexEmbedding.IsConj.eq (NumberField.IsCMField.isConj_complexConj D.host.E (embS D τ)) x
 
 theorem embS_add_conj (τ : D.what₂.Tau) (x : D.host.E) :
     embS D τ (x + D.host.conj x) = ((2 * (embS D τ x).re : ℝ) : ℂ) := by
@@ -173,7 +204,6 @@ theorem sqrtMinusD_ne : D.host.sqrtMinusD ≠ 0 := by
   have h2 := D.host.qd_big.2
   first
     | (rw [h] at h2; exact Nat.not_lt_zero _ h2)
-    | omega
 
 variable (X : HidaSetting D)
 
@@ -221,16 +251,12 @@ def ΓIm (a : Fin D.R.rS) : AddSubgroup ((InfinitePlace X.B.I.F → ℝ) × (Inf
 theorem mem_ΓIm (a : Fin D.R.rS) (g) : g ∈ ΓIm X a ↔ ∃ t ∈ IIm a, reImHom X (embVHom X t) = g := by
   first
     | exact AddSubgroup.mem_map
-    | exact Iff.rfl
-    | simp [ΓIm]
 
 def sF (t : D.host.E) : D.host.F := ⟨t + D.host.conj t, (mem_F_iff _).2 (by rw [map_add (f := _), conj_conj, add_comm])⟩
 
 theorem coeF_two : ((2 : D.host.F) : D.host.E) = 2 := by
   first
     | rfl
-    | norm_num
-    | simp
 
 private theorem embS_coe_F_im_eq_zero (τ : D.what₂.Tau) (w : D.host.F) : (embS D τ (w : D.host.E)).im = 0 := by
   have hw : D.host.conj (w : D.host.E) = w := (mem_F_iff (w : D.host.E)).1 w.2
@@ -382,7 +408,6 @@ theorem coeF_nat (n : ℕ) : ((n : D.host.F) : D.host.E) = (n : D.host.E) := by
   first
     | simp
     | norm_cast
-    | exact map_natCast D.host.F.subtype n
 
 theorem bb_le (a : Fin D.R.rS) :
     bbSub a ≤ ((FractionalIdeal.spanSingleton _ ((D.host.d : D.host.F))⁻¹ * JF a : FIF) : Submodule (𝓞 D.host.F) D.host.F) := by
@@ -413,7 +438,6 @@ theorem bbF_ne (a : Fin D.R.rS) : bbF a ≠ 0 := by
     have := int_mem_IIm a ⟨D.host.sqrtMinusD, sqrtMinusD_int⟩
     first
       | (rw [OneMemClass.coe_one, mul_one]; exact this)
-      | simpa using this
   rw [h, FractionalIdeal.mem_zero_iff] at h1
   exact one_ne_zero h1
 

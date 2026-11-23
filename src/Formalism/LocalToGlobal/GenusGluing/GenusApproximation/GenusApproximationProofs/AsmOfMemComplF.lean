@@ -1,6 +1,55 @@
 module
 
 public import Formalism.LocalToGlobal.GenusGluing.GenusApproximation.GlueExists
+public import Formalism.LocalToGlobal.GenusGluing.GenusApproximation.Statement
+public import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -60,7 +109,6 @@ theorem asm_iota_OF (r : 𝓞 F) :
     iA F E (algebraMap (𝓞 F) E r) = iA F E (algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) r)) := by
   first
     | rfl
-    | rw [IsScalarTower.algebraMap_apply (𝓞 F) (𝓞 E) E r]
 
 theorem asm_iota_OE_mem (b : 𝓞 E) : iA F E (algebraMap (𝓞 E) E b) ∈ Formalism.L2.Herm.intAf F E := by
   apply Subring.subset_closure
@@ -188,19 +236,16 @@ private theorem over_lemma_6 {F E : Type} [Field F] [NumberField F] [Field E] [N
   haveI : Algebra.IsIntegral (𝓞 F) (𝓞 E) := by
     first
       | infer_instance
-      | exact ⟨fun x => (Algebra.IsIntegral.isIntegral (R := ℤ) x).tower_top⟩
   have hker : RingHom.ker (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal := by
     intro a ha
     rw [RingHom.mem_ker] at ha
     have e : algebraMap (𝓞 F) E a = algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) a) := by
       first
         | rfl
-        | exact IsScalarTower.algebraMap_apply (𝓞 F) (𝓞 E) E a
     rw [ha, map_zero] at e
     have e2 : algebraMap (𝓞 F) E a = algebraMap F E (algebraMap (𝓞 F) F a) := by
       first
         | rfl
-        | exact IsScalarTower.algebraMap_apply (𝓞 F) F E a
     rw [e2, map_eq_zero_iff _ (algebraMap F E).injective,
       map_eq_zero_iff _ (IsFractionRing.injective (𝓞 F) F)] at e
     rw [e]
@@ -208,12 +253,9 @@ private theorem over_lemma_6 {F E : Type} [Field F] [NumberField F] [Field E] [N
   obtain ⟨Q, hQ, hQv⟩ : ∃ Q : Ideal (𝓞 E), Q.IsMaximal ∧ Q.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal := by
     first
       | exact Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal hker
-      | exact Ideal.exists_ideal_over_maximal_of_isIntegral inferInstance v.asIdeal hker
   have hQ0 : Q ≠ ⊥ := by
     first
       | exact Ring.ne_bot_of_isMaximal_of_not_isField hQ (NumberField.RingOfIntegers.not_isField (K := E))
-      | exact Ring.ne_bot_of_isMaximal_of_not_isField hQ (NumberField.RingOfIntegers.not_isField E)
-      | exact Ideal.IsMaximal.ne_bot_of_isIntegral_int hQ
   exact ⟨⟨Q, hQ.isPrime, hQ0⟩, IsDedekindDomain.HeightOneSpectrum.ext hQv⟩
 
 private theorem split_lemma_8 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (hI : IdemCalc) (T : Finset (HeightOneSpectrum (𝓞 F)))
@@ -325,8 +367,6 @@ theorem genusToPoint_of (hLoc : LocEq) (hMem : MemLocFStd) (hCof : IdemCof) (hI 
       have hM0 : Mx ≠ ⊥ := by
         first
       | exact Ring.ne_bot_of_isMaximal_of_not_isField hM (NumberField.RingOfIntegers.not_isField (K := F))
-      | exact Ring.ne_bot_of_isMaximal_of_not_isField hM (NumberField.RingOfIntegers.not_isField F)
-      | exact Ideal.IsMaximal.ne_bot_of_isIntegral_int hM
       let w : HeightOneSpectrum (𝓞 F) := ⟨Mx, hM.isPrime, hM0⟩
       by_cases hw : w ∈ T
       · obtain ⟨s, hs, hsy⟩ : ∃ s ∈ complF E w, s • y ∈ N := hloc' w hw
@@ -443,8 +483,6 @@ theorem pointToGenus_of (hLoc : LocEq) (hMem : MemLocFStd) (hDen : IdemDenom) (h
   have hne : p ≠ ⊥ := by
     first
       | exact Ring.ne_bot_of_isMaximal_of_not_isField hp (NumberField.RingOfIntegers.not_isField (K := E))
-      | exact Ring.ne_bot_of_isMaximal_of_not_isField hp (NumberField.RingOfIntegers.not_isField E)
-      | exact Ideal.IsMaximal.ne_bot_of_isIntegral_int hp
   obtain ⟨γ, hγ, h1, h2⟩ := hW x hx (Formalism.L2.DIV.underPl F ⟨p, hp.isPrime, hne⟩)
   refine ⟨Formalism.UG.glEquiv γ, isom_lemma_3 hc γ hγ, ?_⟩
   have e1 := hLoc F E hc n ⟨p, hp.isPrime, hne⟩ (stdLat E n)

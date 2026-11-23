@@ -1,7 +1,54 @@
 module
 
-public import Mathlib
 public import GroundTheory.AutomorphicForms.DefiniteClassNumber.AdelicLattice
+import GroundTheory.GlobalFields.Adele.Compact
+import GroundTheory.GlobalFields.Adele.Topology
+import GroundTheory.GlobalFields.TateThesis.AdelicCharDual
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -80,8 +127,8 @@ theorem mem_integralCore_iff_basis {u : ι → FinAdele K ⊗[K] E} :
   have hβ : (β : E) = ∑ s, ((RingOfIntegers.basis E).repr β s) •
       ((RingOfIntegers.basis E s : 𝓞 E) : E) := by
     have := congrArg (algebraMap (𝓞 E) E) ((RingOfIntegers.basis E).sum_repr β)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at this
+
+    rw [map_sum] at this
     simp only [map_zsmul] at this
     exact this.symm
   rw [hβ, tmul_sum, Finset.sum_smul]
@@ -249,9 +296,9 @@ theorem isCompact_coreStabilizer (hH : IsUnit H.det) :
   show _ = unitaryCoords H (FinAdele K) b g (i, j, m)
   rw [unitaryCoords_apply]
   conv_rhs => rw [← mul_one (unitaryMat g i j), hone]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Finset.mul_sum, mul_smul_comm, map_sum, map_smul, Finsupp.coe_finsetSum,
-    Finset.sum_apply, Finsupp.smul_apply, smul_eq_mul]
+
+  simp only [Finset.mul_sum, mul_smul_comm, map_sum, map_smul, Finsupp.coe_finsetSum,
+  Finset.sum_apply, Finsupp.smul_apply, smul_eq_mul]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [← mul_assoc, ← map_mul, mul_assoc, inv_mul_cancel₀ (hd0 (j, k)), mul_one]
 
@@ -387,8 +434,8 @@ theorem exists_int_smul_mem_coreLattice : ∃ N : ℤ, N ≠ 0 ∧
   have hβ : (β : E) = ∑ s, ((RingOfIntegers.basis E).repr β s) •
       ((RingOfIntegers.basis E s : 𝓞 E) : E) := by
     have := congrArg (algebraMap (𝓞 E) E) ((RingOfIntegers.basis E).sum_repr β)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at this
+
+    rw [map_sum] at this
     simp only [map_zsmul] at this
     exact this.symm
   rw [hβ, tmul_sum, Finset.sum_smul]

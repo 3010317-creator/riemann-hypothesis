@@ -1,19 +1,74 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.BasicLiftAll
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.JdPolyOKPolynomialOperators
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorSumPolynomialOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliDetConjugateTopCoefficientStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AntisymProdEqSumQuantumMinorStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeibnizDetFrameMatrixMatrixUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RightOperatorDualMemOfInfiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsDualMatrixFrameFvecStatement
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BasicLift
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ActualAlgebraFacts
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftCapelliOperators
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftOfFunctions
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QxChain
+public import Formalism.HermitianCurvature.StatementJF
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AntisymProdEqSumQuantumMinorStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliDetConjugateTopCoefficientStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsDualMatrixFrameFvecStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.JdPolyOKPolynomialOperators
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LeibnizDetFrameMatrixMatrixUnitStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorSumPolynomialOperatorStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RightOperatorDualMemOfInfiniteStatement
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ActualAlgebraFacts
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.BasicLift
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellValues
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliWordSumExpansion
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactSupportFacts
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.HomogeneityNaturalDegree
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftCapelliOperators
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftClosedUnderOperations
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TopFirstOfParts
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -177,8 +232,8 @@ theorem row_mul_det (q : Fin (r + 1 + (r + k)) → ℂ) (a : Fin (r + 1 + (r + k
     simp only [posL_cast]
     rfl
   rw [Finset.sum_mul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [smul_mul_assoc, map_sum, map_smul, key, smul_add, Finset.sum_add_distrib, Finset.smul_sum]
+
+  simp only [smul_mul_assoc, map_sum, map_smul, key, smul_add, Finset.sum_add_distrib, Finset.smul_sum]
   congr 1
   · exact Finset.sum_congr rfl fun d _ => smul_comm _ _ _
   · simp only [smul_smul, ← Finset.sum_smul]
@@ -293,8 +348,8 @@ theorem group_identity (hz' : inWb k r z') (hT : 0 < Tz k r z') (Y : ℂ) :
     rw [evAt_apply, Module.End.mul_apply, mulE_pow_apply _ hs _ _ hg]
     rfl
   rw [hP] at e1
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_smul, map_sum, hL, hM, hR, hLN] at e1 e2
+
+  simp only [map_smul, map_sum, hL, hM, hR, hLN] at e1 e2
   simp only [mul_smul] at e2
   rw [e2, Matrix.det_transpose, Matrix.det_nonsing_inv, Ring.inverse_eq_inv'] at e1
   rw [Fintype.sum_prod_type]
@@ -531,8 +586,8 @@ theorem lift_regular {d : Q.NFData P (RA P Bs)} (hD : P5.IsData P Bs.z Bs.z' Bs.
         map_add' := fun _ _ => rfl
         map_smul' := fun _ _ => rfl }
     have := congrArg ev hB
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_neg, map_sum] at this
+
+    rw [map_neg, map_sum] at this
     simp only [map_smul] at this
     exact this
   have e4 : dZ Bs.z Bs.z' h ^ P.r • B.JF Bs (B.opApply Θ F) h =

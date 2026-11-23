@@ -1,9 +1,60 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDRStepB
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapTodaVRules
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapTodaVGrp
+public import Formalism.HermitianCurvature.StatementQ
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ChainRecursionFromSingleDescent
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapTodaVCoef
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDRStepBRules
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HasDerivAtNormPow
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.OperatorPreservesFusionForms
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.RightDerivativeRulePsi
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellMulVecBasis
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.QuantumDetHighestWeightHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
 
 @[expose] public section
 
@@ -276,8 +327,8 @@ theorem stepBv_ring {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n →
       κ • Λ (qminor E (a ∘ Fin.castSucc ∘ Fin.castSucc) (b ∘ Fin.castSucc ∘ Fin.castSucc) u) := by
     have hsk := Formalism.REAL.quantumMinorRowSkew_holds A n (t + 1) E a'' b' τ u
     rw [hperm] at hsk
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsk, Formalism.FourierDecayAlt.P.expansion_first_line A n t E hE a'' b' u, Finset.mul_sum, map_sum, Fin.sum_univ_castSucc]
+
+    rw [hsk, Formalism.FourierDecayAlt.P.expansion_first_line A n t E hE a'' b' u, Finset.mul_sum, map_sum, Fin.sum_univ_castSucc]
     have hrest : ∀ m : Fin t, Λ (((Equiv.Perm.sign τ : ℤ) : A) * ((((-1 : ℤ) ^ ((m.castSucc : Fin (t + 1)) : ℕ) : ℤ) : A) *
         (Tm E (u - (t : ℂ)) (a'' 0) (b' m.castSucc) * qminor E (a'' ∘ Fin.succ) (b' ∘ m.castSucc.succAbove) u))) = 0 := by
       intro m
@@ -297,8 +348,8 @@ theorem stepBv_ring {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E : Fin n →
     rw [h11, Int.cast_one, one_mul, Fin.succAbove_last]
     congr 3
     all_goals (funext i; simp only [Function.comp_apply, Fin.cons_succ]; exact congrFun hcs2 i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Formalism.FourierDecayAlt.P.expansion_last_column A n (t + 1) E a b u, map_sum, Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
+
+  rw [Formalism.FourierDecayAlt.P.expansion_last_column A n (t + 1) E a b u, map_sum, Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
   have hrest : ∀ m : Fin t, Λ ((((-1 : ℤ) ^ (t + 1 + ((m.castSucc.castSucc : Fin (t + 2)) : ℕ)) : ℤ) : A) *
       (qminor E (a ∘ m.castSucc.castSucc.succAbove) (b ∘ Fin.castSucc) u *
         Tm E (u - ((t + 1 : ℕ) : ℂ)) (a m.castSucc.castSucc) (b (Fin.last (t + 1))))) = 0 := by

@@ -1,23 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.WittOnFalse
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRulesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundariesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFormalGroupCoboundaryHomogeneousStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricCocycleAdditiveEqCoboundaryAddStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LazardOneVariableExistsWittLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffPowerSeriesEvalTwoGroupsSinglePairStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveTwoCocycleCoeffRelationsOnePairStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryOneAdditiveFormalGroupLawXPowStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffCoboundaryOneAdditiveEqZeroOfDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffPowerSeriesEvalTwoGroupsSinglePairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LazardOneVariableExistsWittLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundariesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricCocycleAdditiveEqCoboundaryAddStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
 open CategoryTheory TensorProduct MvPowerSeries GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Katz
 
-set_option maxHeartbeats 800000
+
 
 namespace GlobalTheory.LazardHomog
 
@@ -58,13 +96,13 @@ theorem homogCoc_red_cob : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [Ch
           rw [map_sub, hbNc, if_pos hα, sub_self]) γ hγ, add_zero]
       conv_lhs => rw [hb]
       rw [map_add (f := _), map_add (f := _), e1]
-    set_option synthInstance.maxHeartbeats 100000 in
-      · rw [hhom γ hγ, map_add (f := _), map_sum, (GlobalTheory.T.additive_formal_group_coboundary_homogeneous k d N).1 bN (fun α hα => by
-        rw [hbNc, if_neg hα]) γ hγ, zero_add]
-        refine (Finset.sum_eq_zero fun m _ => ?_).symm
-        simp only [cm]
-        rw [GlobalTheory.T.coeff_powerSeriesEvalTwoGroups_single_pair]
-        split_ifs <;> simp [hhom γ hγ]
+
+    · rw [hhom γ hγ, map_add (f := _), map_sum, (GlobalTheory.T.additive_formal_group_coboundary_homogeneous k d N).1 bN (fun α hα => by
+      rw [hbNc, if_neg hα]) γ hγ, zero_add]
+      refine (Finset.sum_eq_zero fun m _ => ?_).symm
+      simp only [cm]
+      rw [GlobalTheory.T.coeff_powerSeriesEvalTwoGroups_single_pair]
+      split_ifs <;> simp [hhom γ hγ]
 
   set a : Fin d → ℕ → k := fun m n => coeff (Finsupp.single (Sum.inl m) n + Finsupp.single (Sum.inr m) (N - n)) c with ha
   have hsym : ∀ m n, n ≤ N → a m n = a m (N - n) := by
@@ -114,8 +152,8 @@ theorem homogCoc_red_cob : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [Ch
     intro m α
     rw [GlobalTheory.T.cob1_addLaw_X_pow_eq_sum_choose (Fr p k) d N m (by omega)]
     simp only [cm]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [GlobalTheory.T.coeff_powerSeriesEvalTwoGroups_single_pair, map_smul, map_sum]
+
+    rw [GlobalTheory.T.coeff_powerSeriesEvalTwoGroups_single_pair, map_smul, map_sum]
     simp only [coeff_monomial, smul_eq_mul]
     set i := α (Sum.inl m) with hi
     set j := α (Sum.inr m) with hj
@@ -159,9 +197,9 @@ theorem homogCoc_red_cob : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [Ch
       apply hs; obtain ⟨e1, e2⟩ := key i' h; rw [e1, e2]; exact h
   refine ⟨Katz.lift p bN + ∑ m, t m • (X m ^ N : MvPowerSeries (Fin d) (Fr p k)), ?_, ?_⟩
   · intro α hα
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_add (f := _), map_sum, coeff_lift, hbNc, if_neg hα, WittVector.teichmuller_zero, map_zero,
-      zero_add]
+
+    rw [map_add (f := _), map_sum, coeff_lift, hbNc, if_neg hα, WittVector.teichmuller_zero, map_zero,
+    zero_add]
     refine Finset.sum_eq_zero fun m _ => ?_
     rw [map_smul, coeff_X_pow, if_neg, smul_zero]
     intro h; apply hα; rw [h, Finsupp.degree_single]

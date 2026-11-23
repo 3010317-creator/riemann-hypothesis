@@ -1,13 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FrobeniusTwistedHilbertNinetyAlt
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.NormFin
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.NormAdic
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.FrobFacts
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.InflFacts
-public import GroundTheory.LocalFields.Uniqueness
-public import GroundTheory.LocalFields.UnitsPowers
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.FrobeniusLocalPairs.NormFin
+import GroundTheory.LocalFields.Uniqueness
+import GroundTheory.LocalFields.UnramifiedHensel
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -300,16 +339,16 @@ private theorem exists_sum_pow_apply_eq_one_of_lift_frobenius {R F₀ F₁ : Typ
         ← pow_mul, pow_succ, mul_comm (Fintype.card F₀ ^ i)]
   set t := ∑ i ∈ Finset.range n, (f ^ i) a₀ with ht
   have hrt : r t = 1 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [ht, map_sum]
+
+    rw [ht, map_sum]
     simp_rw [hri, ha₀]
     exact hz
   have htu : IsUnit t := by
     rw [← IsLocalRing.notMem_maximalIdeal, ← hker, hrt]
     exact one_ne_zero
   have hft : f t = t := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [ht, map_sum]
+
+    rw [ht, map_sum]
     have e : ∀ i, f ((f ^ i) a₀) = (f ^ (i + 1)) a₀ := by
       intro i
       rw [pow_succ', RingHom.mul_def, RingHom.comp_apply]
@@ -355,8 +394,8 @@ private theorem mem_map_of_adjoinRoot_hom_eq_zero_of_ker_le {R S : Type*} [CommR
         Polynomial.coeff_zero]
     have hmk : AdjoinRoot.mk ψ g = AdjoinRoot.mk ψ g' := by
       rw [hg', map_sub, map_mul, AdjoinRoot.mk_self, zero_mul, sub_zero]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hmk, g'.as_sum_range_C_mul_X_pow, map_sum]
+
+    rw [hmk, g'.as_sum_range_C_mul_X_pow, map_sum]
     refine Ideal.sum_mem _ (fun i _ => ?_)
     rw [map_mul, AdjoinRoot.mk_C, ← AdjoinRoot.algebraMap_eq]
     exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ (hg'0 i))
@@ -456,8 +495,8 @@ private theorem normPoly_lemma_7 {R F₀ F₁ : Type} [CommRing R] [IsNoetherian
   obtain ⟨a, ha⟩ := exists_sum_pow_apply_eq_one_of_lift_frobenius r hr hker φ sb hfrob hcomm hper
   have htr : ∑ i ∈ Finset.range n, (⇑τ)^[i] (AdjoinRoot.of ψ a) = 1 := by
     simp_rw [hof]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_sum, ha, map_one]
+
+    rw [← map_sum, ha, map_one]
   have hper' : ∀ x, (⇑τ)^[n] x = x := by
     intro x
     induction x using AdjoinRoot.induction_on with

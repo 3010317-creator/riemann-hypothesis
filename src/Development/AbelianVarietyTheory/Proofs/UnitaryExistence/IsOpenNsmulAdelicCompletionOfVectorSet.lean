@@ -1,11 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsNatMulMem
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ImportsBis
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ImportsTer
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NsmulIntegralMemNhdsZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -22,9 +66,6 @@ theorem isOpen_integral :
   | exact @_root_.GlobalTheory.IntegralOpen.isOpen_integral
   | exact _root_.GlobalTheory.IntegralOpen.isOpen_integral
   | (apply _root_.GlobalTheory.IntegralOpen.isOpen_integral <;> assumption)
-  | (intros; apply _root_.GlobalTheory.IntegralOpen.isOpen_integral <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.IntegralOpen.isOpen_integral <;> first | assumption | infer_instance)
-  | (intros; exact _root_.GlobalTheory.IntegralOpen.isOpen_integral ..)
 
 theorem exists_nsmul_adele (U : Set (FiniteAdeleRing (𝓞 F) F)) (hU : U ∈ 𝓝 (0 : FiniteAdeleRing (𝓞 F) F)) :
     ∃ N : ℕ, 0 < N ∧ ∀ a : FiniteAdeleRing (𝓞 F) F, (∀ v, a v ∈ v.adicCompletionIntegers F) → N • a ∈ U := by
@@ -32,9 +73,6 @@ theorem exists_nsmul_adele (U : Set (FiniteAdeleRing (𝓞 F) F)) (hU : U ∈ �
   | exact @_root_.GlobalTheory.LocalNormBound.main
   | exact _root_.GlobalTheory.LocalNormBound.main
   | (apply _root_.GlobalTheory.LocalNormBound.main <;> assumption)
-  | (intros; apply _root_.GlobalTheory.LocalNormBound.main <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.LocalNormBound.main <;> first | assumption | infer_instance)
-  | (intros; exact _root_.GlobalTheory.LocalNormBound.main ..)
 
 theorem nsmul_integral_mem_nhds (M : ℕ) (hM : 0 < M) :
     {c : FiniteAdeleRing (𝓞 F) F | ∃ a : FiniteAdeleRing (𝓞 F) F,
@@ -43,9 +81,6 @@ theorem nsmul_integral_mem_nhds (M : ℕ) (hM : 0 < M) :
   | exact @_root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero
   | exact _root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero
   | (apply _root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero <;> assumption)
-  | (intros; apply _root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero <;> first | assumption | infer_instance)
-  | (intros; exact _root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero ..)
 
 variable {E : Type} [Field E] [NumberField E] [Algebra F E] {n : ℕ}
 
@@ -58,9 +93,6 @@ theorem exists_denom (L : Submodule (𝓞 E) (Fin n → E))
   | exact @_root_.GlobalTheory.NatMulMemUnitaryExistence.target
   | exact _root_.GlobalTheory.NatMulMemUnitaryExistence.target
   | (apply _root_.GlobalTheory.NatMulMemUnitaryExistence.target <;> assumption)
-  | (intros; apply _root_.GlobalTheory.NatMulMemUnitaryExistence.target <;> assumption)
-  | (intros; apply @_root_.GlobalTheory.NatMulMemUnitaryExistence.target <;> first | assumption | infer_instance)
-  | (intros; exact _root_.GlobalTheory.NatMulMemUnitaryExistence.target ..)
 
 theorem isOpen_nsmul_hat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) (L : Submodule (𝓞 E) (Fin n → E)), Submodule.span E (L : Set (Fin n → E)) = ⊤ → letI : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E); (∀ N : ℕ, 0 < N → IsOpen {z : Fin n → RA F E | ∃ y ∈ hat F (L : Set (Fin n → E)), z = N • y}) ∧ ∀ W ∈ 𝓝 (0 : RA F E), ∃ N : ℕ, 0 < N ∧ ∀ y ∈ hat1 F (Set.range (algebraMap (𝓞 E) E)), N • y ∈ W := by
   intro F E _ _ _ _ _ n L hL
@@ -127,8 +159,8 @@ theorem isOpen_nsmul_hat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       | mem x hx =>
         obtain ⟨a, ha, _, ⟨x, rfl⟩, rfl⟩ := hx
         refine ⟨fun k => w.repr x k • a, fun k v => zsmul_mem (ha v) _, ?_⟩
-        set_option synthInstance.maxHeartbeats 100000 in
-          conv_rhs => rw [← w.sum_repr x, map_sum, TensorProduct.tmul_sum]
+
+        conv_rhs => rw [← w.sum_repr x, map_sum, TensorProduct.tmul_sum]
         refine Finset.sum_congr rfl fun k _ => ?_
         rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one, map_zsmul, TensorProduct.tmul_smul,
           TensorProduct.smul_tmul']

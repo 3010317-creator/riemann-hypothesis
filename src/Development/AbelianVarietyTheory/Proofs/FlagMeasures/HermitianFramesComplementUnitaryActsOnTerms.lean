@@ -1,13 +1,52 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
-public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MoveLatticeIsTermSameDatumWithWitnesses
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasisOfIsCompl
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemPerpSpan
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualLatticeUnipotentTranslateStandardStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermInvariantsIndependentOfWitnessesStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -33,28 +72,7 @@ theorem mem_smul (h : S.GLV) (Λ : Submodule L.O S.V) (x : S.V) : x ∈ h • Λ
 
 theorem isSD_smul {h : S.GLV} (hh : h ∈ isomG L S.Hm) {Λ : Submodule L.O S.V} (hΛ : IsSD L S.Hm Λ) :
     IsSD L S.Hm (h • Λ) := by
-  refine ⟨⟨hΛ.1.1.map _, ?_⟩, fun y => ?_⟩
-  · rw [eq_top_iff]
-    rintro x -
-    have h1 : h⁻¹ x ∈ Submodule.span E (Λ : Set S.V) := by rw [hΛ.1.2]; trivial
-    have h2 := Submodule.mem_map_of_mem (f := h.toLinearMap) h1
-    rw [Submodule.map_span] at h2
-    have h3 : h.toLinearMap (h⁻¹ x) = x := h.apply_symm_apply x
-    rw [h3] at h2
-    refine Submodule.span_mono ?_ h2
-    rintro _ ⟨y, hy, rfl⟩
-    exact Submodule.smul_mem_pointwise_smul y h Λ hy
-  · rw [mem_smul, ← hΛ.2]
-    have hi := (isomG L S.Hm).inv_mem hh
-    constructor
-    · intro H x hx
-      have := H (h x) (Submodule.smul_mem_pointwise_smul x h Λ hx)
-      rw [← hi] at this
-      have h3 : h⁻¹ (h x) = x := h.symm_apply_apply x
-      rwa [h3] at this
-    · intro H x hx
-      rw [← hi]
-      exact H _ ((mem_smul S h Λ x).1 hx)
+  apply GlobalTheory.HL.MoveWit.isSD_smul <;> assumption
 
 theorem spanTo_mono (g : Fin (r + 1) → S.V) : S.spanTo g r ≤ S.spanTo g (r + 1) :=
   Submodule.span_mono (Set.image_mono fun _ hi => Nat.lt_succ_of_lt hi)

@@ -1,6 +1,55 @@
 module
 
-public import Mathlib
+public import Mathlib.Algebra.Module.LinearMap.Star
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.SesquilinearForm.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 @[expose] public section
 
@@ -38,8 +87,8 @@ theorem _root_.GlobalTheory.exists_hyperbolic_completion :
       have h0 : μ (L y) = 0 := hle (LinearMap.mem_range_self L y)
       rw [LinearMap.pi_apply_eq_sum_univ] at h0
       have h1 : h (∑ k, star (μ fun j => if k = j then (1 : E) else 0) • u k) y = ∑ k, L y k • μ fun j => if k = j then (1 : E) else 0 := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star, L, LinearMap.pi_apply]
+
+        simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star, L, LinearMap.pi_apply]
         exact Finset.sum_congr rfl fun k _ => mul_comm _ _
       rw [h1, h0]
     have hc0 : ∀ k, μ (fun j => if k = j then (1 : E) else 0) = 0 := fun k => by
@@ -64,15 +113,15 @@ theorem _root_.GlobalTheory.exists_hyperbolic_completion :
       simp only [Submodule.coe_smul] at this
       exact this.symm
     rw [hx']
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, hgw]
+
+    simp [map_sum, hgw]
   set f : Fin i → V := fun a => g a - ∑ c, (2⁻¹ * h (g c) (g a)) • e c with hf
   have hfa : ∀ a, f a = g a - ∑ c, (2⁻¹ * h (g c) (g a)) • e c := fun a => rfl
   have hfe : ∀ a b, h (e b) (f a) = if b = a then 1 else 0 := by
     intro a b
     rw [hfa]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sub, map_sum, hee, hge]
+
+    simp [map_sub, map_sum, hee, hge]
   have hfe' : ∀ a b, h (f a) (e b) = if a = b then 1 else 0 := by
     intro a b
     rw [← hs.eq, hfe]
@@ -82,18 +131,18 @@ theorem _root_.GlobalTheory.exists_hyperbolic_completion :
   have hfW : ∀ a, ∀ x ∈ W, h x (f a) = 0 := by
     intro a x hx
     rw [hfa]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sub, map_sum, hgW a x hx, heW _ x hx]
+
+    simp [map_sub, map_sum, hgW a x hx, heW _ x hx]
   have hff : ∀ a b, h (f a) (f b) = 0 := by
     intro a b
     have hs' : starRingEnd E (h (g b) (g a)) = h (g a) (g b) := hs.eq (g b) (g a)
     have h1 : h (f a) (f b) = h (f a) (g b) - 2⁻¹ * h (g a) (g b) := by
       conv_lhs => rw [hfa b]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_sub, map_sum, hfe']
+
+      simp [map_sub, map_sum, hfe']
     rw [h1, hfa a]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sub, map_sum, hge, hs', map_ofNat]
+
+    simp [map_sub, map_sum, hge, hs', map_ofNat]
     ring
   let v : Fin i ⊕ (Fin i ⊕ Fin m) → V := Sum.elim f u
   have hu0 : ∀ c k, h (e c) (u k) = 0 := by
@@ -112,8 +161,8 @@ theorem _root_.GlobalTheory.exists_hyperbolic_completion :
     have hfst : ∀ a, γ (Sum.inl a) = 0 := by
       intro a
       have := congrArg (h (e a)) hγ
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [map_add (f := _), map_sum, hfe, hu0] using this
+
+      simpa [map_add (f := _), map_sum, hfe, hu0] using this
     have hrest : ∑ k, γ (Sum.inr k) • u k = 0 := by simpa [hfst] using hγ
     intro k
     rcases k with a | k

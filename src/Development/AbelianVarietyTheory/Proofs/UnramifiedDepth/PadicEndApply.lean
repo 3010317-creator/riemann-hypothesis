@@ -1,10 +1,53 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.DualLattices.TowerZeroSurjective
 public import ReciprocityTheory.DualLattices.LinPairStatement
-public import ReciprocityTheory.DualLattices.SubMemOfCompat
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniversalCharts.LePreimageOfNil
+public import ReciprocityTheory.DualLattices.FormalChartAtZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.Topology.Sheaves.Presheaf
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniversalCharts.LePreimageOfNil
 
 @[expose] public section
 
@@ -200,18 +243,18 @@ theorem main :
       apply Subtype.ext
       rw [AddSubmonoidClass.coe_finsetSum]
       change B.tg π hπ (w ⊗ₜ i) = ∑ l, B.tg π hπ (gb l ⊗ₜ (gb.repr w l • i))
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← map_sum]
+
+      rw [← map_sum]
       congr 1
       conv_lhs => rw [← gb.sum_repr w, TensorProduct.sum_tmul]
       exact Finset.sum_congr rfl fun l _ => TensorProduct.smul_tmul _ _ _
     change (complEnd f p s (hf s) a ⟨B.tg π hπ (w ⊗ₜ i), tg_torP B p π hπ w i hi⟩ : B.G R) = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum, AddSubmonoidClass.coe_finsetSum,
-      Finset.sum_congr rfl fun l _ => key2 a s π hπ l _ (hr l), ← map_sum]
+
+    rw [h1, map_sum, AddSubmonoidClass.coe_finsetSum,
+    Finset.sum_congr rfl fun l _ => key2 a s π hπ l _ (hr l), ← map_sum]
     congr 1
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [← gb.sum_repr w, map_sum, TensorProduct.sum_tmul]
+
+    conv_rhs => rw [← gb.sum_repr w, map_sum, TensorProduct.sum_tmul]
     exact Finset.sum_congr rfl fun l _ => by rw [map_smul, TensorProduct.smul_tmul]
   · intro a k l
     change complMat p dL a k l = algebraMap R₀ (O : Type) (gb.repr (L a (gb l)) k)

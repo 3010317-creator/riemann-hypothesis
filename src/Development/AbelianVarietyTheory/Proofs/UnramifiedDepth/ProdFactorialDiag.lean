@@ -1,8 +1,59 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthEqZeroOfLtPrime
 public import Formalism.LocalToGlobal.CharacterGerms.BiadditiveInSingleVariables
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreAndCapelli
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 @[expose] public section
 
@@ -216,8 +267,8 @@ theorem lead_det {k : ℕ} (w : Fin k → Fin k → σ) (hw : ∀ b c, p (w b c)
     rw [hM, Matrix.det_diagonal, MvPolynomial.monomial_sum_one]
     rfl
   · have hdeg : (∑ b : Fin k, Finsupp.single (w b b) 1).degree = k := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp [Finsupp.degree_single]
     rw [hdeg, Matrix.det_apply]
     apply MvPolynomial.IsHomogeneous.sum
@@ -418,31 +469,7 @@ theorem val_nat_nonneg (n : ℕ) : 0 ≤ v (n : C) := by
 
 theorem val_coprime {l : ℕ} (hl : l.Prime) (hv : v (l : C) = 1) {n : ℕ} (hn : ¬ l ∣ n) :
     v (n : C) = 0 := by
-  classical
-  have hpos := val_nat_nonneg v n
-  have hcop : Nat.Coprime n l := ((Nat.Prime.coprime_iff_not_dvd hl).2 hn).symm
-  obtain ⟨a, -, ha⟩ := Nat.exists_mul_mod_eq_one_of_coprime hcop hl.one_lt
-  have hq : n * a = l * (n * a / l) + 1 := by
-    have h := Nat.div_add_mod (n * a) l
-    rw [ha] at h
-    exact h.symm
-  have h01 : (0 : WithTop ℝ) < 1 := by exact_mod_cast (zero_lt_one : (0 : ℝ) < 1)
-  by_contra hne
-  have hlt : 0 < v (n : C) := lt_of_le_of_ne hpos (Ne.symm hne)
-  have h1 : 0 < v ((n : C) * a) := by
-    rw [AddValuation.map_mul]
-    exact lt_of_lt_of_le hlt (le_add_of_nonneg_right (val_nat_nonneg v a))
-  have h2 : 0 < v ((l : C) * ((n * a / l : ℕ) : C)) := by
-    rw [AddValuation.map_mul, hv]
-    exact lt_of_lt_of_le h01 (le_add_of_nonneg_right (val_nat_nonneg v _))
-  have hC : (1 : C) = (n : C) * a - (l : C) * ((n * a / l : ℕ) : C) := by
-    have h := congrArg (fun x : ℕ => (x : C)) hq
-    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_one] at h
-    rw [h]
-    ring
-  have h3 := AddValuation.map_sub v ((n : C) * a) ((l : C) * ((n * a / l : ℕ) : C))
-  rw [← hC, AddValuation.map_one] at h3
-  exact absurd h3 (not_le.2 (lt_min h1 h2))
+  apply GlobalTheory.FGDepth.val_natCast_eq_zero <;> assumption
 
 theorem val_nat {l : ℕ} (hl : l.Prime) (hv : v (l : C) = 1) {n : ℕ} (hn : n ≠ 0) :
     v (n : C) = (((padicValNat l n : ℕ) : ℝ) : WithTop ℝ) := by

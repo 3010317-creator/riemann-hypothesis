@@ -1,16 +1,59 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivLift
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
-public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToOfComponents
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IdealSheafComapIdealAffineOpenOfIsAffine
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalHolomorphicExponentialChartStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannFormPeriodDeterminantStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IdealSheafComapIdealAffineOpenOfIsAffine
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+public import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPairA
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToOfComponents
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
-public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
 
 @[expose] public section
 
@@ -28,22 +71,7 @@ variable {E E' : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [NormedAddComm
 theorem isHolTo_precomp {X : Scheme.{0}} {B : Set E} {y : E → (Sp ℂ ⟶ X)} (hy : IsHolTo B y)
     {W : Set E'} (hW : IsOpen W) {φ : E' → E} (hφ : DifferentiableOn ℂ φ W) (hm : Set.MapsTo φ W B) :
     IsHolTo W (fun w => y (φ w)) := by
-  intro U f
-  have hset : {w ∈ W | ⊤ ≤ y (φ w) ⁻¹ᵁ U} = W ∩ φ ⁻¹' {b ∈ B | ⊤ ≤ y b ⁻¹ᵁ U} := by
-    ext w
-    constructor
-    · rintro ⟨h1, h2⟩
-      exact ⟨h1, hm h1, h2⟩
-    · rintro ⟨h1, -, h2⟩
-      exact ⟨h1, h2⟩
-  have hopen : IsOpen {w ∈ W | ⊤ ≤ y (φ w) ⁻¹ᵁ U} := by
-    rw [hset]
-    exact hφ.continuousOn.isOpen_inter_preimage hW (hy U f).1
-  refine ⟨hopen, ?_⟩
-  refine DifferentiableOn.comp (g := fun b => valAt' (y b) U f) (t := {b ∈ B | ⊤ ≤ y b ⁻¹ᵁ U})
-    (hy U f).2 (hφ.mono fun w hw => hw.1) ?_
-  intro w hw
-  exact ⟨hm hw.1, hw.2⟩
+  apply GlobalTheory.LocLift.isHolTo_comp <;> assumption
 
 theorem isHolTo_congr {X : Scheme.{0}} {B : Set E} {y y' : E → (Sp ℂ ⟶ X)} (hy : IsHolTo B y)
     (h : ∀ b ∈ B, y' b = y b) : IsHolTo B y' := by

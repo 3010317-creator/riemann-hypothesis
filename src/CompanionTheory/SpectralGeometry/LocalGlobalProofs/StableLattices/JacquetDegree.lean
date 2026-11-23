@@ -1,8 +1,53 @@
 module
 
-public import Mathlib
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.InfinitesimalCharacterPaths.TensDecomp
 public import GroundTheory.IdeleRoots.ConstantFrames.GaugeExistence.QdetSub
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -38,11 +83,11 @@ theorem extract (W' : Submodule ℂ (Module.Dual ℂ V)) (φ : Module.Dual ℂ V
         ∑ j ∈ range (m - 1), (Y + a) ^ j • (φ ∘ₗ Cc j) := by
       refine LinearMap.ext fun v => ?_
       rw [hC (Y + a)]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [Algebra.algebraMap_eq_smul_one, LinearMap.sum_apply, map_sum, ← ht]
+
+      simp [Algebra.algebraMap_eq_smul_one, LinearMap.sum_apply, map_sum, ← ht]
     rw [e]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [hR, eval_finsetSum, map_sum, map_add (f := _), map_sub, map_smul]
+
+    simp [hR, eval_finsetSum, map_sum, map_add (f := _), map_sub, map_smul]
   have hR0 : R = 0 := Polynomial.funext fun Y => by
     rw [hRe, hW' _ (h Y)]; simp
   have hc : R.coeff (m - 1) = 0 := by rw [hR0]; simp
@@ -349,18 +394,18 @@ theorem mem_Wm (F : Filt X A) (B : GradBasis A) (c : ℝ) {φ : Module.Dual ℂ 
     refine ⟨hTφ, fun Y => ?_⟩
     have e : actM X.E Y = ∑ p, ∑ q, (B.Ui * Y * B.U) p q • Eb X B p q := by
       conv_lhs => rw [mat_sum B Y]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← actL_apply, map_sum]
+
+      rw [← actL_apply, map_sum]
       refine Finset.sum_congr rfl fun p _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [map_smul]
       rfl
     have e2 : φ ∘ₗ actM X.E Y = ∑ p, ∑ q, (B.Ui * Y * B.U) p q • (φ ∘ₗ Eb X B p q) := by
       refine LinearMap.ext fun v => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [e, LinearMap.sum_apply, map_sum]
+
+      simp [e, LinearMap.sum_apply, map_sum]
     rw [e2]
     refine sum_mem fun p _ => sum_mem fun q _ => Submodule.smul_mem _ _ ?_
     by_cases h : bl B p < bl B q
@@ -580,8 +625,8 @@ theorem A_eq (B : GradBasis A) : A = ∑ p, (dz (bl B p) : ℂ) • Ym B p p := 
 
 theorem act_A (X : GMod n) (B : GradBasis A) : actM X.E A = trB X B 2 - trB X B 0 := by
   conv_lhs => rw [A_eq B]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← actL_apply, map_sum, sum_blocks B]
+
+  rw [← actL_apply, map_sum, sum_blocks B]
   simp only [map_smul, block_standard]
   have e : ∀ p, actL X.E (Ym B p p) = Eb X B p p := fun _ => rfl
   simp only [e, ← Finset.smul_sum]
@@ -590,7 +635,6 @@ theorem act_A (X : GMod n) (B : GradBasis A) : actM X.E A = trB X B 2 - trB X B 
 
 theorem rho_eq (B : GradBasis A) : rhoA A = (B.j : ℝ) * ((n : ℝ) - B.j) := by
   have htr : Matrix.trace ((1 / 2 : ℂ) • (A * A + A)) = (B.j : ℂ) := by
-    have h1 : A = ∑ p, (dz (bl B p) : ℂ) • Ym B p p := A_eq B
     have hA := B.eq
     set d : Fin n → ℂ := fun p => ((![-1, 0, 1] : Fin 3 → ℂ) ((stdBlocks (dims n B.j) B.hj).symm p).1) with hd
     have h2 : A * A + A = B.U * Matrix.diagonal (fun p => d p * d p + d p) * B.Ui := by

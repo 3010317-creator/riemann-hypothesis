@@ -1,11 +1,63 @@
 module
 
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedIsCrysAndJumpEqZero
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.AinfActionTiltFixedOfFrobeniusRelation
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.ExistsAlgebraicVectorSpanningSubspace
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.MemIK
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaWDDefs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedIsCrysAndJumpEqZero
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ConclusionFinite
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormSubLtOneOfFix
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.TrivialOnInertiaOfUnr
+import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.RepAlg
 
 @[expose] public section
 
@@ -71,8 +123,8 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
   have h1 : ρ g (b.extendOfIsFullLattice ℚ_[l] j) =
       ∑ k, (algebraMap ℤ_[l] ℚ_[l] (b.repr ⟨_, hst g _ (b j).2⟩ k)) • b.extendOfIsFullLattice ℚ_[l] k := by
     have := congrArg Λ.subtype (b.sum_repr ⟨_, hst g _ (b j).2⟩)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at this
+
+    rw [map_sum] at this
     simp only [Basis.extendOfIsFullLattice_apply]
     exact this.symm
   rw [h1, Basis.repr_sum_self]
@@ -154,34 +206,34 @@ private theorem period {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l
   let x : V ⊗[ℚ_[l]] Bst P := ∑ i, e i ⊗ₜ (Polynomial.C (AI.ιA (W i j0)) : Bst P)
   have hx : x ∈ Dpst P ρ := ⟨K', hKK, (mem_Dst P _).2 fun g => by
     have h1 : ∀ i, AI.ιA (W i j0) = ∑ k, e.repr (ρ' g (e k)) i • P.actQ g (AI.ιA (W k j0)) := fun i => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [← hWg g, Matrix.mul_apply, map_sum]
+
+      conv_lhs => rw [← hWg g, Matrix.mul_apply, map_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [map_mul, Matrix.map_apply, Matrix.map_apply, ιA_zlW AI Ti, hM, ← AI.ιA_act, Algebra.smul_def]
       rfl
     have h2 : x = ∑ i, ∑ k, (e.repr (ρ' g (e k)) i • e i) ⊗ₜ[ℚ_[l]]
         (Polynomial.C (P.actQ g (AI.ιA (W k j0))) : Bst P) := by
       refine Finset.sum_congr rfl fun i _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [h1 i, map_sum, tmul_sum]
+
+      rw [h1 i, map_sum, tmul_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [← Polynomial.smul_C, smul_tmul]
     conv_rhs => rw [h2, Finset.sum_comm]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [stRep_tmul, actSt_C, ← sum_tmul, e.sum_repr]⟩
   refine ⟨⟨x, hx⟩, fun h0 => hij ?_, fun g a b hg => Subtype.ext ?_⟩
   · have h1 : x = 0 := congrArg Subtype.val h0
     have h2 := congrArg (fun y => TensorProduct.lid ℚ_[l] _ (LinearMap.rTensor (Bst P) (e.coord i0) y)) h1
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [x, map_sum, LinearMap.rTensor_tmul, lid_tmul, Module.Basis.coord_apply, Module.Basis.repr_self,
-      Finsupp.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_zero,
-      Polynomial.C_eq_zero] at h2
+
+    simp only [x, map_sum, LinearMap.rTensor_tmul, lid_tmul, Module.Basis.coord_apply, Module.Basis.repr_self,
+    Finsupp.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_zero,
+    Polynomial.C_eq_zero] at h2
     exact AI.ιA_inj (h2.trans (map_zero _).symm)
   · rw [coe_actD, Submodule.coe_smul, coe_phiD_pow, coe_phiD_pow]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [x, map_sum, phiV_pow, Finset.smul_sum]
+
+    simp only [x, map_sum, phiV_pow, Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [stRep_tmul, actSt_C, hρ, smul_tmul', ← AI.ιA_act]
     congr 3

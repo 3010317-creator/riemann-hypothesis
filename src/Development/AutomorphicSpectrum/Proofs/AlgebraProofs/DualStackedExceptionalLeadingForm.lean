@@ -1,9 +1,57 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsDualStackedExcLead
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.DenominatorOfSpan
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsExtraLast
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -147,9 +195,9 @@ theorem subst_form {K : Type} [Field K] {i : ℕ} {ι : Type} [Fintype ι]
     funext a
     simp [Finset.sum_apply, Pi.single_apply]
   conv_rhs => rw [hv]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, aeval_X, algHom_C, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
-    map_smul, algebraMap_eq, Finset.mul_sum, Finset.sum_mul]
+
+  simp only [map_sum, map_mul, aeval_X, algHom_C, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
+  map_smul, algebraMap_eq, Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun l _ => ?_
   ring
@@ -195,8 +243,8 @@ theorem poly : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (F F' : HermLa
   have hx : ∀ t, h1 (C (am S) * ∑ l, C ((b' t : Fin i → K) l) * X l) = 1 * h2 (P t) := by
     intro t
     rw [hscale, hform, hC t, hcy (fun l => am (Cc t l)), one_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [h2, P, map_sum, map_mul, map_C]
+
+    simp only [h2, P, map_sum, map_mul, map_C]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : j = j₀ <;> simp [W, hj]
   have hy : ∀ t, h1 (C (am S) * ∑ l, C ((b t : Fin i → K) l) * X l) = C (am π) * h2 (Q t) := by
@@ -206,8 +254,8 @@ theorem poly : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (F F' : HermLa
       refine Finset.sum_congr rfl fun l _ => ?_
       by_cases h : l = j₀ <;> simp [h, smul_smul]
     rw [hscale, hform, hD t, hv, hcy (fun l => am (D t l) * (if l = j₀ then am π else 1))]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [h2, Q, map_sum, map_mul, map_C, Finset.mul_sum, map_X]
+
+    simp only [h2, Q, map_sum, map_mul, map_C, Finset.mul_sum, map_X]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : j = j₀
     · simp only [W, hj, if_true, map_mul]; ring
@@ -232,8 +280,8 @@ theorem poly : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (F F' : HermLa
   rw [ev_map, map_zero] at e5
   have hP3 : ∀ t, h3 (P t) = X j₀ * C (ρ (Cc t j₀)) := by
     intro t
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [h3, P, map_sum, map_mul, map_C]
+
+    simp only [h3, P, map_sum, map_mul, map_C]
     rw [Finset.sum_eq_single j₀]
     · simp [mul_comm]
     · intro j _ hj
@@ -257,12 +305,12 @@ theorem poly : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (F F' : HermLa
       intro l
       have := congrFun (hM t) l
       simpa [Finset.sum_apply] using this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [h3, h4, Q, map_sum, map_mul, map_C, map_X, coe_eval₂Hom, eval₂_mul, eval₂_C, eval₂_X, Finset.mul_sum]
+
+    simp only [h3, h4, Q, map_sum, map_mul, map_C, map_X, coe_eval₂Hom, eval₂_mul, eval₂_C, eval₂_X, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun l _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← mul_assoc, ← C_mul, hMl, map_sum, Finset.sum_mul]
+
+    rw [← mul_assoc, ← C_mul, hMl, map_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [C_mul, mul_assoc]
   simp only [hC4, hyq] at e7
@@ -295,8 +343,8 @@ theorem semi_sum {K : Type} [Field K] [NumberField K] {i : ℕ} {k W : Type} [Fi
     apply Subtype.ext
     rw [hv]
     simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [this, map_sum]
+
+  rw [this, map_sum]
   exact Finset.sum_congr rfl fun j _ => hτ _ _ _ rfl
 
 theorem dual_stable {K : Type} [Field K] [NumberField K] {i : ℕ} (F : HermLattice K i) (μ : 𝓞 K)
@@ -424,8 +472,8 @@ theorem dualStackedExcLeadForm : GroundTheory.Heights₂.Heights.DualStackedExcL
     rw [hy]
     simp only [map_add (f := _), add_smul, Finset.sum_add_distrib, apply_ite am, map_zero, ite_smul, zero_smul,
       Finset.sum_ite_eq', Finset.mem_univ, if_true, he₀]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [e, smul_sub, Finset.sum_sub_distrib, smul_smul, map_sum, map_mul, Finset.sum_smul]
+
+    simp only [e, smul_sub, Finset.sum_sub_distrib, smul_smul, map_sum, map_mul, Finset.sum_smul]
     abel
   have hlmem : ∀ j, (if j = j₀ then am π • e j else e j) ∈ dualLattice F := by
     intro j

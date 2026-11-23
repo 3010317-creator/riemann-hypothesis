@@ -1,16 +1,54 @@
 module
 
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DiscreteSpectrumResidualClassification
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseMain
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
+public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartanInvolutionSystemsConjArchimedeanUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDataRestrictionUnique
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedFiniteMapsRestriction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedLocalIsomorphismScalars
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianCartanInvolutionSystemsConjugateArcStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPlaceCharacterComponentSmoothUnitaryConductStatement
+public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseArch
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DvReBaseReal
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DvReBaseUniq
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralCompRightTranslate
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.HoweReBase
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedFiniteMapsRestriction
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.HoweDualityUnramifiedAllPlaces
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralCompRightTranslate
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -89,13 +127,13 @@ theorem rebase_constants_agree (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs)
     rintro Φ Φ' ⟨hSo, m, m', r, f, s, r', f', s', hr, hr', hΦ, hΦ', hk⟩ y
     have e1 : ∀ u : Fin m → SInf F (Fin a × Fin (a + a')),
         om (g, h) (Λ • ∑ i, pureA F (u i) (r i)) = ∑ i, pureA F (⇑(Λ • T (u i))) (r i) := fun u => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_smul, map_sum, Finset.smul_sum]
+
+      rw [map_smul, map_sum, Finset.smul_sum]
       exact Finset.sum_congr rfl fun i _ => by rw [acts_pureA (hT1 (u i)) (hr i).1, pureA_smul]
     have e2 : ∀ u : Fin m' → SInf F (Fin a' × Fin (a + a')),
         om' (g', h) (∑ i, pureA F (u i) (r' i)) = ∑ i, pureA F (T' (u i)) (r' i) := fun u => by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun i _ => acts_pureA (hT1' (u i)) (hr' i).1
     have hm : Match B (reG G V V' Z) X R₂ S (om (g, h) (Λ • Φ)) (om' (g', h) Φ') := by
       refine ⟨so _ hSo, m, m', r, fun i => Λ • T (f i), fun k i => Λ • T (s k i), r', fun i => T' (f' i),

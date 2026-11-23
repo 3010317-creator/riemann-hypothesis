@@ -1,8 +1,56 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.RepAlg
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Mathlib.RingTheory.AdjoinRoot
 
 @[expose] public section
 
@@ -22,8 +70,8 @@ private theorem core1 {B Γ F A : Type} [CommRing B] [Monoid Γ] [Ring F] [Algeb
       rw [_root_.smul_pow, ← pow_mul, mul_comm, pow_mul, pow_succ, mul_smul, ← one_mul (Φ y₁ ^ N),
         ← smul_mul_assoc, hT, zero_mul, smul_zero]
     have h1 : (1 - T ^ (e + 1) • Φ y₁) * Φ (∑ k ∈ Finset.range N, (T ^ (e + 1) • y₁) ^ k) = 1 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_pow, map_smul]
+
+      simp only [map_sum, map_pow, map_smul]
       rw [mul_neg_geom_sum, h0, sub_zero]
     refine ⟨(∑ k ∈ Finset.range N, (T ^ (e + 1) • y₁) ^ k) * (z + T ^ e • (y₁ * y₂)), ?_⟩
     rw [mul_sub, mul_smul_comm, map_mul, ← mul_assoc, h1, one_mul]
@@ -186,9 +234,9 @@ private theorem map_gen {B C G : Type} [CommRing B] [CommRing C] [Group G] (s : 
     (hψ : ∀ g ∈ s, ψ (MvPolynomial.X g) = y.coeff g) : MonoidAlgebra.mapRingHom G ψ (gen B s) = y := by
   classical
   ext g
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [gen, map_sum, MonoidAlgebra.mapRingHom_single, MonoidAlgebra.coeff_sum,
-    MonoidAlgebra.coeff_single, Finsupp.finsetSum_apply, Finsupp.single_apply, Finset.sum_ite_eq']
+
+  simp only [gen, map_sum, MonoidAlgebra.mapRingHom_single, MonoidAlgebra.coeff_sum,
+  MonoidAlgebra.coeff_single, Finsupp.finsetSum_apply, Finsupp.single_apply, Finset.sum_ite_eq']
   split_ifs with hg
   · exact hψ g hg
   · exact (Finsupp.notMem_support_iff.1 fun h => hg (hy h)).symm

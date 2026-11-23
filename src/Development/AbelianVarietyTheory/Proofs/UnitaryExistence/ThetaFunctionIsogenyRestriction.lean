@@ -1,12 +1,65 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyStatement
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.MemAnalyticAtZeroOfEventuallyDifferentiableAt
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.PredMulSumPadicValNatFactorialAddCardLe
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.FourierProjections.HfNegRight
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsTranslateJetNeZero
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.CoeffEqZeroOfOrthonormal
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsImEqLattice
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DifferentiableFderivApply
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsImEqLattice
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ImFormApply
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Convex.Contractible
+public import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -323,8 +376,8 @@ theorem exists_mem_ne_zero {σ V : Type} [Fintype σ] [NormedAddCommGroup V] [No
       AnalyticAt ℂ (fun z : Fin n → V => ∏ b, (G b (p b) : V → ℂ) (z b)) 0 := fun p =>
     Finset.analyticAt_fun_prod _ fun b _ => ThetaJet.analyticAt_of_differentiable
       ((hT _ (G b (p b)).2).comp (differentiable_apply b)) 0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, polyDeriv_eq_pairing, taylorDir_sum u _ fun p _ => (han p).const_smul, map_sum]
+
+  rw [e, polyDeriv_eq_pairing, taylorDir_sum u _ fun p _ => (han p).const_smul, map_sum]
   refine Finset.sum_eq_zero fun p _ => ?_
   rw [taylorDir_smul u _ (han p), map_smul, ← polyDeriv_eq_pairing,
     hcon (fun b => G b (p b)) fun b => (G b (p b)).2, smul_zero]
@@ -401,8 +454,8 @@ theorem exists_translates_jet_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin 
           ((hasFDerivAt_apply b 0).add_const a)
         simpa using (hθ₁ a).hasFDerivAt
       rw [h1.fderiv]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [← smul_eq_mul, ← map_smul, ← map_sum, ContinuousLinearMap.comp_apply]
+
+      simp only [← smul_eq_mul, ← map_smul, ← map_sum, ContinuousLinearMap.comp_apply]
       convert ha' using 2
       funext i'
       simp [Fintype.sum_prod_type, Pi.single_apply, ite_apply]) hP

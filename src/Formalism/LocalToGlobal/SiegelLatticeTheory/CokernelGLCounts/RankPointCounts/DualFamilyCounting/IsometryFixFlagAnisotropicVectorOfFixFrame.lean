@@ -1,19 +1,62 @@
 module
 
-public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.Saturated
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.StepsR
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.OFDefs
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.IdLiftDef
 public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.FiniteRepSetOfOrtho
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.PerpendicularDefinitionHolds
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
 public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.UnimodularOfMemGenusOrtho
-public import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.InvMemLocROfUnimod
-public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GenusMassPosOfMassLowerBound
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.TransMemUnipotentIntegral
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.IsAdmissibleIntegralBasisChangeOne
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.LocalUnimodularHolds
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.PerpendicularDefinitionHolds
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AutLzFinite
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WittExtensionTheorem
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.TransMemUnipotentIntegral
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeRowsLift
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.IsAdmissibleIntegralBasisChangeOne
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.LocalUnimodularHolds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GenusMassPosOfMassLowerBound
+import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -725,8 +768,8 @@ theorem witt_trans {T' : D.host.E} (F' F'' : LFlag (D.sp.Y 0) D.R.rS T') (hzt' :
     have hx' : ∑ i, bv.repr x i • w i = 0 := by
       rw [← hx]
       conv_rhs => rw [← bv.sum_repr x]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp only [map_smul, hfb]
     have hc := Fintype.linearIndependent_iff.1 hlw _ hx'
     rw [Submodule.mem_bot]
@@ -744,13 +787,13 @@ theorem witt_trans {T' : D.host.E} (F' F'' : LFlag (D.sp.Y 0) D.R.rS T') (hzt' :
       intro x
       calc f x = f (∑ i, bv.repr x i • bv i) := by rw [bv.sum_repr]
         _ = ∑ i, bv.repr x i • w i := by
-            set_option synthInstance.maxHeartbeats 100000 in
-              rw [map_sum]
+
+            rw [map_sum]
             simp only [map_smul, hfb]
     intro x y
     rw [hfx, hfx, hcx, hcx]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.map_smulₛₗ₂, map_smul, LinearMap.sum_apply, hgram]
+
+    simp only [map_sum, LinearMap.map_smulₛₗ₂, map_smul, LinearMap.sum_apply, hgram]
   obtain ⟨g, hgi, hgf⟩ := _root_.witt_extension_theorem D.host.E (VS D).V (VS D).hT
     (fun x y => (VS D).herm.eq x y) (fun x hx => (VS D).nondeg.1 x hx) _ f hinj hiso
   have hgv : ∀ i, g (v i) = w i := by

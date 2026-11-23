@@ -1,15 +1,67 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsIrrKSubOfIsKTypeOf
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsAdmissibleSubOfFiniteDimensional
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DifferentiableAtOrbit
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwinerOfKFiniteVectors
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GlRelationsOnKFiniteVectors
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsUnitaryRepStableConjSkewAdjoint
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Smooth
+public import CompanionTheory.AutomorphicTheory.HarishChandraMultiplicity.HCMult
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.SubquotientNontrivial
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HarishChandraModulesIndefiniteUnitaryGroup
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Closure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsUnitaryRepStableConjSkewAdjoint
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerRepK
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DerivedRepConjMaxCompactIntertwinesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GelfandTraceConjInvertibleScalarMatrixStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GlRelationsOnKFiniteVectors
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MaxCompactIrreducibleHasHighestWeightAndIsoStatement
 public import Formalism.LocalToGlobal.IndefiniteReal.SmExpSmulContDiff
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Closure
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Unitary
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Bridge
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothA
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.Clause1
 
 @[expose] public section
 
@@ -200,8 +252,8 @@ theorem actM_vE (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) ρ) (hV
     ext i j
     simp [Matrix.sum_apply, single_apply, ite_and, Finset.sum_ite_eq, Finset.sum_ite_eq']
   conv_rhs => rw [hX]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, ReciprocityTheory.ChartRestriction.DS.actM, vE]
+
+  simp only [map_sum, map_smul, ReciprocityTheory.ChartRestriction.DS.actM, vE]
 
 theorem isGlRep_vE (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) ρ) (hV : IsGKSub ε ρ V) :
     ReciprocityTheory.ChartRestriction.DS.IsGlRep (vE hρ hV) := by
@@ -358,8 +410,8 @@ theorem vAct_conj_etr (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) �
       fun a b => ∑ c, ∑ d, (P c a * P⁻¹ b d) • vAct hρ hV (single c d 1) := by
     funext a b
     rw [conj_single]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul]
+
+    simp only [map_sum, map_smul]
   rw [this]
   exact GlobalTheory.T.gelfandTrace_conj_invertible_scalarMatrix (fun a b => vAct hρ hV (single a b 1)) P hP k
 

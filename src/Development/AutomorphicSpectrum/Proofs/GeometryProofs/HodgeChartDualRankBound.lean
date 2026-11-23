@@ -1,9 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsExtendLin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateChartDualAction
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateChartDualActionStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeCmTypeWeight
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 
 @[expose] public section
 
@@ -173,8 +215,8 @@ theorem exists_form [IsNoetherianRing R] [IsFractionRing R Ω] [CharZero Ω] [Fa
     simpa [Basis.span_apply, Basis.constr_basis, Finsupp.single_apply, ite_mul] using this
   have hψ : ∀ l : Fin s → Ω, ψ (∑ k, l k • v' k) = l ⬝ᵥ z := by
     intro l
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, hψk, dotProduct]
+
+    simp [map_sum, hψk, dotProduct]
   have hψR : ∀ e ∈ V', (∀ u ∈ D.om', u e ∈ R) → ψ e ∈ R := by
     intro e he hl
     obtain ⟨l, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun Ω).1 (hs ▸ he)
@@ -297,16 +339,16 @@ theorem seqHyp_chart : ∀ (o Ω Li : Type) [CommRing o] [Field Ω] [CharZero Ω
     · rintro ⟨f, hf, hfz⟩
       refine mem_dotDual.2 fun l hl => ?_
       have h1 : l ⬝ᵥ z = f (∑ k, l k • v' k) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp [dotProduct, map_sum, hfz, mul_comm]
+
+        simp [dotProduct, map_sum, hfz, mul_comm]
       rw [h1]
       exact form_mem D ρ hc hact σ (hVv' l) ((hW' l).1 hl) hf
   have hci : ∀ f ∈ D.omHT σ, ∀ f' ∈ D.omHT σ, (∀ k, f (v' k) = f' (v' k)) → f = f' := by
     intro f hf f' hf' h
     refine sub_eq_zero.1 (form_eq_zero D ρ hc hact σ ((D.omHT σ).sub_mem hf hf') fun e he => ?_)
     obtain ⟨a, rfl⟩ := hSv' e he
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, h]
+
+    simp [map_sum, h]
   have hlift : ∀ b ∈ stdLat R (Fin N), ∃ b₀ : Fin N → R, (fun n => (b₀ n : Ω)) = b :=
     fun b hb => ⟨fun n => ⟨b n, mem_std.1 hb n⟩, rfl⟩
   let Lv := Fintype.linearCombination Ω v
@@ -353,8 +395,8 @@ theorem seqHyp_chart : ∀ (o Ω Li : Type) [CommRing o] [Field Ω] [CharZero Ω
       ext j
       simp [Finset.sum_apply, Pi.single_apply]
     conv_rhs => rw [hx]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Rt, Fintype.linearCombination_apply, map_sum, map_smul, hakL]
+
+    simp only [Rt, Fintype.linearCombination_apply, map_sum, map_smul, hakL]
   have hRt : ∀ x ∈ stdLat R (Fin N), Rt x ∈ W := by
     intro x hx
     simp only [Rt, Fintype.linearCombination_apply]

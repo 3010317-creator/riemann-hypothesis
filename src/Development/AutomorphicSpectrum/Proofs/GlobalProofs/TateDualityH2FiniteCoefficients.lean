@@ -1,20 +1,68 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDualDeRhamAndFilZeroDimAll
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankH1fDeRham
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.TmulOneMemDcris
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.CyclotomicTwistFiniteModuleCocycle
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.CyclotomicTwistFiniteModuleCoboundary
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.CyclotomicCupTwoCochainLocallyConstant
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsDualLattices
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.LatticeOpenCompactNhdsBasis
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.CupFlipContinuousCocycle
-public import Development.WeilBound.CoreStatements.EulerCharacteristicCounts.BkMain
-public import Development.WeilBound.CoreStatements.EulerCharacteristicCounts.GcohTop
-public import Development.WeilBound.CoreStatements.EulerCharacteristicCounts.GcohTopEuler
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatum
+public import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.TateLocalDualityTopDegree
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAdicCompleteSpanAlgebraMapOfFreeFinite
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.H2EquivOfTorsionCharacter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntegralOfNormLeOne
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CupFlip
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.DualDOfDualQ
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.DualQOfTopInj
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsFinsetSep
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsLimitOfCauchyAdicFiltration
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsPerfectCharacterQuotient
+import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasis
+import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasisStatement
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GrowthGaloisInvariantsModPrimePowerLattice
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.H2LineOfTateH2AndCoboundaries
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.T2SpaceOfLatticeNhdsBasis
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 
 @[expose] public section
 
@@ -36,7 +84,7 @@ theorem actLoc (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l)
 
 
 open GlobalTheory.CompanionTheory.LocDual.Q in
-set_option maxHeartbeats 1000000 in
+
 theorem dualQ : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l),
     TopInj (Lp.PD K) → DualQ (Lp.PD K) := by
   intro hT l _ Lp K hTop LL _ _ _ O _ _ hG L1 hL1 A A' LA LA' P hdual ϖ hϖ r hI hI'
@@ -150,46 +198,7 @@ theorem cobLO : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), F
 open GlobalTheory.TateTop Formalism.MainNotions.LocalSituation GlobalTheory.Cyc GlobalTheory.Cyc.TwistLift Filter Topology in
 theorem tate_duality_H2_finite_coefficients (hT : Formalism.GaloisCohomology.LocalTateDualityK) (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l) :
     LocalTateTopDegree (Lp.PD K) := by
-  intro LL _ _ _ O _ _ hO L1 hL1
-  obtain ⟨hΦ1, hΦ2⟩ := continuous_fixingSubgroupEquiv K.1
-  set Φ := K.1.fixingSubgroupEquiv with hΦ
-  have hcyc : IsCyc Lp.χQ := Lp.χQ_cyc
-  let χZ : Formalism.GaloisCohomology.GK l K.1 →* ℤ_[l]ˣ := (cyclotomicCharacter (PadicAlgCl l) l).comp
-      (MulSemiringAction.toRingAut (Formalism.GaloisCohomology.GK l K.1) (PadicAlgCl l))
-  have hχZ : ∀ g, ((χZ g : ℤ_[l]) : ℚ_[l]) = (Lp.χQ (Φ.symm g : GQ l) : ℚ_[l]) := fun g => by
-    rw [isCyc_unique hcyc (isCyc_cycChar l)]; rfl
-  have hχc : Continuous fun g => (χZ g : ℤ_[l]) := by
-    rw [continuous_iff_coe]
-    simp only [hχZ]
-    exact hcyc.continuous.comp (continuous_subtype_val.comp hΦ1)
-  obtain ⟨c, hc⟩ := exists_gen_all hχc fun r => by
-    have : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-    exact exists_gen hχc
-      (hT l K.1 K.2 (r + 1) (ZMod (l ^ (r + 1))) (ReciprocityTheory.Gal.charRep (redChar χZ (r + 1)))
-        (Nat.succ_pos _) (contAction_charRep _ ((continuous_toZModPow _).comp hχc))).1
-      fun M _ _ _ _ _ rho hrho => (hT l K.1 K.2 (r + 1) M rho (Nat.succ_pos _) hrho).2.2.2.2
-  have hcpt : CompactSpace (GK K) := Φ.symm.surjective.compactSpace hΦ1
-  obtain ⟨ι, hι⟩ := exists_ringHom hO
-  let : Module ℤ_[l] (LL ⧸ L1.T) := Module.compHom _ ι
-  have : SMulCommClass ℤ_[l] O (LL ⧸ L1.T) := ⟨fun a o x => smul_comm (ι a) o x⟩
-  have hs : ∀ (a : ℤ_[l]) (x : LL), a • (Submodule.Quotient.mk x : LL ⧸ L1.T) =
-      Submodule.Quotient.mk (algebraMap ℚ_[l] LL a * x) := fun a x => by
-    rw [← hι, ← Algebra.smul_def]
-    rfl
-  refine @h2_equiv_of_torsion_character l _ (GK K) _ _ _ _ _ _ hcpt _ (fun r => (hc r).transport Φ hΦ2 hΦ1)
-    (fun x => ?_) O _ _ _ _ fun g x => ?_
-  · obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    obtain ⟨n, hn⟩ := exists_pow_smul_mem hO x
-    refine ⟨n, ?_⟩
-    rw [hs, Submodule.Quotient.mk_eq_zero, hL1]
-    simpa using hn 1
-  · obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    rw [hs]
-    have h1 := hχZ (Φ g)
-    rw [show Φ.symm (Φ g) = g from Φ.symm_apply_apply g, ← Lp.PD_χ K g] at h1
-    change Submodule.Quotient.mk (algebraMap ℚ_[l] LL ((Lp.PD K).χ g : ℚ_[l]) * x) = _
-    rw [← h1]
-    rfl
+  apply GlobalTheory.TateTop.tateH2_of_duality_loc <;> assumption
 
 
 open GlobalTheory.CompanionTheory.LocDual.Top in

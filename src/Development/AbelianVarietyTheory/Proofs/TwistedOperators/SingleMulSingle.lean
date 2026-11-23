@@ -1,10 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIntOv
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOrEqOfPlaceIdem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -129,7 +169,7 @@ theorem isFam_update {S T : HSp D} {ι : Type} [DecidableEq ι] [DecidableEq (Pl
     exact hx.2 p hp
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem isPure_of_facts (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
     (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ)
     (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E))
@@ -178,20 +218,20 @@ theorem isPure_of_facts (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
     · exact attach_orth (A1 j hj) (A2 i hi) (vne j hj i hi hji)
   have hcAc : ∀ i ∈ s, cA D (∑ j ∈ s, a j) * cA D (a i) = cA D (a i) := by
     intro i hi
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_mul, Finset.sum_eq_single i
-      (fun j hj hji => attach_orth (A2 j hj) (A2 i hi) (vne j hj i hi hji)) (fun h => (h hi).elim),
-      ← RingHom.map_mul, (ha i hi).1.1]
+
+    rw [map_sum, Finset.sum_mul, Finset.sum_eq_single i
+    (fun j hj hji => attach_orth (A2 j hj) (A2 i hi) (vne j hj i hi hji)) (fun h => (h hi).elim),
+    ← RingHom.map_mul, (ha i hi).1.1]
   have hAA : (∑ j ∈ s, a j) * (∑ j ∈ s, a j) = ∑ j ∈ s, a j := by
     rw [Finset.mul_sum]
     exact Finset.sum_congr rfl hAa
   have hAcA : (∑ j ∈ s, a j) * cA D (∑ j ∈ s, a j) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.mul_sum]
+
+    rw [map_sum, Finset.mul_sum]
     exact Finset.sum_eq_zero hAc
   have hAinf : infPart D (∑ j ∈ s, a j) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun j hj => GlobalTheory.SplitScalar.infPart_splitIdem (ha j hj).1
   have wsp : ∀ i ∈ s, _ := fun i hi =>
     hwave (a i) (ha i hi).1.1 (ha i hi).1.2.1 (GlobalTheory.SplitScalar.infPart_splitIdem (ha i hi).1)
@@ -260,12 +300,12 @@ theorem isPure_of_facts (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
         simp only [wave]
         rw [Finset.prod_mul_distrib]
         congr 1
-        set_option synthInstance.maxHeartbeats 100000 in
-          · rw [← addChar_sum, show symplO S T t (∑ i ∈ s, (xy i).2) = ∑ i ∈ s, symplO S T t (xy i).2 from
-            map_sum (GlobalTheory.LatVac.symplHom S T t) _ _]
-            apply congrArg ψ
-            refine Finset.sum_congr rfl fun i hi => ?_
-            rw [GlobalTheory.SplitScalar.symplO_smul, hY i hi]
+
+        · rw [← addChar_sum, show symplO S T t (∑ i ∈ s, (xy i).2) = ∑ i ∈ s, symplO S T t (xy i).2 from
+          map_sum (GlobalTheory.LatVac.symplHom S T t) _ _]
+          apply congrArg ψ
+          refine Finset.sum_congr rfl fun i hi => ?_
+          rw [GlobalTheory.SplitScalar.symplO_smul, hY i hi]
         · have ht' := (GlobalTheory.SplitScalar.isHalf_iff _ _).1 ht
           have hsum : t + ∑ i ∈ s, (xy i).1 = ∑ i ∈ s, (a i • t + (xy i).1) := by
             rw [Finset.sum_add_distrib, ← Finset.sum_smul, ht']

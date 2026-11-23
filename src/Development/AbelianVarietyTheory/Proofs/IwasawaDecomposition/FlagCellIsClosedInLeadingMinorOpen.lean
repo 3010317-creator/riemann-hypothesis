@@ -1,8 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
+import Development.AbelianVarietyTheory.Definitions.Divisors.SecondCountableTopologyOfIsProjOver
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CauchyBinetPluckerAndCellCoordinatesStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.ValuativeCriterion
+public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.AmpleOnAbelianBase
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsNatDiagIffIsDiag
+import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.AbelianAt
 
 @[expose] public section
 
@@ -249,14 +292,14 @@ theorem exists_lift (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
     obtain ⟨u, hu⟩ := unit_of_eq hp ψ (vEn x) (b := (algebraMap R K).comp bO) (v := algebraMap R K ∘ V (vEn x))
       (hv := span_range_comp_eq_top _ (hV _) _) (by rw [e, Category.assoc, hzV, spMap_pt])
     have hL : algebraMap R K (∑ q, φ0 (lform D (wLet w ∘ (vEn x).2.1) q) * V (vEn x) q) = u := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, ← lead_eq (w := w) hD ψ (vEn x).2.2 u]
+
+      rw [map_sum, ← lead_eq (w := w) hD ψ (vEn x).2.2 u]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [map_mul, ← hu, hC]
       rfl
     have hR : algebraMap R K (∑ q, φ0 (lform D (rd w x) q) * V (vEn x) q) = u * ψ (MvPolynomial.X x) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, ← read_eq hD ψ x u]
+
+      rw [map_sum, ← read_eq hD ψ x u]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [map_mul, ← hu, hC]
       rfl
@@ -264,8 +307,8 @@ theorem exists_lift (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
       have := hmin x.1 (x.2.1.2 + 1) (Nat.succ_le_of_lt x.2.1.2.2) (π.comp bO) (π ∘ V (vEn x))
         (span_range_comp_eq_top _ (hV _) π) (by rw [Category.assoc, hzV, spMap_pt])
       rw [hk] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       simp only [map_mul]
       exact this
     obtain ⟨t, ht⟩ := (IsLocalRing.residue_ne_zero_iff_isUnit _).1 hne

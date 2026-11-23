@@ -5,6 +5,55 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
 public import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 public import Formalism.LocalRingCardinality.SpanPowerMembership.Places
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Algebra.Polynomial.SpecificDegree
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.Padics.Hensel
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Formalism.LocalRingCardinality.DataArith
+import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
 
 @[expose] public section
 
@@ -35,7 +84,6 @@ theorem resChar_prime : (resChar v).Prime := by
   haveI : Finite (𝓞 F ⧸ v.asIdeal) := by
     first
     | exact Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
-    | exact Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
     | infer_instance
   exact (CharP.char_is_prime_or_zero (𝓞 F ⧸ v.asIdeal) (ringChar (𝓞 F ⧸ v.asIdeal))).resolve_right
     (CharP.char_ne_zero_of_finite (𝓞 F ⧸ v.asIdeal) _)
@@ -45,7 +93,6 @@ theorem resChar_mem : ((resChar v : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   first
   | exact ringChar.Nat.cast_ringChar
-  | exact CharP.cast_eq_zero _ _
 
 def cjT : (v.adicCompletion F ⊗[F] E) ≃ₐ[v.adicCompletion F] (v.adicCompletion F ⊗[F] E) :=
   AlgEquiv.ofAlgHom (Algebra.TensorProduct.map (AlgHom.id _ _) sig)
@@ -186,7 +233,6 @@ theorem exists_emb {K : Type} [Field K] [Algebra F K]
   have hmonic : (Polynomial.X ^ 2 + Polynomial.C (d : F) : Polynomial F).Monic := by
     first
     | exact Polynomial.monic_X_pow_add_C _ two_ne_zero
-    | exact Polynomial.monic_X_pow_add_C _ (by norm_num)
     | monicity!
   have haeval : Polynomial.aeval b (Polynomial.X ^ 2 + Polynomial.C (d : F) : Polynomial F) = 0 := by
     simp [hb2]
@@ -218,7 +264,6 @@ theorem exists_emb {K : Type} [Field K] [Algebra F K]
       first
       | (field_simp; ring)
       | field_simp
-      | ring
     obtain ⟨a1, ha1⟩ := hfix _ hA
     obtain ⟨a2, ha2⟩ := hfix _ hB
     have hx : x = algebraMap F E a1 + algebraMap F E a2 * b := by
@@ -226,7 +271,6 @@ theorem exists_emb {K : Type} [Field K] [Algebra F K]
       first
       | (field_simp; ring)
       | field_simp
-      | ring
     rw [hx]
     exact add_mem (IntermediateField.algebraMap_mem _ a1)
       (mul_mem (IntermediateField.algebraMap_mem _ a2) (IntermediateField.mem_adjoin_simple_self F b))
@@ -319,10 +363,8 @@ theorem conjF_conjF (x : H.E) : conjF H (conjF H x) = x := by
     · first
       | decide
       | rfl
-      | simp [Formalism.HC.Frame.cc]
     · first
       | exact mul_one _
-      | simp [Formalism.HC.Frame.cc]
   have hc2 : H.conj * H.conj = 1 := by
     show H.gal.symm R.toFrame.cc * H.gal.symm R.toFrame.cc = 1
     rw [← map_mul, hcc, map_one]
@@ -347,8 +389,6 @@ theorem finrank_FE : Module.finrank H.F H.E = 2 := by
     have hc : (((R.toFrame.cc.1.2 : ℤˣ) : ℤ)) = -1 := by
       first
       | rfl
-      | decide
-      | simp [Formalism.HC.Frame.cc]
     rw [h1, hc]
     simp
   have hfix : ∀ x, conjF H x = x → ∃ a, algebraMap H.F H.E a = x :=
@@ -362,7 +402,6 @@ theorem finrank_FE : Module.finrank H.F H.E = 2 := by
   have hmonic : (Polynomial.X ^ 2 + Polynomial.C (H.d : H.F) : Polynomial H.F).Monic := by
     first
     | exact Polynomial.monic_X_pow_add_C _ two_ne_zero
-    | exact Polynomial.monic_X_pow_add_C _ (by norm_num)
     | monicity!
   have haeval : Polynomial.aeval H.sqd (Polynomial.X ^ 2 + Polynomial.C (H.d : H.F) : Polynomial H.F) = 0 := by
     simp [H.sqd_sq]
@@ -394,7 +433,6 @@ theorem finrank_FE : Module.finrank H.F H.E = 2 := by
       first
       | (field_simp; ring)
       | field_simp
-      | ring
     obtain ⟨a1, ha1⟩ := hfix _ hA
     obtain ⟨a2, ha2⟩ := hfix _ hB
     have hx : x = algebraMap H.F H.E a1 + algebraMap H.F H.E a2 * H.sqd := by
@@ -402,7 +440,6 @@ theorem finrank_FE : Module.finrank H.F H.E = 2 := by
       first
       | (field_simp; ring)
       | field_simp
-      | ring
     rw [hx]
     exact add_mem (IntermediateField.algebraMap_mem _ a1)
       (mul_mem (IntermediateField.algebraMap_mem _ a2) (IntermediateField.mem_adjoin_simple_self H.F H.sqd))
@@ -507,8 +544,6 @@ theorem splH (hg : ∀ k, (placesOver H.E (H.g k)).ncard = Module.finrank ℚ H.
     have hc : (((R.toFrame.cc.1.2 : ℤˣ) : ℤ)) = -1 := by
       first
       | rfl
-      | decide
-      | simp [Formalism.HC.Frame.cc]
     rw [h1, hc]
     simp
   have hfix : ∀ x, conjF H x = x → ∃ a, algebraMap H.F H.E a = x :=

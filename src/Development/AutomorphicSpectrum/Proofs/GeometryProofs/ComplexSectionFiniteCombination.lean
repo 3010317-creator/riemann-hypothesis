@@ -1,9 +1,49 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NoCommonZeroCombVal
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsResidueEval
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LinIndepDescent
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -72,8 +112,8 @@ theorem vanish_descent : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y ⟶ Sp
       · push Not at H
         obtain ⟨a, ha0, ha⟩ := H
         have hes : ∀ j, e j (∑ l, algX p ⊤ (a l) • b l) = 0 := fun j => by
-          set_option synthInstance.maxHeartbeats 100000 in
-            simp only [map_sum, he_smul]
+
+          simp only [map_sum, he_smul]
           exact ha0 j
         have hsO : nonzeroLocus (∑ l, algX p ⊤ (a l) • b l) ≤ O := by
           by_contra h
@@ -82,8 +122,8 @@ theorem vanish_descent : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y ⟶ Sp
         have hsG : secVal p σ (∑ l, algX p ⊤ (a l) • b l) ∈ G :=
           Submodule.subset_span ⟨_, hsO, rfl⟩
         have hsv : secVal p σ (∑ l, algX p ⊤ (a l) • b l) = ∑ l, σ (a l) • secVal p σ (b l) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            simp only [map_sum, secVal_smul]
+
+          simp only [map_sum, secVal_smul]
         rw [hsv] at hsG
         obtain ⟨l₀, hl₀⟩ := Function.ne_iff.1 ha
         have hσ : σ (a l₀) ≠ 0 := (map_ne_zero σ).2 hl₀
@@ -102,8 +142,8 @@ theorem vanish_descent : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y ⟶ Sp
   obtain ⟨n, f, g, hfg⟩ := Submodule.mem_span_set'.1 hxspan
   choose b hb using fun i => (g i).2
   have hval : SecC.val x = ∑ l, f l • secVal p σ (b l) + 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hfg, add_zero, map_sum]
+
+    rw [← hfg, add_zero, map_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [map_smul, ← hb l, SecC.val_of]
   have hxZ : SecC.val x ∈ Z := hx

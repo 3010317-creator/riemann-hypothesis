@@ -1,12 +1,55 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsSplitGaussChars
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GapCondExample
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.BundleDegreeEqSumValuationsStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FrobeniusLatticeDegreeMulPStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeBasisAdaptedToSubspaceStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SubAndQuotientBundlesStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -24,8 +67,8 @@ theorem repr_semilinear {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGrou
     b'.repr (F x) j = σ (b.repr x j) := by
   have hx : F x = ∑ k, σ (b.repr x k) • b' k := by
     conv_lhs => rw [← b.sum_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun k _ => by rw [LinearMap.map_smulₛₗ, h]
   rw [hx, b'.repr_sum_self]
 
@@ -79,8 +122,8 @@ theorem isLatOf_comap (C : ACurve K) {V : Type} [AddCommGroup V] [Module K V] (i
     rw [Fin.sum_univ_add]
     simp only [Fin.addCases_left, Fin.addCases_right, zero_smul, Finset.sum_const_zero, add_zero, h]
     have := congrArg W.subtype (c.sum_repr x)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at this
+
+    rw [map_sum] at this
     exact this.symm
   have hr : ∀ k, b.repr (x : V) k =
       Fin.addCases (motive := fun _ => K) (fun j => c.repr x j) (fun _ => 0) k := by
@@ -154,11 +197,11 @@ theorem exists_basis_sub (σ : K →+* K) {d n : ℕ} (W : Submodule K (Fin d �
       rintro _ ⟨x, hx, rfl⟩
       have : x = ∑ k, c.repr ⟨x, hx⟩ k • (c k : Fin d → K) := by
         have := congrArg W.subtype (c.sum_repr ⟨x, hx⟩)
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum] at this
+
+        rw [map_sum] at this
         exact this.symm
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [this, map_sum]
+
+      rw [this, map_sum]
       refine Submodule.sum_mem _ fun k _ => ?_
       rw [LinearMap.map_smulₛₗ]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)

@@ -1,22 +1,65 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleThetaUnfoldingEquivariantUnitaryGroups
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLinearModelLatticeVacuumBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SourceLiftAtGluedPlaceProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedLatticeFiniteExpansionsLocalFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLineComponentsContractionStatement
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClopenIsCompactMapsPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleThetaUnfoldingEquivariantUnitaryGroups
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DualLatticeCosetIndicatorIsSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedLatticeDatumMainPartMemSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorDualLatticeIndicaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorCosetIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingDualIndicatorAddNonzeroCosetsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingCharIndicatorDualLatticeCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingDualIndicatorAddNonzeroCosetsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorCosetIndicatorStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorDualLatticeIndicaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedLatticeDatumMainPartMemSchwartzBruhatStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedLatticeFiniteExpansionsLocalFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SourceLiftAtGluedPlaceProofStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLineComponentsContractionStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLinearModelLatticeVacuumBaseStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClopenIsCompactMapsPair
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -480,11 +523,11 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
         (U₂ (y₀ + ∑ Q'' ∈ withLat Q.lat, y Q'')) =
         ∑ Q' ∈ withLat Q.lat, ((Θ v' (x Q') y₀).1 + ∑ Q'' ∈ withLat Q.lat, (Θ v' (x Q') (y Q'')).1) := by
       refine (hΘ v' _ _).symm.trans ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, LinearMap.sum_apply, Submodule.coe_sum]
+
+      rw [map_sum, LinearMap.sum_apply, Submodule.coe_sum]
       refine Finset.sum_congr rfl fun Q' _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_add (f := _), map_sum, Submodule.coe_add, Submodule.coe_sum]
+
+      rw [map_add (f := _), map_sum, Submodule.coe_add, Submodule.coe_sum]
     rw [h2, hΞ₂, hexp, Finset.sum_congr rfl fun Q' hQ' => by rw [t0 Q' hQ', zero_add, t1 Q' hQ', hall Q' hQ'],
       Finset.sum_const, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, hfin]
 
@@ -521,8 +564,8 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       have hsum : hand0 s₁ s₂ l vL (FFStar q (resChar χ hχ q) φ P₁) (U₁ (∑ Q' ∈ withLat Q.lat, x Q')) (U₂ yK) =
           ∑ Q' ∈ withLat Q.lat, (Θ v' (x Q') yK).1 := by
         refine (hΘ v' _ _).symm.trans ?_
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum, LinearMap.sum_apply, Submodule.coe_sum]
+
+        rw [map_sum, LinearMap.sum_apply, Submodule.coe_sum]
       have t0 : ∀ Q' ∈ withLat Q.lat, (Θ v' (x Q') yK).1 = 0 := fun Q' hQ' => by
         have := key v' (phiOne P₁ Q') (GlobalTheory.IndefiniteRowSideFullHecke.IndicatorFunctionIdentity.phiOne_mem P₁ Q') (latInd Q.lat Λ) hL
           (charInd (resChar χ hχ q) Q') (vecInd Q.lat) (dualInd Q.lat) (dualInd Q.lat) (charInd_mem' _ Q') hvec hdual hdual
@@ -606,14 +649,14 @@ theorem vertexGlued (D : D7) : VertexGlued D := by
       calc hand0 s₁ s₂ l vL (φ P) (U₁ (r⁻¹ • (x₀ + ∑ Q' ∈ withLat Q.lat, xm Q'))) (U₂ yP)
           = (Θ vP (r⁻¹ • (x₀ + ∑ Q' ∈ withLat Q.lat, xm Q')) yP).1 := (hΘ vP _ _).symm
         _ = r⁻¹ • ((Θ vP x₀ yP).1 + ∑ Q' ∈ withLat Q.lat, (Θ vP (xm Q') yP).1) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_smul, map_add (f := _), map_sum, LinearMap.smul_apply, LinearMap.add_apply, LinearMap.sum_apply,
-            Submodule.coe_smul, Submodule.coe_add, Submodule.coe_sum]
+
+          rw [map_smul, map_add (f := _), map_sum, LinearMap.smul_apply, LinearMap.add_apply, LinearMap.sum_apply,
+          Submodule.coe_smul, Submodule.coe_add, Submodule.coe_sum]
         _ = r⁻¹ • ((Θ vP x₀ yP).1 + ∑ Q' ∈ withLat Q.lat, (Θ vP (xmv Q') yP).1) := by
           rw [Finset.sum_congr rfl hm]
         _ = r⁻¹ • (Θ vP (x₀ + ∑ Q' ∈ withLat Q.lat, xmv Q') yP).1 := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_add (f := _), map_sum, LinearMap.add_apply, LinearMap.sum_apply, Submodule.coe_add, Submodule.coe_sum]
+
+          rw [map_add (f := _), map_sum, LinearMap.add_apply, LinearMap.sum_apply, Submodule.coe_add, Submodule.coe_sum]
         _ = 0 := by
           rw [hs, map_smul, LinearMap.smul_apply, Submodule.coe_smul, hzero, smul_zero, smul_zero]
 

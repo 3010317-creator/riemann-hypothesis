@@ -1,12 +1,59 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ETPointStatement
 public import Development.AbelianVarietyTheory.BlockTheory.JetGauges.SpansOverField
 public import Development.AbelianVarietyTheory.BlockTheory.JetGauges.BalancedHermitianSpace
-public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.PremisesInhabited
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumPosOfTensorPos
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Module.FinitePresentation
+public import Mathlib.RingTheory.Flat.EquationalCriterion
+public import Mathlib.RingTheory.Flat.TorsionFree
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.WchartLePreimage
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 
 @[expose] public section
 
@@ -92,11 +139,11 @@ theorem sum_pos_of_isPosHerm [Module.Free ℤ X] [Module.Finite ℤ X] {n : ℕ}
   have key : ∀ f g : X →ₗ[ℤ] ℤ, Algebra.trace ℤ (𝓞 E) (outer E x x' (up f) (up g)) =
       N * ∑ p : Fin n × ι, f (ω p.2 • x p.1) * g (bar E (θ p.2) • x' p.1) := by
     intro f g
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [outer, map_sum, Fintype.sum_prod_type, Finset.mul_sum]
+
+    rw [outer, map_sum, Fintype.sum_prod_type, Finset.mul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hup f, Finset.sum_mul, map_sum, Finset.mul_sum]
+
+    rw [hup f, Finset.sum_mul, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun s _ => ?_
     have e : θ s * bar E (up g (x' i)) = bar E (bar E (θ s) * up g (x' i)) := by
       conv_lhs => rw [← bar_bar E (θ s)]
@@ -126,9 +173,9 @@ theorem sum_pos_of_isPosHerm [Module.Free ℤ X] [Module.Finite ℤ X] {n : ℕ}
     have : ∀ s, γ (ω s • x i) (bar E (θ s) • x' i) = γ ((θ s * ω s) • x i) (x' i) := fun s => by
       rw [← hγ.2, mul_smul]
     simp only [this]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, ← Finset.sum_smul, hsum, Nat.cast_smul_eq_nsmul, map_nsmul,
-      LinearMap.smul_apply, nsmul_eq_mul]
+
+    rw [← LinearMap.sum_apply, ← map_sum, ← Finset.sum_smul, hsum, Nat.cast_smul_eq_nsmul, map_nsmul,
+    LinearMap.smul_apply, nsmul_eq_mul]
   rw [h2] at h1
   exact pos_of_mul_pos_right h1 (Nat.cast_nonneg N)
 
@@ -147,16 +194,16 @@ theorem rankOne_apply (η : Module.Dual (𝓞 E) X) (τ : E →+* ℂ) (a c : X)
 theorem bar_outer {n : ℕ} (x x' : Fin n → X) (η η' : Module.Dual (𝓞 E) X) :
     bar E (outer E x x' η η') = outer E x' x η' η := by
   have := bar_bar E
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [outer, bar, map_sum, map_mul] at this ⊢
+
+  simp only [outer, bar, map_sum, map_mul] at this ⊢
   simp only [this, mul_comm]
 
 theorem re_outer {n : ℕ} (x x' : Fin n → X) (η : Module.Dual (𝓞 E) X) (τ : E →+* ℂ) :
     (τ (outer E x x' η η : E)).re = ∑ i, rankOne E η τ (x i) (x' i) := by
   simp only [outer, rankOne_apply]
   push_cast
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Complex.re_sum]
+
+  rw [map_sum, Complex.re_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul, ← emb_bar]
 

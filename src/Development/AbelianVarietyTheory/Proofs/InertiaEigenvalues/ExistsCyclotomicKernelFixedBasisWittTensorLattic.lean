@@ -1,11 +1,55 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConvZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltWittEqZeroOfPrimeMulEqZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousGaloisLatticeMatrixIntegral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicActionOnRootTower
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousGaloisLatticeMatrixIntegral
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltWittEqZeroOfPrimeMulEqZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.DiscreteValuationRing
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
 
 @[expose] public section
 
@@ -21,9 +65,9 @@ theorem shift_mem (τ : H → M →+ M) (hmul : ∀ g h x, τ (g * h) x = τ g (
     (J : AddSubgroup M) (hJ : ∀ g, ∀ x ∈ J, τ g x ∈ J) (N : Subgroup H) [Fintype (H ⧸ N)] (x : M)
     (hx : ∀ ν ∈ N, τ ν x - x ∈ J) (h : H) :
     τ h (∑ q : H ⧸ N, τ q.out x) - ∑ q : H ⧸ N, τ q.out x ∈ J := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, ← Equiv.sum_comp (MulAction.toPerm h) (fun q : H ⧸ N => τ q.out x),
-    ← Finset.sum_sub_distrib]
+
+  rw [map_sum, ← Equiv.sum_comp (MulAction.toPerm h) (fun q : H ⧸ N => τ q.out x),
+  ← Finset.sum_sub_distrib]
   refine J.sum_mem fun q _ => ?_
   obtain ⟨ν, hν⟩ := QuotientGroup.mk_out_eq_mul N (h * q.out)
   have e : (MulAction.toPerm h q : H ⧸ N) = ((h * q.out : H) : H ⧸ N) :=
@@ -53,8 +97,8 @@ theorem exists_fixed (σ : H → R → R) (τ : H → M →+ M) (hmul : ∀ g h 
     · obtain ⟨N₁, hN₁, h₁⟩ := hx k
       obtain ⟨N₂, hN₂, hle, hle'⟩ := hdir N hN N₁ hN₁
       refine ⟨N₂, hN₂, fun ν hν => ?_⟩
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, ← Finset.sum_sub_distrib]
+
+      rw [map_sum, ← Finset.sum_sub_distrib]
       refine (J k).sum_mem fun q _ => ?_
       have hν' := (hnorm N₂ hN₂).conj_mem' ν hν q.out
       have e : ν * q.out = q.out * (q.out⁻¹ * ν * q.out) := by group
@@ -169,11 +213,11 @@ theorem surjective_of_matrix {W : Type} [CommRing W] [DecidableEq ι] (j : W →
   rw [← LinearMap.range_eq_top, eq_top_iff, ← hm, Submodule.span_le]
   rintro _ ⟨k, rfl⟩
   refine ⟨∑ a, j (U⁻¹ a k) • m a, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, hu, Finset.smul_sum, smul_smul, ← map_mul]
+
+  simp only [map_sum, map_smul, hu, Finset.smul_sum, smul_smul, ← map_mul]
   rw [Finset.sum_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [← Finset.sum_smul, ← map_sum]
+
+  simp only [← Finset.sum_smul, ← map_sum]
   have : ∀ i, ∑ a, U⁻¹ a k * U i a = (1 : Matrix ι ι W) i k := fun i => by
     rw [← Matrix.mul_nonsing_inv U hU, Matrix.mul_apply]
     exact Finset.sum_congr rfl fun a _ => mul_comm _ _
@@ -336,8 +380,8 @@ theorem generic (b : Module.Basis ι O T) (c : Module.Basis κ Z T) (ρ : H →*
       rw [hz]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
     · rw [hut]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Matrix.sum_apply, map_sum, Finset.sum_smul]
+
+      simp only [Matrix.sum_apply, map_sum, Finset.sum_smul]
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun q _ => ?_
       conv_lhs => rw [← c.sum_repr (ρ q.out (c k)), TensorProduct.tmul_sum, Finset.smul_sum]
@@ -441,9 +485,9 @@ theorem base (hF : FaithH AI) {H : Type} [Group H] (f : H →* GQ l) (hf : ∀ h
     refine fun h0 => hy (Eq.trans (congrArg Matrix.det ?_) h0)
     symm
     ext i k
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sum_apply, Matrix.smul_apply,
-      smul_eq_mul, map_sum, map_mul, act_teich, hs]
+
+    simp only [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sum_apply, Matrix.smul_apply,
+    smul_eq_mul, map_sum, map_mul, act_teich, hs]
     refine Finset.sum_congr rfl fun q _ => ?_
     rw [WittVector.constantCoeff_apply, WittVector.teichmuller_coeff_zero]
     rfl

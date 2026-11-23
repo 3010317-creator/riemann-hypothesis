@@ -1,9 +1,48 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZAEqAlgebraMapPt
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CrisToODToOCr
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KisinModuleTensorBdRPlusEqLattice
 public import Development.AutomorphicArithmetic.CyclotomicBounds.DeRhamLattices.ExistsUnitIdentificationSingleIntegral
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -34,13 +73,13 @@ private theorem UpperTheory.KN.basis_change_matrices_algebra_map {O R R' M ι : 
       funext j
       simp [Finset.sum_apply, Pi.single_apply]
     have h2 : bD k = ∑ i, jD.symm (bD k) i • jD (Pi.single i 1) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [← jD.apply_symm_apply (bD k), h1, map_sum]
+
+      conv_lhs => rw [← jD.apply_symm_apply (bD k), h1, map_sum]
       simp only [map_smul]
     have h3 := congrArg (fun x => bD.repr x k') h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul,
-      Module.Basis.repr_self, Finsupp.single_apply] at h3
+
+    simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul,
+    Module.Basis.repr_self, Finsupp.single_apply] at h3
     simp only [Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
     exact h3.symm
   · intro i k
@@ -51,8 +90,8 @@ private theorem UpperTheory.KN.basis_change_matrices_algebra_map {O R R' M ι : 
         simp
       · simp [hj]
     have e2 : TensorProduct.map f.toLinearMap LinearMap.id (z i) = ∑ k, f (bA.repr (z i) k) • bD k := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        conv_lhs => rw [hz i, map_sum]
+
+      conv_lhs => rw [hz i, map_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       simp [bD, Algebra.TensorProduct.basis_apply, TensorProduct.smul_tmul']
     have h3 := h i

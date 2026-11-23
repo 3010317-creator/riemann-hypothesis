@@ -1,8 +1,52 @@
 module
 
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TermAttractorConstant.LeadMinorEMulUpper
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.RowsDef
-public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalModelPeriodLattices
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilyPacketOfEquivalentStatement
+public import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
 public import Formalism.FormalDegreeBessel.FinalG
+public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalModelPeriodLattices
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -19,46 +63,10 @@ section Uni
 variable {K : Type*} [CommRing K] {N : ℕ}
 
 theorem rows_loUni_mul {L M : Matrix (Fin N) (Fin N) K} (hL : IsLoUni L) (hM : IsLoUni M) : IsLoUni (L * M) := by
-  intro i j
-  constructor
-  · intro hij
-    rw [Matrix.mul_apply]
-    apply Finset.sum_eq_zero
-    intro k _
-    rcases lt_or_ge i k with hik | hki
-    · rw [(hL i k).1 hik, zero_mul]
-    · rw [(hM k j).1 (lt_of_le_of_lt hki hij), mul_zero]
-  · intro hij
-    subst hij
-    rw [Matrix.mul_apply, Finset.sum_eq_single i]
-    · rw [(hL i i).2 rfl, (hM i i).2 rfl, one_mul]
-    · intro k _ hki
-      rcases lt_or_gt_of_ne hki with h | h
-      · rw [(hM k i).1 h, mul_zero]
-      · rw [(hL i k).1 h, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+  apply PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul <;> assumption
 
 theorem rows_upUni_mul {L M : Matrix (Fin N) (Fin N) K} (hL : IsUpUni L) (hM : IsUpUni M) : IsUpUni (L * M) := by
-  intro i j
-  constructor
-  · intro hji
-    rw [Matrix.mul_apply]
-    apply Finset.sum_eq_zero
-    intro k _
-    rcases lt_or_ge k i with hki | hik
-    · rw [(hL i k).1 hki, zero_mul]
-    · rw [(hM k j).1 (lt_of_lt_of_le hji hik), mul_zero]
-  · intro hij
-    subst hij
-    rw [Matrix.mul_apply, Finset.sum_eq_single i]
-    · rw [(hL i i).2 rfl, (hM i i).2 rfl, one_mul]
-    · intro k _ hki
-      rcases lt_or_gt_of_ne hki with h | h
-      · rw [(hL i k).1 h, zero_mul]
-      · rw [(hM k i).1 h, mul_zero]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
+  apply PI.TermAttrConst.UnitaryGroupMassFormula.isUpUni_mul <;> assumption
 
 def rows_tw {r : ℕ} (B : Matrix (Fin (r + 1)) (Fin (r + 1)) K) : Matrix (Fin (r + 1)) (Fin (r + 1)) K :=
   Matrix.of fun i j => (-1) ^ (r - i.val) * B i j * (-1) ^ (r - j.val)

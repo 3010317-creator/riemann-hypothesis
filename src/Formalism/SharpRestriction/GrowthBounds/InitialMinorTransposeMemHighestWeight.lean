@@ -1,23 +1,73 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.TableLineDegreeFive
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.DescendingProdEqFactorialChoose
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.ExponentFactorialAddSingleOne
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.IsotypicProjectorLatticeScaling
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.ValuationNonnegIffIntegral
 public import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightConditionFromIntegralForm
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.PolynomialMemWeightSpaceIff
-public import Formalism.GrowthSums.FactorialBaseGrowth.Coarse
+public import Formalism.SharpRestriction.GrowthBounds.CountingStatementReduction
+public import Formalism.GradedWeylDivisibility.FinalD
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.PadicGeMulNat
+import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GrowthSums.FactorialBaseGrowth.Coarse
 public import Formalism.GrowthSums.FactorialBaseGrowth.Harmonic
 public import Formalism.GrowthSums.FactorialBaseGrowth.LogCoef
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.MahPadicGeOfDvd
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.BinomialExpansionCoeffZeroOfDeg
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.MemBoundedDegreeExponentsIff
-public import Formalism.SharpRestriction.GrowthBounds.CountingStatementReduction
-public import Formalism.GradedWeylDivisibility.FinalC
-public import Formalism.GradedWeylDivisibility.FinalD
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.BinomialExpansionCoeffZeroOfDeg
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.DescendingProdEqFactorialChoose
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.GlOperatorPreservesMultidegree
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.IsotypicProjectorLatticeScaling
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.MahPadicGeOfDvd
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.MemBoundedDegreeExponentsIff
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.PolynomialMemWeightSpaceIff
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.ValuationNonnegIffIntegral
+import Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightConditionFromIntegralForm
 public import Lemmata.MiscLemmasE.Imports
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Padics.LocalField
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -123,8 +173,8 @@ theorem decSys_congr {W : I → Submodule K V} {e e' : I → Module.End K V} (h 
   obtain ⟨T, hT⟩ := h.cover x
   have a : e' mu x = ∑ nu ∈ T, e' mu (e nu x) := by
     conv_lhs => rw [hT]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
   rw [a]
   by_cases hmu : mu ∈ T
   · rw [Finset.sum_eq_single_of_mem mu hmu fun nu _ hne => h2 mu nu hne _ (h.mem nu x)]
@@ -1235,8 +1285,8 @@ theorem isWeightedHomogeneous_of_column_scaling {R : Type} [CommRing R] {m n : �
   have hL : AddMonoidAlgebra.coeff (aeval (fun v : Fin m × Fin n =>
         (X (Sum.inr v.2) * X (Sum.inl v) : MvPolynomial ((Fin m × Fin n) ⊕ Fin n) R)) Q) (E d0) = AddMonoidAlgebra.coeff Q d0 := by
     conv_lhs => rw [Q.as_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, coeff_sum]
+
+    rw [map_sum, coeff_sum]
     simp_rw [hmono, coeff_monomial]
     rw [Finset.sum_eq_single d0]
     · simp

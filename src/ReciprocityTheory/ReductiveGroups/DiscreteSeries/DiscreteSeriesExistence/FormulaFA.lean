@@ -1,13 +1,54 @@
 module
 
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.ExpInPPosDef
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.DatumEmbeddingMemHlam
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.DatumInj
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.DatumIrr
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.RregRep
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.MeasurePreservingMulRight
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.PmatIsHermitian
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.DatumInj
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.RregRep
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KSchur
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.KFacts
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.RigidityTheorems.IsInLieAlgebraISmulAddConjTranspose
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.KinstSecondCountable
 
 @[expose] public section
 
@@ -38,37 +79,7 @@ theorem ffa_continuousOn {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 end Smooth
 
 theorem ffa_Kset {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Kset ε) : ∃ k' : S7.KG ε, S7.toMK k' = k := by
-  obtain ⟨hu, hc⟩ := hk
-  have hs : star k * k = 1 := by
-    first
-    | exact unitary.star_mul_self_of_mem hu
-    | exact Unitary.star_mul_self_of_mem hu
-    | exact (Matrix.mem_unitaryGroup_iff'.1 hu)
-  have hu' : kᴴ * k = 1 := by simpa [Matrix.star_eq_conjTranspose] using hs
-  have hUJ : k ∈ UJset ε := by
-    show kᴴ * Jm ε * k = Jm ε
-    rw [Matrix.mul_assoc, ← hc, ← Matrix.mul_assoc, hu', Matrix.one_mul]
-  have hJ : (Jm ε).det ≠ 0 := by
-    rw [Jm, Matrix.det_diagonal]
-    refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
-    split_ifs <;> norm_num
-  have hdet : IsUnit k.det := by
-    rw [isUnit_iff_ne_zero]
-    intro h0
-    have h := congrArg Matrix.det (show kᴴ * Jm ε * k = Jm ε from hUJ)
-    rw [Matrix.det_mul, Matrix.det_mul, h0, mul_zero] at h
-    exact hJ h.symm
-  obtain ⟨y, hy⟩ : ∃ y : Formalism.REAL.UJ ε, Formalism.MainNotions.S.umat y = k :=
-    ⟨⟨Matrix.nonsingInvUnit k hdet, hUJ⟩, rfl⟩
-  refine ⟨⟨y, ?_⟩, ?_⟩
-  · first
-    | exact (show S7.toM y ∈ Kset ε from by rw [show S7.toM y = k from hy]; exact ⟨hu, hc⟩)
-    | exact (show Formalism.MainNotions.S.umat y ∈ Kset ε from by rw [hy]; exact ⟨hu, hc⟩)
-    | (unfold S7.KG; exact ⟨hu, hc⟩)
-  · first
-    | exact hy
-    | (unfold S7.toMK; exact hy)
-    | simpa [S7.toMK, S7.toM] using hy
+  apply ReciprocityTheory.ChartRestriction.DS.S7.exists_toMK <;> assumption
 
 theorem ffa_UJ_lift {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UJset ε) :
     ∃ y : Formalism.REAL.UJ ε, Formalism.MainNotions.S.umat y = g := by

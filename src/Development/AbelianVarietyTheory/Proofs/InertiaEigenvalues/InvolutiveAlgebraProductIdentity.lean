@@ -1,13 +1,72 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLatticeIdempotentPositionInvolutionStable
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Mathlib.LinearAlgebra.BilinearForm.DualLattice
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ValIrreducible
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DualLattice
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightedCountStableLatticesProductDescentGLStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClassStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaGramDetEqOneOfSelfDualLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClassStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightedCountStableLatticesProductDescentGLStatement
+public import Mathlib.Algebra.Module.Lattice.Full
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.FieldTheory.IsAlgClosed.Spectrum
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Charpoly.ToMatrix
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+public import Mathlib.LinearAlgebra.Semisimple
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.Module.Lattice.Basic
 
 @[expose] public section
 
@@ -282,21 +341,7 @@ theorem sigma_smul (B : InvAlg K) (a : K.O) : ∃ b : K.O, ∀ y, B.σ (a • y)
     IsScalarTower.algebraMap_apply K.O K.E B.A b, B.σ_alg, hb]
 
 theorem sigma_integral (B : InvAlg K) {y : B.A} (hi : IsIntegral K.O y) : IsIntegral K.O (B.σ y) := by
-  have hinj : Function.Injective (algebraMap K.O K.E) := IsFractionRing.injective K.O K.E
-
-  choose c' hc' using K.c_int
-  let φ : K.O →+* K.O :=
-    { toFun := c'
-      map_one' := hinj (by simp [← hc'])
-      map_mul' := fun x y => hinj (by simp [← hc'])
-      map_zero' := hinj (by simp [← hc'])
-      map_add' := fun x y => hinj (by simp [← hc']) }
-  have hsq : (algebraMap K.O B.A).comp φ = B.σ.toRingHom.comp (algebraMap K.O B.A) := by
-    refine RingHom.ext fun x => ?_
-    show algebraMap K.O B.A (c' x) = B.σ (algebraMap K.O B.A x)
-    rw [IsScalarTower.algebraMap_apply K.O K.E B.A (c' x), IsScalarTower.algebraMap_apply K.O K.E B.A x,
-      B.σ_alg, hc']
-  exact IsIntegral.map_of_comp_eq φ B.σ.toRingHom hsq hi
+  apply GlobalTheory.UnitLemma.Desc.isIntegral_sigma <;> assumption
 
 theorem conj_mem (x : K.E) : K.c x ∈ (algebraMap K.O K.E).range ↔ x ∈ (1 : Submodule K.O K.E) := by
   rw [RingHom.mem_range, Submodule.mem_one]

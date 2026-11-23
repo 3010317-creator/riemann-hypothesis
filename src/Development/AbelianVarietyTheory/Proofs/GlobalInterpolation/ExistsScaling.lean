@@ -1,12 +1,58 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualUnramifiedPlaces
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualLatticeActions
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsEqTransposeMulMapOfIdempotent
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DisjointSpanPerpLat
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsSelfDualLatticeIff
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -97,8 +143,8 @@ theorem hR_eq (x y : Fin M → Fv F v ⊗[F] E) : hR (Fv F v) σ J x y =
 theorem hR_sum_right (x : Fin M → Fv F v ⊗[F] E) (z : Fin M → Fv F v ⊗[F] E)
     (b : Fin M → Fin M → Fv F v ⊗[F] E) :
     hR (Fv F v) σ J x (∑ i, z i • b i) = ∑ i, z i * hR (Fv F v) σ J x (b i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hR_eq, map_sum, map_smul, smul_eq_mul]
+
+  simp only [hR_eq, map_sum, map_smul, smul_eq_mul]
 
 theorem hR_sum_left (y : Fin M → Fv F v ⊗[F] E) (z : Fin M → Fv F v ⊗[F] E)
     (b : Fin M → Fin M → Fv F v ⊗[F] E) :
@@ -107,8 +153,8 @@ theorem hR_sum_left (y : Fin M → Fv F v ⊗[F] E) (z : Fin M → Fv F v ⊗[F]
       ∑ i, sigR (Fv F v) σ (z i) • fun j => sigR (Fv F v) σ (b i j) := by
     funext j
     simp [Finset.sum_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hR_eq, this, map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
+
+  simp only [hR_eq, this, map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
 
 theorem hR_smul_left (x y : Fin M → Fv F v ⊗[F] E) (c : Fv F v ⊗[F] E) :
     hR (Fv F v) σ J (c • x) y = sigR (Fv F v) σ c * hR (Fv F v) σ J x y := by
@@ -275,8 +321,8 @@ theorem exists_coords (hσ : IsCMExt F E σ) (hJ : IsHermND σ J)
       exact add_mem ((algebraMap_mem_iff v _).2 (h _))
         (mul_mem ((algebraMap_mem_iff v _).2 (h _)) hw)
   · apply algebraMap_inj (E := E) v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hR_self _ hσ hJ, hh, map_sum]
+
+    rw [← hR_self _ hσ hJ, hh, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     change _ = algebraMap (Fv F v) _
       (e X (i, 0) ^ 2 + t * e X (i, 0) * e X (i, 1) + n * e X (i, 1) ^ 2)
@@ -287,8 +333,8 @@ theorem exists_coords (hσ : IsCMExt F E σ) (hJ : IsHermND σ J)
     have hB : ∀ X : Fin 1 → Fin M → Fv F v ⊗[F] E, BR (Fv F v) σ J X Y =
         ∑ i, Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (sigR (Fv F v) σ (g (X 0) i) * g (Y 0) i) := by
       intro X
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [BR, Fin.sum_univ_one, hh, map_sum]
+
+      rw [BR, Fin.sum_univ_one, hh, map_sum]
     constructor
     · intro h X hX
       have hX' := fun i => SelfDualLatticeActions.sigR_mem v σ ((hg _).1 hX i)

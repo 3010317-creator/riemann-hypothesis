@@ -1,16 +1,53 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnramifiedSubfieldLeCyclotomicExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqFiltrationSumAtLevel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqStdPowerSeriesAtZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNIffExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNInvQPowGammaStableStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesTwistedScalingTriangularLaurentStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqFiltrationSumAtLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqStdPowerSeriesAtZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNInvQPowGammaStableStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -184,7 +221,7 @@ theorem SubF_mono (H : LocHW l P) (h : Good K s LL) (T : Lt K LL) (i : Let K) (�
   exact inf_le_inf_left _ (Submodule.comap_mono (hanti (by omega)))
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_jump (H : LocHW l P) (h : Good K s LL) (T : Lt K LL) (i : Let K)
     (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (y : ℕ) (k : ℤ) (hb : ¬ SubF H h T i τ k ≤ SubF H h T i τ (k - y)) :
     ∃ a : ℤ, IsJumpV (P.PD K) T.ρ τ a ∧ -k ≤ a ∧ a ≤ y - k - 1 := by
@@ -213,8 +250,8 @@ theorem exists_jump (H : LocHW l P) (h : Good K s LL) (T : Lt K LL) (i : Let K)
   exact he
 
 
-set_option maxHeartbeats 1000000 in
-set_option synthInstance.maxHeartbeats 400000 in
+
+
 theorem Ex_sub_smul (C : LocCmpT l P AI H F) (h : Good K s LL) (T : Lt K LL) (i : Let K) (ζ : ↥LL.1) (y : ℕ)
     (z : (H.W K s LL h).DD T) (d : ↥(OL LL))
     (hz : (H.W K s LL h).Q ^ y • z ∈ (H.W K s LL h).N T)

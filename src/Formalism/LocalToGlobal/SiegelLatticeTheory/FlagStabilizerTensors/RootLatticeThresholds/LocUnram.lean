@@ -1,7 +1,50 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocalAdditiveCharContinuous
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.TermLoc
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -37,7 +80,6 @@ theorem exists_theta : ∃ (θ : D.host.E) (c tr nm : 𝓞 D.host.F), IsIntegral
   haveI : Algebra.IsIntegral (𝓞 D.host.F) (𝓞 D.host.E) := by
     first
     | infer_instance
-    | exact ⟨fun z => (NumberField.RingOfIntegers.isIntegral z).tower_top⟩
   have hinj : Function.Injective (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
     intro a b h
     apply NumberField.RingOfIntegers.ext
@@ -65,7 +107,6 @@ theorem exists_theta : ∃ (θ : D.host.E) (c tr nm : 𝓞 D.host.F), IsIntegral
     rw [hc]; push_cast
     first
     | rw [← htE]
-    | simp [htE]
   rw [key] at hcp
   exact hθt (hQ.isPrime.mem_of_pow_mem 2 hcp)
 
@@ -83,7 +124,6 @@ private theorem mem_integers_iff_valuation_le_one (z : (D.s.atP p).Fp) :
     z ∈ 𝒪[(D.s.atP p).Fp] ↔ ValuativeRel.valuation (D.s.atP p).Fp z ≤ 1 := by
   first
   | exact Valuation.mem_integer_iff _ _
-  | exact Iff.rfl
 
 private theorem valuative_le_iff_valuation_le (y z : (D.s.atP p).Fp) :
     y ≤ᵥ z ↔ ValuativeRel.valuation (D.s.atP p).Fp y ≤ ValuativeRel.valuation (D.s.atP p).Fp z :=
@@ -94,8 +134,6 @@ theorem iotaF_mem (x : 𝓞 D.host.F) : (D.s.atP p).ιF (x : D.host.F) ∈ 𝒪[
     ← map_one (D.s.atP p).ιF, (D.s.atP p).val, map_one]
   first
   | exact p.valuation_le_one x
-  | exact p.valuation_le_one (K := D.host.F) x
-  | exact p.valuation_le_one D.host.F x
 
 theorem iotaF_inv_mem (x : 𝓞 D.host.F) (hx : x ∉ p.asIdeal) :
     ((D.s.atP p).ιF (x : D.host.F))⁻¹ ∈ 𝒪[(D.s.atP p).Fp] := by
@@ -107,8 +145,6 @@ theorem iotaF_inv_mem (x : 𝓞 D.host.F) (hx : x ∉ p.asIdeal) :
     refine not_lt.1 (fun h => hx ?_)
     first
     | exact (p.valuation_lt_one_iff_mem x).1 h
-    | exact (p.valuation_lt_one_iff_mem (K := D.host.F) x).1 h
-    | exact (p.valuation_lt_one_iff_mem D.host.F x).1 h
   rw [mem_integers_iff_valuation_le_one p, map_inv₀, le_antisymm h1 h2, inv_one]
 
 theorem iotaF_ne (x : 𝓞 D.host.F) (hx : x ∉ p.asIdeal) : (D.s.atP p).ιF (x : D.host.F) ≠ 0 := by
@@ -118,7 +154,6 @@ theorem iotaF_ne (x : 𝓞 D.host.F) (hx : x ∉ p.asIdeal) : (D.s.atP p).ιF (x
   have h1 : x = 0 := by
     first
     | exact_mod_cast h0
-    | exact NumberField.RingOfIntegers.ext h0
   rw [h1]; exact p.asIdeal.zero_mem
 
 theorem iotaE_alg (x : D.host.F) :
@@ -132,7 +167,6 @@ theorem iotaE_mem (θ : D.host.E) (hθ : IsIntegral ℤ θ) : (D.s.atP p).ιE θ
 private theorem isScalarTower_integers_Fp_Ep : IsScalarTower 𝒪[(D.s.atP p).Fp] (D.s.atP p).Fp (D.s.atP p).Ep := by
   first
   | infer_instance
-  | exact IsScalarTower.of_algebraMap_eq (fun _ => rfl)
 
 private theorem algebraMap_Fp_Ep_injective : Function.Injective (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep) := by
   haveI : Nontrivial (D.s.atP p).Ep := by
@@ -369,7 +403,6 @@ theorem core {R : Type*} [CommRing R] (ϖ A B T N K C Dd : R) (hpr : Prime ϖ) (
   have h2 : ϖ ∣ B ^ 4 := by
     first
     | exact (hK.dvd_mul_right).1 h1
-    | exact (IsUnit.dvd_mul_right hK).1 h1
     | (obtain ⟨u, rfl⟩ := hK; exact (Units.dvd_mul_right).1 h1)
   have hB : ϖ ∣ B := hpr.dvd_of_dvd_pow h2
   obtain ⟨b, rfl⟩ := hB
@@ -378,13 +411,11 @@ theorem core {R : Type*} [CommRing R] (ϖ A B T N K C Dd : R) (hpr : Prime ϖ) (
 
 variable {D : D7} (p : PlF D)
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 theorem prime_of_irr (ϖ : 𝒪[(D.s.atP p).Fp]) (h : Irreducible ϖ) : Prime ϖ := by
   haveI := (D.s.atP p).lf
   first
   | exact h.prime
-  | exact UniqueFactorizationMonoid.irreducible_iff_prime.1 h
-  | exact PrincipalIdealRing.irreducible_iff_prime.1 h
 
 theorem alg_mem_O (a : (D.s.atP p).Fp) (ha : a ∈ 𝒪[(D.s.atP p).Fp]) :
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep a ∈ (D.s.atP p).O := algebraMap_mem_O_of_mem_integers p a ha

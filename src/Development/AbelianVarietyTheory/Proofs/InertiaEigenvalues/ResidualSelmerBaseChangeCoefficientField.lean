@@ -1,10 +1,47 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsDualDualRep
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.CohDimTwoLocalOfLocalFiniteness
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousCycMod
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousCycMod
 
 @[expose] public section
 
@@ -33,16 +70,16 @@ theorem finrank_eq_of_coord {k K V W : Type} [Field k] [Field K] [Algebra k K] [
     have h2 : ∑ i, lam (a i) • b i = 0 := by
       apply Subtype.ext
       have := congrArg (L lam) h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa [map_sum, hL] using this
+
+      simpa [map_sum, hL] using this
     exact Fintype.linearIndependent_iff.1 b.linearIndependent _ h2 i
   have hJs : ∀ v : S, (⟨J v, hS _ v.2⟩ : T) ∈ Submodule.span K (Set.range w) := by
     intro v
     have : (⟨J v, hS _ v.2⟩ : T) = ∑ i, algebraMap k K (b.repr v i) • w i := by
       apply Subtype.ext
       have e := congrArg (fun x : S => J x) (b.sum_repr v)
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, map_sum, hJ] at e
+
+      simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, map_sum, hJ] at e
       simp [w, e]
     rw [this]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
@@ -106,8 +143,8 @@ def vecAdd : (Fin r → K) →+ (Fin r → K') where
 theorem vecAdd_repOn {Γ : Type} [Group Γ] {r : ℕ} (ρ : Γ →* GL (Fin r) O) (g : Γ) (m : Fin r → K) :
     vecAdd f r (repOn ρ (1 : Γ →* Kˣ) K g m) = repOn ρ (1 : Γ →* K'ˣ) K' g (vecAdd f r m) := by
   funext a
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [vecAdd, repOn, matAct, map_sum, ← Algebra.smul_def]
+
+  simp [vecAdd, repOn, matAct, map_sum, ← Algebra.smul_def]
 
 end Coef
 
@@ -206,8 +243,8 @@ theorem selOn_baseChange (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D
           Finsupp.sum_of_support_subset _ hsub (fun j c => c • b j) (fun j _ => zero_smul _ _)]
         exact Finset.sum_congr rfl fun j _ => by rw [Algebra.smul_def, mul_comm]
       refine (congrArg (Submodule.mkQ _) key).trans ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       rfl
 
 end GlobalTheory.ResSel.BaseChange

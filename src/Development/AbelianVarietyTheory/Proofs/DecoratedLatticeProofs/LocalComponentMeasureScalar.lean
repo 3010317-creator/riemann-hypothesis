@@ -1,28 +1,58 @@
 module
 
-public import Mathlib
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsNormalFr
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VacOfShape
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselCharacterLocalElementEqSimpleEntrySum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BeszPairings
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointWeilCharConductorOneOfUnits
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsJacFramePairing
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAll
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineMemLatVIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MonoAtOfJacFrame
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MonoAtOfSplitW
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeAtPlaceSplitsHyperbolicPlusCore
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SliceColMem
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineMemLatVIff
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsJacFramePairing
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumPrStar
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BeszPairings
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselCharacterLocalElementEqSimpleEntrySum
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointWeilCharConductorOneOfUnits
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsNormalFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PairForm
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotBadPrimeBase
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationEqZeroOfRootOfSUnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
+import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
 
 @[expose] public section
 
@@ -59,8 +89,8 @@ theorem monoAt_of_besFrame (hU : q.UnitAA) {σ : ℕ} (B : BesLev D σ) {n : Typ
     exact Finset.sum_congr rfl fun t _ => congrArg _ (hcore.1 t a).symm
   · refine (b3 l hl r).trans ?_
     change _ * GlobalTheory.MonoSplit.prE q _ = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Matrix.mul_apply, Matrix.mulVec, dotProduct, map_sum, Finset.mul_sum]
+
+    rw [Matrix.mul_apply, Matrix.mulVec, dotProduct, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [map_mul, mul_left_comm]
     exact congrArg _ (hcore.2 t).symm
@@ -83,8 +113,8 @@ theorem line_bes (hU : q.UnitAA) {σ : ℕ} (B : BesLev D σ) {n : Type} [Fintyp
     have e := GlobalTheory.SplitLine.line_mem_latV_iff D k q B.V L _ F _ s m hL h hs hA hB hC a ha
     convert e using 2
     funext r
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [GlobalTheory.FinPl.colMul, xLast, HypDec.j0, rat, ratV, Matrix.mulVec, dotProduct, map_sum]
+
+    simp [GlobalTheory.FinPl.colMul, xLast, HypDec.j0, rat, ratV, Matrix.mulVec, dotProduct, map_sum]
   · obtain ⟨b, m, hb, hA, hB, hC⟩ := GlobalTheory.BesPair.bes_cols D k (ofSplit q) σ B s n c FA F hF hs hz
       (GlobalTheory.MonoSplit.xi_unit q hU) i'
     have e := GlobalTheory.SplitLine.line_mem_latV_iff D k q B.V L _ F _ b m hL h hb hA hB hC a ha

@@ -1,6 +1,48 @@
 module
 
-public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.ComplexMatrixCalculus.SwapLaws
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.ComplexMatrixCalculus.InstBorelUK
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -56,8 +98,8 @@ theorem Dop_ι_mul (B : X n) (m : Md n → ℂ) (x : abelian₂ n) :
   have h1 : ExteriorAlgebra.ι ℂ (mv B m) =
       ∑ r, ∑ s, (B r s * m s) • ExteriorAlgebra.ι ℂ (Pi.single r (1 : ℂ)) := by
     conv_lhs => rw [← sum_single_smul (mv B m)]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, mv, Finset.sum_smul]
+
+    simp only [map_sum, map_smul, mv, Finset.sum_smul]
   rw [Dop_apply, Dop_apply, h1, Finset.sum_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun r _ => ?_
   rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -103,7 +145,7 @@ theorem F_ι_mul (m : Md n → ℂ) (x : abelian₂ n) :
   simp only [F, Phi_apply, mvL_apply, map_mul, ExteriorAlgebra.map_apply_ι, LinearEquiv.symm_apply_apply]
   rfl
 
-set_option maxHeartbeats 800000 in
+
 theorem key (y : abelian₂ n) : ContDiff ℂ ∞ (F y) ∧
     ∃ L : X n →L[ℂ] (Finset (Md n) → ℂ), HasFDerivAt (F y) L (one' n) ∧ ∀ B, L B = (fb n).equivFun (Dop B y) := by
   refine CliffordAlgebra.left_induction _ ?_ ?_ ?_ y

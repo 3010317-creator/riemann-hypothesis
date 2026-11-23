@@ -1,13 +1,59 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HasBaseDegreeSetting
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.DegreeTautologicalLineProjectiveLine
-public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.GramSt
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPowerSumOneZeroStatement
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotalStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyBoundaryDimensionDropStatement
+import Formalism.DegreeFormula.PointDegree.PowSum
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.GramSt
 
 @[expose] public section
 
@@ -131,8 +177,8 @@ theorem hhFl_eq (II : IntersectionSystem) (F : RP Ψ N) : hhFl Ψ N II F = hR Ψ
 theorem hFl_eq (II : IntersectionSystem) (G : GroundTheory.Heights₂.Heights.LowerBoundFree.RootPoly Ψ N) :
     GroundTheory.Heights₂.Heights.LowerBoundFree.hFl Ψ N II G = hR Ψ N II (map (algebraMap ℚ ℝ) G) := by
   conv_rhs => rw [G.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum, GroundTheory.Heights₂.Heights.LowerBoundFree.hFl]
+
+  rw [map_sum, map_sum, GroundTheory.Heights₂.Heights.LowerBoundFree.hFl]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [map_monomial, hR_monomial]
   rfl
@@ -164,7 +210,7 @@ theorem flagInt_eq (G : GroundTheory.Heights₂.Heights.LowerBoundFree.RootPoly 
       simp [GroundTheory.Heights₂.Heights.LowerBoundFree.weylAct]
     rw [this, Finsupp.mapDomain_apply_of_injective hinj]
     simp [GroundTheory.Heights₂.Heights.LowerBoundFree.rhoMono, permExp, GroundTheory.Heights₂.Heights.LowerBoundFree.weylAct]
-  rw [coeff_smul, hm, coeff_rename_mapDomain _ hinj, smul_eq_mul, Rat.cast_mul, coeff_map]
+  rw [MvPolynomial.coeff_smul, hm, coeff_rename_mapDomain _ hinj, smul_eq_mul, Rat.cast_mul, coeff_map]
   congr 1
   simp [GroundTheory.Heights₂.Heights.LowerBoundFree.weylSign]
 
@@ -179,8 +225,8 @@ def muR (j : ℕ) : RP Ψ N := map (algebraMap ℚ ℝ) (GroundTheory.Heights₂
 def vR (j : ℕ) : RP Ψ N := map (algebraMap ℚ ℝ) (GroundTheory.Heights₂.Heights.LowerBoundFree.vandBlocks Ψ N j)
 
 theorem muR_eq (j : ℕ) : (muR j : RP Ψ N) = ∑ τ, ∑ i ∈ Finset.univ.filter (fun i : Fin N => j ≤ (i : ℕ)), X (τ, i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [muR, GroundTheory.Heights₂.Heights.LowerBoundFree.muPoly, map_sum, Finset.sum_filter, Fintype.sum_prod_type]
+
+  rw [muR, GroundTheory.Heights₂.Heights.LowerBoundFree.muPoly, map_sum, Finset.sum_filter, Fintype.sum_prod_type]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Finset.sum_filter]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -189,11 +235,11 @@ theorem muR_eq (j : ℕ) : (muR j : RP Ψ N) = ∑ τ, ∑ i ∈ Finset.univ.fil
   · simp [h, Nat.le_of_not_lt h]
 
 theorem negX_muR (j : ℕ) : negX (muR j : RP Ψ N) = -muR j := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [muR_eq, negX, map_sum, ← Finset.sum_neg_distrib]
+
+  rw [muR_eq, negX, map_sum, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun τ _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, ← Finset.sum_neg_distrib]
+
+  rw [map_sum, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [aeval_X]
 
@@ -345,8 +391,8 @@ theorem hhFl_test (II : IntersectionSystem) {j d : ℕ}
       have := ((muR_homog (Ψ := Ψ) (N := N) j).pow i).mul ((muSmall_homog (Ψ := Ψ) (N := N) j).pow (dimX Ψ N j + 1 - 1 - i))
       have e3 : 1 * i + 1 * (dimX Ψ N j + 1 - 1 - i) = dimX Ψ N j := by omega
       rwa [e3] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e2, map_add (f := _), sAll, Finset.sum_mul, map_sum, Finset.sum_eq_zero fun τ _ => hkill τ Q hQh, add_zero]
+
+    rw [e2, map_add (f := _), sAll, Finset.sum_mul, map_sum, Finset.sum_eq_zero fun τ _ => hkill τ Q hQh, add_zero]
 
 end Main
 

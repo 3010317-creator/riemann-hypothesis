@@ -1,22 +1,65 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformEnergyBoundOfSection
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.Objects
-public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
-public import ReciprocityTheory.AnalyticForms.LeviForms.MixedIntegralInclusionExclusion
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasureB
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.HessCEqZeroOfEventuallyEqZero
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocDensAddOfFunContinuousOn
+public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalDensityInclusionExclusionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedEnergyUniformBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralRegularizedConvergenceStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA
+import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+import ReciprocityTheory.AnalyticForms.PotentialTheory.HessCEqZeroOfEventuallyEqZero
+import ReciprocityTheory.AnalyticForms.PotentialTheory.LocDens
+import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasureA
+import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasureB
+import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv
 
 @[expose] public section
 
@@ -30,18 +73,7 @@ open GroundTheory.Heights₂.Heights.AnalyticLimit (TailLogBound tail)
 theorem tailLogBound_congr_φ {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     (Yo : Set X) (r : X → ℝ) {Φ Ψ : Fin e → LocPot X} (h : ∀ i, (Φ i).φ = (Ψ i).φ) (CE : ℝ)
     (H : TailLogBound A Yo r Φ CE) : TailLogBound A Yo r Ψ CE := by
-  have hD : locDens A Φ = locDens A Ψ := by
-    funext j y
-    simp only [locDens, h]
-  intro R₀ hR
-  obtain ⟨h1, h2⟩ := H R₀ hR
-  refine ⟨?_, ?_⟩
-  · unfold MIntegrable at h1 ⊢
-    rw [← hD]
-    exact h1
-  · unfold mInt integralWith at h2 ⊢
-    rw [← hD]
-    exact h2
+  apply _root_.GlobalTheory.CompanionTheory.Ar.Giv.tailLogBound_of_phi_eq <;> assumption
 
 theorem isPsh_reassoc {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X)
     (a Θ : LocPot X) (v : X → ℝ) (h : IsPsh A (a + LocPot.ofFun v + Θ)) :

@@ -1,21 +1,53 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLeibnizOfCommute
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFormOneAddMulSmul
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
-public import ReciprocityTheory.L2DbarEstimates.ChartDerivatives.HoloSmooth
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExtFormAdjEqNegSecondForm
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiagValExtTraceNonneg
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicDerivChernConnectionInverseSymmetricG
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelDbarAdditiveComplexLinearOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormDelDbarSmooth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormPullbackHolomorphic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelDbarCommPullbackOfSmoothDelDbar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullbackPreservesFormType
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.BasSingleMulSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConjFsBasisOfUnitary
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CupPair
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsTorusActionRot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFormsMulClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelDbarAdditiveComplexLinearOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLeibnizOfCommute
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormDelDbarSmooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormPullbackHolomorphic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFormOneAddMulSmul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -130,8 +162,8 @@ theorem hasDeg_iff_mem (k : ℕ) (α : Alt n) : HasDeg k α ↔ α ∈ ⋀[ℂ]^
 theorem repr_degPart (k : ℕ) (α : Alt n) (S : Finset (Fin (n + n))) :
     (bas n).repr (degPart n k α) S = if S.card = k then (bas n).repr α S else 0 := by
   conv_lhs => rw [← (bas n).sum_repr α]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, degPart, Module.Basis.constr_basis, Finsupp.finsetSum_apply, Finsupp.smul_apply]
+
+  simp only [map_sum, map_smul, degPart, Module.Basis.constr_basis, Finsupp.finsetSum_apply, Finsupp.smul_apply]
   rw [Finset.sum_eq_single S (fun T _ h => by split_ifs <;> simp [h]) (by simp)]
   split_ifs <;> simp
 
@@ -227,8 +259,8 @@ theorem dirD_zero (i : Fin n ⊕ Fin n) : dirD i (fun _ => 0) v = 0 := by
 theorem repr_linear (L : Alt n →ₗ[ℂ] Alt n) (α : Alt n) (S : Finset (Fin (n + n))) :
     (bas n).repr (L α) S = ∑ T, (bas n).repr (L (bas n T)) S • (bas n).repr α T := by
   conv_lhs => rw [← (bas n).sum_repr α]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul, mul_comm]
+
+  simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul, mul_comm]
 
 theorem coefwise_dirD_linear (i : Fin n ⊕ Fin n) (L : Alt n →ₗ[ℂ] Alt n) {F : V n → Alt n}
     (hF : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (F x) S) v) :
@@ -248,8 +280,8 @@ theorem delAt_dbarAt_mul {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt ℝ
 theorem degPart_opAt (s : Fin n → Fin n ⊕ Fin n) (k : ℕ) {F : V n → Alt n}
     (hF : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (F x) S) v) :
     degPart n (k + 1) (opAt s F v) = opAt s (fun x => degPart n k (F x)) v ∧ degPart n 0 (opAt s F v) = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [opAt, opAt, map_sum, map_sum]
+
+  rw [opAt, opAt, map_sum, map_sum]
   refine ⟨Finset.sum_congr rfl fun a _ => ?_, Finset.sum_eq_zero fun a _ => (degPart_ι_mul _ k _).2⟩
   rw [(degPart_ι_mul _ k _).1, coefwise_dirD_linear _ _ hF]
 

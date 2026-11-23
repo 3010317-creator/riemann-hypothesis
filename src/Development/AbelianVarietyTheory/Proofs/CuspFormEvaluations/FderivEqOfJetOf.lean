@@ -1,10 +1,49 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ThConst
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolJetF
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.MvPolynomial.Ideal
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -86,8 +125,8 @@ private theorem snd_jetTan_psJet_succ_eq_coeff_single {κ : Type} [Fintype κ] [
   change (MvPolynomial.aeval (fun i => if i = ℓ then (DualNumber.eps : DualNumber ℂ) else 0)
     (psTrunc (k + 1) F)).snd = _
   unfold psTrunc
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, TrivSqZeroExt.snd_sum]
+
+  rw [map_sum, TrivSqZeroExt.snd_sum]
   simp_rw [snd_aeval_eps_monomial_eq_ite]
   rw [Finset.sum_ite_eq', if_pos (single_one_mem_degLE_succ k ℓ)]
 
@@ -120,8 +159,8 @@ theorem fderiv_eq_of_jetOf {g : ℕ} (m : ℕ) (θ θ' : (Fin g → ℂ) → ℂ
     exact e1.symm.trans e2
   ext v
   rw [PullbackSections.sum_single_smul v]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, hd]
+
+  simp only [map_sum, map_smul, hd]
 
 def renInv (n g m : ℕ) : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] Jet ℂ (Fin 1 × Fin (n * g)) m :=
   jetMap (fun p => MvPolynomial.X ((0 : Fin 1), finProdFinEquiv p)) fun _ => X_mem_orig _
@@ -264,8 +303,8 @@ private theorem jetAug_jetN_zero_eq_apply_zero {n g : ℕ} (F : (Fin n → Fin g
       (psTrunc 0 (PullbackSections.tay (fun v => F (colsOf n g v)) 0))) = F 0
   rw [← AlgHom.comp_apply, hc2, hcc]
   unfold psTrunc
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [MvPolynomial.constantCoeff_monomial]
   rw [Finset.sum_ite_eq', if_pos (zero_mem_degLE' 0)]
   have e1 := PullbackSections.coeff_tay_zero (fun v => F (colsOf n g v)) 0

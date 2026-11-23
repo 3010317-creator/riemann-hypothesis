@@ -1,29 +1,53 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsIsScalar
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumVectorDropAuxiliaryPlaces
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CardInversePrimeRepsIntegralRightMulHecke
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumHeckeIndicatorIntegralEqPrimitiveStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceChartFiniteAdeleTensorLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumUniversalDeterminantDatumCoeffEqPrimitiveStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffHeckePolyOfComplex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleConjugatePairPlacesEqSelfOfGoodCharsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArtinMapSplitPlaceUniformiserEqFrobeniusInvStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryGroupCharacterOfHeckeChar
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectors
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VacuumVectorDropAuxiliaryPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenPlacesAdmissibleGoodSetup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlNeOfSplit
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvNatPowRpowNegHalfEvenEqPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDetRootOfDetAt
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffHeckePolyOfComplex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlNeOfSplit
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenPlacesAdmissibleGoodSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleConjugatePairPlacesEqSelfOfGoodCharsStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModulusUnramifiedCharDetHeckeDoubleCosetSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniversalCharSpreadCommutesWithRestrictionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnivCharWithUnivChar
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivChar
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaVacuumHeckeIdentitySplitPlace
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDetInt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -31,8 +55,8 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open Formalism.L2.NTheta (IsIdemAt IsHeckeElt)
 open Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.SeriesTie
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 800000
+
+
 noncomputable section
 
 namespace GlobalTheory.DistRel
@@ -45,8 +69,8 @@ theorem specU_grpSum (Y : NExp D.R D.host D.what₂ D.LL0 N X) (i : X.Tw) {j : �
     Formalism.MainNotions.IntegralHeckeForms.specU Y i j b Q M k χ (grpSum Y ch Q M x) =
       ∑ c, ((χ (Multiplicative.ofAdd (spread Y i Q M ch c)) : (X.Ok i k)ˣ) : X.Ok i k) ⊗ₜ[X.O i] x c := by
   unfold grpSum
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun c _ => ?_
   simp [Formalism.MainNotions.IntegralHeckeForms.specU, AddMonoidAlgebra.lift_single]
 
@@ -154,7 +178,7 @@ open Formalism.IndefR.Links (PolF)
 variable {D : D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂ D.LL0 N}
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem thURel_of_tie {ρ : Setup X} (hρ : ρ.Good) {Y : NExp D.R D.host D.what₂ D.LL0 N X} (rd : Rds Y ρ) (T : Comparison₂ hρ rd)
     (hU : GlobalTheory.UnivChar.IsUnivChar Y) (hH : ∀ i j b, HeckeRead (rd i j b))
     (hR : ∀ i, X.NonzeroIndexPlace i → ∀ j b, RatUniv (rd i j b)) :
@@ -239,8 +263,8 @@ theorem thURel_of_tie {ρ : Setup X} (hρ : ρ.Good) {Y : NExp D.R D.host D.what
   obtain ⟨x2, hx2, hT2⟩ := (T i J b).thU_of_rat (hR i hi J b) M hIR' (Finset.disjoint_of_subset_left hQ'Q hlev)
   change Formalism.MainNotions.IntegralHeckeForms.specU Y i ((J : ℕ) + 1) b Q M k χ (Y.thU i ((J : ℕ) + 1) b Q M a) = GlobalTheory.TwSys.PqF Y i ((J : ℕ) + 1) b k P _
     (Formalism.MainNotions.IntegralHeckeForms.specU Y i ((J : ℕ) + 1) b ((Q.erase P).erase Pb) M k χ' (Y.thU i ((J : ℕ) + 1) b ((Q.erase P).erase Pb) M a))
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hT1, hT2, specU_grpSum, specU_grpSum, map_sum]
+
+  rw [hT1, hT2, specU_grpSum, specU_grpSum, map_sum]
   apply (T i J b).injective_rdK k
   funext g
 
@@ -306,8 +330,8 @@ theorem thURel_of_tie {ρ : Setup X} (hρ : ρ.Good) {Y : NExp D.R D.host D.what
 
   have eL : (rdK (rd i J b) hρ k (∑ c, ((χ (Multiplicative.ofAdd (spread Y i Q M (ρ.ch i) c)) : (X.Ok i k)ˣ) : X.Ok i k) ⊗ₜ[X.O i]
       x1 c)) g = ∑ c, E c * Ξ c g := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, rdK_tmul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hx1]
+
+    simp only [map_sum, rdK_tmul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hx1]
     rfl
   have eR : (rdK (rd i J b) hρ k (∑ c, GlobalTheory.TwSys.PqF Y i ((J : ℕ) + 1) b k P
       ((Formalism.MainNotions.BlochKatoReduction.Gen.psiAt true χ' (Y.delU i ((Q.erase P).erase Pb) M σ) : (X.Ok i k)ˣ) : X.Ok i k)
@@ -316,8 +340,8 @@ theorem thURel_of_tie {ρ : Setup X} (hρ : ρ.Good) {Y : NExp D.R D.host D.what
       ∑ c, (E' c * Ξ' c g + ∑ n ∈ Finset.Icc 1 D.R.r, ((-1) ^ n * q ^ (n * (n - 1) / 2) * yv ^ n) *
         (E' c * (((((ρ.B i J b).mu x : Circle) : ℂ) ^ n)⁻¹ * (q ^ (n * ((Links.Vc D J).rank / 2)))⁻¹ *
           ∑ γ ∈ R n, Ξ' c (g * γ)))) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, PqF_tmul, map_add (f := _), map_smulₛₗ, rdK_tmul, Finset.sum_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+
+    simp only [map_sum, PqF_tmul, map_add (f := _), map_smulₛₗ, rdK_tmul, Finset.sum_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [hx2]
     congr 1

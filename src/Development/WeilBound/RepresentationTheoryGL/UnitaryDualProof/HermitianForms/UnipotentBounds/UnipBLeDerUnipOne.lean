@@ -1,6 +1,50 @@
 module
 
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.SmoothColumnLifts.FinSumFinEquivSymmEq
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.StepForm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -18,25 +62,7 @@ theorem blkAt_apply (n N : ℕ) (h : n ≤ N) (g : GL (Fin n) k) (i j : Fin N) :
     (blkAt k n N h g).val i j =
       if hi : (i : ℕ) < n then (if hj : (j : ℕ) < n then g.val ⟨i, hi⟩ ⟨j, hj⟩ else 0)
       else if i = j then 1 else 0 := by
-  have key : ∀ x : Fin N, (finSumFinEquiv.symm (Fin.cast (Nat.add_sub_cancel' h).symm x) : Fin n ⊕ Fin (N - n)) =
-      if hx : (x : ℕ) < n then Sum.inl ⟨x, hx⟩ else Sum.inr ⟨x - n, by omega⟩ := by
-    intro x
-    split_ifs with hx
-    · have : Fin.cast (Nat.add_sub_cancel' h).symm x = Fin.castAdd (N - n) ⟨x, hx⟩ := Fin.ext rfl
-      rw [this, finSumFinEquiv_symm_apply_castAdd]
-    · have : Fin.cast (Nat.add_sub_cancel' h).symm x = Fin.natAdd n ⟨x - n, by omega⟩ := Fin.ext (by simp; omega)
-      rw [this, finSumFinEquiv_symm_apply_natAdd]
-  simp only [blkAt, glCongr, blkGL, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map]
-  simp [blkHom, reindex_apply]
-  rw [key i, key j]
-  by_cases hi : (i : ℕ) < n
-  · by_cases hj : (j : ℕ) < n <;> simp [hi, hj]
-  · by_cases hj : (j : ℕ) < n
-    · have : i ≠ j := fun e => hi (e ▸ hj)
-      simp [hi, hj, this]
-    · have e : ((⟨i - n, by omega⟩ : Fin (N - n)) = ⟨j - n, by omega⟩) ↔ i = j := by
-        rw [Fin.ext_iff, Fin.ext_iff]; simp only; omega
-      simp only [hi, hj, dite_false, fromBlocks_apply₂₂, Matrix.one_apply, e]
+  apply PositivityTheory.RgUd.Form.U.Lift2.TrM.blkAt_val <;> assumption
 
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in

@@ -1,7 +1,42 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvIsIntMapMap
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.CanonGaugeNabValBaseChange
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -72,8 +107,8 @@ theorem frameSt_of (hAct : ActSt) (hUnit : UnitSt) : FrameSt := by
     · exact frame_cc_ev _ (frame_cc_pt 0) (hact i)
   have hcL : constantCoeff (B.hL C h w0) = 0 := frame_cc_ev _ hpair hc
   have hS : constantCoeff (∑ b : Fin n, ev (n := n) ![pt C d b] (B.hL C h w0)) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun b _ => frame_cc_ev _ (frame_cc_pt b) hcL
   obtain ⟨-, -, -, hadd, hone, -⟩ := hUnit C v (Fin n × Fin d)
   refine ⟨hone _ hS, fun k => ?_, fun σ _ y hy => ?_⟩
@@ -88,8 +123,8 @@ theorem frameSt_of (hAct : ActSt) (hUnit : UnitSt) : FrameSt := by
     have key : subst (fun q : Fin n × Fin d => expPt (fglOf hB) (y q.1) q.2)
         (∑ b : Fin n, ev (n := n) ![pt C d b] (B.hL C h w0)) =
         ∑ j, pairSer (fglOf hB) h (y j) (mv (dAct C B w0) (y j)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← coe_substAlgHom ht, map_sum]
+
+      rw [← coe_substAlgHom ht, map_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       have hs : HasSubst (fun p : Fin 1 × Fin d => expPt (fglOf hB) (y b) p.2) :=
         hasSubst_of_constantCoeff_zero fun q => cc_expPt _ (hy b) q.2

@@ -1,20 +1,69 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.PoincareLelong
 public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.SheetDensityEqSetSheetDensity
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSheet
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxPosDens
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxSimple
-public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.SegreChartProjObjects
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MemChartComponents
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGoodE
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreCoordGoodProj
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.NoetherNormalization
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGoodA
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxPosDens
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MemChartComponents
+public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StatementsCurrent
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Objects
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.SegreChartProjObjects
 
 @[expose] public section
 
@@ -100,8 +149,8 @@ theorem component_aeval_cx {E : Type*} (w' : E → (K →₀ ℕ))
     weightedHomogeneousComponent (blkWt (ι := ι)) δ (aeval yt H) =
       aeval yt (weightedHomogeneousComponent w' δ H) := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [H.as_sum, map_sum, map_sum, map_sum, map_sum]
+
+  rw [H.as_sum, map_sum, map_sum, map_sum, map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   have hmon : IsWeightedHomogeneous (blkWt (ι := ι)) (aeval yt (monomial m (AddMonoidAlgebra.coeff H m)))
       (Finsupp.weight w' m) := by
@@ -125,8 +174,8 @@ theorem aeval_sumElim_factor_cx (k0 : K) {S : Type*} [CommRing S] [Algebra ℂ S
     aeval (Sum.elim a b) H = (∏ k', b k' ^ n0 (Sum.inr k')) * aeval (Sum.elim a 1) H := by
   conv_lhs => rw [H.as_sum]
   conv_rhs => rw [H.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum, Finset.mul_sum]
+
+  rw [map_sum, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun n hn => ?_
   have hw : Finsupp.weight (sWt k0 r) n = Finsupp.weight (sWt k0 r) n0 :=
     (hH (mem_support_iff.mp hn)).trans (hH (mem_support_iff.mp hn0)).symm
@@ -160,8 +209,8 @@ theorem algebraicIndependent_sumElim_cx (Q : Ideal (MRingOver ℂ ι)) [Q.IsPrim
   have hπy : (fun e => π (yt e)) = Sum.elim (forms (segC Q) L) xs := by
     funext e
     rcases e with j | k'
-    set_option synthInstance.maxHeartbeats 100000 in
-      · simp [yt, π, forms, segC, map_sum]
+
+    · simp [yt, π, forms, segC, map_sum]
     · rfl
   have hcomp : ∀ G : MvPolynomial (Fin r ⊕ {k // k ≠ k0}) ℂ,
       Ideal.Quotient.mk Q (aeval yt G) = aeval (Sum.elim (forms (segC Q) L) xs) G := by
@@ -266,8 +315,8 @@ theorem evC_segC (Q : Ideal (MRingOver ℂ ι)) (z : (Σ k, ι k) → ℂ) (hz :
 theorem evC_forms (Q : Ideal (MRingOver ℂ ι)) (z : (Σ k, ι k) → ℂ) (hz : z ∈ conePts Q) {r : ℕ}
     (L : Fin r → ((k : K) → ι k) → ℂ) (j : Fin r) :
     evC Q z hz (forms (segC Q) L j) = ∑ t, L j t * segre z t := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [forms, map_sum, map_smul, evC_segC, smul_eq_mul]
+
+  simp only [forms, map_sum, map_smul, evC_segC, smul_eq_mul]
 
 theorem mem_conePts (Q : Ideal (MRingOver ℂ ι)) (hQ : IsMultiHomogIdeal Q) (k0 : K) {c : ℂ}
     (hc : c ≠ 0) {z : (Σ k, ι k) → ℂ} (hz : z ∈ conePts Q) : scaleBlock k0 c z ∈ conePts Q := by

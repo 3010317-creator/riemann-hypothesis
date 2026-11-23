@@ -1,9 +1,50 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeCoveringOfTraceDualLowerBound
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetDetNormPos
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoeSmulMem
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -52,34 +93,7 @@ theorem sum_re_embedding (hE : IsTotallyComplex E) (e : E) :
 
 theorem eq_zero_of_sum_re (hE : IsTotallyComplex E) (c : InfinitePlace E → ℂ)
     (h : ∀ e : E, ∑ w : InfinitePlace E, (w.embedding e * c w).re = 0) : c = 0 := by
-  classical
-  have hli : LinearIndependent ℂ (fun φ : E →+* ℂ => (φ : E → ℂ)) :=
-    (linearIndependent_monoidHom E ℂ).comp (fun φ : E →+* ℂ => φ.toMonoidHom)
-      (fun a b hab => by ext x; exact DFunLike.congr_fun hab x)
-  let d : (E →+* ℂ) → ℂ := fun φ =>
-    if φ = (InfinitePlace.mk φ).embedding then c (InfinitePlace.mk φ)
-    else (starRingEnd ℂ) (c (InfinitePlace.mk φ))
-  have hd1 : ∀ w : InfinitePlace E, d w.embedding = c w := by
-    intro w; simp [d]
-  have hd2 : ∀ w : InfinitePlace E,
-      d (ComplexEmbedding.conjugate w.embedding) = (starRingEnd ℂ) (c w) := by
-    intro w
-    have hc := IsTotallyComplex.isComplex (K := E) w
-    rw [InfinitePlace.isComplex_iff, ComplexEmbedding.isReal_iff] at hc
-    simp [d, InfinitePlace.mk_conjugate_eq, hc]
-  have hz := Fintype.linearIndependent_iff.1 hli d (by
-    funext e
-    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply]
-    rw [sum_embeddings_pairs hE (fun φ => d φ * φ e)]
-    have : ∀ w : InfinitePlace E, d w.embedding * w.embedding e +
-        d (ComplexEmbedding.conjugate w.embedding) * ComplexEmbedding.conjugate w.embedding e
-        = ((2 * (w.embedding e * c w).re : ℝ) : ℂ) := by
-      intro w
-      rw [hd1, hd2, ComplexEmbedding.conjugate_coe_eq, ← map_mul, Complex.add_conj, mul_comm (c w)]
-    simp only [this]
-    rw [← Complex.ofReal_sum, ← Finset.mul_sum, h e]; simp)
-  funext w
-  rw [← hd1 w]; exact hz _
+  apply GlobalTheory.TraceCover.eq_zero_of_sum_re <;> assumption
 
 theorem exists_int_smul_mem {j : ℕ} (Λ : Submodule (𝓞 E) (Fin j → E))
     (hΛ : Submodule.IsFullLattice E Λ) (x : Fin j → E) : ∃ n : ℤ, n ≠ 0 ∧ (n : E) • x ∈ Λ := by
@@ -91,8 +105,8 @@ theorem pairing_rational (hE : IsTotallyComplex E) {j : ℕ} (x y : Fin j → E)
       ((Algebra.trace ℚ E (x ⬝ᵥ y) : ℚ) : ℝ) / 2 := by
   rw [← sum_re_embedding hE]
   refine Finset.sum_congr rfl fun w _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [dotProduct, map_sum, map_mul]
+
+  simp only [dotProduct, map_sum, map_mul]
 
 theorem exists_trDual (hE : IsTotallyComplex E) {j : ℕ} (Λ : Submodule (𝓞 E) (Fin j → E))
     (hΛ : Submodule.IsFullLattice E Λ) (u : InfinitePlace E → Fin j → ℂ)

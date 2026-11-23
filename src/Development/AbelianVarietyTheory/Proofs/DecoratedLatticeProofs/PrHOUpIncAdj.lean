@@ -1,31 +1,49 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SymRead
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Placed
-public import Formalism.LocalToGlobal.IndefiniteReal.RealRec
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PairForm
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotBadPrimeBase
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationEqZeroOfRootOfSUnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergFrameHalfInverse
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UpImageIntegralMatrixMemCompletedHomLattice
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateHalfAnnihilatorMemCompletedHomLattice
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CompletedHomLatticeStableSplitIdempotent
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsHermitianAuxiliaryVectorSystemBesselVectors
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PairForm
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 
 @[expose] public section
 
@@ -51,10 +69,10 @@ theorem incAdj_yZero_apply {ρ : ℕ} (hρ : 0 < ρ) {S T T₀ : HSp D} (d : Hyp
     intro i
     simp only [ell, Fin.ext_iff]
     split_ifs with h1 h2 h2 <;> first | (exfalso; omega) | simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [HypDec.incAdj_apply, HypDec.incY_apply, yZero, zEll, Matrix.vecMul, dotProduct,
-    Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply, adj, Matrix.transpose_apply, Matrix.map_apply,
-    Matrix.vecMulVec_apply, smul_eq_mul, map_mul, map_neg, hell, map_sum]
+
+  simp only [HypDec.incAdj_apply, HypDec.incY_apply, yZero, zEll, Matrix.vecMul, dotProduct,
+  Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply, adj, Matrix.transpose_apply, Matrix.map_apply,
+  Matrix.vecMulVec_apply, smul_eq_mul, map_mul, map_neg, hell, map_sum]
   rw [Finset.sum_eq_single (⟨ρ - 1, by omega⟩ : Fin ρ) (fun i _ hi => by simp [hi]) (fun h => absurd (Finset.mem_univ _) h)]
   simp only [if_true, mul_one, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
@@ -64,8 +82,8 @@ theorem incAdj_yZero_apply {ρ : ℕ} (hρ : 0 < ρ) {S T T₀ : HSp D} (d : Hyp
 
 theorem map_row {E : Type} [Field E] (f : E →+* k) {m n : Type} [Fintype m] (w : m → E) (M : Matrix m n E) (j : n) :
     ∑ l, f (w l) * f (M l j) = f ((w ᵥ* M) j) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.vecMul, dotProduct, map_sum, RingHom.map_mul]
+
+  simp only [Matrix.vecMul, dotProduct, map_sum, RingHom.map_mul]
 
 theorem row_core (q : GlobalTheory.FinPl.SplitPt D k) {ρ : ℕ} (B : BesLev D ρ) {n : Type} [Fintype n] [DecidableEq n] (sc : k)
     (FA : Frame k B.A.rank n) (F₀ : Frame k B.V₀.rank (n ⊕ Unit)) (hF₀ : (ofSplit q).IsCoreFrame B sc FA F₀) :
@@ -92,8 +110,8 @@ theorem row_core (q : GlobalTheory.FinPl.SplitPt D k) {ρ : ℕ} (B : BesLev D �
     have h0 : (star (vecB B.o B.ζ) ᵥ* B.V₀.gram) ⬝ᵥ vecB B.o B.ζ = star B.ζ ⬝ᵥ B.L.gram *ᵥ B.ζ := by
       rw [vecB, Matrix.star_mulVec, Matrix.vecMul_vecMul, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, B.o.isoB]
     change ∑ l, f _ * F₀.β l (Sum.inr ()) = sc * f (star B.ζ ⬝ᵥ B.L.gram *ᵥ B.ζ)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← h0, dotProduct, map_sum, Finset.mul_sum]
+
+    rw [← h0, dotProduct, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [hF₀.2 l, RingHom.map_mul, mul_left_comm]
     rfl
@@ -107,8 +125,8 @@ theorem row_jac (q : GlobalTheory.FinPl.SplitPt D k) {ρ : ℕ} (hρ : 0 < ρ) (
   set i₀ : Fin ρ := ⟨ρ - 1, by omega⟩ with hi₀
   have hcol : ∀ {m : ℕ} (M : Matrix (Fin J.W.rank) (Fin m) D.host.E) (j : Fin m),
       ∑ l, f ((J.d.e'ᴴ * J.W.gram) i₀ l) * f (M l j) = f ((J.d.e'ᴴ * J.W.gram * M) i₀ j) := fun M j => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Matrix.mul_apply (M := J.d.e'ᴴ * J.W.gram), map_sum]
+
+    rw [Matrix.mul_apply (M := J.d.e'ᴴ * J.W.gram), map_sum]
     simp only [RingHom.map_mul]
   funext t
   rcases t with t | t

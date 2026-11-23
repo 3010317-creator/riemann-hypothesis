@@ -1,9 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralPointsFinitePlaceTensorProperties
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DisjointSpanPerpLat
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralPointsFinitePlaceTensorProperties
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -47,8 +91,8 @@ theorem exists_isUnit_sub {O : Type} [CommRing O] (s : O →+* O) (hs : ∀ z, s
   obtain ⟨c, hc⟩ := Ideal.mem_span_range_iff_exists_fun.1 ((Ideal.eq_top_iff_one _).1 htop)
   have hc' : ∑ i, s (c i) * (D i * s (D i)) = 1 := by
     have := congrArg s hc
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, hs, map_one] at this
+
+    simp only [map_sum, map_mul, hs, map_one] at this
     rw [← this]
     exact Finset.sum_congr rfl fun i _ => by ring
   obtain ⟨i, hi⟩ := hloc (fun i => (c i + s (c i)) * (D i * s (D i)))
@@ -71,8 +115,8 @@ theorem exists_unitary {A : Type} [CommRing A] {M : ℕ} (s : A →+* A) (hs : �
     exact Finset.sum_comm
   have hsym : ∀ p q : Fin M → A, s (Formalism.UG.hform s J p q) = Formalism.UG.hform s J q p := by
     intro p q
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Formalism.UG.hform, map_sum, map_mul, hs]
+
+    simp only [Formalism.UG.hform, map_sum, map_mul, hs]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     rw [hJ]; ring
@@ -102,9 +146,9 @@ theorem exists_unitary {A : Type} [CommRing A] {M : ℕ} (s : A →+* A) (hs : �
     exact Finset.sum_congr rfl fun k _ => by ring
   have hPJ : Formalism.UG.cT s P * J = J * P := by
     ext i j
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hP, hl, Formalism.UG.cT, Matrix.mul_apply, Matrix.vecMulVec_apply, Matrix.transpose_apply,
-      Matrix.map_apply, Matrix.vecMul, dotProduct, map_mul, map_sum, hs, hJ, Finset.mul_sum, Finset.sum_mul]
+
+    simp only [hP, hl, Formalism.UG.cT, Matrix.mul_apply, Matrix.vecMulVec_apply, Matrix.transpose_apply,
+    Matrix.map_apply, Matrix.vecMul, dotProduct, map_mul, map_sum, hs, hJ, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun k' _ => by ring
   have hcc : c * s c * (l ⬝ᵥ w) = c + s c := by
@@ -312,8 +356,8 @@ theorem witt_integral : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hxx : Formalism.UG.hform (sigR (Fv F v) σ) (JR (Fv F v) J) (ratTup (F := F) (Fv F v) x 0)
       (ratTup (F := F) (Fv F v) x 0) = algebraMap (Fv F v) _ (algebraMap F (Fv F v) β) := by
     have e := congrArg (inclR (F := F) (Fv F v)) hx
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hE, Formalism.UG.hform, map_sum, map_mul] at e
+
+    simp only [hE, Formalism.UG.hform, map_sum, map_mul] at e
     refine Eq.trans e ?_
     rw [← IsScalarTower.algebraMap_apply]
     exact (Algebra.TensorProduct.includeRight : E →ₐ[F] Fv F v ⊗[F] E).commutes β

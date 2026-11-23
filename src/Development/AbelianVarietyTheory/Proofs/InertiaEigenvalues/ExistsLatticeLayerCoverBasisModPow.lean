@@ -1,14 +1,57 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TupMemLatT
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisRepTupleSpanSaturationBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisRepTupleRelationMemPowSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaledProductSpanLatticeExistsPadicBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PolyApproxZeroPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRepOfMatrixTuplePadicBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaledProductSpanLatticeStableGaloisRepTupleStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisRepTupleRelationMemPowSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisRepTupleSpanSaturationBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaledProductSpanLatticeEntriesAndSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaledProductSpanLatticeExistsPadicBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScaledProductSpanLatticeStableGaloisRepTupleStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceEstimateScaledProductSpanLatticeStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LocalPrimeGaloisActionPeriodT
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 
 @[expose] public section
 
@@ -118,8 +161,8 @@ theorem layer : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topological
       fun s => (coordsB hR (F s)).symm⟩
   have hPz : ∀ z : Fin d' → ℤ_[l], ∑ i, (P *ᵥ z) i • b i = Finsupp.linearCombination ℤ_[l] (fun h => ((r h : GL (Fin a) (Om l)) : Matrix (Fin a) (Fin a) (Om l))) (∑ s, z s • F s) := by
     intro z
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, ← hP, Finset.smul_sum, smul_smul, Matrix.mulVec, dotProduct, Finset.sum_smul]
+
+    simp only [map_sum, map_smul, ← hP, Finset.smul_sum, smul_smul, Matrix.mulVec, dotProduct, Finset.sum_smul]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i _ => by rw [mul_comm]
   have hCar : ∀ (z : Fin d' → ℤ_[l]) (G : Γ →₀ ℤ_[l]) (y0 : Fin m → Matrix (Fin a) (Fin a) (Om l)), y0 ∈ latL t M →
@@ -129,8 +172,8 @@ theorem layer : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topological
     obtain ⟨w, hw⟩ := hW (∑ s, z s • F s - G) (by
       have hLF : ∀ s, Finsupp.linearCombination ℤ_[l] (tup ρs) (F s) = bb s - y s := fun s => by rw [hFy s]; abel
       have : Finsupp.linearCombination ℤ_[l] (tup ρs) (∑ s, z s • F s - G) = y0 - ∑ s, z s • y s := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sub, map_sum]
+
+        rw [map_sub, map_sum]
         simp only [map_smul, hLF, smul_sub, Finset.sum_sub_distrib, heq]
         abel
       rw [this]

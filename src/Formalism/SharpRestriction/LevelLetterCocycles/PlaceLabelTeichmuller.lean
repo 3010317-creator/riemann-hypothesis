@@ -1,12 +1,53 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.PrimesEffectiveChebotarev
+import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArithmeticCylinders
-public import Formalism.SharpRestriction.CuspSpanNormBounds.PlaceDegreeData
-public import Formalism.SharpRestriction.ParConsts
-public import Formalism.PadicSubsetSums.StableGradedCounts.FixedByAutomorphismInField
 public import Formalism.PadicSubsetSums.CentralIdempotents.GaloisIrreducibility
+public import Formalism.CyclotomicNorms.NonsquarefreeBounds.NonsquarefreeMonicBoundHolds
+public import Formalism.PadicSubsetSums.StableGradedCounts.LocalEstimateIVOfTypeSetWeight
+public import Formalism.SharpRestriction.LevelLetterCocycles.PrimesEffectiveChebotarev
+public import Formalism.SharpRestriction.LevelLetterCocycles.ResidualIrreducibleOfTheoremThreePrime
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -49,24 +90,7 @@ theorem tens_coeff (a : ∀ i, MonoidAlgebra ℂ (G i)) (g : ∀ i, G i) :
 
 theorem conv_coeff {H : Type} [Group H] [Fintype H] (x y : MonoidAlgebra ℂ H) (g : H) :
     (x * y).coeff g = ∑ h, x.coeff h * y.coeff (h⁻¹ * g) := by
-  classical
-  rw [MonoidAlgebra.coeff_mul, Finsupp.sum_fintype]
-  · refine Finset.sum_congr rfl (fun h _ => ?_)
-    rw [Finsupp.sum_fintype]
-    · rw [Finset.sum_eq_single (h⁻¹ * g)]
-      · simp
-      · intro b _ hb
-        rw [if_neg]
-        intro hh
-        apply hb
-        rw [← hh]
-        simp
-      · intro hb
-        exact absurd (Finset.mem_univ _) hb
-    · intro i
-      simp
-  · intro i
-    simp
+  apply Formalism.MainNotions.PrimeDegreeVariant.Ten.conv_coeff <;> assumption
 
 theorem tens_mul (a b : ∀ i, MonoidAlgebra ℂ (G i)) :
     tens a * tens b = tens (fun i => a i * b i) := by

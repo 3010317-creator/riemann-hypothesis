@@ -1,21 +1,68 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
-public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-public import Formalism.LogVandermondeBounds.HookGammaAmgmMultinomialBounds
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.FiniteEulerProductLeZeta
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.SumWeightsOverPrimeLeHalfDegree
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.OneAddInvPowLeExpOne
-public import Mathlib
-public import Formalism.GL3MeanSquares.RankMulPowThreeHalvesLeFourthPower
+public import Formalism.GL3MeanSquares.HookFormulaTorsion.HilbertSchmidtHalfBound
+public import Formalism.HermitianLattices.HermitianLatticesProofs.MassTelescope
+public import Formalism.LogVandermondeBounds.LogRatioLowerBound
+public import Formalism.LogVandermondeBounds.LogRatioUpperBound
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.DimensionMassJointBound
+public import Formalism.GL3MeanSquares.HookFormulaTorsion.FiniteEulerProductLeZeta
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.GlobalBoundRefinements
 public import Formalism.HermitianLattices.FinalMass
-public import Formalism.GL3MeanSquares.InvariantSeriesBidegreeOneOne
-public import Formalism.GL3MeanSquares.ConcavityEquidistribution
-public import Formalism.GL3MeanSquares.HookFormulaTorsion.HilbertSchmidtHalfBound
-public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.InclusionInjective
+import Formalism.HermitianLattices.HermitianLatticesProofs.MassBasic
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalRingCardinality.SpanPowerMembership.Spaces
+import Formalism.LogVandermondeBounds.LogVandermondeProofs.CardStabilizerVector
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.InclusionInjective
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -966,9 +1013,9 @@ theorem mass_ortho (K : Type) [Field K] [NumberField K] [StarRing K] (hK : Forma
   have he : ∀ x y, stdForm K n (e x) (e y) = h x y := by
     intro x y
     conv_rhs => rw [← B.sum_repr x, ← B.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hB, hon,
-      RingHom.id_apply, mul_ite, mul_one, mul_zero]
+
+    simp only [map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hB, hon,
+    RingHom.id_apply, mul_ite, mul_one, mul_zero]
     show ∑ i, star (e x i) * e y i = _
     refine Finset.sum_congr rfl fun i _ => ?_
     simp [e, Module.Basis.equivFun_apply, starRingEnd_apply, mul_comm]

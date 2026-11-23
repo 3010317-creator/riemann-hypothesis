@@ -1,15 +1,62 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.ColValMonomial
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsFormalBiextMap
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.DofIterSmulDir
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MapDofIterate
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.FormalSecondPointDerivativeSecondCoordinate
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BilinPartEigenMemRange
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NabValColumnsCongr
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffProdLeadingMinors
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MapDofIterate
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NabValColumnsCongr
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NabValPullbackMonomial
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumProdConstantCoeffDmonOfCols
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumProdNabValLeadingMinors
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumProdNabValLeadingMinorsOfColumnJets
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.DofIterSmulDir
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+public import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GEWick
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.NabTrans
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -376,8 +423,8 @@ theorem val_unit_columns {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing 
   refine ⟨g, fun b => (colM al b).degree, fun b mo => ?_, (SymbolCols.sum_degree_colM al).trans hdeg, fun f hf => ?_⟩
   · have : g b = MvPowerSeries.map (algebraMap (TWO.Ov v) F)
         (∏ l, (∑ i, C (lam' l i) * (X ((0 : Fin 1), i) : PS (TWO.Ov v) 1 d)) ^ al (l, b)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_prod, map_pow, map_sum, map_mul, map_C, map_X]
+
+      simp only [map_prod, map_pow, map_sum, map_mul, map_C, map_X]
       rfl
     rw [this, coeff_map]
     exact TWO.v_nonneg v _
@@ -394,8 +441,8 @@ theorem val_unit_columns {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing 
         · rw [hl, Units.inv_mul, mul_one]
         · rw [mul_zero]
       have h2 := congrArg (algebraMap (TWO.Ov v) F) h1
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, apply_ite (algebraMap (TWO.Ov v) F), map_one, map_zero] at h2
+
+      rw [map_sum, apply_ite (algebraMap (TWO.Ov v) F), map_one, map_zero] at h2
       exact h2)
     (fun _ => 1) f₂ (fun b mo hmo => by
       rw [one_mul]

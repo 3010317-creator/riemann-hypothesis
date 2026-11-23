@@ -1,21 +1,68 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.DataForms
 public import Formalism.LocalToGlobal.Columns.ToHLat
-public import Formalism.LocalToGlobal.Columns.ToHLatLemmas
 public import Formalism.LocalToGlobal.Columns.PolyFn
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
 public import Formalism.LocalToGlobal.Columns.AtTOwedC
 public import Formalism.LocalToGlobal.Columns.AtTOwedS
-public import Formalism.LocalToGlobal.Columns.AdjointFrobeniusPreservesRamified
-public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
 public import Formalism.LocalToGlobal.Columns.RecLevel
-public import Formalism.LocalToGlobal.Columns.InputsLemmas
-public import Formalism.LocalToGlobal.Columns.CmUnramifiedOfFieldConditions
 public import Formalism.LocalToGlobal.Columns.DGamAut
-public import Formalism.LocalRingCardinality.MinkMEqMinkowskiNumber
 import Formalism.LocalToGlobal.Columns.HeckeSpCount
+public import Formalism.LocalToGlobal.Columns.SmulMemTrpSet
+import Formalism.LocalToGlobal.Columns.AdelicLemmas
+public import Formalism.LocalToGlobal.Columns.AdjointFrobeniusPreservesRamified
+import Formalism.LocalToGlobal.Columns.CoefColLemmas
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.LatticeBasisExistsHolds
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.NablaIndependenceHolds
+public import Formalism.LocalToGlobal.Columns.CoefficientsModP.TauLatticeLatticeHolds
+public import Formalism.LocalToGlobal.Columns.DiamondPreservesRamified
+import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+public import Formalism.LocalToGlobal.Columns.RowFormsGood
+public import Formalism.LocalToGlobal.Columns.ToHLatLemmas
+import Formalism.LocalToGlobal.Divisibility.ClassSumLemmas
+import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ClassSumDualGeOfFamily
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -42,8 +89,8 @@ theorem rec_li_semilin {K V M ι κ : Type} [Field K] [AddCommGroup V] [Module K
     intro x
     conv_lhs => rw [← b.linearCombination_repr x]
     conv_rhs => rw [← b.linearCombination_repr x]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finsupp.linearCombination_apply, Finsupp.sum, TensorProduct.tmul_sum, map_sum, map_sum]
+
+    rw [Finsupp.linearCombination_apply, Finsupp.sum, TensorProduct.tmul_sum, map_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [LinearMap.map_smulₛₗ, TensorProduct.tmul_smul, ← algebraMap_smul ℂ (b.repr x i), map_smul, hLb]
     rfl
@@ -214,8 +261,8 @@ theorem span_basis {ι : Type} [Fintype ι] (b : Basis ι K S.EqFun) :
   · show Submodule.span ℂ (Set.range E.emb) ≤ _
     rw [Submodule.span_le]
     rintro _ ⟨φ, rfl⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← b.sum_repr φ, map_sum]
+
+    rw [← b.sum_repr φ, map_sum]
     refine Submodule.sum_mem _ fun a _ => ?_
     rw [LinearMap.map_smulₛₗ]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
@@ -229,9 +276,9 @@ theorem pairAt_mk (S : GSD K) (σ : K →+* ℂ) (hσ : ∀ x : K, σ (star x) =
       ∑ i, ∑ j, starRingEnd ℂ (σ (S.bV.repr x i)) * σ (S.gramV i j) * σ (S.bV.repr y j) := by
     intro x y
     conv_lhs => rw [← S.bV.sum_repr x, ← S.bV.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, map_mul,
-      Finset.mul_sum]
+
+    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, map_mul,
+    Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     have h1 : σ ((starRingEnd K) (S.bV.repr x i)) = starRingEnd ℂ (σ (S.bV.repr x i)) := hσ _
@@ -245,8 +292,8 @@ theorem pairAt_mk (S : GSD K) (σ : K →+* ℂ) (hσ : ∀ x : K, σ (star x) =
   · right
     intro x y
     rw [key, pairAt, h]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, ComplexEmbedding.conjugate_coe_eq]
+
+    simp only [map_sum, map_mul, ComplexEmbedding.conjugate_coe_eq]
 
 theorem Ev.norm_eq {S : GSD K} {σ : K →+* ℂ} (E : S.Ev σ) (h : S.Ok) (R : S.Rat)
     (hσ : ∀ x : K, σ (star x) = starRingEnd ℂ (σ x)) (φ : S.EqFun) :
@@ -268,8 +315,8 @@ theorem Ev.norm_eq {S : GSD K} {σ : K →+* ℂ} (E : S.Ev σ) (h : S.Ok) (R : 
   · simp only [hp]
     rw [← Complex.conj_re]
     congr 1
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, map_inv₀, map_natCast, Complex.conj_conj]
+
+    simp only [map_sum, map_mul, map_inv₀, map_natCast, Complex.conj_conj]
 
 end GSD
 

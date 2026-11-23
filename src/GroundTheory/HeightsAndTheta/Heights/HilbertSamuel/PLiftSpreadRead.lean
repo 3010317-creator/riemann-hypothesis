@@ -1,8 +1,55 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenOnFibres
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PChartLatQCech
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsKodairaGeneric
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenOnFibres
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -137,24 +184,7 @@ theorem cellMon_ne {I : ∀ k, Finset (ι k)} (hI : ∀ k, ∀ i ∈ I k, y ⟨k
 variable (y) in
 theorem aeval_div_mem (c : ∀ k, ι k) {g : MRingOver ℚ ι} {d : K → ℕ} (hg : IsMultiHomog g d) :
     aeval y g / ∏ k, y ⟨k, c k⟩ ^ d k ∈ chartRingQ y c := by
-  classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [g.as_sum, map_sum, Finset.sum_div]
-  refine Subalgebra.sum_mem _ fun m hm => ?_
-  rw [aeval_monomial, mul_div_assoc]
-  refine Subalgebra.mul_mem _ (Subalgebra.algebraMap_mem _ _) ?_
-  have key : m.prod (fun p e => y p ^ e) / ∏ k, y ⟨k, c k⟩ ^ d k = ∏ p, (y p / y ⟨p.1, c p.1⟩) ^ m p := by
-    rw [Finsupp.prod_fintype _ _ (by simp)]
-    simp only [div_pow]
-    rw [Finset.prod_div_distrib]
-    congr 1
-    rw [Fintype.prod_sigma]
-    refine Finset.prod_congr rfl fun k _ => ?_
-    dsimp only
-    rw [Finset.prod_pow_eq_pow_sum, hg m hm k]
-  rw [key]
-  exact Subalgebra.prod_mem _ fun p _ => Subalgebra.pow_mem _
-    (Algebra.subset_adjoin (Set.mem_range_self (f := fun p : Σ k, ι k => y p / y ⟨p.1, c p.1⟩) p)) _
+  apply GroundTheory.Heights₂.Heights.HilbertSamuel.ChartLatQCech.aeval_div_memQ <;> assumption
 
 theorem quotPart_mem (c : ∀ k, ι k) {d : K → ℤ} {m : MRingOver ℚ ι ⧸ KH.genIdeal y}
     (hm : m ∈ KH.quotPart ℚ (KH.genIdeal y) d) :

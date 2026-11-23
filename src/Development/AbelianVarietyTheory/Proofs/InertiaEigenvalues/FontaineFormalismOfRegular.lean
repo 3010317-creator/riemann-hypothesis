@@ -1,11 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFormalismTensorEquiv
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.CrystallineSubrepresentation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinExt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusIsDomainBdRIsField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFormalismTensorEquiv
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndepOnOfFixed
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusIsDomainBdRIsField
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.LinearAlgebra.Dual.BaseChange
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -168,18 +218,18 @@ theorem span_eq_top_of_invariant (hu : LineUnit PD) [FiniteDimensional Qp V] (ρ
     ext j
     have := congrFun hc0 j
     simp only [Matrix.mulVec, dotProduct, A, Basis.toMatrix_apply, Pi.zero_apply] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Finset.sum_apply', Finsupp.smul_apply,
-      smul_eq_mul, map_zero, Finsupp.zero_apply]
+
+    simp only [map_sum, map_smul, Finset.sum_apply', Finsupp.smul_apply,
+    smul_eq_mul, map_zero, Finsupp.zero_apply]
     rw [← this]
     exact Finset.sum_congr rfl fun k _ => mul_comm _ _
   have hrep : ∀ g (w : B ⊗[Qp] V) k, e.repr (sig PD ρ g w) k =
       ∑ j, algebraMap Qp B (v.repr (ρ g (v j)) k) * PD.actB g (e.repr w j) := by
     intro g w k
     conv_lhs => rw [← e.sum_repr w]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, sig_smul, map_smul, Finset.sum_apply', Finsupp.smul_apply,
-      smul_eq_mul]
+
+    simp only [map_sum, sig_smul, map_smul, Finset.sum_apply', Finsupp.smul_apply,
+    smul_eq_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [mul_comm]
     congr 1
@@ -550,7 +600,7 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
     rw [← LinearMap.range_eq_top]
     apply Submodule.eq_top_of_finrank_eq
     have := hA.rank_matrix
-    rw [Matrix.rank] at this
+    rw [← Matrix.finrank_range_mulVecLin] at this
     rw [this, finrank_fintype_fun_eq_card]
   have hinj : Function.Injective A.mulVecLin :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (by simp [hc])).2 hsurj
@@ -561,16 +611,16 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
     intro c x
     let f : K₀ →+ M := AddMonoidHom.mk' (fun a => m a x) fun a b => hadd a b x
     change f c = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [← v.sum_repr c, map_sum]
+
+    conv_lhs => rw [← v.sum_repr c, map_sum]
     rw [hμ]
     refine Finset.sum_congr rfl fun i _ => ?_
     change m _ x = _
     rw [Algebra.smul_def, hmul, hq]
   have hev : ∀ (c : K₀) τ, A.mulVecLin (fun i => algebraMap Qp LL (v.repr c i)) τ = τ c := by
     intro c τ
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [← v.sum_repr c, map_sum]
+
+    conv_rhs => rw [← v.sum_repr c, map_sum]
     change ∑ i, τ (v i) * algebraMap Qp LL (v.repr c i) = _
     exact Finset.sum_congr rfl fun i _ => by rw [map_smul, Algebra.smul_def, mul_comm]
   choose e he using fun τ : K₀ →ₐ[Qp] LL => hsurj (Pi.single τ 1)
@@ -579,11 +629,11 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
     have h1 : ∑ τ, e τ = fun i => algebraMap Qp LL (v.repr 1 i) := by
       apply hinj
       funext τ
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hev, map_sum]
+
+      rw [hev, map_sum]
       simp [he, Pi.single_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, h1, ← hsum]
+
+    rw [← LinearMap.sum_apply, ← map_sum, h1, ← hsum]
     simpa using hq 1 x
   have heig : ∀ τ c x, m c (μ (e τ) x) = τ c • μ (e τ) x := by
     intro τ c x
@@ -591,8 +641,8 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
       apply hinj
       funext τ'
       have h2 : ∑ i, τ' (v i) * e τ i = (Pi.single τ 1 : _ → LL) τ' := congrFun (he τ) τ'
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_smul, he]
+
+      rw [map_sum, map_smul, he]
       simp only [map_smul, Finset.sum_apply, Pi.smul_apply, hev, map_mul, smul_eq_mul]
       have h3 : ∑ i, e τ i * (τ' c * τ' (v i)) = τ' c * ∑ i, τ' (v i) * e τ i := by
         rw [Finset.mul_sum]
@@ -601,8 +651,8 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
       by_cases h : τ' = τ
       · rw [h]
       · simp [h]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.smul_apply, ← map_smul, ← h1, map_sum, LinearMap.sum_apply, hμ, map_sum]
+
+    rw [← LinearMap.smul_apply, ← map_smul, ← h1, map_sum, LinearMap.sum_apply, hμ, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul, map_smul, LinearMap.smul_apply, ← hsum, hmul]
   have hon : ∀ τ τ', ∀ x ∈ L τ', μ (e τ) x = (Pi.single τ 1 : _ → LL) τ' • x := by
@@ -625,8 +675,8 @@ theorem finrank_eq_sum_letters [FiniteDimensional Qp K₀] [Fintype (K₀ →ₐ
       refine ⟨⟨∑ τ, (y τ : M), D.sum_mem fun τ _ => ((hL τ _).1 (y τ).2).1⟩, ?_⟩
       funext τ
       apply Subtype.ext
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hF, map_sum, Finset.sum_congr rfl fun τ' _ => hon τ τ' _ (y τ').2]
+
+      rw [hF, map_sum, Finset.sum_congr rfl fun τ' _ => hon τ τ' _ (y τ').2]
       simp [Pi.single_apply]
   haveI : ∀ τ, Module.Finite LL (L τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := D) fun x hx => ((hL τ x).1 hx).1

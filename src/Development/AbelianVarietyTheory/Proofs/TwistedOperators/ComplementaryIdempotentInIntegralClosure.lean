@@ -1,10 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RedMFrMapAdjZero
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatePlacesProductIdealProperOddCoprime
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NeZeroOfIsIdemAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentSumAuxiliaryPlaces
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvalVAlgebraMapMem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugatePlacesProductIdealProperOddCoprime
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.NumberField.ClassNumber
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RevPosRevPos
+import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 
 @[expose] public section
 
@@ -15,8 +56,8 @@ open GlobalTheory.SW hiding Level
 open scoped TensorProduct ComplexConjugate Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 1600000
+
+
 
 noncomputable section
 
@@ -192,8 +233,8 @@ theorem offConj : ∀ (D : D7) (Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (e
   obtain ⟨⟨es, hes, rfl⟩, h0⟩ := he
   have hz : ∀ i ∈ Pg ∪ Q, ∀ j ∈ Pg ∪ Q, es i * cA D (es j) = 0 := by
     have hsum : ∑ x ∈ (Pg ∪ Q) ×ˢ (Pg ∪ Q), es x.1 * cA D (es x.2) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [Finset.sum_product, ← h0, map_sum, Finset.sum_mul_sum]
+
+      rw [Finset.sum_product, ← h0, map_sum, Finset.sum_mul_sum]
     have hall := GlobalTheory.PlaceVec.idem_eq_zero_of_sum (A := AE D) GlobalTheory.PlaceVec.natCast_mul_eq_zero
       (fun x : Formalism.L2.DIV.Pl D.host.E × Formalism.L2.DIV.Pl D.host.E => es x.1 * cA D (es x.2)) ((Pg ∪ Q) ×ˢ (Pg ∪ Q))
       (fun x hx => by
@@ -207,8 +248,8 @@ theorem offConj : ∀ (D : D7) (Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (e
     · exact absurd (GlobalTheory.PlaceVec.isIdemAt_inj (hes i hi) (by rw [e]; exact hes j hj)) hij
     · rw [← map_mul, e, map_zero]
   show finPart D _ ∈ clos D (GlobalTheory.LiftLevel.liftI Pg Q)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, ← prod_one_sub _ _ horth, map_prod]
+
+  rw [map_sum, ← prod_one_sub _ _ horth, map_prod]
   exact prod_mem_clos (Pg ∪ Q) _ (fun PP => conjI PP.asIdeal) fun PP hP =>
     finPart_one_sub_cA_mem (hes PP hP) (by rw [GlobalTheory.LiftIdeal.conjI_eq_map D]; exact GlobalTheory.LiftIdeal.map_ne he' hP hP)
 

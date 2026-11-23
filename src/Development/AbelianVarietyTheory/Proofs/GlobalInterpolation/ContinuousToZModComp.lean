@@ -1,15 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDual
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRational
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MonomialEqSumJet
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissibleLatticeBasisExistsStatement
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsLocallyConstantToZModPow
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RatIntOfIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FieldIsoLatticesFormTaylorCorrespondStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDual
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsLocallyConstantToZModPow
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MonomialEqSumJet
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RatIntOfIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRational
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -203,8 +247,8 @@ theorem pu_iT (z : VCx X.Tau a b) : (fun τ => pu s z (s.iT τ)) = z := by funex
 
 theorem mat_sum {r : ℕ} (c : Fin r → ℕ) (β : Fin r → HomE X.E a b) :
     mat s (∑ i, (c i : X.E) • β i) = ∑ i, (c i : D.host.E) • mat s (β i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Nat.cast_smul_eq_nsmul, map_nsmul]
+
+  simp only [map_sum, Nat.cast_smul_eq_nsmul, map_nsmul]
 
 variable {s} (hs : s.Ok)
 include hs
@@ -295,13 +339,13 @@ theorem pairN_nat {D : D7} {N N' r : ℕ} (Ω : ℂ_[p]) (b : Fin r → Matrix (
     simp only [TaylorLogMetric.hYY, Matrix.add_apply, mul_add, Finset.sum_add_distrib, map_add (f := _)]
   have h : TaylorLogMetric.hYY D y (∑ i, (c i : D.host.E) • b i) = ∑ i, (c i : D.host.K) * TaylorLogMetric.hYY D y (b i) := by
     change f _ = ∑ i, (c i : D.host.K) * f (b i)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Nat.cast_smul_eq_nsmul, map_nsmul, nsmul_eq_mul]
+
+    simp only [map_sum, Nat.cast_smul_eq_nsmul, map_nsmul, nsmul_eq_mul]
   rw [TaylorLogMetric.pairN, h]
   simp only [lamHom_apply, zc_nat]
   push_cast
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, map_natCast]
+
+  simp only [map_sum, map_mul, map_natCast]
 
 theorem continuous_pairN {D : D7} {N N' r : ℕ} (Ω : ℂ_[p]) (b : Fin r → Matrix (Fin N') (Fin N) D.host.E)
     (y : Matrix (Fin N') (Fin N) D.host.E) : Continuous (TaylorLogMetric.pairN D lam Ω b y) :=
@@ -436,8 +480,8 @@ theorem ptMom : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (𝓞 D.hos
     · rw [hjet]; exact mul_mem hα (mul_mem c1 (mul_mem f1 (hC _)))
     · rw [hjet, lamC_mul lam hα (mul_mem c1 (mul_mem f1 (hC _))), lamC_mul lam c1 (mul_mem f1 (hC _)), lamC_mul lam f1 (hC _),
         c2, f2]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_smul, map_sum, smul_eq_mul, ← hG, ← hγ1, Finsupp.prod_mapDomain_index_inj ren_inj]
+
+      simp only [map_smul, map_sum, smul_eq_mul, ← hG, ← hγ1, Finsupp.prod_mapDomain_index_inj ren_inj]
       rfl
     · rw [ptTab_eq lam hs hι, hγ2, mat_sum]
       simp only [G, hβm, ContinuousMap.smul_apply, ContinuousMap.sum_apply, ContinuousMap.mul_apply, ContinuousMap.coe_mk, hg₀,

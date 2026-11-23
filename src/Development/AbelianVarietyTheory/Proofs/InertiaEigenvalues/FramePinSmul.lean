@@ -1,12 +1,57 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.JEvExists
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BaseEmbeddingReadingEvalAdelicFunction
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSpanAndGoodRangeObj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCcIsEquivAtSerOfOneMapRowOfFive
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoreConstantsBaseSolutionEquivariant
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OfCore
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ShiftSubTranslate
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EmbeddingsDifferOnInteger
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointIntertwines
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCcIsEquivAtSerOfOneMapRowOfFive
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapOfOneOfSerOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PureTensorOSmul
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BaseEmbeddingReadingEvalAdelicFunction
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGenReadsOfUnitAt
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultValueLeftContLevel
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSpanAndGoodRangeObj
+import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -35,7 +80,7 @@ variable {C : Formalism.L2.Pj.Core D} [Algebra C.Q.c.F D.what₂.LL] {R : RealDa
   {cE c0 : (C.U ((i : ℕ) + 1) O.s0).Comp → ℂ}
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem shift_central (hP : O.Pins κ v₀ ι x₀) (hn : κ.n = (Vc D i).rank) (hHV : R.models_HV) (hjV : R.models_jV)
     (hmem : R.thP_thF_mem) (hsp : GlobalTheory.IndefiniteRowSideFullHecke.ThetaTranslateSize.SpanAt R i A.μ0) {ph : ℂ} (hE : O.OneMapOf κ v₀ cE ph)
     (hE0 : O.EquivAt κ c0) (hS : GlobalTheory.AdTh.SerOf O κ v₀ c0 1)
@@ -139,7 +184,7 @@ theorem phi_smul (s : ℂ) (cc : (C.U ((i : ℕ) + 1) O.s0).Comp → ℂ) (f : C
   ring
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem oneMapOf_smul {ph ze : ℂ} (h : O.OneMapOf κ v₀ c0 ph) (hL : ze ∈ D.what₂.embLL.toRatAlgHom.fieldRange)
     {m : ℕ} (hm : 0 < m) (hze : ze ^ m = 1) : O.OneMapOf κ v₀ (ze⁻¹ • c0) ph := by
   have hn : ‖ze‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hze hm.ne'
@@ -176,7 +221,7 @@ theorem lawsJ_setCE (hL : LawsJ T) {c' : ∀ (j : ℕ) (σ : T.Q.c.F →+* ℂ),
   ⟨hL.toLawsM, h, hL.muVal, hL.muConj, hL.intAll, hL.modelW, hL.familyUniformisationBasePointOrthogonal, hL.kfHalf, hL.adPin⟩
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem framePin_smul {c' c'' : ∀ (j : ℕ) (σ : T.Q.c.F →+* ℂ), (T.U j σ).Comp → ℂ} {i : Fin D.R.m} {σ : T.Q.c.F →+* ℂ}
     {hV : T.V ((i : ℕ) + 1) σ = Wc D i} {s : ℂ} (hs : ‖s‖ = 1) (e : c'' ((i : ℕ) + 1) σ = s • c' ((i : ℕ) + 1) σ)
     (h : @GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.FramePin D G _ _ Pl0 T0 A (setCE T c') iA R i σ hV) :
@@ -191,7 +236,7 @@ theorem framePin_smul {c' c'' : ∀ (j : ℕ) (σ : T.Q.c.F →+* ℂ), (T.U j �
   exact congrArg (· * _) (e1 _ _)
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem exists_shift (hP : GlobalTheory.Published.CuspRapidDecay) (hsz : 8 * D.R.f * D.R.r + 4 ≤ D.R.nV) {F : Face D A} (hC : GlobalTheory.Core5 R F)
     (B : GeoHalf T R fun _ => 1) (hU : R.LUnif) (hJ : JEvExists T R B.κ B.v₀) (i : Fin D.R.m) :
     ∃ (c1 : (T.U ((i : ℕ) + 1) T.σ₀).Comp → ℂ) (z : G), z ∈ Subgroup.center G ∧

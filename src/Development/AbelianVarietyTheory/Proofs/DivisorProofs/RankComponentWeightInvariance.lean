@@ -1,60 +1,78 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HypothesesX
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InterNumDetNonposSplitTorus
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
-public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Formalism.LocalRingCardinality.DataParamsT
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ToKnownTheoremsOf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IntegralBound
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsCoordAtPoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeSmul
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHeightIffOfDegreeEq
-public import Development.AbelianVarietyTheory.Definitions.Divisors.WedgeNrmLeOfWedgeNormLe
-public import Development.AbelianVarietyTheory.Definitions.Divisors.VolMeasureOfAdd
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
-public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LogMeanShares.LogMeanStatements.HSClaim
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
-public import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ToroidalCompactificationBis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImageBirationalLinearSystemEqSelfInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeBotOfNotMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedStr
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanBdLeSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalFlagNonempty
-public import Development.AbelianVarietyTheory.Definitions.Divisors.P22
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormsExtendVanishCompactifiedFlagSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalIntegralWeightSection
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ToroidalChartsForFan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqLastAddGaps
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsLinearMapMultilinearMapBaseChange
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.HigherDirectImagesVanishOfIsAffineHom
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.SumNegOnePowFinrankEqZero
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnectedStatement
-public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeadWeightLineNef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNefPullLLStepEx
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusFlagUnitWeightBundlesNef
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ToroidalFlagProportionalityOfGoodChernWeilStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEffCartierCompl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEqOfGenericUniqueComplexPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightPositivityPrincipalisation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightPositivityPrincipalisationDeep
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivLeSubMulDiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImageBirationalLinearSystemEqSelfInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedStr
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageIdealEqConeIdealOfGeneric
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralBaseChangeRationalFunctionFieldFiniteVStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimFieldBaseChangeLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModificationLineBundleGlobalSectionsDimPullEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopSelfIntersectionNefLeCuspFormGrowthStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOrIsEmptyGenericMemberLinearSystemStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfRingKrullDimConeIdeal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemNonzeroLocusFormMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModificationLineBundleGlobalSectionsDimPullEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeBotOfNotMem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyHomologyEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopSelfIntersectionNefLeCuspFormGrowthStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimFieldBaseChangeLeStatement
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
+import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsRightActFunPull
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
+import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 
 @[expose] public section
 
@@ -93,20 +111,20 @@ theorem dim_zeroScheme_le [IsIntegral X] [IsLocallyNoetherian X] {L : LB X} (hL 
 theorem globalSections_dim_le_div_add_restriction [IsIntegral X] (hp : IsProjOver (strHom k (X := X))) {L B : LB X} (hL : L.IsLB) (hB : B.IsLB) {t : L.Sec}
     (ht : t ≠ 0) : letI := algebraΓAlong k (secIdeal hL t).subschemeι
     lbH0 k B ≤ lbH0 k (LB.div B L) + lbH0 k (B.pull (secIdeal hL t).subschemeι) := by
-  set_option maxHeartbeats 16000000 in
-    letI := algebraΓAlong k (secIdeal hL t).subschemeι
-    have := isNoetherian_of_isProjOver hp
-    have := (mono_cutHom_structureModule_iff hL t).2 ((sec_ne_zero_iff t).1 ht)
-    have hF := finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k X) (structureModule X) hp
-    have h := hdim₂_le k (Twist.shortExact_map hB (shortExact_cutComplex (structureModule X) hL t)) 0
-      ((hF.twist (Twist.isLB_lbZPow hL (-1)) _ hB).finite 0) ((hF.cut hL t _ hB).finite 0)
-    obtain ⟨e₁⟩ := nonempty_twist_twist_iso_of_cls_eq (structureModule X) (Twist.isLB_lbZPow hL (-1)) hB
-      (LB.isLB_div hB hL) (by rw [cls_div hB hL, cls_lbZPow hL]; abel)
-    obtain ⟨e₂, -⟩ := exists_cut_structureModule_iso hL t
-    have := Twist.isQuasicoherent_twist (F := structureModule _) (LB.isLB_pull hB (secIdeal hL t).subschemeι)
-    refine h.trans_eq (congrArg₂ (· + ·) (hdim_congr k 0 e₁) ((hdim_congr k 0 ((twistFunctor B).mapIso e₂)).trans
-      ((hdim_congr k 0 (Twist.projIso B _ _)).symm.trans ?_)))
-    exact hdim_pushforward k (appTop_algebraMap_along k _) _ 0
+
+  letI := algebraΓAlong k (secIdeal hL t).subschemeι
+  have := isNoetherian_of_isProjOver hp
+  have := (mono_cutHom_structureModule_iff hL t).2 ((sec_ne_zero_iff t).1 ht)
+  have hF := finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k X) (structureModule X) hp
+  have h := hdim₂_le k (Twist.shortExact_map hB (shortExact_cutComplex (structureModule X) hL t)) 0
+    ((hF.twist (Twist.isLB_lbZPow hL (-1)) _ hB).finite 0) ((hF.cut hL t _ hB).finite 0)
+  obtain ⟨e₁⟩ := nonempty_twist_twist_iso_of_cls_eq (structureModule X) (Twist.isLB_lbZPow hL (-1)) hB
+    (LB.isLB_div hB hL) (by rw [cls_div hB hL, cls_lbZPow hL]; abel)
+  obtain ⟨e₂, -⟩ := exists_cut_structureModule_iso hL t
+  have := Twist.isQuasicoherent_twist (F := structureModule _) (LB.isLB_pull hB (secIdeal hL t).subschemeι)
+  refine h.trans_eq (congrArg₂ (· + ·) (hdim_congr k 0 e₁) ((hdim_congr k 0 ((twistFunctor B).mapIso e₂)).trans
+    ((hdim_congr k 0 (Twist.projIso B _ _)).symm.trans ?_)))
+  exact hdim_pushforward k (appTop_algebraMap_along k _) _ 0
 
 theorem interNum_nonneg (hN : GlobalTheory.Published.NefNumerics) (hp : IsProjOver (strHom k (X := X))) {d : ℕ}
     (hd : topologicalKrullDim X ≤ d) {P : Fin d → LB X} (hP : ∀ i, IsNef k (P i)) :
@@ -336,8 +354,8 @@ theorem imageDeg_eq_del (hQ : GlobalTheory.HSCore.Quoted) {F : Type} [Field F] [
       have hF : ∀ r, algebraMap F Ω r ∈ S.ratioField x.1 := fun r =>
         Subfield.subset_closure (Or.inl ⟨r, by rw [LinSys.baseHom_ptOver]⟩)
       have h₃ : ∀ v, a * ev v / S.coords x.1 j ∈ S.ratioField x.1 := fun v => by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← b.sum_repr v, map_sum, Finset.mul_sum, Finset.sum_div]
+
+        rw [← b.sum_repr v, map_sum, Finset.mul_sum, Finset.sum_div]
         refine sum_mem fun i _ => ?_
         rw [map_smul, Algebra.smul_def, mul_left_comm, mul_div_assoc]
         exact mul_mem (hF _) (Subfield.subset_closure (Or.inr ⟨i, j, by rw [congrFun hc i]; rfl⟩))

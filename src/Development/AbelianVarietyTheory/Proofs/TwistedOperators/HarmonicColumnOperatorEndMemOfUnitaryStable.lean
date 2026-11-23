@@ -1,7 +1,58 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SumSmulMemOfSumZpowSmulMem
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -40,23 +91,23 @@ theorem yForm_eq_sum (t : T) (b : Fin q) (φ : κ → R) :
 theorem colDerM_xForm (t t' : T) (X : Matrix κ κ R) (a : Fin p) (ε : κ → R) :
     colDerM (q := q) t X (xForm t' a ε) = if t' = t then xForm t a (ε ᵥ* X) else 0 := by
   have hv : ε ᵥ* X = ∑ k, ε k • X k := by ext l; simp [vecMul, dotProduct]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [xForm_eq_sum, map_sum]
+
+  rw [xForm_eq_sum, map_sum]
   simp only [Derivation.map_smul, colDerM_X_xVar]
   split_ifs with h
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [hv, map_sum]; simp [map_smul]
+
+  · rw [hv, map_sum]; simp [map_smul]
   · simp
 
 theorem colDerM_yForm (t t' : T) (X : Matrix κ κ R) (b : Fin q) (φ : κ → R) :
     colDerM (p := p) t X (yForm t' b φ) = if t' = t then -yForm t b (X *ᵥ φ) else 0 := by
   have hv : X *ᵥ φ = ∑ k, φ k • fun r => X r k := by ext l; simp [mulVec, dotProduct, mul_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [yForm_eq_sum, map_sum]
+
+  rw [yForm_eq_sum, map_sum]
   simp only [Derivation.map_smul, colDerM_X_yVar]
   split_ifs with h
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [hv, map_sum]; simp [map_smul, Finset.sum_neg_distrib]
+
+  · rw [hv, map_sum]; simp [map_smul, Finset.sum_neg_distrib]
   · simp
 
 
@@ -165,7 +216,7 @@ variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 def blockMat (k l : κ) (c s s' : ℂ) : Matrix κ κ ℂ :=
   1 + single k k (c - 1) + single l l (c - 1) + single l k s + single k l s'
 
-set_option maxHeartbeats 2000000 in
+
 theorem blockMat_mul_star_eq {k l : κ} (hkl : k ≠ l) (c s s' : ℂ) :
     blockMat k l c s s' * star (blockMat k l c s s') =
       1 + single k k (c * star c + s' * star s' - 1) + single l l (s * star s + c * star c - 1) +
@@ -221,12 +272,12 @@ theorem sum_smul_mem_of_sum_pow_smul_mem_on (W : Submodule K V) {U : Set K} (hU 
     refine Set.Infinite.mono ?_ hU
     intro u hu
     have := hφ _ (h u hu)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul] at this
+
+    simp only [map_sum, map_smul, smul_eq_mul] at this
     simpa [Polynomial.eval_finsetSum, mul_comm] using this
   have := congrArg (Polynomial.lsum (R := K) (fun n => f n • (LinearMap.id : K →ₗ[K] K))) hP
-  set_option synthInstance.maxHeartbeats 100000 in
-    simpa [map_sum, Polynomial.lsum_apply, Polynomial.sum_monomial_index] using this
+
+  simpa [map_sum, Polynomial.lsum_apply, Polynomial.sum_monomial_index] using this
 
 theorem sum_smul_mem_of_sum_zpow_smul_mem_on (W : Submodule K V) {U : Set K} (hU : U.Infinite)
     (hU0 : ∀ u ∈ U, u ≠ 0) (S : Finset ι) (e : ι → ℤ) (v : ι → V)
@@ -374,12 +425,12 @@ theorem colLie_diag_mem_of_unitary (W : Submodule ℂ (Poly ℂ T p q κ))
         rw [Set.mem_setOf_eq, h0, zero_mul] at hu; exact zero_ne_one hu
       have := hW (Pi.mulSingle t (diagInvAt k (Units.mk0 u hu0)))
         (mulSingle_mem_unitaryGroup t _ (diagInvAt_mem_unitaryGroup k _ hu)) w hw
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [w.as_sum, map_sum] at this
+
+      rw [w.as_sum, map_sum] at this
       simpa only [colActHom_diagInvAt_monomial, Units.val_zpow_eq_zpow_val, Units.val_mk0] using this)
     Int.cast
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [w.as_sum, map_sum]
+
+  rw [w.as_sum, map_sum]
   simpa only [colLie_monomial] using this
 
 theorem colDerM_mem_of_conj (W : Submodule ℂ (Poly ℂ T p q κ))

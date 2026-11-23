@@ -1,23 +1,59 @@
 module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.DefsMMInv
-public import Formalism.LocalToGlobal.InertKernelTheory.DefsBasis
 public import Formalism.LocalToGlobal.InertKernelTheory.StatementCc
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.CurveIdealPrimeReduction
 public import Formalism.LocalToGlobal.InertKernelTheory.StatementModel
-public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
+public import Formalism.PeriodIntegrals.FglPhSplit
+public import Mathlib.RingTheory.PowerSeries.Exp
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.CurveIdealPrimeReduction
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.FormalExponentialAgree
+public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntBasis
+import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.FlowTwoTorsionWp
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FormalGroupCommon.ExpLog
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FormalGroupSplitting.ExpCongruenceExtendsToSum
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.AdditionIdentityOfSigmaFormulaUnit
-public import Formalism.SharpRestriction.GlobalSchurBounds.StatementTranslationInvariantSeventh
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.CoefWfPhAt
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.TestVectorMemSchwartzBruhat
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.RetcutA
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.TheoremOfCubeOfAdditionFormulas
+public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.BeConjOfNormHolds
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.FormalGroupLawFirstHalfHolds
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.StmtEndIntWHolds
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.StmtPhDualWHolds
-public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.ReadWHolds
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FormalGroupCommon.ExpLog
+import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.LevelRestrictionOfGroupLawHolds
+public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.RetcutA
+import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.TestVectorMemSchwartzBruhat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -57,8 +93,8 @@ theorem expMv_sum {σ ι : Type} (s : Finset ι) (f : ι → MvPowerSeries σ �
   · simpa using (expMv_zero' (σ := σ) (p := p))
   · intro a s ha ih
     have h0 : MvPowerSeries.constantCoeff (∑ i ∈ s, f i) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]; exact Finset.sum_eq_zero fun i _ => hf i
+
+      rw [map_sum]; exact Finset.sum_eq_zero fun i _ => hf i
     rw [Finset.sum_insert ha, Finset.prod_insert ha, expMv_add'' (hf a) h0, ih]
 
 theorem msubst_psubst {τ υ : Type} {a : MvPowerSeries τ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0)
@@ -139,8 +175,8 @@ theorem lin_partial (hOk : g.Ok) {r : ℕ} (c : Fin r → ℂ_[p])
   have hT : ∀ t : Finset (Fin r),
       MvPowerSeries.constantCoeff (∑ j ∈ t, MvPowerSeries.C (c j) * g.lg (Xv j) : MvPowerSeries (Fin r) ℂ_[p]) = 0 := by
     intro t
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_eq_zero fun j _ => by rw [map_mul, cc_lg g (hX j), mul_zero]
   refine Finset.induction_on s ?_ ?_
   · rw [Finset.sum_empty]
@@ -179,8 +215,8 @@ theorem lg_lin (hOk : g.Ok) {r : ℕ} (c : Fin r → ℂ_[p]) :
       ∑ j, MvPowerSeries.C (c j) * g.lg (Xv j : MvPowerSeries (Fin r) ℂ_[p]) := by
   unfold G1.lin
   refine lg_pt g hOk ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_eq_zero fun j _ => by rw [map_mul, cc_lg g (by simp), mul_zero]
 
 theorem inv_ePhi1 (he1 : PowerSeries.constantCoeff (ePhi1 g.lam g.abelian₂ g.C g.wq) = 1) {σ : Type}
@@ -267,18 +303,18 @@ theorem core (D : D7) (g : G1 p) (hOk : g.Ok) (hp : p ≠ 2)
     have hPh : g.PhOn de = ∑ i : Fin r, g.phAt (S i) := rfl
     have hX0 : ∀ i : Fin r, MvPowerSeries.constantCoeff (Xv i : MvPowerSeries (Fin r) ℂ_[p]) = 0 := fun i => by simp
     have hsum0 : MvPowerSeries.constantCoeff (∑ i : Fin r, g.phAt (Xv i) : MvPowerSeries (Fin r) ℂ_[p]) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]; exact Finset.sum_eq_zero fun i _ => PowerSeries.constantCoeff_subst_eq_zero (hX0 i) _ (ph0 g)
+
+      rw [map_sum]; exact Finset.sum_eq_zero fun i _ => PowerSeries.constantCoeff_subst_eq_zero (hX0 i) _ (ph0 g)
     have hsumS : MvPowerSeries.subst S (∑ i : Fin r, g.phAt (Xv i) : MvPowerSeries (Fin r) ℂ_[p]) =
         ∑ i : Fin r, g.phAt (S i) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← MvPowerSeries.coe_substAlgHom hS, map_sum, MvPowerSeries.coe_substAlgHom hS]
+
+      rw [← MvPowerSeries.coe_substAlgHom hS, map_sum, MvPowerSeries.coe_substAlgHom hS]
       refine Finset.sum_congr rfl fun i _ => ?_
       unfold G1.phAt
       rw [msubst_psubst (hX0 i) hS, MvPowerSeries.subst_X hS]
     have hS0 : MvPowerSeries.constantCoeff (∑ i : Fin r, g.phAt (S i) : MvPowerSeries (Fin r) ℂ_[p]) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]; exact Finset.sum_eq_zero fun i _ => PowerSeries.constantCoeff_subst_eq_zero (hSI i).1 _ (ph0 g)
+
+      rw [map_sum]; exact Finset.sum_eq_zero fun i _ => PowerSeries.constantCoeff_subst_eq_zero (hSI i).1 _ (ph0 g)
     obtain ⟨hG0, hGI⟩ := hG
     rw [hPh] at hG0 hGI
     have hd0 : MvPowerSeries.constantCoeff (∑ i : Fin r, g.phAt (Xv i) - ∑ i : Fin r, g.phAt (S i) :

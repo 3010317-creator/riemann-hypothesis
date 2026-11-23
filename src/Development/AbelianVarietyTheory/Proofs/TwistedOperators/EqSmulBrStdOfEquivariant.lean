@@ -1,12 +1,51 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.FiniteIntertwining
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BranchesAlongOfIrreducible
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StatementWithTransposeOfBranching
-public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BranchesAlongOfIrreducible
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TensorMapDescent
+import Formalism.GradedWeylDivisibility.FinalD
+import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.InterlaceDifferenceShiftInvariant
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -111,8 +150,8 @@ theorem rhoK_update_bVV {n : ℕ} (lam : ι → DomWeight n) (τ₀ : ι) (g : G
     have h2 := congrArg Subtype.val h
     simp only [Submodule.coe_sum, Submodule.coe_smul, bSq_coe, GlobalTheory.Branching.sqRep_coe] at h2
     exact h2.symm
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e2, map_sum, Submodule.coe_sum]
+
+  rw [e2, map_sum, Submodule.coe_sum]
   refine Finset.sum_congr rfl fun l _ => ?_
   rw [map_smul, Submodule.coe_smul, bVV_coe, bVVfun, tenAt_apply]
   congr 2
@@ -125,8 +164,8 @@ theorem partCoord_rhoK {n : ℕ} (lam : ι → DomWeight n) (τ₀ : ι) (j : VV
   have key : partCoord lam τ₀ j ∘ₗ rhoK lam (Function.update 1 τ₀ g) =
       GlobalTheory.Branching.sqRep ℂ n (lam τ₀) g ∘ₗ partCoord lam τ₀ j := by
     refine (bVV ℂ lam).ext fun j' => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.comp_apply, rhoK_update_bVV, map_sum, map_smul, partCoord_bVV]
+
+    simp only [LinearMap.comp_apply, rhoK_update_bVV, map_sum, map_smul, partCoord_bVV]
     have hc : ∀ l, ((∀ τ, τ ≠ τ₀ → Function.update j' τ₀ l τ = j τ) ↔ (∀ τ, τ ≠ τ₀ → j' τ = j τ)) := fun l =>
       forall_congr' fun τ => imp_congr_right fun h => by rw [Function.update_of_ne h]
     by_cases h : ∀ τ, τ ≠ τ₀ → j' τ = j τ
@@ -278,8 +317,8 @@ theorem brStd_bVV (hN : N = n + 1) (Λ : ι → DomWeight N) (σ : ι → DomWei
     simp only [Submodule.coe_sum, Submodule.coe_smul, bSq_coe, brOneRep_coe] at h
     rw [← h]
     rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [e, ten, map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul, bVV_coe, bVVfun]
+
+  simp only [e, ten, map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul, bVV_coe, bVVfun]
   rw [Finset.prod_univ_sum, Fintype.piFinset_univ]
   refine Finset.sum_congr (by congr 1; exact Subsingleton.elim _ _) fun x _ => ?_
   simp only [MvPolynomial.smul_eq_C_mul, Finset.prod_mul_distrib, map_prod]

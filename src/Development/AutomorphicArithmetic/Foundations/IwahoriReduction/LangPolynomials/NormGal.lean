@@ -1,11 +1,50 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FixedIntegersIsUnitOfNotMemPrimeSpan
-public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.PresTr
+public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.DvdOfNormLe
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.KumAlg
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.KumTriv
-public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.DvdOfNormLe
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.PolyEx
+public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.PresTr
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.Multiplicity
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -196,8 +235,8 @@ private theorem ng_kum {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) {Ω : Type} [Fiel
           ((((x : ZMod (l ^ (m + 1))).val : ℕ) : Qbar l) - 1) * Z (m + 1) s x +
         (Z m s 1 - ∑ i, β.val i * (((k' i).val : ℕ) : Qbar l)) := by
       rw [hZ.nrm m s hsI 1, hxs]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sub, map_sum, map_natCast, Nat.cast_sum, mul_sub, Finset.mul_sum, Finset.sum_sub_distrib, sub_mul, one_mul]
+
+      simp only [map_sub, map_sum, map_natCast, Nat.cast_sum, mul_sub, Finset.mul_sum, Finset.sum_sub_distrib, sub_mul, one_mul]
       rw [Finset.sum_comm]
       ring
     have hC : Cg n (∑ i, β.val i * algebraMap ℤ_[l] (PadicAlgCl l) (xs i)) 0 := by
@@ -224,8 +263,8 @@ private theorem ng_kum {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) {Ω : Type} [Fiel
       rw [← Nat.cast_pow, map_natCast]
       exact ZMod.natCast_self (l ^ n)
     rw [map_mul, e0, zero_mul, hxs] at h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sub, map_sum, map_natCast, Nat.cast_sum, ZMod.natCast_zmod_val] at h2
+
+    simp only [map_sub, map_sum, map_natCast, Nat.cast_sum, ZMod.natCast_zmod_val] at h2
     exact sub_eq_zero.1 h2
   have h3 := (kalg _ _ _ _ (hprod (Finset.univ.filter fun x : (ZMod (l ^ (m + 1)))ˣ => red l m x = 1) i) (kalg _ _ _ _ (hk' i) (hk' i)).2.1).1
   rw [heq i, add_neg_cancel] at h3

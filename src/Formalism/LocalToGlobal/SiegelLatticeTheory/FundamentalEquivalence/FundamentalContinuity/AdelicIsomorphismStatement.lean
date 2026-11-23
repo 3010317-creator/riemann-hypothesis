@@ -1,6 +1,58 @@
 module
 
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.InvariantTopologyComparison.LinearIndependentOneBeta
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FundamentalEquivalence.AdBridge
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -25,23 +77,7 @@ def KgS (g : ℕ) : Set I.Gf :=
     ∀ y ∈ I.Lf, ∃ z ∈ I.Lf, (I.fmat x - 1) *ᵥ y = (g : EAf I) • z}
 
 theorem exists_beta : ∃ β : I.E, β ∈ Formalism.UG.intOE I.E ∧ β ∉ Set.range (algebraMap I.F I.E) := by
-  by_contra hcon
-  push_neg at hcon
-  have hall : ∀ z : I.E, z ∈ Set.range (algebraMap I.F I.E) := by
-    intro z
-    obtain ⟨a, b, _, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 I.E) z
-    obtain ⟨x, hx⟩ := hcon _ (by exact RingHom.mem_range.mpr ⟨a, rfl⟩)
-    obtain ⟨y, hy⟩ := hcon _ (by exact RingHom.mem_range.mpr ⟨b, rfl⟩)
-    exact ⟨x / y, by rw [map_div₀, hx, hy]⟩
-  have hw : ∀ w : I.E, ∃ c : I.F, c • (1 : I.E) = w := fun w => by
-    obtain ⟨c, hc⟩ := hall w
-    exact ⟨c, by rw [← hc, Algebra.algebraMap_eq_smul_one]⟩
-  have hle : Module.finrank I.F I.E ≤ 1 := by
-    first
-      | exact finrank_le_one (1 : I.E) hw
-      | exact Module.finrank_le_one (1 : I.E) hw
-  have h2 := I.cm.deg2
-  omega
+  apply PI.InvTopW.exists_beta <;> assumption
 
 def beta : I.E := (exists_beta I).choose
 
@@ -347,8 +383,8 @@ private theorem thetaV_tmul_lemma_2 (v : InfinitePlace I.F) (a : Formalism.MainN
 theorem alg_theta (v : InfinitePlace I.F) (y : TT I) :
     thetaV I v y = evV I v ((alg_B I).repr y 0) + evV I v ((alg_B I).repr y 1) * I.φ v (beta I) := by
   conv_lhs => rw [alg_y_eq I y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Fin.sum_univ_two, thetaV_tmul_lemma_2, thetaV_tmul_lemma_2, bas_zero, bas_one, map_one, mul_one]
+
+  rw [map_sum, Fin.sum_univ_two, thetaV_tmul_lemma_2, thetaV_tmul_lemma_2, bas_zero, bas_one, map_one, mul_one]
 
 private theorem tauF_tmul_lemma (a : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) (b : I.E) :
     tauF I (a ⊗ₜ[I.F] b) = b ⊗ₜ[I.F] a.2 := by
@@ -360,8 +396,8 @@ private theorem tauF_tmul_lemma (a : Formalism.MainNotions.GlobalTheoryTheory.Ge
 theorem alg_tau (y : TT I) :
     tauF I y = (1 : I.E) ⊗ₜ[I.F] ((alg_B I).repr y 0).2 + beta I ⊗ₜ[I.F] ((alg_B I).repr y 1).2 := by
   conv_lhs => rw [alg_y_eq I y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Fin.sum_univ_two, tauF_tmul_lemma, tauF_tmul_lemma, bas_zero, bas_one]
+
+  rw [map_sum, Fin.sum_univ_two, tauF_tmul_lemma, tauF_tmul_lemma, bas_zero, bas_one]
 
 theorem alg_comm_eq (c : Fin 2 → Af I.F) :
     Algebra.TensorProduct.comm I.F I.E (Af I.F)
@@ -603,14 +639,14 @@ theorem top_expand (y : TT I) : y = ∑ i, (top_eq I y i) ⊗ₜ[I.F] bas I i :=
 theorem top_theta_formula (v : InfinitePlace I.F) (y : TT I) :
     thetaV I v y = ∑ i, evV I v (top_eq I y i) * I.φ v (bas I i) := by
   conv_lhs => rw [top_expand I y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun i _ => thetaV_tmul_lemma_2 I v _ _
 
 theorem top_tau_formula (y : TT I) : tauF I y = ∑ i, bas I i ⊗ₜ[I.F] (top_eq I y i).2 := by
   conv_lhs => rw [top_expand I y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   exact Finset.sum_congr rfl fun i _ => tauF_tmul_lemma I _ _
 
 theorem top_cont_evV (v : InfinitePlace I.F) : Continuous (evV I v) := by
@@ -693,8 +729,8 @@ theorem top_kappa_bas (i j : Fin 2) (a : Af I.F) :
   split_ifs <;> simp
 
 theorem top_kappa_tau (i : Fin 2) (y : TT I) : top_kappa I i (tauF I y) = (top_eq I y i).2 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [top_tau_formula, map_sum]
+
+  rw [top_tau_formula, map_sum]
   simp_rw [top_kappa_bas]
   simp
 
@@ -734,8 +770,8 @@ theorem top_coord_den : ∃ D : ℕ, 1 ≤ D ∧ ∀ o ∈ Formalism.UG.intOE I.
   · have h := Int.natAbs_pos.mpr hy0
     nlinarith
   obtain ⟨o', rfl⟩ := ho
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← (NumberField.RingOfIntegers.basis I.E).sum_repr o', map_sum, map_sum, Finset.mul_sum]
+
+  rw [← (NumberField.RingOfIntegers.basis I.E).sum_repr o', map_sum, map_sum, Finset.mul_sum]
   refine IsIntegral.sum _ (fun k _ => ?_)
   rw [map_zsmul, map_zsmul, mul_smul_comm]
   refine IsIntegral.smul _ (key _ (hy _ ?_))

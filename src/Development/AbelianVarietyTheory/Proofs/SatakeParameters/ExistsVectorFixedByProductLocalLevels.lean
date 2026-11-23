@@ -1,14 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Statements.EllipticCurveLevels.HasLevel
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RegPolOfRepOf
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.Imports
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ArthurClozelStrongTC
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsComplementaryProductOfIsCuspidal
+public import Development.AbelianVarietyTheory.Statements.EllipticCurveLevels.ClosedAtLConclusionOfMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLocalIntegralPointsMemOpenSubgroupDefi
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPoints
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RestrictsSelf
 
 @[expose] public section
 
@@ -53,8 +89,8 @@ theorem avg_apply (f : UA E a → ℂ) :
 
 theorem avg_comm {c : UA E a} (hc : ∀ k ∈ K, Commute c k) (f : UA E a → ℂ) :
     avg K K' (RU E a c f) = RU E a c (avg K K' f) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [avg_apply, avg_apply, map_sum]
+
+  rw [avg_apply, avg_apply, map_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
   rw [← rU_mul, ← rU_mul, (hc _ (Quotient.out q).2).eq]
 
@@ -155,8 +191,8 @@ theorem mend (U : Submodule ℂ (UA E a → ℂ)) (hU : IsAutRepU U) (w : Height
   haveI : Finite (K ⧸ K') := Subgroup.quotient_finite_of_isOpen K' hK'o
   letI : Fintype (K ⧸ K') := Fintype.ofFinite _
   have hA : avg K K' φw = c.sum fun g b => b • RU E a ((r g)⁻¹ * g) (avg K K' (RU E a (r g) φ)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hc, Finsupp.sum, Finsupp.sum, map_sum]
+
+    rw [← hc, Finsupp.sum, Finsupp.sum, map_sum]
     refine Finset.sum_congr rfl fun g _ => ?_
     rw [map_smul, hsplit g, avg_comm K K' (fun k hk => hd g k (hKw hk))]
   by_cases h0 : ∀ g ∈ c.support, avg K K' (RU E a (r g) φ) = 0

@@ -1,6 +1,48 @@
 module
 
-public import Mathlib
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -43,8 +85,8 @@ theorem goal1 :
       simp only [Module.Basis.constr_basis] at this
       simpa using this
     rw [← b.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, h2, map_smul, smul_eq_mul, hb, map_mul]
+
+    simp only [map_sum, h2, map_smul, smul_eq_mul, hb, map_mul]
   have hsm : ∀ c : K, w.valuation K c ≤ 1 → ∀ (Tt : Set Fn) (z : Fn),
       z ∈ Submodule.span O Tt → φ c • z ∈ Submodule.span O Tt := by
     intro c hc Tt z hz
@@ -93,9 +135,9 @@ theorem goal1 :
         simp only [neg_mul, neg_smul, mul_smul, Finset.sum_neg_distrib, ← Finset.smul_sum, e',
           smul_neg, neg_neg, inv_smul_smul₀ hl0]
       have hx0mem : cmp x0 ∈ Submodule.span O (cmp '' (S.erase x0 : Set V)) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [show cmp x0 = cmp (∑ x ∈ S.erase x0, (-(lam x0)⁻¹ * lam x) • x) from congrArg cmp hrel,
-          map_sum]
+
+        rw [show cmp x0 = cmp (∑ x ∈ S.erase x0, (-(lam x0)⁻¹ * lam x) • x) from congrArg cmp hrel,
+        map_sum]
         refine Submodule.sum_mem _ fun x hx => ?_
         rw [h2]
         refine hsm _ ?_ _ _ (Submodule.subset_span ⟨x, Finset.mem_coe.2 hx, rfl⟩)

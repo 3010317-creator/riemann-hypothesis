@@ -1,16 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.EFam
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.IsSeparatedOfProj
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.IsIntegralRBIff
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsGaloisCover
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.TcoMem
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsFiniteQCOmega
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LocalMaximality.TanConjEt
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCotangentMapDualBasisOfParameters
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCotangentMapLocalizationAway
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.FiniteFiberOfFiniteTypeParameterRing
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsUnitMulMemSpanOfReducedIsolatedZero
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.FiniteEtaleFunctionFieldGermCompatOfSmooth
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCotangentMapLocalizationAway
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCotangentMapDualBasisOfParameters
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.FiniteFiberOfFiniteTypeParameterRing
+public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.IsIntegralRBIff
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LocalMaximality.TanConjEt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Edge1
 
 @[expose] public section
 
@@ -219,8 +255,8 @@ theorem UpperTheory.etaleCorrespondence_local_parameters_statement :
     · apply gm_inj s' hgY
       have h := congrArg Subtype.val hcg
       simp only [Subalgebra.coe_mul, AddSubmonoidClass.coe_finsetSum, MulMemClass.coe_mul] at h
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_mul, map_sum]
+
+      rw [map_mul, map_sum]
       simp only [map_mul]
       refine Eq.trans ?_ (h.trans ?_)
       · exact congrArg (· * gm s' hgY u) hc'
@@ -230,8 +266,8 @@ theorem UpperTheory.etaleCorrespondence_local_parameters_statement :
   obtain ⟨UA, VA, hA1, hA2, tA, hyA, hUA, hVA, φA, hφs, hφ1, hφ2, hφk⟩ := hA
   have pdVA : Pd d y VA := by
     refine ⟨φA, hφs, fun v => ⟨∑ l, v l • D ℂ (Sec s' VA) (Sec.res s' hA1 (appSec s s' c1 UA (tA l))), ?_⟩, hφk⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [map_smul, hφ1]
     ext i
     simp [Finset.sum_apply, Pi.single_apply]
@@ -319,8 +355,8 @@ theorem UpperTheory.etaleCorrespondence_local_parameters_statement :
     exact (gm_res s' hWle hgY hgW _).trans (germT l)
   have hcq : Sec.res s' hWle c * u m = ∑ l, Sec.res s' hWle (q l) * t l := by
     apply gm_inj s' hgW
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_mul, map_sum, gm_res s' hWle hgY hgW, hju, hc', hcq0]
+
+    rw [map_mul, map_sum, gm_res s' hWle hgY hgW, hju, hc', hcq0]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [map_mul, gm_res s' hWle hgY hgW, htl, hq]
   have ec : CxPts.ev s' (RingHom.id ℂ) (c1 ⁻¹ᵁ U 0) c y = e ⟨c0, hc0⟩ := by

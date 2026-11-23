@@ -1,16 +1,57 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GgNone
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasisOfIsCompl
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToLePerp
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemPerpSpan
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NotField
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToZero
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameCoordinatesTransportInnerLattices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramePairCoordinatesTransportInnerLattices
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermOverFrameCoordinates
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameCoordinatesTransportInnerLattices
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemPerpSpan
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NotField
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToLePerp
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 
 @[expose] public section
 
@@ -82,8 +123,8 @@ theorem h_sum_left {ι : Type} (s : Finset ι) (u : ι → V) (y : V) :
 
 theorem h_right_sum {ι : Type} [Fintype ι] (a : ι → E) (u : ι → V) (x : V) :
     H.h x (∑ i, a i • u i) = ∑ i, M.L.cj (a i) * H.h x (u i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [H.h_herm, h_sum_left, map_sum]
+
+  rw [H.h_herm, h_sum_left, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [H.h_smul_left, map_mul, ← H.h_herm]
 
@@ -252,8 +293,8 @@ theorem change_of (Fr : FrameD H r) (g : Fin (r + 1) → S.V) (hgf : ∀ a, g a 
     (hs : ∀ j, c.grp n (g j) = ∑ i, s i j • g i) (j : Fin (r + 1)) :
     n (Fr.f j) = ∑ i, s i j • Fr.f i := by
   apply c.e.injective
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← CoordUnip.grp_apply c n (Fr.f j), ← hgf j, hs j, map_sum]
+
+  rw [← CoordUnip.grp_apply c n (Fr.f j), ← hgf j, hs j, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, hgf i]
 

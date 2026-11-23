@@ -1,10 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalPol
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimePowSmulMemValueLatticeErase
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowDivRowWeight
-public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FockSpaceTableaux.RowDivStable
 public import Formalism.PieriBlockIdeals.PieriColumnMinors.RealLocalDeltaNabla
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -109,8 +150,8 @@ theorem comp_rowAct_transvection {O : Type} [CommRing O] {N : ℕ} (a b : Fin N)
   classical
   have hZ := rowZ_of_rowW w h hh
   rw [rowAct_transvection, Polynomial.eval_eq_sum_range' (n := (rowGen O a b h).natDegree + 2) (by omega)]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [one_pow, mul_one, map_sum]
+
+  simp only [one_pow, mul_one, map_sum]
   have hk : ∀ k ∈ Finset.range ((rowGen O a b h).natDegree + 2),
       weightedHomogeneousComponent (rowW N N) (w + Pi.single a 1 - Pi.single b 1) ((rowGen O a b h).coeff k) =
         if k = 1 then rowDiv O a b 1 h else 0 := by
@@ -160,9 +201,9 @@ theorem polar_formula : ∀ (O : Type) [CommRing O] (N : ℕ) (ι : Type) [Finty
     have hPx : ∀ w, P τ w (PiTensorProduct.tprod O x) =
         PiTensorProduct.tprod O (Function.update x τ (cmp w)) :=
       fun w => hP τ w x (cmp w) rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [evalE, map_sum, map_smul, FreeAlgebra.lift_ι_apply, Sum.elim_inr, LinearMap.sum_apply,
-      Finset.sum_apply, LinearMap.smul_apply, hPx]
+
+    simp only [evalE, map_sum, map_smul, FreeAlgebra.lift_ι_apply, Sum.elim_inr, LinearMap.sum_apply,
+    Finset.sum_apply, LinearMap.smul_apply, hPx]
     have hsum : (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
         (w a : O) • PiTensorProduct.tprod O (Function.update x τ (cmp w))) =
         ∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
@@ -176,11 +217,11 @@ theorem polar_formula : ∀ (O : Type) [CommRing O] (N : ℕ) (ι : Type) [Finty
     apply Subtype.ext
     simp only [Submodule.coe_sum, Submodule.coe_smul]
     conv_rhs => rw [← sum_rowComp _ M hM _ hcol]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show rowDiv O a a 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
-        weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) =
-        rowDivL O a a 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
-        weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) from rfl, map_sum]
+
+    rw [show rowDiv O a a 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
+      weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) =
+      rowDivL O a a 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
+      weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) from rfl, map_sum]
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [rowDivL_apply, (GlobalTheory.ValCmp.rowDiv_rowWeight O N N w _
       (weightedHomogeneousComponent_isWeightedHomogeneous _ _)).2 a 1, Nat.choose_one_right,
@@ -211,19 +252,19 @@ theorem polar_formula : ∀ (O : Type) [CommRing O] (N : ℕ) (ι : Type) [Finty
       by_cases hσ : σ = τ
       · subst hσ; simp [g]
       · simp [g, hσ, Pi.mulSingle_eq_of_ne hσ]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [evalE, map_sum, map_mul, FreeAlgebra.lift_ι_apply, Sum.elim_inr, Sum.elim_inl, LinearMap.sum_apply,
-      Finset.sum_apply, Module.End.mul_apply, hPz, hg, Function.update_self, Function.update_idem]
+
+    simp only [evalE, map_sum, map_mul, FreeAlgebra.lift_ι_apply, Sum.elim_inr, Sum.elim_inl, LinearMap.sum_apply,
+    Finset.sum_apply, Module.End.mul_apply, hPz, hg, Function.update_self, Function.update_idem]
     rw [← MultilinearMap.map_update_sum]
     congr 2
     apply Subtype.ext
     simp only [Submodule.coe_sum]
     conv_rhs => rw [← sum_rowComp _ M hM _ hcol]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show rowDiv O a b 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
-        weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) =
-        rowDivL O a b 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
-        weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) from rfl, map_sum]
+
+    rw [show rowDiv O a b 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
+      weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) =
+      rowDivL O a b 1 (∑ w ∈ Fintype.piFinset (fun _ : Fin N => Finset.range (M + 1)),
+      weightedHomogeneousComponent (rowW N N) w (x τ : MvPolynomial (Fin N × Fin N) O)) from rfl, map_sum]
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [rowDivL_apply]
     exact comp_rowAct_transvection a b hab w _ (weightedHomogeneousComponent_isWeightedHomogeneous _ _)

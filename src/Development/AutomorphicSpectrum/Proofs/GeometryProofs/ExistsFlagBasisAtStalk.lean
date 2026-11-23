@@ -1,11 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSubFibreSubFib
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinrankFiniteFlatTorsionSubschemeEqCardPoints
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsConstStalk
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenspaceDecompositionInternalStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsConstStalk
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinrankFiniteFlatTorsionSubschemeEqCardPoints
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -42,8 +81,8 @@ theorem mem_of_sum_mem {Ω : Type} [Field Ω] (R : Subring Ω) {Li : Type} [AddC
         Λ.sub_mem (hst a _ hs) (hRs _ (hval u a) _ hs)
       have h2 : ρ a (x u + ∑ t ∈ T, x t) - σ u a • (x u + ∑ t ∈ T, x t) =
           ∑ t ∈ T, (σ t a - σ u a) • x t := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_add (f := _), map_sum, hact u a _ (hx u), smul_add, Finset.smul_sum]
+
+        rw [map_add (f := _), map_sum, hact u a _ (hx u), smul_add, Finset.smul_sum]
         rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
         refine Finset.sum_congr rfl fun t _ => ?_
         rw [hact t a _ (hx t), sub_smul]

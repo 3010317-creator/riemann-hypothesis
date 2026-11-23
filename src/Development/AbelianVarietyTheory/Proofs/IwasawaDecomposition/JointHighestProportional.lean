@@ -1,8 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColLieApply
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsWeightedHomogeneousOfMemOrbitSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsEqMulProdMinors
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RowAddGenericRowAddTerm
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Sl2NonnegWeightOfHighestWeightVector
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsMemRowHighestTotalDegreeEqTwo
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CommuteRowOpRightMixedOp
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqZeroOfPartialSumsNonneg
 
 @[expose] public section
 
@@ -15,8 +59,8 @@ namespace GlobalTheory.DefLift.Joint
 theorem X_mul_pderiv_mem {σ : Type} (u v : σ) (N : ℕ) (Q : MvPolynomial σ ℂ)
     (hQ : Q ∈ restrictTotalDegree σ ℂ N) : X u * pderiv v Q ∈ restrictTotalDegree σ ℂ N := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Q.as_sum, map_sum, Finset.mul_sum]
+
+  rw [Q.as_sum, map_sum, Finset.mul_sum]
   refine Submodule.sum_mem _ fun m hm => ?_
   rw [mem_restrictTotalDegree] at hQ ⊢
   have hd : (m.sum fun _ e => e) ≤ N := (le_totalDegree hm).trans hQ
@@ -49,7 +93,7 @@ theorem degree_of_mem_support {σ J : Type} [Fintype J] (z : J → σ) {P : MvPo
     (h : ∑ k, X (z k) * pderiv (z k) P = (w : ℂ) • P) {m : σ →₀ ℕ} (hm : m ∈ P.support) :
     ((∑ k, m (z k) : ℕ) : ℤ) = w := by
   have := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [coeff_sum, coeff_smul] at this
+  rw [coeff_sum, MvPolynomial.coeff_smul] at this
   simp only [coeff_X_mul_pderiv, ← Finset.sum_mul, smul_eq_mul] at this
   have h2 := mul_right_cancel₀ (mem_support_iff.1 hm) this
   exact_mod_cast h2
@@ -121,14 +165,14 @@ theorem joint_highest_proportional (ι : Type) [Fintype ι] (m n : ℕ) (hnm : n
     exact Prod.ext e.1 (Prod.ext e.2.2 e.2.1)
   have hr : ∀ τ k l (R : Pol ι m n), rename f (rowLie n τ k l R) =
       ∑ a, X (xVar τ a k) * pderiv (xVar τ a l) (rename f R) := fun τ k l R => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [rowLie_apply, map_sum]
+
+    rw [rowLie_apply, map_sum]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [map_mul, rename_X, ← pderiv_rename hf]
   have hc : ∀ τ k l (R : Pol ι m n), rename f (colLie m τ k l R) =
       ∑ a, X (xVar τ k a) * pderiv (xVar τ l a) (rename f R) := fun τ k l R => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [colLie_apply, map_sum]
+
+    rw [colLie_apply, map_sum]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [map_mul, rename_X, ← pderiv_rename hf]
   have hi := rename_injective (R := ℂ) f hf

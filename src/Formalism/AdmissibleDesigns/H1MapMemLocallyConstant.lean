@@ -1,6 +1,48 @@
 module
 
 public import Formalism.AdmissibleDesigns.BlockTwistedCyclotomic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -260,16 +302,16 @@ theorem Psi_inj : Function.Injective (Psi l O b) := by
   have hs' : ∀ j, ∃ cj : ℤ_[l], algebraMap ℤ_[l] ℚ_[l] cj = (s : ℤ_[l]) • x j := fun j => hs j
   choose c hc using hs'
   have h1 : (∑ j, iotaK l O (x j) * algebraMap O (FractionRing O) (b j)) ∈ (1 : Submodule O (FractionRing O)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Submodule.Quotient.mk_eq_zero, ← Submodule.mkQ_apply, map_sum, ← hv, Psi_apply]
+
+    rw [← Submodule.Quotient.mk_eq_zero, ← Submodule.mkQ_apply, map_sum, ← hv, Psi_apply]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [← hx j]
     rfl
   obtain ⟨o, ho⟩ := Submodule.mem_one.mp h1
   have h2 : algebraMap O (FractionRing O) ((s : ℤ_[l]) • o) =
       algebraMap O (FractionRing O) (∑ j, c j • b j) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Algebra.smul_def, map_mul, ho, Finset.mul_sum, map_sum]
+
+    rw [Algebra.smul_def, map_mul, ho, Finset.mul_sum, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Algebra.smul_def, map_mul, ← mul_assoc]
     congr 1
@@ -298,8 +340,8 @@ theorem Psi_surj [IsLocalHom (algebraMap ℤ_[l] O)] : Function.Surjective (Psi 
   refine ⟨fun j => QZ.mk l (algebraMap ℤ_[l] ℚ_[l] (b.equivFun (a * w) j) / ((l : ℕ) : ℚ_[l]) ^ m), ?_⟩
   rw [Psi_apply]
   simp only [PsiJ_mk, ← Submodule.mkQ_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← map_sum]
+
+  rw [← map_sum]
   congr 1
   have hl0 : ((l : ℕ) : O) ≠ 0 := by
     rw [← map_natCast (algebraMap ℤ_[l] O)]
@@ -315,8 +357,8 @@ theorem Psi_surj [IsLocalHom (algebraMap ℤ_[l] O)] : Function.Surjective (Psi 
     rw [← map_mul, ← hw, map_pow, map_natCast]
   have hsum : ∑ j, algebraMap O (FractionRing O) (algebraMap ℤ_[l] O (b.equivFun (a * w) j)) *
       algebraMap O (FractionRing O) (b j) = algebraMap O (FractionRing O) (a * w) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_rhs => rw [← b.sum_equivFun (a * w), map_sum]
+
+    conv_rhs => rw [← b.sum_equivFun (a * w), map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Algebra.smul_def, map_mul (algebraMap O (FractionRing O))]
   calc ∑ j, iotaK l O (algebraMap ℤ_[l] ℚ_[l] (b.equivFun (a * w) j) / ((l : ℕ) : ℚ_[l]) ^ m) *

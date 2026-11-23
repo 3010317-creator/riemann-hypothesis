@@ -1,9 +1,59 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPowerSeriesCompletionEmbeddingStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicDivisibleDedekindFiniteTypeAlgClosed
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Mathlib.RingTheory.PowerSeries.Substitution
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DeformMultipleZerosLinearFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPowerSeriesCompletionEmbeddingStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IterateDerivativeFunMulSubstLeibnizStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.PowerSeries.Inverse
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -26,41 +76,7 @@ theorem not_mem_pow_succ {A : Type} [CommRing A] [IsDedekindDomain A] {N : ℕ} 
     (hQmax : ∀ i, (Q i).IsMaximal) (hQinj : Function.Injective Q) (hQP : ∀ i, Q i ≠ P₀)
     (hDQ : ∀ i, ¬ D ≤ Q i) (hf₀ : f₀ ≠ 0)
     (hspan : Ideal.span {f₀} = P₀ * D * ∏ i, Q i ^ N) (i : I) : f₀ ∉ Q i ^ (N + 1) := by
-  classical
-  intro hmem
-  have hQne : Q i ≠ ⊥ := by
-    intro h
-    rw [h, Ideal.bot_pow (Nat.succ_ne_zero N), Ideal.mem_bot] at hmem
-    exact hf₀ hmem
-  have hp : Prime (Q i) := Ideal.prime_of_isPrime hQne (hQmax i).isPrime
-  have hdvd : Q i ^ (N + 1) ∣ Ideal.span {f₀} :=
-    Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr hmem)
-  have hsplit : Ideal.span {f₀} = Q i ^ N * (P₀ * D * ∏ j ∈ Finset.univ.erase i, Q j ^ N) := by
-    rw [hspan, ← Finset.mul_prod_erase Finset.univ (fun j => Q j ^ N) (Finset.mem_univ i)]
-    ring
-  rw [hsplit, pow_succ, mul_dvd_mul_iff_left (pow_ne_zero N hQne)] at hdvd
-  rcases hp.dvd_or_dvd hdvd with h | h
-  · rcases hp.dvd_or_dvd h with h | h
-    · exact hQP i (hP₀.eq_of_le (hQmax i).ne_top (Ideal.le_of_dvd h)).symm
-    · exact hDQ i (Ideal.le_of_dvd h)
-  · have hprod : ∀ s : Finset I, Q i ∣ ∏ j ∈ s, Q j ^ N →
-        ∃ j ∈ s, Q i ∣ Q j ^ N := by
-      intro s
-      induction s using Finset.induction_on with
-      | empty =>
-        simp only [Finset.prod_empty]
-        intro hd
-        exact (hp.not_unit (isUnit_iff_dvd_one.mpr hd)).elim
-      | @insert j s hj ih =>
-        rw [Finset.prod_insert hj]
-        intro hd
-        rcases hp.dvd_or_dvd hd with hd | hd
-        · exact ⟨j, Finset.mem_insert_self _ _, hd⟩
-        · obtain ⟨a, ha, had⟩ := ih hd
-          exact ⟨a, Finset.mem_insert_of_mem ha, had⟩
-    obtain ⟨j, hj, hji⟩ := hprod _ h
-    have hle : Q j ≤ Q i := Ideal.le_of_dvd (hp.dvd_of_dvd_pow hji)
-    exact (Finset.mem_erase.mp hj).1 (hQinj ((hQmax j).eq_of_le (hQmax i).ne_top hle))
+  apply GlobalTheory.PicDiv.FormalDeformHasse.not_mem_pow_succ <;> assumption
 
 theorem coeff_map_sum {k A : Type} [Field k] [CommRing A] [Algebra k A] {m : ℕ}
     (σ : A →ₐ[k] PowerSeries k) (v : Fin m → A) (c : Fin m → k) (l : ℕ) :

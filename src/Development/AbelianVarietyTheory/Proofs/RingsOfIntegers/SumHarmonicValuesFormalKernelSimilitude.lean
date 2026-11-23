@@ -1,24 +1,58 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.PlaceAdaptation.AdaptStd
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConstantCoeffDmonNCongr
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalModuleMatrixApplyPointsActionLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupTranslateAutomorphismAndMatrixKernel
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.GaugeThirdDifferenceSymmetryIntegralExponentialsStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsIntegralExponentialSimilitudeGaugeStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ProdSymmetricTranslationUnitsEqKappaRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ConnectionValueLevelKappaMulPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConstantCoeffDmonNCongr
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.CoeffSingleEq
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.JacobianNonzeroSplittingOfProductStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ConnectionValueLevelKappaMulPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsIntegralExponentialSimilitudeGaugeStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsTranslateUnitSymmetricFormalGroupPointStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FiniteHeightFormalGroupUniformisedModelStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupPointsOfIntegralChartSpecStatement
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalModuleMatrixApplyPointsActionLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.GaugeThirdDifferenceSymmetryIntegralExponentialsStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HarmonicValueIntegralPointEqValueOnBiextensionCoStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralChartFormalBiextensionGaugeBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScaleStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FormalGroupPointsOfIntegralChartSpecStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.JacobianNonzeroSplittingOfProductStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.KillsFormalPointsIffMemCoordinateKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.FiniteHeightFormalGroupUniformisedModelStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ProdSymmetricTranslationUnitsEqKappaRatioStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RegularSectionIntegralGermUniqueScaleStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SplitKernelFormalGroupOfRationalTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsTranslateUnitSymmetricFormalGroupPointStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -165,9 +199,9 @@ theorem map_pushL {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
   | add p1 p2 h1 h2 => simp only [_root_.map_add (f := _), h1, h2]
   | mul_X p ℓ h =>
     simp only [Matrix.map_apply] at h
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [_root_.map_mul, h, MvPolynomial.aeval_X, MvPolynomial.map_X, _root_.map_sum, MvPolynomial.map_C,
-      Matrix.map_apply, RingHom.coe_comp, Function.comp_apply]
+
+    simp only [_root_.map_mul, h, MvPolynomial.aeval_X, MvPolynomial.map_X, _root_.map_sum, MvPolynomial.map_C,
+    Matrix.map_apply, RingHom.coe_comp, Function.comp_apply]
     rfl
 
 private theorem isLinearMap_nabValN {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [StarRing O] (B : FB R d O)
@@ -331,8 +365,8 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     have e0 := _root_.map_sum (IsLinearMap.mk' _ hlin) (fun i => FB.toK T.Fr (X i)) Finset.univ
     simp only [IsLinearMap.mk'_apply] at e0
     rw [← e0]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [FB.toK, _root_.map_sum]
+
+    simp only [FB.toK, _root_.map_sum]
   have e2 : ∀ (t : T.V) (Y : PS T.V n (chD C.ch)), nabValN B T.Fr (gaugeOf C) H.w0 (N ^ 2) (FB.toK T.Fr (t • Y))
       (fun ℓ : LtN Dw n => ℓ.2.2) (fun ℓ => C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.map io P) =
       algebraMap T.V T.Fr t * nabValN B T.Fr (gaugeOf C) H.w0 (N ^ 2) (FB.toK T.Fr Y)

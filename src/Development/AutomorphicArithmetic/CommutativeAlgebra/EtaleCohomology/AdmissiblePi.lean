@@ -1,7 +1,43 @@
 module
 
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.NilToPhiAlt
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.AdmissibleSequenceExact
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -81,8 +117,8 @@ private def dinvPi (hρ : ∀ g x i, ρ' g x i = ρ i g (x i)) : Dinv σ ρ' ≃
         classical
         have hc : ∀ i, prI B i (∑ j, inI B j (y j : V j ⊗[F] B)) = y i := by
           intro i
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum, Finset.sum_eq_single i (fun j _ h => prI_inI_ne h _) (by simp), prI_inI_same]
+
+          rw [map_sum, Finset.sum_eq_single i (fun j _ h => prI_inI_ne h _) (by simp), prI_inI_same]
         refine ⟨⟨∑ j, inI B j (y j : V j ⊗[F] B), (mem_Dinv_pi σ ρ ρ' hρ _).2 fun i => ?_⟩, ?_⟩
         · rw [hc]; exact (y i).2
         · funext i
@@ -115,8 +151,8 @@ private theorem annD_pi (ψ : End F B) (q n : ℕ) (T : ∀ i, ℕ → End F (V 
   intro x hx
   refine ext_prI fun i => ?_
   have := h i _ ((mem_Dinv_pi σ ρ ρ' hρ x).1 hx i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_zero, map_sum, ← this]
+
+  rw [map_zero, map_sum, ← this]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [map_zsmul, prI_map i (T' j) (T i j) (ψ ^ (n - j)) (fun x => hT j x i)]
 

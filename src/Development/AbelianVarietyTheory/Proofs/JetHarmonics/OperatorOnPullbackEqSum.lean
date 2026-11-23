@@ -1,20 +1,51 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.OneCHyp
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThetaPt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.BaseOver
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.TwistBC
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniversalCharts.IsUnivChart
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StalkMapInjectiveOfFlat
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsNormalisation
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsShiftedNormalisation
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsGenMul
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPowMulEqOne
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ValuationMultiplicationInvariance
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsGenMul
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsNormalisation
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPowMulEqOne
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsShiftedNormalisation
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StalkMapInjectiveOfFlat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -175,9 +206,9 @@ theorem operator_on_pullback_eq_sum : Laws → ∀ (E : Type) [Field E] [NumberF
       rw [star_mul, P.oA.map_mul, ← Category.assoc, k₁, MonObj.one_comp]
     show g (qkAdd hB p₀ (p₁ i)) ≫ P.oA.act (star (a' * a)) = 1
     rw [g₂ _ _ _ (qkAdd_qkAdd hB p₀ (p₁ i)), ← (g₀ _ _).1 hx₀, MonObj.mul_comp, e₀, e₁, _root_.mul_one]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [(DVR.isSmul_iff _ _ _).1 hh, (hΦ₀ _ _).1 ht₀, hs, map_sum, map_sum, Finset.smul_sum]
-      refine Finset.sum_congr rfl fun i _ => ?_
-      rw [(DVR.isSmul_iff _ _ _).1 (htt' i), map_smul, map_smul, map_smul, map_smul, smul_comm, smul_smul ζ₀]
+
+  · rw [(DVR.isSmul_iff _ _ _).1 hh, (hΦ₀ _ _).1 ht₀, hs, map_sum, map_sum, Finset.smul_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [(DVR.isSmul_iff _ _ _).1 (htt' i), map_smul, map_smul, map_smul, map_smul, smul_comm, smul_smul ζ₀]
 
 end GlobalTheory

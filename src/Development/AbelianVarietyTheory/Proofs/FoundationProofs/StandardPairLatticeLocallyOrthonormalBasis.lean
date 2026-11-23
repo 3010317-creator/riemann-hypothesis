@@ -1,16 +1,58 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
-public import Formalism.PairingDivisors.StatementH
-public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-public import Formalism.LocalRingCardinality.ConjSqrtMinusD
-public import Formalism.LocalToGlobal.ProjectiveLattices.HostRank
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitNormOfSelfDualHermitianLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SelfDualHermitianLatticeExistsNormOneModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HermitianLatticeNormOneOfNormOneModPrimeStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsOrthonormalHermitianOfDiagPosIsSquareStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitNormOfSelfDualHermitianLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharacterTrivialNearOneStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HermitianLatticeNormOneOfNormOneModPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SelfDualHermitianLatticeExistsNormOneModStatement
+public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+public import Formalism.LocalToGlobal.ProjectiveLattices.HostRank
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
 
 @[expose] public section
 
@@ -304,8 +346,8 @@ theorem hYY_herm (D : D7) (σ : D.host.K →+* D.host.K)
     (hc : ∀ y : D.host.E, D.host.conj (D.host.conj y) = y)
     (ht : ∀ y : D.host.E, Algebra.trace D.host.K D.host.E (D.host.conj y) = σ (Algebra.trace D.host.K D.host.E y))
     {N N' : ℕ} (x y : Matrix (Fin N') (Fin N) D.host.E) : hYY D y x = σ (hYY D x y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hYY, ← ht, map_sum D.host.conj, map_mul, hc, mul_comm]
+
+  simp only [hYY, ← ht, map_sum D.host.conj, map_mul, hc, mul_comm]
 
 theorem hYY_pos (D : D7)
     (hp : ∀ y : D.host.E, y ≠ 0 → ∃ a : ℚ, 0 < a ∧ Algebra.trace D.host.K D.host.E (y * D.host.conj y) = (a : D.host.K))
@@ -326,8 +368,8 @@ theorem hYY_pos (D : D7)
   refine ⟨∑ i, ∑ j, a (x i j), ?_, ?_⟩
   · refine Finset.sum_pos' (fun i _ => Finset.sum_nonneg fun j _ => ha0 _) ⟨i, Finset.mem_univ _, ?_⟩
     exact Finset.sum_pos' (fun j _ => ha0 _) ⟨j, Finset.mem_univ _, ha1 _ hij⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [hYY, map_sum, ha2, Rat.cast_sum]
+
+  · simp only [hYY, map_sum, ha2, Rat.cast_sum]
 
 theorem hYY_single (D : D7) {N N' : ℕ} (x : Matrix (Fin N') (Fin N) D.host.E) (i : Fin N') (j : Fin N)
     (y : D.host.E) :
@@ -436,8 +478,8 @@ theorem odd_one : ∀ D : D7, odd1 D := by
     have e1 : ((s * t : ℕ) : D.host.K) * h x y = ∑ i, ∑ j, Algebra.trace D.host.K D.host.E
         ((s : D.host.E) * x i j * D.host.conj ((t : D.host.E) * y i j)) := by
       rw [hh, hYY, ← smul_eq_mul, ← map_smul]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [← map_sum, Finset.smul_sum]
+
+      simp only [← map_sum, Finset.smul_sum]
       congr 1
       refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
       rw [smul_eq, map_mul, map_natCast]; push_cast; ring

@@ -1,6 +1,51 @@
 module
 
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.DerKer
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.PositiveShells.ContinuousColElVal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -113,8 +158,8 @@ theorem avgL_colEl {A H : AddSubgroup (Fin (m + 1) → k)} {T : Finset (Fin (m +
 
 theorem colEl_avgL {A H : AddSubgroup (Fin (m + 1) → k)} {T : Finset (Fin (m + 1) → k)} (hT : IsTr A H T) {v : V}
     (hv : FixH h π H v) {a : Fin (m + 1) → k} (ha : a ∈ A) : π (colEl k m N h a) (avgL h π T v) = avgL h π T v := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [avgL_apply, map_smul, map_sum]
+
+  rw [avgL_apply, map_smul, map_sum]
   congr 1
   rw [← sum_translate hT hv ha]
   refine Finset.sum_congr rfl fun t _ => ?_
@@ -129,10 +174,10 @@ theorem avgL_eq {A H H' : AddSubgroup (Fin (m + 1) → k)} {T T' : Finset (Fin (
     (hv : FixH h π H v) (hT' : IsTr A H' T') (hv' : FixH h π H' v) : avgL h π T v = avgL h π T' v := by
   have h1 : avgL h π T (avgL h π T' v) = avgL h π T' v :=
     avgL_of_inv hT fun a ha => colEl_avgL hT' hv' ha
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← h1, avgL_apply h π T' v, map_smul, map_sum,
-    Finset.sum_congr rfl fun t ht => avgL_colEl hT hv (hT'.2.2.1 t ht), Finset.sum_const,
-    ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hT'.card_ne, one_smul]
+
+  rw [← h1, avgL_apply h π T' v, map_smul, map_sum,
+  Finset.sum_congr rfl fun t ht => avgL_colEl hT hv (hT'.2.2.1 t ht), Finset.sum_const,
+  ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hT'.card_ne, one_smul]
 
 theorem avg_eq {A H : AddSubgroup (Fin (m + 1) → k)} {T : Finset (Fin (m + 1) → k)} (hT : IsTr A H T) {v : V}
     (hv : FixH h π H v) : avg (1 : AddChar k Circle) h π 0 A v = avgL h π T v := by
@@ -181,10 +226,10 @@ theorem B_avgL {s : ℝ} {B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ} (hB : MirEq π
   classical
   have hTn := hT.neg
   have hcard : (T.image Neg.neg).card = T.card := Finset.card_image_of_injective _ neg_injective
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← avgL_eq hTn hw hT hw, avgL_apply, avgL_apply, Finset.sum_image (fun x _ y _ hxy => neg_injective hxy),
-    hcard, LinearMap.map_smul, LinearMap.smul_apply, LinearMap.map_smulₛₗ, map_sum, map_sum,
-    LinearMap.sum_apply]
+
+  rw [← avgL_eq hTn hw hT hw, avgL_apply, avgL_apply, Finset.sum_image (fun x _ y _ hxy => neg_injective hxy),
+  hcard, LinearMap.map_smul, LinearMap.smul_apply, LinearMap.map_smulₛₗ, map_sum, map_sum,
+  LinearMap.sum_apply]
   simp only [map_inv₀, map_natCast, smul_eq_mul]
   congr 1
   refine Finset.sum_congr rfl fun t _ => ?_
@@ -389,9 +434,9 @@ theorem FixH.smul {H : AddSubgroup (Fin (m + 1) → k)} {v : V} (hv : FixH h π 
 theorem avgL_smul [DecidableEq (Fin (m + 1) → k)] (T : Finset (Fin (m + 1) → k)) (z : kˣ) (v : V) :
     avgL h π (T.image fun t => z • t) (π (scalAt k (m + 1) N (by omega) z) v) =
       π (scalAt k (m + 1) N (by omega) z) (avgL h π T v) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [avgL_apply, avgL_apply, Finset.card_image_of_injective _ (MulAction.injective z),
-    Finset.sum_image (fun x _ y _ hxy => MulAction.injective z hxy), map_smul, map_sum]
+
+  rw [avgL_apply, avgL_apply, Finset.card_image_of_injective _ (MulAction.injective z),
+  Finset.sum_image (fun x _ y _ hxy => MulAction.injective z hxy), map_smul, map_sum]
   congr 1
   refine Finset.sum_congr rfl fun t _ => ?_
   have e : π (colEl k m N h ((z : k) • t)) * π (scalAt k (m + 1) N (by omega) z) =

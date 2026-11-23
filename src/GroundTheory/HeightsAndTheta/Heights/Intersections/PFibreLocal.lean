@@ -1,10 +1,62 @@
 module
 
-public import Mathlib
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibreLocal
+public import GroundTheory.HeightsAndTheta.Heights.FlagBundles.Statements
+public import GroundTheory.HeightsAndTheta.Heights.FlagBundles.Assembly
+import GroundTheory.HeightsAndTheta.Heights.FlagBundles.PFibreIntegralInvariant
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+public import Mathlib.Topology.Algebra.MvPolynomial
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaB
-public import GroundTheory.HeightsAndTheta.Heights.FlagBundles.Assembly
-public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibreLocal
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -104,8 +156,8 @@ theorem eval_momentPoly {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) (w :
     (Q : MvPolynomial (Fin 3) (Ω → ℝ)) (hQ : ∀ m, Integrable (fun p => w p * AddMonoidAlgebra.coeff Q m p) μ)
     (a : Fin 3 → ℝ) :
     eval a (momentPoly μ w Q) = ∫ p, w p * eval₂ (Pi.evalRingHom (fun _ : Ω => ℝ) p) a Q ∂μ := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [momentPoly, map_sum]
+
+  rw [momentPoly, map_sum]
   simp only [eval_monomial]
   simp_rw [← integral_mul_const]
   rw [← integral_finsetSum _ (fun m _ => (hQ m).mul_const _)]
@@ -123,8 +175,8 @@ theorem dotPoly_id_pow (N : ℕ) :
     (dotPoly (id : S2 → S2)) ^ N =
       MvPolynomial.map (ContinuousMap.coeFnRingHom : C(S2, ℝ) →+* (S2 → ℝ)) ((∑ i, X i * C (coordS i)) ^ N) := by
   rw [map_pow, dotPoly]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, map_X, map_C]
+
+  simp only [map_sum, map_mul, map_X, map_C]
   rfl
 
 theorem pushMomentPoly_eq (k : ℕ) (hk : 1 ≤ k) :
@@ -151,8 +203,8 @@ theorem pushMomentPoly_eq (k : ℕ) (hk : 1 ≤ k) :
     rw [real_inner_self_eq_norm_sq, EuclideanSpace.norm_sq_eq]
     simp [sq_abs]
   rw [haa]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_neg, map_pow, map_sum, eval_X]
+
+  simp only [map_neg, map_pow, map_sum, eval_X]
   have hc : ((k - 1 : ℕ) : ℝ) = (k : ℝ) - 1 := by rw [Nat.cast_sub hk, Nat.cast_one]
   rw [hc]
   have hk' : (2 * ((k : ℝ) - 1) + 1) ≠ 0 := by
@@ -191,8 +243,8 @@ theorem proof : FibreLocal.Statement := by
     field_simp
     ring
   · rw [pushMomentPoly_eq k hk]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_neg, map_pow, map_sum, aeval_X]
+
+    simp [map_neg, map_pow, map_sum, aeval_X]
   · rw [kappa_eq, FlagBundles.fibreConstant_eq]
     ring
 

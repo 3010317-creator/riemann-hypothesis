@@ -1,6 +1,59 @@
 module
 
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ProdIccMulFactorial
 public import Formalism.IncomingBounds.StatementThmP
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -38,8 +91,8 @@ theorem der_det {n : Type*} [Fintype n] [DecidableEq n] (N : Matrix n n A) :
     rfl
   rw [Finset.sum_congr rfl fun i _ => hcol i]
   simp only [det_apply']
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_comm]
+
+  rw [map_sum, Finset.sum_comm]
   refine Finset.sum_congr rfl fun σ _ => ?_
   rw [Derivation.leibniz, Derivation.map_intCast, smul_zero, add_zero, smul_eq_mul,
     der_prod, Finset.mul_sum]
@@ -54,9 +107,9 @@ theorem der_det {n : Type*} [Fintype n] [DecidableEq n] (N : Matrix n n A) :
 theorem map_mul_der {n : Type*} [Fintype n] (X Y : Matrix n n A) :
     (X * Y).map D = X.map D * Y + X * Y.map D := by
   ext i j
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.map_apply, Matrix.mul_apply, Matrix.add_apply, map_sum, Derivation.leibniz,
-    smul_eq_mul]
+
+  simp only [Matrix.map_apply, Matrix.mul_apply, Matrix.add_apply, map_sum, Derivation.leibniz,
+  smul_eq_mul]
   rw [← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun k _ => by ring
 
@@ -494,25 +547,6 @@ namespace Formalism.IncomingBounds
 open MvPolynomial Matrix
 
 theorem cayleyIdentity : CayleyId := by
-  intro F _ _ n0 s
-  have hdl : detL F n0 = (Formalism.IncomingBounds.Cay.Mg F n0).det := rfl
-  rw [hdl]
-  cases n0 with
-  | zero =>
-    rw [Matrix.det_isEmpty, one_pow, one_pow, Formalism.IncomingBounds.Cay.diffOp_one, Finset.range_zero,
-      Finset.prod_empty, one_smul]
-  | succ k =>
-    have h := Formalism.IncomingBounds.Cay.gen (K := F) (k+1) s k id id
-    have hsub : (Formalism.IncomingBounds.Cay.Mg F (k+1)).submatrix id id =
-        Formalism.IncomingBounds.Cay.Mg F (k+1) := Matrix.submatrix_id_id _
-    have hadj : ((adjugate (Formalism.IncomingBounds.Cay.Mg F (k+1))).submatrix id id).det =
-        (Formalism.IncomingBounds.Cay.Mg F (k+1)).det ^ k := by
-      rw [Matrix.submatrix_id_id, det_adjugate, Fintype.card_fin, Nat.add_sub_cancel]
-    rw [hsub, hadj] at h
-    have hne : (Formalism.IncomingBounds.Cay.Mg F (k+1)).det ^ k ≠ 0 :=
-      pow_ne_zero _ (Formalism.IncomingBounds.Cay.det_ne (K := F) (k+1))
-    apply mul_left_cancel₀ hne
-    rw [h, smul_eq_C_mul]
-    ring
+  apply GlobalTheory.CayleyCapelli.cayleyId <;> assumption
 
 end Formalism.IncomingBounds

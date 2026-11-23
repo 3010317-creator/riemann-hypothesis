@@ -1,16 +1,63 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPolAVGenericFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrIsGenAt
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGenericStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeHermitianFormExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeRegularAtLocalPointStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPolAVGenericFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGenericStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -167,8 +214,8 @@ theorem gram_posDef {V : Type} [AddCommGroup V] [Module ℂ V] (h : V →ₗ⋆[
   · ext p q
     simp [Matrix.conjTranspose_apply, hh (v p) (v q)]
   · have e : star x ⬝ᵥ ((Matrix.of fun p q => h (v p) (v q)) *ᵥ x) = h (∑ p, x p • v p) (∑ q, x q • v q) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [dotProduct, Matrix.mulVec, map_sum, LinearMap.sum_apply, Finset.mul_sum, mul_comm, mul_left_comm]
+
+      simp [dotProduct, Matrix.mulVec, map_sum, LinearMap.sum_apply, Finset.mul_sum, mul_comm, mul_left_comm]
       rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     rw [e]
@@ -242,10 +289,10 @@ theorem compare (h0 : val 0 = 0) (hadd : ∀ e ∈ Lm, ∀ e' ∈ Lm, val (e + e
     exact val_sum h0 hadd hsm hbL (fun l => P l k) Finset.univ
   have hG : gramOf h val b' = Cᴴ * gramOf h val b * C := by
     ext p q
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [gramOf, Matrix.of_apply, hval, Matrix.mul_apply, Matrix.conjTranspose_apply, map_sum,
-      LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, Finset.sum_mul, Complex.star_def,
-      RingHom.id_apply, smul_eq_mul, map_smulₛₗ]
+
+    simp only [gramOf, Matrix.of_apply, hval, Matrix.mul_apply, Matrix.conjTranspose_apply, map_sum,
+    LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, Finset.sum_mul, Complex.star_def,
+    RingHom.id_apply, smul_eq_mul, map_smulₛₗ]
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [Finset.mul_sum]
     exact Finset.sum_congr rfl fun _ _ => by ring
@@ -375,9 +422,9 @@ theorem exists_dual (𝔐 : HodgeCpt Y S y) (hind : iSupIndep 𝔐.Vgen) (q : Cp
         rw [hfr] at hx
         obtain ⟨c', rfl⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hx
         have e1 : ∀ k, (c' k • b k) = ((c' k : regAt 𝔐.ξ q) : Ω) • b k := fun _ => rfl
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [e1, map_sum, map_smul, LinearMap.comp_apply, Submodule.subtype_apply, hpr _ (hbV _), hgb,
-          LinearMap.proj_apply]
+
+        simp only [e1, map_sum, map_smul, LinearMap.comp_apply, Submodule.subtype_apply, hpr _ (hbV _), hgb,
+        LinearMap.proj_apply]
         refine sum_mem fun k _ => ?_
         rw [smul_eq_mul]
         refine mul_mem (c' k).2 ?_
@@ -564,8 +611,8 @@ theorem exists_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     choose g hg using hg
     refine Fintype.linearIndependent_iff.2 fun w hw j => ?_
     have := congrArg (g j) hw
-    set_option synthInstance.maxHeartbeats 100000 in
-      simpa [map_sum, hg, Finset.sum_ite_eq] using this
+
+    simpa [map_sum, hg, Finset.sum_ite_eq] using this
 
   have hGram : ∀ (b : Fin (labelRk D s) → 𝔐.Li) (Γ : Matrix (Fin (labelRk D s)) (Fin (labelRk D s)) ℂ),
       (∀ k, b k ∈ 𝔐.M.lat q) → (𝔐.M.GramAt 𝔐.t.PP.L z b Γ ↔ Γ = gramOf h val b) := by

@@ -1,10 +1,40 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CongrFunHeq
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowReadingsSameRowsIdentifyDefiniteFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowsSameGeometricHalf
-public import Lean
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DsigEq
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AtSame
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -15,7 +45,7 @@ open GlobalTheory.HeightCounting GlobalTheory.Mem.R3.Tr
 
 noncomputable section
 namespace GlobalTheory.LayerMove
-set_option maxHeartbeats 4000000
+
 
 theorem tupTied_ext {D : D7} {cf : CharFrame D} {C : NChoice D} {p q : TupTied D cf C} (h1 : p.xi = q.xi) (h2 : p.psi = q.psi) :
     p = q := by
@@ -52,12 +82,17 @@ theorem nchT_up (n : NchT w Z Wt nch) : Nonempty (NchT w (upL Z S' N h) Wt (nchU
      chrPsi := by with_unfolding_all exact (n.chrPsi :) }⟩
 
 theorem kept_up (nch : NChoice (w.D Z)) : Kept nch (nchUp S' N h nch) := by
-  refine ⟨?_, ?_, ?_, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩ <;> constructor <;> first | rfl | exact HEq.rfl
+  refine ⟨?_, ?_, ?_, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩ <;> constructor <;> rfl
 
 theorem goodO_up (g : GoodO (w.D Z) nch xd) : GoodO (w.D (upL Z S' N h)) (nchUp S' N h nch) (xdUp S' N h xd) := by
-  obtain ⟨⟨E, N0, S⟩, h1, h2, h3⟩ := g.tw
-  cases h1
-  exact ⟨⟨⟨twEOf (xdUp S' N h xd), N0, S⟩, rfl, (by with_unfolding_all exact (h2 :)), (by with_unfolding_all exact (h3 :))⟩, g.sep⟩
+  dsimp only [nchUp, xdUp, upL]
+  -- Abstract the new division stage before comparing the twisting conditions.
+  generalize (Db.setDivZ Z N h).V = V'
+  obtain ⟨⟨E, N0, S⟩, hE, hAt, hCl⟩ := g.tw
+  cases hE
+  refine ⟨⟨⟨twEOf _, N0, S⟩, rfl, ?_, ?_⟩, g.sep⟩
+  · with_unfolding_all exact hAt
+  · with_unfolding_all exact hCl
 end
 
 end GlobalTheory.LayerMove

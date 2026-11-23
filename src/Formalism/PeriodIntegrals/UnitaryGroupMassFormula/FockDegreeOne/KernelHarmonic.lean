@@ -1,7 +1,53 @@
 module
 
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockDegreeOne.RedOps
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockDegreeOne.RedDefs
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockDegreeOne.ExistsMonomialWeight
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockDegreeOne.FockOperatorsKernel
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockDegreeOne.RedOps
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockRaisingLowering.KroneckerMapOneRightNeZero
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -22,8 +68,8 @@ theorem lowOp_Xd (c d : Ix r s) (l l' : Ln p q r s) (P : Pol p q r s) :
         ((if ((a, d) : Ln p q r s) = l then pderiv ((a, c) : Ln p q r s) (pderiv l' P) else 0) +
          (if ((a, c) : Ln p q r s) = l then pderiv ((a, d) : Ln p q r s) (pderiv l' P) else 0))
         else 0) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [lowOp_apply, lowOp_apply, map_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
+
+  rw [lowOp_apply, lowOp_apply, map_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_
   by_cases h : linePos ((a, d) : Ln p q r s) = true
   · simp only [h, ↓reduceIte]
@@ -60,8 +106,8 @@ theorem lowOp_posOp (c d : Ix r s) (hcd : ¬ sameBlock c d) (a b : Ix p q) (P : 
         pderiv ((a, c) : Ln p q r s) (pderiv ((b, d) : Ln p q r s) P) else 0) := by
   have hcd' : c ≠ d := by
     rintro rfl; exact hcd (by rcases c with c | c <;> simp [sameBlock])
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [posOp_apply, posOp_apply, map_sum]
+
+  rw [posOp_apply, posOp_apply, map_sum]
   have hterm : ∀ e : Ix r s,
       lowOp (p := p) (q := q) c d (if linePos ((a, e) : Ln p q r s) = true then
         X ((a, e) : Ln p q r s) * pderiv ((b, e) : Ln p q r s) P else 0) =
@@ -105,8 +151,8 @@ theorem lowOp_negOp (c d : Ix r s) (hcd : ¬ sameBlock c d) (a b : Ix p q) (hab 
     rintro rfl; exact hcd (by rcases c with c | c <;> simp [sameBlock])
   have hba : linePos ((b, d) : Ln p q r s) = linePos ((a, d) : Ln p q r s) :=
     (FockRL.linePos_left b a d).2 (FockRL.sameBlock_symm hab)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [negOp_apply, negOp_apply, map_sum]
+
+  rw [negOp_apply, negOp_apply, map_sum]
   have hterm : ∀ e : Ix r s,
       lowOp (p := p) (q := q) c d (if linePos ((b, e) : Ln p q r s) = true then 0 else
         X ((b, e) : Ln p q r s) * pderiv ((a, e) : Ln p q r s) P) =

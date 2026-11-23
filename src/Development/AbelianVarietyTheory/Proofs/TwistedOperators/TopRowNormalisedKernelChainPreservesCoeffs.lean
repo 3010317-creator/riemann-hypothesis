@@ -1,12 +1,42 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkMapInitMinor
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicReadingDecoratedLatticeForms
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.MemHalfCosetSelf
+import Formalism.LocalToGlobal.Columns.CoefficientsModP.FkMapInitMinor
+import Formalism.LocalToGlobal.Columns.PolyFnLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -35,7 +65,7 @@ theorem coeff_bVV_mem (A : Subfield ℂ) (lam : ι → DomWeight n) (i : VVIdx l
 theorem coeff_mem_of_repr_mem (A : Subfield ℂ) (lam : ι → DomWeight n) (v : VV ℂ lam)
     (h : ∀ i, (bVV ℂ lam).repr v i ∈ A) (m) : AddMonoidAlgebra.coeff (v : Pol ℂ ι n) m ∈ A := by
   have e := congrArg (fun x : VV ℂ lam => AddMonoidAlgebra.coeff (x : Pol ℂ ι n) m) ((bVV ℂ lam).sum_repr v)
-  simp only [Submodule.coe_sum, Submodule.coe_smul, coeff_sum, coeff_smul, smul_eq_mul] at e
+  simp only [Submodule.coe_sum, Submodule.coe_smul, coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul] at e
   rw [← e]
   exact sum_mem fun i _ => mul_mem (h i) (coeff_bVV_mem A lam i m)
 
@@ -59,8 +89,8 @@ theorem repr_mem_of_coeff_mem (A : Subfield ℂ) (lam : ι → DomWeight n) (v :
     rw [Fintype.linearIndependent_iff]
     intro g hg j
     have e := congrArg (map s) hg
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_zero, smul_eq_C_mul, map_mul, map_C, hb'] at e
+
+    simp only [map_sum, map_zero, smul_eq_C_mul, map_mul, map_C, hb'] at e
     have e' : ∑ k, (s (g k)) • ((bVV ℂ lam k : VV ℂ lam) : Pol ℂ ι n) = 0 := by
       simpa only [smul_eq_C_mul] using e
     have := Fintype.linearIndependent_iff.1 hliC (fun k => s (g k)) e' j
@@ -85,8 +115,8 @@ theorem repr_mem_of_coeff_mem (A : Subfield ℂ) (lam : ι → DomWeight n) (v :
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun A).1 hspan
   have hvc : v = ∑ j, (s (c j)) • bVV ℂ lam j := by
     apply Subtype.ext
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hv', ← hc, map_sum, Submodule.coe_sum]
+
+    rw [← hv', ← hc, map_sum, Submodule.coe_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Submodule.coe_smul, ← hb', smul_eq_C_mul, smul_eq_C_mul, map_mul, map_C]
   rw [hvc, (bVV ℂ lam).repr_sum_self]
@@ -154,7 +184,7 @@ theorem coeff_rhoVr_mem {E : Type} [Field E] (emb : ι → E →+* ℂ) (lam : �
   have htr : Formalism.L2.DIV.trAct (invTrK (embGL emb γE)) (v : Pol ℂ ι n) ∈ R₀ :=
     hblock _ (fun τ a b => hent τ b a) _ ((memR _).2 hv)
   show AddMonoidAlgebra.coeff (Formalism.L2.DIV.actP lam (invTrK (embGL emb γE)) (v : Pol ℂ ι n)) m ∈ A
-  rw [Formalism.L2.DIV.actP, LinearMap.smul_apply, coeff_smul, smul_eq_mul]
+  rw [Formalism.L2.DIV.actP, LinearMap.smul_apply, MvPolynomial.coeff_smul, smul_eq_mul]
   exact mul_mem hdt ((memR _).1 htr m)
 
 end Coeff

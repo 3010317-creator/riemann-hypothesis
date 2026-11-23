@@ -1,11 +1,57 @@
 module
 
-public import Mathlib
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.HeckeAlgebraActions.BackStable
-public import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.QuantumDeterminantTensorStatement
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.CayleyHamiltonStatementStatement
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HeckeNonVanishingStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.QuantumDeterminantTensorStatement
+import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -152,8 +198,8 @@ theorem IsPol.scalar {F : ℂ → Module.End ℂ M} (h : IsPol F) (v : M) (φ : 
   have e : ∀ i, (p.coeff i * (algebraMap ℂ (Module.End ℂ M) x) ^ i) v = x ^ i • (p.coeff i v) := by
     intro i
     rw [← map_pow, Module.End.mul_apply, Module.algebraMap_end_apply, map_smul]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hp, eval₂_eq_sum_range, LinearMap.sum_apply, map_sum, Polynomial.eval_finsetSum]
+
+  rw [hp, eval₂_eq_sum_range, LinearMap.sum_apply, map_sum, Polynomial.eval_finsetSum]
   refine Finset.sum_congr rfl fun i _ => ?_
   simp only [RingHom.id_apply, e, map_smul, smul_eq_mul, eval_mul, eval_C, eval_pow, eval_X, mul_comm]
 
@@ -356,8 +402,8 @@ theorem central (X : GMod n) (N : Module.End ℂ X.V) (Y c : ℂ)
 theorem commute_om_compLeft (X : GMod n) (N : Module.End ℂ X.V) (hc : ∀ a b, Commute N (X.E a b)) :
     Commute (om X) (N.compLeft (Fin n)) := by
   refine LinearMap.ext fun u => funext fun b => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Module.End.mul_apply, om_apply, LinearMap.compLeft_apply, Function.comp_apply, map_sum]
+
+  simp only [Module.End.mul_apply, om_apply, LinearMap.compLeft_apply, Function.comp_apply, map_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
   exact (LinearMap.congr_fun (hc a b).eq (u a)).symm
 

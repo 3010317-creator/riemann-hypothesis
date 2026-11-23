@@ -1,6 +1,49 @@
 module
 
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.LocalCharacterIntegrals.ShellP
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.LocalCharacterIntegrals.MeasurePreservingOfAddEquiv
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -104,8 +147,8 @@ theorem gramR_mem' (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E) (h
   intro a b
   have hJR : ∀ i j, sigR R σ (JR R J i j) = JR R J j i := by
     intro i j; simp [JR, inclR, sigR, hJ]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [gramR, hR, hform, map_sum, map_mul, sigR_invol' R σ hσ, hJR]
+
+  simp only [gramR, hR, hform, map_sum, map_mul, sigR_invol' R σ hσ, hJR]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
@@ -183,9 +226,9 @@ theorem trPair_herm {n : ℕ} (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) 
     rw [Finset.sum_comm]; simp_rw [hD']
   have h1 : ∑ a, ∑ c, (X + (X.map (sigR (Fv F v) σ))ᵀ) a c * D c a =
       (∑ a, ∑ c, X a c * D c a) + sigR (Fv F v) σ (∑ a, ∑ c, X a c * D c a) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Matrix.add_apply, Matrix.transpose_apply, Matrix.map_apply, add_mul, Finset.sum_add_distrib, map_sum,
-      map_mul]
+
+    simp only [Matrix.add_apply, Matrix.transpose_apply, Matrix.map_apply, add_mul, Finset.sum_add_distrib, map_sum,
+    map_mul]
     rw [h2]
   unfold trPair
   rw [h1, map_add (f := _), trace_sigR σ hσ, ← two_mul, ← mul_assoc, half_mul_two, one_mul]

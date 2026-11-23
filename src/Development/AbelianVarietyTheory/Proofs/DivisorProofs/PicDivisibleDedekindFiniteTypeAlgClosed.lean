@@ -1,19 +1,72 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffHasse
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.RingTheory.PowerSeries.Substitution
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraMapQuotBijective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompletionEmbedding
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeCountGenerates
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassGroupNthPowerOfCodimOneMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalBoundedIn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JetsMemSubalgebraOfFiniteType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CcSubst
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNeZeroForallPointExtendSubalgebra
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasseDerivativePowerSeriesMulSubstLeibnizStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasseJetVanishingMemPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassGroupNthPowerOfCodimOneMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeCountGenerates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompletionEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinrankQuotientSpanModEqOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparableNormalisationReducedFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalBoundedIn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasseDerivativePowerSeriesMulSubstLeibnizStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasseJetVanishingMemPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JetsMemSubalgebraOfFiniteType
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNeZeroForallPointExtendSubalgebra
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.PowerSeries.Inverse
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -73,8 +126,8 @@ theorem not_mem_pow_succ {A : Type} [CommRing A] [IsDedekindDomain A] {N : ℕ} 
 theorem coeff_map_sum {k A : Type} [Field k] [CommRing A] [Algebra k A] {m : ℕ}
     (σ : A →ₐ[k] PowerSeries k) (v : Fin m → A) (c : Fin m → k) (l : ℕ) :
     ∑ j, c j * PowerSeries.coeff l (σ (v j)) = PowerSeries.coeff l (σ (∑ j, c j • v j)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, map_smul]
+
+  simp [map_sum, map_smul]
 
 theorem formal_deformation : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A] [Algebra k A] [Algebra.FiniteType k A] (N : ℕ) (I : Type) [Fintype I] (V : Submodule k A) (D P₀ : Ideal A) (Q : I → Ideal A) (f₀ : A), 2 ≤ N → (N : k) ≠ 0 → P₀.IsMaximal → (FiniteDimensional k V ∧ (∀ v ∈ V, v ∈ D) ∧ (∀ i, (Q i).IsMaximal) ∧ Function.Injective Q ∧ (∀ i, Q i ≠ P₀) ∧ (∀ i, ¬ D ≤ Q i) ∧ ¬ D ≤ P₀ ∧ f₀ ∈ V ∧ f₀ ≠ 0 ∧ Ideal.span {f₀} = P₀ * D * ∏ i, Q i ^ N ∧ (∀ u : A, ∃ v ∈ V, u - v ∈ P₀ * ∏ i, Q i ^ (N - 1))) → ∃ (ξ : A →ₐ[k] PowerSeries k) (Δ : I → ℕ → A →ₗ[k] PowerSeries k) (m : ℕ) (v : Fin m → A) (y : Fin m → PowerSeries k),
   Function.Injective ξ ∧ (∀ i, Δ i 0 1 = 1) ∧ (∀ i, (∀ l, ∀ u w : A, Δ i l (u * w) = ∑ p ∈ Finset.range (l + 1), Δ i p u * Δ i (l - p) w)) ∧ (∀ i, ∃ π : A, Δ i 1 π = 1) ∧
@@ -341,8 +394,8 @@ theorem specialise_generic_solution_hasse : ∀ (k A : Type) [Field k] [IsAlgClo
     apply GlobalTheory.T.exists_maximal_mem_pow_of_hasse_vanishing k A N (Δ' i) hN
     · rw [hΔ' i 0 hN0, h01 i, hone]
     · intro l hl u w
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hΔ' i l hl, hleib i l u w, map_sum]
+
+      rw [hΔ' i l hl, hleib i l u w, map_sum]
       refine Finset.sum_congr rfl fun p hp => ?_
       have hp' : p < l + 1 := Finset.mem_range.1 hp
       rw [hmul _ (hSΔ i p (by omega) u) _ (hSΔ i (l - p) (by omega) w),
@@ -390,8 +443,8 @@ theorem specialise_generic_solution_hasse : ∀ (k A : Type) [Field k] [IsAlgClo
     exact hunit _ (hy j0) hj0 (hTS _ (by simp [T])) this
   · apply (hφ f).2
     have : φ f = L (∑ j, y j * ξ (v j)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [f, map_sum, map_smul, smul_eq_mul]
+
+      simp only [f, map_sum, map_smul, smul_eq_mul]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [hmul _ (hy j) _ (hξS _), hLξ]
     rw [this, heq0, map_zero]
@@ -399,8 +452,8 @@ theorem specialise_generic_solution_hasse : ∀ (k A : Type) [Field k] [IsAlgClo
     apply hQpow i
     intro l hl
     have : Δ' i l f = L (∑ j, y j * Δ i l (v j)) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [f, map_sum, map_smul, smul_eq_mul]
+
+      simp only [f, map_sum, map_smul, smul_eq_mul]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [hmul _ (hy j) _ (hSΔ i l hl _), hΔ' i l hl]
     rw [this, heqΔ i l hl, map_zero]

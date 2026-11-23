@@ -1,14 +1,61 @@
 module
 
-public import Formalism.SharpRestriction.CuspSpanNormBounds.ThinScalesBound
-public import Formalism.SharpRestriction.CuspSpanNormBounds.ChainLength
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DualIdealInclusion
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstEmbeddingOne
-public import Formalism.HermitianCurvature.Statement
+import Formalism.PeriodIntegrals.AlgebraMapMemO
+public import Formalism.HermitianCurvature.BlockKernelPropertiesOfSteps
+public import Formalism.HermitianCurvature.PrimeToDifferent
+public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalGroupInFamilyNontrivial
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FinrankLeOfMapLe
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PeriodLatticeFactsSplitOfGeneral
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferProductMonic
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LocalConditionsAndQuotientSplitting
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FirstKernelProperties
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondVanishingOffRing
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Valuation.Extension
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SharpRestriction.CuspSpanNormBounds.ChainLength
 
 @[expose] public section
 
@@ -599,51 +646,7 @@ theorem nontrivial_E (L : LocE F E) : Nontrivial E := by
   exact Module.nontrivial_of_finrank_pos (R := F) (by rw [L.rank]; norm_num)
 
 theorem exists_theta : ∃ θ ∈ L.O, L.cj θ = -θ ∧ ∃ D : 𝒪[F], (D : F) ≠ 0 ∧ θ * θ = algebraMap F E D := by
-  have := nontrivial_E L
-  have hy : ∃ y, L.cj y ≠ y := by
-    by_contra hcon
-    push Not at hcon
-    have h1 : Module.finrank F E ≤ 1 := finrank_le_one (1 : E) (fun w => by
-      obtain ⟨a, ha⟩ := (L.cj_fix w).1 (hcon w)
-      exact ⟨a, by rw [Algebra.smul_def, mul_one, ha]⟩)
-    rw [L.rank] at h1
-    omega
-  obtain ⟨y, hy⟩ := hy
-  obtain ⟨T, hT⟩ := tr_ex L y
-  obtain ⟨N, hN⟩ := nm_ex L y
-  obtain ⟨r₁, h10, h1⟩ := exists_scale T
-  obtain ⟨r₂, h20, h2⟩ := exists_scale N
-  obtain ⟨r, hr⟩ : ∃ r : F, r = (r₁ : F) * (r₂ : F) := ⟨_, rfl⟩
-  have hr0 : r ≠ 0 := by rw [hr]; exact mul_ne_zero h10 h20
-  have hz : algebraMap F E r * y ∈ L.O := by
-    refine mem_O_of_quad L _ ⟨r * T, ?_⟩ ⟨r * r * N, ?_⟩ ?_
-    · have : r * T = (r₂ : F) * ((r₁ : F) * T) := by rw [hr]; ring
-      rw [this]; exact (𝒪[F]).mul_mem r₂.2 h1
-    · have : r * r * N = ((r₁ : F) * (r₁ : F) * (r₂ : F)) * ((r₂ : F) * N) := by rw [hr]; ring
-      rw [this]; exact (𝒪[F]).mul_mem ((𝒪[F]).mul_mem ((𝒪[F]).mul_mem r₁.2 r₁.2) r₂.2) h2
-    · simp only [map_mul, hT, hN]
-      ring
-  have hθO : algebraMap F E r * y - L.cj (algebraMap F E r * y) ∈ L.O :=
-    L.O.sub_mem hz (cj_mem_O L _ hz)
-  have hθc : L.cj (algebraMap F E r * y - L.cj (algebraMap F E r * y)) =
-      -(algebraMap F E r * y - L.cj (algebraMap F E r * y)) := by
-    rw [map_sub, L.cj_cj]; ring
-  have hθ0 : algebraMap F E r * y - L.cj (algebraMap F E r * y) ≠ 0 := by
-    intro h0
-    apply hy
-    rw [map_mul L.cj, AlgEquiv.commutes, ← mul_sub] at h0
-    have hu : IsUnit (algebraMap F E r) := (hr0.isUnit).map _
-    have := (hu.mul_right_eq_zero).1 h0
-    exact (sub_eq_zero.1 this).symm
-  obtain ⟨θ, hθ⟩ : ∃ θ : E, θ = algebraMap F E r * y - L.cj (algebraMap F E r * y) := ⟨_, rfl⟩
-  rw [← hθ] at hθO hθc hθ0
-  obtain ⟨D, hD⟩ := (L.cj_fix (θ * θ)).1 (by rw [map_mul, hθc]; ring)
-  have hDO : D ∈ 𝒪[F] := mem_OF_of_mem_O L D (by rw [hD]; exact L.O.mul_mem hθO hθO)
-  refine ⟨θ, hθO, hθc, ⟨D, hDO⟩, ?_, hD.symm⟩
-  rintro (rfl : D = 0)
-  rw [map_zero] at hD
-  have := L.reduced
-  exact hθ0 (IsReduced.eq_zero θ ⟨2, by rw [sq]; exact hD.symm⟩)
+  apply PI.LocHerm.SlopeTestRemainingChoices.exists_theta <;> assumption
 
 end Top2
 

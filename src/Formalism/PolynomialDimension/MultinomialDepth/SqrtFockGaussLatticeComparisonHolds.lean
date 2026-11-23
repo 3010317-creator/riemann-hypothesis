@@ -1,8 +1,57 @@
 module
 
 public import Formalism.PolynomialDimension.StatementHar
-public import Formalism.PolynomialDimension.MultinomialDepth.HarmonicDecompositionHolds
-public import Formalism.PolynomialDimension.MultinomialDepth.DiagLaplacianDivPowMemSqrtFockLattice
+public import Mathlib.Data.Nat.Choose.Multinomial
+import Formalism.PolynomialDimension.MultinomialDepth.DiagLaplacianDivPowMemSqrtFockLattice
+import Formalism.PolynomialDimension.MultinomialDepth.HarmonicDecompositionHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -73,8 +122,8 @@ theorem glAct_hXY {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) : glAct g (h
     rw [e, Units.inv_mul, Matrix.one_apply]
     split_ifs <;> simp
   unfold hXY
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, glAct_X_inl, glAct_X_inr]
+
+  simp only [map_sum, map_mul, glAct_X_inl, glAct_X_inr]
   calc ∑ i : Fin k, (∑ j : Fin k, C ((g : Matrix (Fin k) (Fin k) K) i j) * X (Sum.inl j)) *
         (∑ l : Fin k, C (((g⁻¹ : GL (Fin k) K) : Matrix (Fin k) (Fin k) K) l i) * X (Sum.inr l))
       = ∑ i : Fin k, ∑ j : Fin k, ∑ l : Fin k, (C ((g : Matrix (Fin k) (Fin k) K) i j) * X (Sum.inl j)) *
@@ -86,8 +135,8 @@ theorem glAct_hXY {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) : glAct g (h
     _ = ∑ j : Fin k, ∑ l : Fin k, C (∑ i : Fin k, (g : Matrix (Fin k) (Fin k) K) i j * ((g⁻¹ : GL (Fin k) K) : Matrix (Fin k) (Fin k) K) l i) *
           (X (Sum.inl j) * X (Sum.inr l)) := by
         refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun l _ => ?_
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum, Finset.sum_mul]
+
+        rw [map_sum, Finset.sum_mul]
         exact Finset.sum_congr rfl fun i _ => by rw [map_mul]; ring
     _ = ∑ i : Fin k, X (Sum.inl i) * X (Sum.inr i) := by
         simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq,
@@ -110,8 +159,8 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             ∑ l : Fin k, C (((g⁻¹ : GL (Fin k) K) : Matrix (Fin k) (Fin k) K) j l) * X (Sum.inl l)
           = ∑ l : Fin k, C (∑ j : Fin k, (g : Matrix (Fin k) (Fin k) K) i j *
               ((g⁻¹ : GL (Fin k) K) : Matrix (Fin k) (Fin k) K) j l) * X (Sum.inl l) := by
-            set_option synthInstance.maxHeartbeats 100000 in
-              simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
+
+            simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inl i) := by
           simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
@@ -134,8 +183,8 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             ∑ l : Fin k, C ((g : Matrix (Fin k) (Fin k) K) l j) * X (Sum.inr l)
           = ∑ l : Fin k, C (∑ j : Fin k, ((g⁻¹ : GL (Fin k) K) : Matrix (Fin k) (Fin k) K) j i *
               (g : Matrix (Fin k) (Fin k) K) l j) * X (Sum.inr l) := by
-            set_option synthInstance.maxHeartbeats 100000 in
-              simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
+
+            simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inr i) := by
           simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
@@ -197,8 +246,8 @@ theorem glAct_mem_PolAB {K : Type} [Field K] {k A B : ℕ} (g : GL (Fin k) K) (f
         (isWeightedHomogeneous_X (R := K) (wXY k) (Sum.inr j))
       convert h using 1
       simp [wXY]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hgl, f.as_sum, map_sum]
+
+  rw [hgl, f.as_sum, map_sum]
   apply IsWeightedHomogeneous.sum
   intro m hm
   rw [aeval_monomial, MvPolynomial.algebraMap_eq]

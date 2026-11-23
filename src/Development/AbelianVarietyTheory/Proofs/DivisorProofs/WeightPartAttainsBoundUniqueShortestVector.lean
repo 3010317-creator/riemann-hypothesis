@@ -1,14 +1,86 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGenLab
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVec
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormThetaConstantLePrimitiveGeneratorScale
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionValueAtTorsionPointEqSumTerms
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtFormalTorsion
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantValuationsUnitsEveryCoset
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UTorsClosed
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.AllDV
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormVal
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsNsmulIffEq
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsExpandsFAndNuGeOfIsComb
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGlobalGenerators
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRatLog
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusPoint
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsFibreSectionLinearCombIffExpansionSum
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LinCombValueAct
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormThetaConstantLePrimitiveGeneratorScale
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NsmulEqZeroOfCast
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestQuadraticFormEqPsiValuationMul
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UtestGeomNonempty
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVec
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactTermAfterTorsionStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsNsmulAndNeg
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPrimGenerator
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpBijFAndExpandsFLin
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpansionPullbackSectionEndomorphismStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionValueAtTorsionPointEqSumTerms
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SymmetricLiftOddOrderActsAsExpansionOperatorStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantEqSumThetaTermsOddMultiple
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantValuationsUnitsEveryCoset
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TxFrameOfOne
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UTorsClosed
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UnivIdentity
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValuationsSymmetricFrameAndTermsStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValuationsTorusPointsFramesFamilyTerms
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtFormalTorsion
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.BOfNsmulLeft
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsBasisB
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGenLab
 
 @[expose] public section
 
@@ -69,7 +141,7 @@ variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω
   {y₀ : S.R →+* PadicAlgCl p} {u : ρ.UTest p y₀}
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem coef_proj (hLL : LL) (hU : UTorsSt) [ArithBase o Ω] [CharZero u.V] (l : u.Lab) (Φ : u.Geom)
     {w₀ : W0 u.U.toUnifPre} (hw₀ : w₀.IsGen) (α : u.D.toPre.X) (i : S.J) {t : SecA u.A (PadicAlgCl p) S.N}
     (ht : IsComb Φ.s (fun j => y₀ (algebraMap o S.R (S.proj _ (l.wt α) j i))) t)
@@ -109,9 +181,9 @@ theorem coef_proj (hLL : LL) (hU : UTorsSt) [ArithBase o Ω] [CharZero u.V] (l :
   set φ : o →+* PadicAlgCl p := y₀.comp (algebraMap o S.R) with hφ
   change ∑ j, φ _ * _ = _
   change ∀ a : S.perp l.yy.ker, ∑ j, φ _ * _ = φ _ * _ at key
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [proj_eq, Matrix.smul_apply, Matrix.sum_apply, smul_eq_mul, map_mul, map_sum, Finset.mul_sum, Finset.sum_mul,
-    _root_.mul_assoc]
+
+  simp only [proj_eq, Matrix.smul_apply, Matrix.sum_apply, smul_eq_mul, map_mul, map_sum, Finset.mul_sum, Finset.sum_mul,
+  _root_.mul_assoc]
   rw [Finset.sum_comm]
   simp only [← Finset.mul_sum, key]
   simp only [← _root_.mul_assoc (φ (GlobalGen.chi S _)), ← map_mul, h1, map_one, _root_.one_mul]
@@ -121,7 +193,7 @@ theorem coef_proj (hLL : LL) (hU : UTorsSt) [ArithBase o Ω] [CharZero u.V] (l :
 attribute [local instance] gtGroup
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem pull_term (hL : LL) (hT : TwistBCSpanStatement) (hVR : TWM.VRatioGtStatement) (hTW : TWStatement)
     (hUU : UUStatement) {V : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V]
     (hcp : IsAdicComplete (maximalIdeal V) V) {ϖ : V} (hϖ : Irreducible ϖ) {D : DegData V (maximalIdeal V)}
@@ -185,7 +257,7 @@ theorem pull_term (hL : LL) (hT : TwistBCSpanStatement) (hVR : TWM.VRatioGtState
     v.map_mul, v.map_mul, hb, ← hr, WithTop.coe_zero, zero_add]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_point : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] {S : ThetaSys o Ω} {ρ : S.Real} {p : ℕ}
     [Fact p.Prime] {y₀ : S.R →+* PadicAlgCl p} (u : ρ.UTest p y₀) (l : u.Lab),
     LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → UTorsSt →
@@ -239,7 +311,7 @@ theorem exists_point : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] 
     exact hgv w hw hw0 σ₁ hσ₁
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem val_value : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] {S : ThetaSys o Ω} {ρ : S.Real} {p : ℕ}
     [Fact p.Prime] {y₀ : S.R →+* PadicAlgCl p} (u : ρ.UTest p y₀) (l : u.Lab),
     LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → UTorsSt →
@@ -302,7 +374,7 @@ theorem val_value : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [Ar
     simpa using hlt
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] {S : ThetaSys o Ω} {ρ : S.Real} {p : ℕ} [Fact p.Prime] {y₀ : S.R →+* PadicAlgCl p} (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → ∀ (m k : ℕ), S.N = m ^ 2 → 2 ≤ k → k ∣ m → ∀ ν : u.D.toPre.X, (∀ χ : u.D.toPre.X, m • χ ≠ 0 → l.q ν < l.q (ν + m • χ)) → ∃ h ∈ l.yy.ker, k • m • h = 0 ∧ ‖∑ j, y₀ (algebraMap o S.R (S.proj _ (l.wt (m • ν)) j ρ.i₀)) * y₀ ⟨S.ev h j, S.ev_mem h j⟩‖ = S.delta y₀ * Real.exp (-l.q ν) := by
   intro o Ω _ _ _ _ S ρ p _ y₀ u l hint m k hNm hk hkm ν hν
   obtain ⟨hL, hL2⟩ := GlobalTheory.abelianSchemeLaws_all

@@ -1,11 +1,45 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.UpLReStage
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemPrinCongOfSm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfIffUnitaryDecoration
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPtOfMulJ0Decoration
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsSameFOfDiv
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpectralComparisonTransportedDivisionLatticeChan
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NeZeroTop
 
 @[expose] public section
 
@@ -28,7 +62,7 @@ theorem pt_swap {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
   exact (one_smul _ q : ((1, 1, 1) : UF E n × GLG (E := E) (n := n) (SG := SG) × GLQ E n Q') • q = q) ▸ this
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem reads_le {B : Base} {X : PreX B.toPre} (I : TC B X) (u : B.Word) (i : ℕ) {Lb Lb'} {U U' : Subgroup (GA B (B.R.N i))}
     {chi : U →* ℂˣ} {chi' : U' →* ℂˣ} {y y' st st' k k'} (hy : y' = y)
     (h : I.Reads u I.mu0 i (fun _ => ()) (fun _ => Lb) (fun _ => U) (fun _ => chi) y st k)
@@ -75,7 +109,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T}
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem U_le (Z : w.Lt) (u : B.Word) (F : Forms0 (w.D Z) u) :
     (show Subgroup (GA B (B.R.N 0)) from F.cls0.lev.U) ≤ UAd B.sp.cm (B.R.N 0) := by
   have hg1 : gramN (w.D Z) 0 (Nat.zero_le _) = 1 := ((spaces_in_coordinates w.I w.ok w.pins w.l Z).2.2.2 0 (Nat.zero_le _)).1
@@ -87,13 +121,13 @@ abbrev Car (B : Base) : Type :=
   Submodule (𝓞 B.host.E) (Fin (B.R.N 0) → B.host.E) × Σ U : Subgroup (GA B (B.R.N 0)), (U →* ℂˣ)
 
 
-set_option maxHeartbeats 4000000 in
+
 def car (Z : w.Lt) (u : B.Word)
     (S : StepLevel (w.D Z).host.F (w.D Z).host.E (sigD (w.D Z)) (gramN (w.D Z) 0 (Nat.zero_le _)) ((w.D Z).mem u).A.T (w.D Z).R.f
       (badG (w.D Z))) : Car B := (S.Lb, ⟨S.U, S.chi⟩)
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem car_eq {Z Z' : w.Lt} (t : ColT w Z) (t' : ColT w Z') (u : B.Word) :
     car Z' u (t'.C.forms u).to0.cls0.lev = car Z u (t.C.forms u).to0.cls0.lev := by
   obtain ⟨k, h⟩ := (t.std u).ends 0 (Nat.zero_le _) (Or.inl rfl)
@@ -102,18 +136,18 @@ theorem car_eq {Z Z' : w.Lt} (t : ColT w Z) (t' : ColT w Z') (u : B.Word) :
   have e := heq_chi (reads_le w.I u 0 hy.symm h h' (U_le Z u (t.C.forms u).to0)) (reads_le w.I u 0 hy h' h (U_le Z' u (t'.C.forms u).to0))
   exact Prod.ext (Submodule.ext fun x => (h'.lb () x).trans (h.lb () x).symm) (Sigma.ext e.1 e.2)
 
-set_option maxHeartbeats 4000000 in
+
 theorem y_eq {Z Z' : w.Lt} (t : ColT w Z) (t' : ColT w Z') (u : B.Word) :
     (t'.C.forms u).to0.cls0.y = ((t.C.forms u).to0.cls0.y) :=
   funext fun c => Subtype.ext (((t'.std u).yE 0 (Nat.zero_le _) (Or.inl rfl) c).trans ((t.std u).yE 0 (Nat.zero_le _) (Or.inl rfl) c).symm)
 
-set_option maxHeartbeats 4000000 in
+
 theorem eY_eq {Z Z' : w.Lt} (t : ColT w Z) (t' : ColT w Z') (u : B.Word) :
     (t'.C.forms u).to0.val0.eY = ((t.C.forms u).to0.val0.eY) :=
   Equiv.ext fun c => Subtype.ext (((t'.std u).eY 0 (Nat.zero_le _) (Or.inl rfl) c).trans ((t.std u).eY 0 (Nat.zero_le _) (Or.inl rfl) c).symm)
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem sameStd : SameStd := by
   intro B f T w Z Zn col col' F₁ h u
   have e : car (reL Z Zn) u (col'.C.forms u).to0.cls0.lev = car (reL Z Zn) u (F₁ u).cls0.lev :=
@@ -131,13 +165,13 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {D : D7} {F F' : ∀ u, Forms0 D u}
 
 
-set_option maxHeartbeats 4000000 in
+
 def trCar (h : SameCar F F') {X : HidaSetting D} {u} (t : Transport X u (F u)) : Transport X u (F' u) :=
   { t with
     hc_rep := fun c => by rw [(h u).2.2.2.1]; exact t.hc_rep c
     J_isom := fun c ξ η => by rw [(h u).2.2.2.2]; exact t.J_isom c ξ η }
 
-set_option maxHeartbeats 4000000 in
+
 theorem colDictL_car (h : SameCar F F') {X : HidaSetting D} {u} (t : Transport X u (F u)) (hK : X.LevelSubgroupCharacter) :
     colDictL X (trCar h t) hK = colDictL X t hK := by
   refine LinearMap.ext fun T => funext fun c => funext fun z => ?_
@@ -148,7 +182,7 @@ theorem chi_of_heq {G : Type} [Group G] {U U' : Subgroup G} {chi : U →* ℂˣ}
   subst e
   rw [eq_of_heq h]
 
-set_option maxHeartbeats 4000000 in
+
 theorem lev_car (h : SameCar F F') {X : HidaSetting D} {u} {t : Transport X u (F u)} {hK : X.LevelSubgroupCharacter} (l : LevelMatch X t hK) :
     LevelMatch X (trCar h t) hK := by
   refine ⟨fun x => ?_, fun g y hr => ⟨?_, fun hk hy => ?_⟩⟩
@@ -157,7 +191,7 @@ theorem lev_car (h : SameCar F F') {X : HidaSetting D} {u} {t : Transport X u (F
   · rw [chi_of_heq (h u).2.1 (h u).2.2.1]; exact (l.2 g y hr).2 hk _
 
 
-set_option maxHeartbeats 4000000 in
+
 def packCar (h : SameCar F F') (P : SPack D F) : SPack D F' :=
   { P with
     tr := fun u => trCar h (P.tr u)
@@ -167,7 +201,7 @@ def packCar (h : SameCar F F') (P : SPack D F) : SPack D F' :=
     isom := fun u a b => by rw [colDictL_car]; exact P.isom u a b }
 
 
-set_option maxHeartbeats 4000000 in
+
 def restCar (h : SameCar F F') {P : SPack D F} (S : SRest P) : SRest (packCar h P) where
   hI := S.hI
   autTie := S.autTie
@@ -177,7 +211,7 @@ def restCar (h : SameCar F F') {P : SPack D F} (S : SRest P) : SRest (packCar h 
   locTied := S.locTied
 
 
-set_option maxHeartbeats 4000000 in
+
 def satCar (h : SameCar F F') (p : RowPk D) (s : p.SAt F) : p.SAt F' :=
   { P := packCar h s.P, S := restCar h s.S, t := s.t, c := s.c, c_pos := s.c_pos, see := s.see, ev := s.ev, rowJ := s.rowJ }
 

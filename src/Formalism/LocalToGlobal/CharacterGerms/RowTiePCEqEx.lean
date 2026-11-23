@@ -1,6 +1,56 @@
 module
 
-public import Formalism.LocalToGlobal.CharacterGerms.RowTiePCEqM2
+import Formalism.LocalToGlobal.CharacterGerms.RowTiePOActLog
+public import Formalism.LocalToGlobal.CharacterGerms.RowTiePCEqDer
+public import Formalism.LocalToGlobal.CharacterGerms.RowTiePGerm
+import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieCartAdd
+import Formalism.LocalToGlobal.CharacterGerms.RowTieCartFB
+public import Formalism.LocalToGlobal.CharacterGerms.RowTiePCEqSum2
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.CharacterGerms.RowTiePCEqM2
 
 @[expose] public section
 
@@ -38,21 +88,7 @@ theorem constantCoeff_pderiv {σ : Type} (q : σ) (f : MvPowerSeries σ C) :
   simp
 
 theorem ev_zero_pt {n : ℕ} (f : PS C 1 dd) : ev (n := n) (![0] : Fin 1 → Pt C n dd) f = MvPowerSeries.C (constantCoeff f) := by
-  have hZ : Z0 (![0] : Fin 1 → Pt C n dd) := by
-    intro k i; fin_cases k; simp
-  have h1 : f = MvPowerSeries.C (constantCoeff f) + (f - MvPowerSeries.C (constantCoeff f)) := by ring
-  conv_lhs => rw [h1]
-  rw [ev_add hZ, ev_C]
-  have h2 : ev (n := n) (![0] : Fin 1 → Pt C n dd) (f - MvPowerSeries.C (constantCoeff f)) = 0 := by
-    unfold ev
-    have e : (fun p : Fin 1 × Fin dd => (![0] : Fin 1 → Pt C n dd) p.1 p.2) = fun _ => 0 := by
-      funext p
-      obtain ⟨k, j⟩ := p
-      fin_cases k
-      rfl
-    rw [e]
-    exact RowTiePCEqSum.subst_zero_const _ (by simp)
-  rw [h2, add_zero]
+  apply Formalism.L2.FormalSeriesBounds.OActLog.ev_zero_pt <;> assumption
 
 theorem ex_lin (Y : FBChart C V O dd) (i m : Fin dd) :
     constantCoeff (pderiv (R := C) ((0 : Fin 1), i) (Y.ex m)) = if i = m then 1 else 0 := by
@@ -61,8 +97,8 @@ theorem ex_lin (Y : FBChart C V O dd) (i m : Fin dd) :
       constantCoeff (pderiv (R := C) ((0 : Fin 1), i) (pt C (n := 1) dd 0 m)) := by
     rw [Y.lg_ex]
   unfold comp1 at h
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [pderiv_eval_single hZ, map_sum] at h
+
+  rw [pderiv_eval_single hZ, map_sum] at h
   simp only [map_mul, constantCoeff_ev hZ, constantCoeff_pderiv] at h
   have hl : ∀ k, coeff (Finsupp.single ((0 : Fin 1), k) 1) (Y.lg m) = if k = m then 1 else 0 := by
     intro k

@@ -1,9 +1,62 @@
 module
 
-public import Mathlib
-public import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsBlockMapInitialVertex
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.MCoordIdealLeOfHomog
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryFactorCommutation
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.StepRowsInverseNonzeroEntryStatement
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsBlockMapInitialVertex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverTransferIdealEq
 
 @[expose] public section
 
@@ -167,8 +220,8 @@ theorem wCo_eq (hb : (b : ℕ) = a + 1) (hab : (b : ℕ) < j ∨ j ≤ (a : ℕ)
   rcases q with ⟨_ | k, m⟩
   · simp only [FlagModel.wCo, penCo, vecB]
     rw [Finset.sum_congr rfl fun I _ => by rw [minor_elem M.j_le hb hab hca hcb], M.y_step _ _ hk m]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [CPts.minorIJ_map, mul_add, Finset.sum_add_distrib, map_sum, map_mul, Finset.mul_sum, mul_left_comm t]
+
+    simp only [CPts.minorIJ_map, mul_add, Finset.sum_add_distrib, map_sum, map_mul, Finset.mul_sum, mul_left_comm t]
   · rfl
 
 theorem charZero_of_model (M : FlagModel y Ψ N j) : CharZero Φ :=
@@ -193,8 +246,8 @@ theorem blocks_of_model (M : FlagModel y Ψ N j) (k : K) : ∃ i, y ⟨k, i⟩ �
       (ValuationSubring.mem_top _) (fun _ _ => ValuationSubring.mem_top _) (fun _ _ => ValuationSubring.mem_top _)
       (fun I I' hI hI' => by
           have := congrArg am (hF.2.2.1 p k hp I I' hI hI')
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum] at this
+
+          rw [map_sum] at this
           simp only [map_mul] at this
           rw [this]
           split_ifs <;> simp)
@@ -312,8 +365,8 @@ theorem image_snd (hb : (b : ℕ) = a + 1) (hab : (b : ℕ) < j ∨ j ≤ (a : �
         rfl
       · simp only [Function.comp, h1 ⟨k, m⟩ e]
         show φ (y ⟨k, m⟩) = _
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [M.y_step p k hp m, map_sum]
+
+        rw [M.y_step p k hp m, map_sum]
         refine Finset.sum_congr rfl fun I _ => ?_
         rw [map_mul]
         congr 1

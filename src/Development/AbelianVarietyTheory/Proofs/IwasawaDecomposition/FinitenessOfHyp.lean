@@ -1,47 +1,44 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistDataAgreeAcrossCoefficientsLocalized
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoreEq
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ThirdLevelOfGoodTwists
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TiedColumnData
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolarizedTwistAbsPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChebSplitNd
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverStd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeDoubleCosetOperatorsStandardFacts
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SideRationalEigenData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SideRationalLevelData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SideRationalCharacterData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TypeVISupIndep
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenKerMapRep
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RootsOfUnityRingLeWittIntegers
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NonemptyAllIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SideMultiplicityFamily
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceOverPrimeOfPadicAlgClEmbedding
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NTiedLocTiedOfBuilt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharpolyFinOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SideMultiplicityCharacter
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsReadingOfRowLiftFamilyMovedDataStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRowsT
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LinksAnalyticHypothesesOfWeilRepHarishChandra
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.TwDatPsiValuesInLL
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMovedDataStateLocalisationsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormalisedReadingsRelatedLocalizedAdelicDataStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SetupLGood
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ToricCharacterGridListKeptLocalizedStageStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GroupTieOfLocalCoefficientStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeRowOfLocalAll
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenAdjointOfReadRelation
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -52,15 +49,18 @@ namespace GlobalTheory.HeightCounting.Fin3
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-set_option synthInstance.maxHeartbeats 400000
-set_option maxHeartbeats 4000000
+
+
 
 variable {hL : GlobalTheory.Published.LocalLanglandsGL} {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {P : Pre2 K w}
   {x : St P} (l : LC hL x)
 
 theorem mtIn : MtInput (Dof x) l.mt.M l.c.tp.tup l.c.ch.Q := by
-  show MtInput (Dof x) l.mt.M (fun μ j => (cfOf x).mu0 j * l.c.tp.xi μ) l.c.ch.Q
-  rw [l.c.xi_eq, l.c.Q_eq]; exact l.mt.mt
+  have h := congrArg₂
+    (fun (ξ : (Dof x).what₂.Tup → HChar (Dof x).host.E) Q =>
+      MtInput (Dof x) l.mt.M (fun μ j => (cfOf x).mu0 j * ξ μ) Q)
+    l.c.xi_eq l.c.Q_eq
+  exact h.mpr l.mt.mt
 
 variable {big : (Dof x).what₂.places.Pl → Finset ℂ} {L : LocAll (lay0 (Dof x))} (Sp : NdSpec l.a.A.pl l.mt.M l.c.ch big L.X L.T)
   (Au : AutSpec l.a.A l.mt.M l.c.tp.tup Sp.iq L.Y L.C) (ss : ∀ σ lam, IsSSRep (L.Z.rbar σ lam))
@@ -86,14 +86,30 @@ structure AllL : Type 1 where
 
 theorem low_ok (D : D7) : 2 ∈ lowAll D ∧ AbsolutelyIrreducibleSpan.q0 D ∈ lowAll D ∧ (NumberField.discr D.host.E).natAbs.primeFactors ⊆ lowAll D ∧
     (Ideal.absNorm D.host.ccK).primeFactors ⊆ lowAll D := by
-  refine ⟨by simp [lowAll, Formalism.L2.lowPr], by simp [lowAll, Formalism.L2.lowPr], fun p hp => ?_, fun p hp => ?_⟩ <;>
-    simp only [lowAll, Formalism.L2.lowPr, Finset.mem_union, Finset.mem_insert] <;> tauto
+  have memLow {p : ℕ} (hp : p ∈ Formalism.L2.lowPr D) : p ∈ lowAll D :=
+    Finset.mem_union_left _ hp
+  have memPrimes {p : ℕ} (hp : p ∈ (Ideal.absNorm D.host.ccK).primeFactors ∪
+      (NumberField.discr D.host.E).natAbs.primeFactors) : p ∈ lowAll D :=
+    memLow (Finset.mem_insert_of_mem (Finset.mem_insert_of_mem hp))
+  exact ⟨memLow (Finset.mem_insert_self _ _),
+    memLow (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _)),
+    fun _ hp => memPrimes (Finset.mem_union_right _ hp),
+    fun _ hp => memPrimes (Finset.mem_union_left _ hp)⟩
+
+private theorem admTw_of_withLoc {D : D7} {L : LocAll (lay0 D)} {i k Q ψ}
+    (h : Formalism.L2.NX.AdmTw (withLoc L) i k Q ψ) : Formalism.L2.NX.AdmTw D i k Q ψ := by
+  unfold Formalism.L2.NX.AdmTw at h ⊢
+  with_unfolding_all exact h
 
 variable (al : AllL l L) (hLg : GlobalTheory.CoefDuty.Large (withLoc L))
 
 theorem pqW (i j b k Q ψ) (h1 : 1 ≤ j) (h2 : j ≤ (withLoc L).R.m) (hadm : Formalism.L2.NX.AdmTw (withLoc L) i k Q ψ) :
-    plsOf al.a.exp i j b k Q ψ h1 h2 hadm = (qpOf (Dof x) l.Pq Q, qpOf (Dof x) l.Pq ((Dof x).ntw.pD i)) :=
-  (al.exp.pl i j b k Q ψ h1 h2 hadm).trans (Prod.ext (l.b.Bs.pq i j b k Q ψ h1 h2 hadm).1 (l.b.Bs.pq i j b k Q ψ h1 h2 hadm).2)
+    plsOf al.a.exp i j b k Q ψ h1 h2 hadm = (qpOf (Dof x) l.Pq Q, qpOf (Dof x) l.Pq ((Dof x).ntw.pD i)) := by
+  have hpl := al.exp.pl i j b k Q ψ h1 h2 hadm
+  have hadm₀ := admTw_of_withLoc (D := Dof x) (L := L) hadm
+  have hpq := l.b.Bs.pq i j b k Q ψ h1 h2 hadm₀
+  have hpair := congrArg₂ Prod.mk hpq.1 hpq.2
+  with_unfolding_all exact (hpl.trans hpair :)
 
 def natW : NAt hL (withLoc L) (cfL L (cfOf x)) (chL L l.c.ch) (tpL L l.c.tp) where
   nt := ntW l Sp Au ss
@@ -140,9 +156,12 @@ theorem packedNAt_transport_heq {D D' : D7} (e : D = D') (a : PackedNAt hL D) :
 theorem natD_heq :
     HEq (ratL (natD l Sp Au ss al hLg).nt.L (natD l Sp Au ss al hLg).nt.S) (ratL L l.rat.S) ∧
       HEq (natD l Sp Au ss al hLg).nt.hL l.rat.In.hL ∧
-      HEq (natD l Sp Au ss al hLg).nt.rep (repOf x.r.Y) :=
-  packedNAt_transport_heq (DL_eq x L).symm
+      HEq (natD l Sp Au ss al hLg).nt.rep (repOf x.r.Y) := by
+  let a : PackedNAt hL (withLoc L) :=
     ⟨cfL L (cfOf x), chL L l.c.ch, tpL L l.c.tp, natW l Sp Au ss al hLg⟩
+  have h := packedNAt_transport_heq (D := withLoc L) (D' := DL x L) (DL_eq x L).symm a
+  dsimp only [natD, natDData, natW, ntW, a] at h ⊢
+  exact h
 
 
 include l in

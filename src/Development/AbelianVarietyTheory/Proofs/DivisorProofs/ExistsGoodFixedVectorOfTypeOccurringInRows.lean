@@ -1,15 +1,50 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
+public import Formalism.LocalToGlobal.IndefiniteReal.ConjSubConjSub
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
-public import Formalism.LocalToGlobal.IndefiniteReal.PartsRow
-public import Formalism.LocalToGlobal.IndefiniteReal.BaseLiftsPackageOfPrimitiveLinks
-public import Formalism.LocalToGlobal.Divisibility.TrivialExtensionSideWellFormed
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 
 @[expose] public section
 
@@ -280,13 +315,13 @@ theorem exists_vec_of_occRows : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {P
       rw [hL, hR]
       exact Finset.sum_congr rfl fun g _ => by rw [hact g]
     have h1 := hv (∑ g, MonoidAlgebra.single (κ g) (RealDat.eC (A := A) D.what₂.embLL g) - 1) (by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sub, map_sum, map_one, LinearMap.sub_apply, Module.End.one_apply, LinearMap.sum_apply]
+
+      rw [map_sub, map_sum, map_one, LinearMap.sub_apply, Module.End.one_apply, LinearMap.sum_apply]
       simp only [asAlgebraHom_single, LinearMap.smul_apply]
       rw [hU2, sub_self])
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, map_sum, map_one, LinearMap.sub_apply, Module.End.one_apply, LinearMap.sum_apply,
-      sub_eq_zero] at h1
+
+    rw [map_sub, map_sum, map_one, LinearMap.sub_apply, Module.End.one_apply, LinearMap.sum_apply,
+    sub_eq_zero] at h1
     simp only [asAlgebraHom_single, LinearMap.smul_apply] at h1
     have h2 := congrArg Subtype.val h1
     rw [Submodule.coe_sum] at h2

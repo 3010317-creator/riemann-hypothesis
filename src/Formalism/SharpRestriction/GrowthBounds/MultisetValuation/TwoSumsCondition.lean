@@ -1,6 +1,54 @@
 module
 
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.DworkExponentialRestrictions
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.ExistsAtPiG1EqCPowMulIntegralSeries
+public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.ExpansionAllPlacesOfPlace
+import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.IntRPsubst
+import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NatCastInvMemRp
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -249,8 +297,8 @@ theorem gcCondition_of_twoSums (hT : TwoSumsCondition p) : RestGc p := by
   have hexp : MvPowerSeries.subst (tOf vp μ (coordZ B K' 1)) (-(MvPowerSeries.map (algebraMap (K0 p) K')
       (Gt p (Eidx n' r0 r1) (wK p c) (wK p (sigW p c))))) =
       -(MvPowerSeries.C (vp ^ (p + 1) / p) * hhS p K' u) + MvPowerSeries.C (vp ^ (p + 1)) * (-(Y + W)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPowerSeries.coe_substAlgHom htS, map_neg, Gt, map_sum, map_sum]
+
+    rw [← MvPowerSeries.coe_substAlgHom htS, map_neg, Gt, map_sum, map_sum]
     have hterm : ∀ e : Eidx n' r0 r1, MvPowerSeries.substAlgHom htS (MvPowerSeries.map (algebraMap (K0 p) K')
         (ren ![Sum.inl e, Sum.inr e] (Gser p (wK p c) (wK p (sigW p c))))) =
         MvPowerSeries.C (vp ^ (p + 1)) * MvPowerSeries.subst (P e) Rr +
@@ -275,8 +323,8 @@ theorem gcCondition_of_twoSums (hT : TwoSumsCondition p) : RestGc p := by
     simp [hS0, hhS_const, zero_pow hp.out.ne_zero, hpK] at hc0
     exact hc0
   have hW0 : MvPowerSeries.constantCoeff W = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hW, map_sum]
+
+    rw [hW, map_sum]
     exact Finset.sum_eq_zero fun e _ => MvPowerSeries.constantCoeff_subst_eq_zero (hPs e) (hP0 e) hRr0
   have hWI : IntR (Rp p K' vp) W := IntR_sum _ _ fun e _ => IntR_subst (P e) (hP0 e) (hPI e) hRrI
   rw [hexp, expK_add]

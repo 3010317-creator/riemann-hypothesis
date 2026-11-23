@@ -1,14 +1,71 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.FiniteResidue
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ConjPushMat
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.WPresEx
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.IsCharZeroPt
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.NumberTheory.Padics.PadicIntegers
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoEvLow
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoFinite
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.PartSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.KerGen
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.PartSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.LocalRingsCompletion.DvrIntClosure
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.ConjPushMat
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeDeformations.WPresEx
+import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ConjTor
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NormOnValuationRing
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
 
 @[expose] public section
 
@@ -247,9 +304,9 @@ private theorem ev_eq {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [No
           exact he'
         have he3 : Φ f - ψ ⟨f, hP hf⟩ =
             ∑ m ∈ μ, (Φ (b m) - ψ ⟨_, hP (hb m)⟩) * Φ (MvPowerSeries.monomial m 1) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [he2, congrArg Φ he', map_add (f := _), map_add (f := _), AlgHom.commutes, AlgHom.commutes, add_sub_add_left_eq_sub,
-            map_sum, map_sum, ← Finset.sum_sub_distrib]
+
+          rw [he2, congrArg Φ he', map_add (f := _), map_add (f := _), AlgHom.commutes, AlgHom.commutes, add_sub_add_left_eq_sub,
+          map_sum, map_sum, ← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun m hm => ?_
           rw [map_mul, map_mul, sub_mul, hmono m, congrArg (t ^ ·) (hμ hm).2]
           simp
@@ -266,8 +323,8 @@ private theorem ev_eq {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [No
     apply Subtype.ext
     rw [AddSubmonoidClass.coe_finsetSum]
     exact he
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [he2, congrArg Φ he, map_sum, map_sum, Finset.mul_sum]
+
+  rw [he2, congrArg Φ he, map_sum, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hm' : Finsupp.weight W.wt m = j := hμ hm
   rw [map_mul, map_mul, h0 _ (hb m), hmono m, congrArg (t ^ ·) hm']

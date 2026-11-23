@@ -1,10 +1,47 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
-public import Formalism.LocalToGlobal.HermitianForms.TiedStep
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceLatticeComponentsStatement
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitIntLoc
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
 
 @[expose] public section
 
@@ -23,11 +60,11 @@ theorem mem_levelVL_of_first_components : ∀ (F E : Type) [Field F] [NumberFiel
       ∑ i, ∑ j, (sp (z i)).2 * (sp (inclE (F := F) (v.adicCompletion F) (J i j))).1 * (sp (y j)).1 := by
     intro z y
     unfold hR hform
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Prod.fst_sum]
+
+    rw [map_sum, Prod.fst_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Prod.fst_sum]
+
+    rw [map_sum, Prod.fst_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul, map_mul, hsig]
     rfl
@@ -35,11 +72,11 @@ theorem mem_levelVL_of_first_components : ∀ (F E : Type) [Field F] [NumberFiel
       ∑ i, ∑ j, (sp (z i)).1 * (sp (inclE (F := F) (v.adicCompletion F) (J i j))).2 * (sp (y j)).2 := by
     intro z y
     unfold hR hform
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Prod.snd_sum]
+
+    rw [map_sum, Prod.snd_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Prod.snd_sum]
+
+    rw [map_sum, Prod.snd_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul, map_mul, hsig]
     rfl
@@ -139,14 +176,14 @@ theorem mem_levelVL_of_first_components : ∀ (F E : Type) [Field F] [NumberFiel
   have hc1 : ∀ (x : Fin n → E ⊗[F] Kv) b, (sp (((κ : Matrix (Fin n) (Fin n) (E ⊗[F] Kv)) *ᵥ x) b)).1 =
       (K1 *ᵥ fun j => (sp (x j)).1) b := by
     intro x b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [mulVec, dotProduct, map_sum, Prod.fst_sum, map_mul, Prod.fst_mul]
+
+    simp only [mulVec, dotProduct, map_sum, Prod.fst_sum, map_mul, Prod.fst_mul]
     rfl
   have hc2 : ∀ (x : Fin n → E ⊗[F] Kv) b, (sp (((κ : Matrix (Fin n) (Fin n) (E ⊗[F] Kv)) *ᵥ x) b)).2 =
       (K2 *ᵥ fun j => (sp (x j)).2) b := by
     intro x b
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [mulVec, dotProduct, map_sum, Prod.snd_sum, map_mul, Prod.snd_mul]
+
+    simp only [mulVec, dotProduct, map_sum, Prod.snd_sum, map_mul, Prod.snd_mul]
     rfl
   show κ ∈ UJ _ _ ⊓ stabGL _
   rw [Subgroup.mem_inf]

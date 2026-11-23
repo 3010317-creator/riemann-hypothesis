@@ -1,9 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DerivationCoordinateChange
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.JetSumTable
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
+import Formalism.LocalToGlobal.Columns.AlgebraMapMemMaximalIdealPowIff
+import Formalism.LocalToGlobal.Divisibility.CoefMod
+import Formalism.LocalToGlobal.KernelLattices.XiIndCClass
 
 @[expose] public section
 
@@ -99,8 +142,8 @@ theorem lam_hYY (y Y : Matrix (Fin N') (Fin N) D.host.E) :
   refine Finset.sum_congr rfl fun τ _ => ?_
   obtain ⟨g, hg⟩ := exists_lamHom lam (TaylorLogMetric.embT D τ)
   rw [hg]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [vecY, TaylorLogMetric.tauEmb, hg, map_sum, map_mul, Fintype.sum_prod_type]
+
+  simp only [vecY, TaylorLogMetric.tauEmb, hg, map_sum, map_mul, Fintype.sum_prod_type]
 
 theorem dirDer_sum {σ ι : Type} [Fintype σ] (s : Finset ι) (c : ι → ℂ_[p]) (w : ι → σ → ℂ_[p]) :
     dirDer (∑ l ∈ s, c l • w l) = ∑ l ∈ s, c l • dirDer (w l) := by
@@ -160,9 +203,9 @@ theorem exists_comb (n : ℕ) : ∀ α : TaylorLogMetric.Mono D N N', α.degree 
     · rw [jetAt_add_single, h1, Fintype.sum_prod_type]
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [← dirDer_single, ← hz, dirDer_sum, jet_eq]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [jet_snoc, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, constantCoeff_smul,
-        smul_eq_mul, Finset.mul_sum, mul_assoc]
+
+      simp only [jet_snoc, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, constantCoeff_smul,
+      smul_eq_mul, Finset.mul_sum, mul_assoc]
     · rw [Finsupp.prod_add_index' (by simp) (fun _ _ _ => pow_add _ _ _), h2, Finsupp.prod_single_index (by simp),
         pow_one, Fintype.sum_prod_type, Finset.sum_mul]
       refine Finset.sum_congr rfl fun l _ => ?_

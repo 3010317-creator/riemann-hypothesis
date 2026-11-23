@@ -1,12 +1,51 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.IndefiniteReal.LiftCoordinatesInGoodPartOfDefinite
-public import Formalism.LocalToGlobal.IndefiniteReal.CxPass
-public import Formalism.LocalToGlobal.IndefiniteReal.MemRangeAdjointOfKerStable
-public import Formalism.LocalToGlobal.IndefiniteReal.EqZeroOfMemRangeAdjoint
-public import Formalism.LocalToGlobal.IndefiniteReal.EqZeroOfRangeAdjoint
-public import Formalism.LocalToGlobal.Divisibility.ProjLemmas
+import Formalism.LocalToGlobal.Divisibility.ProjLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -216,8 +255,8 @@ theorem rho_adj (hsp : Submodule.span ℂ (Set.range j) = ⊤) (hjr : ∀ g x, j
 theorem theta_opV (hsp : Submodule.span ℂ (Set.range j) = ⊤) (hjr : ∀ g x, j (r g x) = ρ g (j x))
     (heq : ∀ g x, Θ (j (r g x)) = gE g (Θ (j x))) (a : MonoidAlgebra K G) (u : V) :
     Θ (opV σ ρ a u) = opV σ (fun g => gE g) a (Θ u) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [opV, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
+
+  simp only [opV, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
   refine Finset.sum_congr rfl fun g _ => ?_
   rw [show Θ (ρ g u) = gE g (Θ u) from LinearMap.congr_fun (theta_rho hsp hjr heq g) u]
 
@@ -225,8 +264,8 @@ theorem opV_adj (hsp : Submodule.span ℂ (Set.range j) = ⊤) (hjr : ∀ g x, j
     (hiso : ∀ g x y, ⟪j (r g x), j (r g y)⟫_ℂ = ⟪j x, j y⟫_ℂ) (heq : ∀ g x, Θ (j (r g x)) = gE g (Θ (j x)))
     (hu : ∀ (g : G) (x y : E), ⟪gE g x, gE g y⟫_ℂ = ⟪x, y⟫_ℂ) (a : MonoidAlgebra K G) (e : E) :
     opV σ ρ a (LinearMap.adjoint Θ e) = LinearMap.adjoint Θ (opV σ (fun g => gE g) a e) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [opV, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
+
+  simp only [opV, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
   refine Finset.sum_congr rfl fun g _ => ?_
   rw [rho_adj hsp hjr hiso heq hu]
 

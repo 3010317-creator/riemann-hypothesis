@@ -1,9 +1,59 @@
 module
 
-public import Mathlib
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.ShortVectorEveryPlace
-public import Formalism.HermitianLattices.FinalMass
+public import Formalism.HermitianLattices.DefsCS
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 public import Formalism.FockGram.FockGramProofs.CovolGram
+public import Formalism.HermitianLattices.FinalNeighbourConstruct
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+public import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+public import Mathlib.MeasureTheory.Group.GeometryOfNumbers
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -48,8 +98,8 @@ theorem abs_det_trace_form_eq_discr (hK : IsCMUnram K) :
     simp only [Mq, A, Matrix.of_apply, Matrix.transpose_apply, LinearMap.toMatrix_apply,
       Algebra.traceMatrix_apply, Algebra.traceForm_apply]
     conv_lhs => rw [← B.sum_repr (star (B j))]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_mul, map_sum]
+
+    rw [Finset.sum_mul, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [smul_mul_assoc, LinearMap.map_smul, smul_eq_mul, hs]
   have hA : A * A = 1 := by
@@ -82,9 +132,9 @@ variable {K : Type} [Field K] [NumberField K] [StarRing K] {V : Type} [AddCommGr
 theorem inner_sum_orthonormal_pair (h : V →ₗ⋆[K] V →ₗ[K] K) (e : Fin 2 → V)
     (he : ∀ i j, h (e i) (e j) = if i = j then 1 else 0) (a c : Fin 2 → K) :
     h (∑ i, a i • e i) (∑ j, c j • e j) = ∑ i, star (a i) * c i := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, map_smul, smul_eq_mul,
-    starRingEnd_apply, he]
+
+  simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, map_smul, smul_eq_mul,
+  starRingEnd_apply, he]
   simp [Fin.sum_univ_two]
   ring
 
@@ -100,8 +150,8 @@ theorem conj_inner_self_nonneg (hK : IsCMUnram K) (h : V →ₗ⋆[K] V →ₗ[K
   obtain ⟨a, rfl⟩ := exists_coords_basis_fin_two e hli hsp x
   rw [inner_sum_orthonormal_pair h e he a a]
   refine ⟨∑ i, ‖σ (a i)‖ ^ 2, by positivity, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   push_cast
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul]
@@ -128,8 +178,8 @@ theorem trace_inner_pos_of_orthonormal_pair (hK : IsCMUnram K) (h : V →ₗ⋆[
       algebraMap ℚ ℂ (Algebra.trace ℚ K (∑ i, star (a i) * a i)) by simp, h1]
     push_cast
     refine Finset.sum_congr rfl fun σ _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_mul]
     have hst := hK.2.1 (σ : K →+* ℂ) (a j)
@@ -169,11 +219,11 @@ theorem covolume_trace_lattice (hK : IsCMUnram K) (h : V →ₗ⋆[K] V →ₗ[K
     apply le_antisymm
     · rintro w ⟨x, hx, rfl⟩
       obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun (𝓞 K)).1 hx
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine Submodule.sum_mem _ fun i _ => ?_
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← (RingOfIntegers.basis K).sum_repr (c i), Finset.sum_smul, map_sum]
+
+      rw [← (RingOfIntegers.basis K).sum_repr (c i), Finset.sum_smul, map_sum]
       refine Submodule.sum_mem _ fun k _ => ?_
       rw [smul_assoc, map_zsmul]
       refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨(k, i), ?_⟩)

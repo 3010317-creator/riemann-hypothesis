@@ -1,6 +1,45 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.BlockRank
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -45,10 +84,10 @@ theorem rho_inl (a : Fin (N + 1) × Fin r) : rho (O := O) (r := r) D (X (Sum.inl
 
 theorem rho_qq (i : Fin (D.T.t + 1)) : rho (O := O) (r := r) D (qq (O := O) (r := r) D i) = algebraMap _ _ (qq (O := O) (r := r) D i) := by
   refine Fin.lastCases ?_ (fun i => ?_) i
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [qq, Fin.lastCases_last, map_sum, map_mul, xiVar, rho_inl]
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simp only [qq, Fin.lastCases_castSucc, map_sum, map_mul, rho_inl]
+
+  · simp only [qq, Fin.lastCases_last, map_sum, map_mul, xiVar, rho_inl]
+
+  · simp only [qq, Fin.lastCases_castSucc, map_sum, map_mul, rho_inl]
 
 theorem rho_tau (f : MvPolynomial (BVar N r D.T.t) (KK O)) : rho D (tau D f) = algebraMap _ _ f := by
   have h : (rho (O := O) (r := r) D).comp (tau D) = IsScalarTower.toAlgHom (KK O) _
@@ -172,13 +211,13 @@ theorem ltot_inj : Function.Injective (Ltot (O := O) (r := r) D) := by
   intro v hv
   rw [Ltot_apply] at hv
   simp only [ell_eq_tau] at hv
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← map_sum] at hv
+
+  rw [← map_sum] at hv
   have h0 : ∑ i : ↥(IF (r := r) D), base D i.1.1 i.1.2 (v i : MvPolynomial (Fin N × Fin r) (KK O)) = 0 :=
     tau_inj D (by rw [hv, map_zero])
   have h1 := congrArg (ppi D) h0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_zero] at h1
+
+  rw [map_sum, map_zero] at h1
   simp only [ppi_base] at h1
   funext i0
   have h2 := congrArg (AddMonoidAlgebra.coeff · (eExp D i0.1.1 i0.1.2)) h1

@@ -1,12 +1,51 @@
 module
 
 public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CloudADef
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CloudIso
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsTwoWeightIff
-public import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CcDualWtAnti
+public import Mathlib.Tactic.Monotonicity.Lemmas
+public import Mathlib.Topology.Sheaves.Presheaf
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 public import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.Tensor
-public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LDrowLemmas
-public import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LClosedeqLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -25,9 +64,9 @@ private theorem rowAct_mul_lemma_0 {k n : ℕ} (g h : Matrix (Fin k) (Fin k) K) 
   have e : (rowAct K (n := n) g).comp (rowAct K (n := n) h) = rowAct K (n := n) (h * g) := by
     apply MvPolynomial.algHom_ext
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [AlgHom.comp_apply, rowAct, aeval_X, map_sum, map_mul, aeval_C, algebraMap_eq,
-      Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
+
+    simp only [AlgHom.comp_apply, rowAct, aeval_X, map_sum, map_mul, aeval_C, algebraMap_eq,
+    Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl (fun _ _ => Finset.sum_congr rfl (fun _ _ => ?_))
     ring
@@ -165,8 +204,8 @@ theorem rowAct_D {k : ℕ} (c : K) (f : MvPolynomial (Fin (k + 1) × Fin (k + 1)
     rw [smul_monomial, C_mul_monomial, C_mul_monomial, smul_eq_mul]
     congr 1
     ring
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [f.as_sum, map_sum, Finset.smul_sum]
+
+  rw [f.as_sum, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl (fun u hu => ?_)
   rw [hmono, h u (mem_support_iff.mp hu)]
 

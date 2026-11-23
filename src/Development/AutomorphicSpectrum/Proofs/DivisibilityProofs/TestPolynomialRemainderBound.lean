@@ -1,17 +1,59 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
-public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.Imports
-public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.RestAt
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.IsFlagIntegralOne
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreePowerSumMulZeroStatement
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RemainderTermSummableStatement
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotalStatement
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.Imports
+public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.RestAt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -149,7 +191,7 @@ def degFlL (N : ℕ) : RP Ψ N →ₗ[ℝ] ℝ where
   map_add' a b := by
     simp only [degFl, MvPolynomial.coeff_add, mul_add, Finset.sum_add_distrib]
   map_smul' c a := by
-    simp only [degFl, coeff_smul, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
+    simp only [degFl, MvPolynomial.coeff_smul, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
     refine Finset.sum_congr rfl fun _ _ => ?_
     ring
 
@@ -223,8 +265,8 @@ theorem flagI_rl (e : Ψ ≃ Fin f) (F : RP Ψ (j + k)) : flagI e j k (rl e j k 
 omit [Fintype Ψ] [DecidableEq Ψ] in
 theorem psumAt_eq (e : Ψ ≃ Fin f) (m : ℕ) (τ : Ψ) :
     RestTerms.psumAt f j k m (e τ) = rl e j k (pk τ m) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [RestTerms.psumAt, pk, map_sum, map_pow, rl_X]
+
+  simp only [RestTerms.psumAt, pk, map_sum, map_pow, rl_X]
 
 theorem isFlag (e : Ψ ≃ Fin f) (hf : Fintype.card Ψ = f) : RestTerms.IsFlagIntegral f j k (flagI e j k) := by
   refine ⟨?_, ?_⟩
@@ -249,12 +291,12 @@ theorem lie_eq (e : Ψ ≃ Fin f) (m : ℕ) (s : Ψ ⊕ Ψ) :
     RestTerms.lieClass f j k m (conv e s) = rl e j k (pLie j m s) := by
   cases s with
   | inl t =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [conv, RestTerms.lieClass, pLie, pkLow, sum_low, map_sum, map_pow, rl_X]
+
+    simp only [conv, RestTerms.lieClass, pLie, pkLow, sum_low, map_sum, map_pow, rl_X]
     simp
   | inr t =>
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [conv, RestTerms.lieClass, pLie, sum_high, map_sum, map_pow, map_neg, rl_X, if_true]
+
+    simp only [conv, RestTerms.lieClass, pLie, sum_high, map_sum, map_pow, map_neg, rl_X, if_true]
     rw [Finset.mul_sum]
     exact Finset.sum_congr rfl fun b _ => (neg_pow _ m).symm
 
@@ -266,12 +308,12 @@ theorem mu_eq (e : Ψ ≃ Fin f) (bot : Bool) (hbot : bot = decide (k ≤ j)) :
   by_cases h : k ≤ j
   · have hb : bot = true := by simp [hbot, h]
     rw [if_pos (by rw [hk]; exact h), hb]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [RestTerms.smallPsum, if_true, sum_high, map_sum, rl_X, pow_one]
+
+    simp only [RestTerms.smallPsum, if_true, sum_high, map_sum, rl_X, pow_one]
   · have hb : bot = false := by simp [hbot, h]
     rw [if_neg (by rw [hk]; exact h), hb]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [RestTerms.smallPsum, pkLow, sum_low, map_neg, map_sum, rl_X, pow_one]
+
+    simp only [RestTerms.smallPsum, pkLow, sum_low, map_neg, map_sum, rl_X, pow_one]
     simp
 
 theorem fib_sg (e : Ψ ≃ Fin f) (bot : Bool) :
@@ -342,9 +384,9 @@ theorem finite_bound [Nonempty Ψ] (hj : 1 ≤ j) (hk : 1 ≤ k) (frob : ℕ →
       simp only [Q', smul_eq_C_mul]
       exact h3
     · rw [hrest, hQ.2, (Equiv.sum_comp e _).symm]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Q', map_sum, Finset.smul_sum, map_mul, Equiv.symm_apply_apply, psumAt_eq,
-        mul_smul_comm]
+
+      simp only [Q', map_sum, Finset.smul_sum, map_mul, Equiv.symm_apply_apply, psumAt_eq,
+      mul_smul_comm]
   let σ : ℕ → ℕ → Fin (Fintype.card Ψ) → Fin (Fintype.card Ψ) × Bool :=
     fun p n τ => conv e (frob p (e.symm τ) (n - 1))
   have hat : ∀ p, RestTerms.restAt (Fintype.card Ψ) j k (flagI e j k) 1 σ Q' p =

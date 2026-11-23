@@ -1,16 +1,57 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpPair
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Proportional
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrGenOfIsFlagVBOn
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompDescentSecond
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DegreeLatticeQuotientFormsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagVectorBundleTransportStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrGenOfIsFlagVBOn
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionNormIsomorphicLinesStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
 
 @[expose] public section
 
@@ -116,23 +157,7 @@ theorem flagStep_comp (f : E →ₗ[Ω] E') {r : ℕ} (b : Fin r → E) (i : ℕ
 
 theorem exists_scale {r : ℕ} {b₁ b₂ : Fin r → E} (hF : ∀ s : ℕ, flagStep Ω b₁ s = flagStep Ω b₂ s)
     (hb : LinearIndependent Ω b₁) (j : Fin r) : ∃ μ : Ω, μ ≠ 0 ∧ b₁ j - μ • b₂ j ∈ flagStep Ω b₂ j := by
-  have hmem : b₁ j ∈ flagStep Ω b₂ ((j : ℕ) + 1) := by
-    rw [← hF]
-    exact Submodule.subset_span ⟨j, by simp, rfl⟩
-  have hsub : flagStep Ω b₂ ((j : ℕ) + 1) ≤ Submodule.span Ω {b₂ j} ⊔ flagStep Ω b₂ j := by
-    refine Submodule.span_le.2 ?_
-    rintro _ ⟨l, hl, rfl⟩
-    rcases Nat.lt_succ_iff_lt_or_eq.1 hl with h | h
-    · exact Submodule.mem_sup_right (Submodule.subset_span ⟨l, h, rfl⟩)
-    · have : l = j := Fin.ext h
-      subst this
-      exact Submodule.mem_sup_left (Submodule.mem_span_singleton_self _)
-  obtain ⟨a, ha, c, hc, e⟩ := Submodule.mem_sup.1 (hsub hmem)
-  obtain ⟨μ, rfl⟩ := Submodule.mem_span_singleton.1 ha
-  have hd : b₁ j - μ • b₂ j ∈ flagStep Ω b₂ j := by rw [← e]; simpa using hc
-  refine ⟨μ, fun h0 => ?_, hd⟩
-  rw [h0, zero_smul, sub_zero, ← hF] at hd
-  exact hb.notMem_span_image (s := {k | (k : ℕ) < j}) (x := j) (by simp) hd
+  apply GlobalTheory.CompanionTheory.Ar.Chg.GP.exists_coeff <;> assumption
 
 variable {X : Scheme.{0}} {ξ : Spec (CommRingCat.of Ω) ⟶ X}
 

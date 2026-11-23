@@ -1,8 +1,48 @@
 module
 
-public import Formalism.LocalToGlobal.CharacterGerms.BlockMembershipSelfConjCharts
-public import Formalism.LocalToGlobal.CharacterGerms.RowTieMemCDeg
-public import Formalism.LocalToGlobal.CharacterGerms.FinTwoNeOneSub
+public import Formalism.LocalToGlobal.CharacterGerms.GramMatrixMulRight
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -46,8 +86,8 @@ theorem pderiv_subG_off {p : MvPolynomial (Fin N × WVO fun o (_ : Fin 2) => IIs
   refine Finset.sum_eq_zero fun y _ => ?_
   have hX : pderiv ℓ (subG r tau gm plc (X y)) = 0 := by
     unfold subG
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [MvPolynomial.aeval_X, map_sum]
+
+    rw [MvPolynomial.aeval_X, map_sum]
     refine Finset.sum_eq_zero fun col _ => ?_
     rw [Derivation.leibniz, MvPolynomial.pderiv_C, smul_zero, add_zero, MvPolynomial.pderiv_X]
     have hne : (⟨tau y.2.1 y.2.2.2.1, y.2.2.2.2, plc (y.1, col)⟩ : Letter T r n) ≠ ℓ := by
@@ -75,8 +115,8 @@ private theorem pderiv_lam_subG_X_eq_ite (inj : Function.Injective fun x : Orb �
     pderiv (lam r tau plc (α0, col0)) (subG r tau gm plc (X y)) =
       if (eW r tau N y).1 = α0 then MvPolynomial.C (gm y.2.1 y.2.2.2.1 col0 y.2.2.1) else 0 := by
   unfold subG
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [MvPolynomial.aeval_X, map_sum]
+
+  rw [MvPolynomial.aeval_X, map_sum]
   have key : ∀ col : Fin 2, pderiv (lam r tau plc (α0, col0))
       (MvPolynomial.C (gm y.2.1 y.2.2.2.1 col y.2.2.1) *
         MvPolynomial.X (⟨tau y.2.1 y.2.2.2.1, y.2.2.2.2, plc (y.1, col)⟩ : Letter T r n)) =

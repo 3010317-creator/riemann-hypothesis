@@ -1,30 +1,68 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
-public import Formalism.LocalRingCardinality.DataExtra
-public import Formalism.LocalRingCardinality.DataTies
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColLieApply
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColumnHighestWeightPolynomialMapStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsStepWeil
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFiniteOfHcFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnHighestRowIntertwinersProportionalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColStableDisjointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBilinearFischerPairingMatrixEntryPolynomiaStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDegreeBoundOfRowUnitaryInvariantPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteSmoothIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TensorProductDefiniteUnitaryLocalModelsIrreducibStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteThetaIntegralIntegrableContinuousStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteThetaIntegralInvariantRealTranslateStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryRealPointsActFockSubstitutionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOrEqOfPlaceIdem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBilinearFischerPairingMatrixEntryPolynomiaStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColStableDisjointStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColumnHighestWeightPolynomialMapStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDegreeBoundOfRowUnitaryInvariantPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteSmoothIrreducibleStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMultTOfEquivariantStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MultiplicitySpaceDefiniteContinuousInvariantEquiStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TensorProductDefiniteUnitaryLocalModelsIrreducibStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChainStepsLevelCharacterConditionsHold
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteDimensionalModel
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastStepVectorLiftPairFlagLevelCharactersStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteDimensionalModel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsFockVacAtOfIsThetaAt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKOContinuousAndRatInvariant
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodFiniteOfHcFinite
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastStepVectorLiftPairFlagLevelCharactersStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKOContinuousAndRatInvariant
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -42,9 +80,9 @@ theorem subst_subst (a a' : ι → Matrix (Fin n) (Fin n) ℂ) (b b' : ι → Ma
     subst a b (subst a' b' P) = subst (fun τ => a' τ * a τ) (fun τ => b τ * b' τ) P := by
   refine DFunLike.congr_fun (?_ : (subst a b).comp (subst a' b') = _) P
   refine MvPolynomial.algHom_ext fun v => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [subst, AlgHom.comp_apply, MvPolynomial.aeval_X, map_sum, map_smul, Finset.smul_sum, smul_smul,
-    Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum, Finset.sum_smul]
+
+  simp only [subst, AlgHom.comp_apply, MvPolynomial.aeval_X, map_sum, map_smul, Finset.smul_sum, smul_smul,
+  Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum, Finset.sum_smul]
   calc _ = ∑ i, ∑ c, ∑ i', ∑ c', (b v.1 i' i * b' v.1 i v.2.1 * (a' v.1 v.2.2 c * a v.1 c c')) •
         (MvPolynomial.X (v.1, i', c') : Pol ι m n) := by
         refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun i' _ =>
@@ -245,7 +283,7 @@ theorem exists_trilinear {G H S P Ds : Type} [MeasurableSpace H] [AddCommGroup S
 variable {D : D7}
 
 
-set_option maxHeartbeats 800000 in
+
 theorem ioExists_definite {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSModel V S) (M' : DSModel W S')
     {θ : InfFam D} {ψ : AddChar (AF D.host.F) ℂ} {χS χT : (AE D)ˣ →* Circle}
     {ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)} {f : WO V W → ℂ}

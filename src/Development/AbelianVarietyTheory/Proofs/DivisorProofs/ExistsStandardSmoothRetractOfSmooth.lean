@@ -1,12 +1,65 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
+public import Mathlib.RingTheory.Smooth.Basic
+public import Mathlib.RingTheory.Smooth.StandardSmooth
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsWitnessesOfFormallySmoothQuotient
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothPresentationRelationsCombinationNormalStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehlerDifferentialMap
+import Development.AbelianVarietyTheory.Definitions.Divisors.PrimitiveStructureSheafDegTwoVanish
+import Development.AbelianVarietyTheory.Definitions.Divisors.Pullback1MemHodgeFiltration
+import Development.AbelianVarietyTheory.Definitions.Divisors.SurjectiveOfIsPullbackSqZero
+import Mathlib.Topology.Sheaves.Presheaf
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 
 @[expose] public section
 
@@ -72,9 +125,9 @@ theorem core (g : Fin r → MvPolynomial (Fin n) R₀) (a : Fin n → Fin r → 
   have hs0 : ∀ l, r₀' (X (Sum.inl l) - X (Sum.inr l)) = 0 := fun l => by simp [r₀']
   have hrel : ∀ i, r₀' (rel g a i) = 0 := by
     intro i
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [rel, map_add (f := _), map_sum, map_mul, hren, hs0, mul_zero, Finset.sum_const_zero,
-      add_zero, hg0]
+
+    simp only [rel, map_add (f := _), map_sum, map_mul, hren, hs0, mul_zero, Finset.sum_const_zero,
+    add_zero, hg0]
   have hKle : K ≤ RingHom.ker r₀' := Ideal.span_le.2 (by rintro _ ⟨i, rfl⟩; exact hrel i)
   let r₀ : (MvPolynomial (Fin n ⊕ Fin n) R₀ ⧸ K) →ₐ[R₀] MvPolynomial (Fin n) R₀ ⧸ J :=
     Ideal.Quotient.liftₐ K r₀' (fun x hx => hKle hx)
@@ -134,14 +187,14 @@ theorem core (g : Fin r → MvPolynomial (Fin n) R₀) (a : Fin n → Fin r → 
     have : Ideal.Quotient.mk K (rel g a i) = 0 :=
       Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span ⟨i, rfl⟩)
     rw [← this]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [rel, map_add (f := _), map_sum, map_mul, hφ, s]
+
+    simp only [rel, map_add (f := _), map_sum, map_mul, hφ, s]
   have key : ∀ j, G j ∈ L * JD := by
     intro j
     have e1 : φ (g j + ∑ i, pderiv i (g j) * ∑ k, a i k * g k) =
         G j + ∑ i, φ (pderiv i (g j)) * φ (∑ k, a i k * g k) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_add (f := _), map_sum]
+
+      rw [map_add (f := _), map_sum]
       simp only [map_mul, G]
     have hs : ∑ i, φ (pderiv i (g j)) * φ (∑ k, a i k * g k) +
         ∑ i, φ (pderiv i (g j)) * ∑ l, φ (tang g a i l) * s l = 0 := by
@@ -149,8 +202,8 @@ theorem core (g : Fin r → MvPolynomial (Fin n) R₀) (a : Fin n → Fin r → 
       exact Finset.sum_eq_zero fun i _ => by rw [← mul_add, hrelD i, mul_zero]
     have e3 : ∑ l, s l * φ (∑ i, pderiv i (g j) * tang g a i l) =
         ∑ i, φ (pderiv i (g j)) * ∑ l, φ (tang g a i l) * s l := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, Finset.mul_sum]
+
+      simp only [map_sum, map_mul, Finset.mul_sum]
       rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     have eq : G j = φ (g j + ∑ i, pderiv i (g j) * ∑ k, a i k * g k) +

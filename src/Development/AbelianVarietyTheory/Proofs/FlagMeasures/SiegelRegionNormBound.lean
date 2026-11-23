@@ -1,12 +1,55 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselModelUnitaryGroupOpNormProperties
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LeadingMinorInvariant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsBisMore
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormLowerLe
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsLowerUnitriangularMulUpperTriangular
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LeadingMinorInvariant
 public import Formalism.FormalDegreeBessel.FinalG
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsBisMore
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -166,23 +209,7 @@ theorem continuous_opn {N : ℕ} : Continuous fun x : Matrix (Fin N) (Fin N) ℂ
     (Matrix.toEuclideanCLM (𝕜 := ℂ) (n := Fin N)).toAlgEquiv.toLinearMap).norm
 
 theorem one_le_opn {k r : ℕ} {x : Mat k r} (hx : x ∈ GG k r) : 1 ≤ opn x := by
-  have h1 : opn xᴴ = opn x := by
-    unfold opn
-    rw [← Matrix.star_eq_conjTranspose, map_star, norm_star]
-  have h2 : opn (Hpk k r) ≤ opn x * opn (Hpk k r) * opn x := by
-    conv_lhs => rw [← show xᴴ * Hpk k r * x = Hpk k r from hx]
-    refine (opn_mul_le _ _).trans (mul_le_mul_of_nonneg_right ?_ (opn_nonneg _))
-    rw [← h1]; exact opn_mul_le _ _
-  have h3 : 1 ≤ opn (Hpk k r) * opn (Hpk k r) := by
-    have := opn_mul_le (Hpk k r) (Hpk k r)
-    rwa [(hpkFacts k r).2.1, opn_one] at this
-  have h4 : 0 < opn (Hpk k r) := lt_of_le_of_ne (opn_nonneg _) fun h => by
-    rw [← h] at h3; norm_num at h3
-  by_contra h
-  have h5 := not_le.1 h
-  have h6 := opn_nonneg x
-  have h7 : opn x * opn x < 1 := by nlinarith
-  nlinarith
+  apply GlobalTheory.SgInf.OpNormU.one_le_opn <;> assumption
 
 theorem eucl_le_sum {N : ℕ} (v : Fin N → ℂ) : eucl v ≤ ∑ i, ‖v i‖ := by
   unfold eucl

@@ -1,15 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormFrameCoordinatesConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumCupOneFormsZeroImpCoordinatesZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupSumClosedGlobalOneFormsEqZeroIffSumWedgeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperH2GeneratedByCupsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumWedgeGlobalOneFormsEqZeroIffStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExteriorSquareKerOfSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalOneFormFrameCoordinatesConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperH2GeneratedByCupsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumCupOneFormsZeroImpCoordinatesZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumWedgeGlobalOneFormsEqZeroIffStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -160,35 +198,35 @@ theorem exists_wedge_hyp_equiv : ∀ (R : Type) [CommRing R] (C : Type) [Categor
     obtain ⟨m, a, w, rfl⟩ := GlobalTheory.T.exists_sum_ιMulti_of_exteriorSquare_map_eq_zero R (Glob1 F) (Hyp1 F) (CatCoh.H1 F) (clAll F hc) (toO F) hs hex t h1
     simp only [← ιTwo_apply] at ht ⊢
     have hsum : ∑ k, cupHyp F (a k) (clAll F hc (w k)) = 0 := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa only [map_sum, e₀_ι] using ht
+
+      simpa only [map_sum, e₀_ι] using ht
     obtain ⟨N, ⟨Φ⟩⟩ := hF
     obtain ⟨l, -, hl⟩ := GlobalTheory.T.globalOneFormFrame_coordinates_constant R C F h0 N Φ
     let x : Fin N → Hyp1 F := fun i ↦ clAll F hc (Φ.w i)
     have hcl : ∀ v : Glob1 F, clAll F hc v = ∑ i, l i v • x i := by
       intro v
       conv_lhs => rw [hl v]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, x]
+
+      simp only [map_sum, map_smul, x]
 
     let Mi : Fin N → Hyp1 F := fun i ↦ ∑ k, l i (w k) • a k
     have ht1 : ∑ k, ιTwo (R := R) (a k) (clAll F hc (w k)) = ∑ i, ιTwo (Mi i) (x i) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hcl, map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Mi]
+
+      simp only [hcl, map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Mi]
       exact Finset.sum_comm
     have hM0 : ∀ i, toO F (Mi i) = 0 := by
       intro i
       have := GlobalTheory.T.sum_cup_oneForms_zero_imp_coordinates_zero R C F ⟨N, ⟨Φ⟩⟩ h0 hc hs m a w hsum (l i)
-      set_option synthInstance.maxHeartbeats 100000 in
-        simpa only [Mi, map_sum, map_smul] using this
+
+      simpa only [Mi, map_sum, map_smul] using this
     have hMu : ∀ i, ∃ u, clAll F hc u = Mi i := fun i ↦ (hex (Mi i)).1 (hM0 i)
     choose u hu using hMu
     rw [ht1]
     simp only [← hu]
     have hcup : ∑ i, cupHyp F (clAll F hc (u i)) (clAll F hc (Φ.w i)) = 0 := by
       rw [← ht, ht1]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [← hu, map_sum, e₀_ι, x]
+
+      simp only [← hu, map_sum, e₀_ι, x]
     have hw2 := (GlobalTheory.T.cupSum_closedGlobalOneForms_eq_zero_iff_sumWedge R C F hc hs N u Φ.w).1 hcup
     have hsym := (GlobalTheory.T.sumWedgeGlobalOneForms_eq_zero_iff R C F ⟨N, ⟨Φ⟩⟩ h0 N u Φ.w).1 hw2
     let c : Fin N → Fin N → R := fun p q ↦ ∑ i, l p (u i) * l q (Φ.w i)
@@ -204,8 +242,8 @@ theorem exists_wedge_hyp_equiv : ∀ (R : Type) [CommRing R] (C : Type) [Categor
       intro i
       rw [hcl (u i)]
       conv_lhs => rw [show x i = ∑ q, l q (Φ.w i) • x q from hcl (Φ.w i)]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, smul_smul]
+
+      simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, Finset.smul_sum, smul_smul]
       rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun p _ ↦ Finset.sum_congr rfl fun q _ ↦ by rw [mul_comm]
     have hexp : ∑ i, ιTwo (R := R) (clAll F hc (u i)) (x i) = ∑ p, ∑ q, c p q • ιTwo (R := R) (x p) (x q) := by

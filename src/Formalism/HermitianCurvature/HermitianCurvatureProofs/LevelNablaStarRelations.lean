@@ -1,6 +1,56 @@
 module
 
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.EulerZetaGammaInvIdentity
 public import Formalism.HermitianCurvature.StatementM
+public import Mathlib.Algebra.Order.Group.PiLex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -9,29 +59,7 @@ open Formalism.FourierDecayAlt.M Formalism.FourierDecayAlt Finset
 namespace Formalism.FourierDecayAlt.P.Mx2
 
 theorem eulerLeibniz : EulerLeibniz := by
-  intro r v f g
-  ext γ
-  have hf : (euler v f).support ⊆ f.support := by
-    intro γ h
-    simp only [euler, LinearMap.coe_mk, AddHom.coe_mk, HahnSeries.mem_support, ne_eq, mul_eq_zero, not_or] at h
-    exact h.2
-  have hg : (euler v g).support ⊆ g.support := by
-    intro γ h
-    simp only [euler, LinearMap.coe_mk, AddHom.coe_mk, HahnSeries.mem_support, ne_eq, mul_eq_zero, not_or] at h
-    exact h.2
-  rw [HahnSeries.coeff_add, HahnSeries.coeff_mul_left' f.isPWO_support hf,
-    HahnSeries.coeff_mul_right' g.isPWO_support hg, ← Finset.sum_add_distrib]
-  show ((ofLex γ v : ℤ) : ℂ) * (f * g).coeff γ = _
-  rw [HahnSeries.coeff_mul, Finset.mul_sum]
-  refine Finset.sum_congr rfl ?_
-  rintro ⟨a, b⟩ h
-  have hab : a + b = γ := (Finset.mem_addAntidiagonal.1 h).2.2
-  subst hab
-  show _ = (((ofLex a v : ℤ) : ℂ) * f.coeff a) * g.coeff b + f.coeff a * (((ofLex b v : ℤ) : ℂ) * g.coeff b)
-  have : ((ofLex (a + b) v : ℤ) : ℂ) = ((ofLex a v : ℤ) : ℂ) + ((ofLex b v : ℤ) : ℂ) := by
-    have h2 : ofLex (a + b) v = ofLex a v + ofLex b v := rfl
-    rw [h2]; push_cast; ring
-  rw [this]; ring
+  apply Formalism.FourierDecayAlt.P.Mx4.eulerLeibniz <;> assumption
 
 theorem eulerCoord : EulerCoord := by
   intro r v w z
@@ -96,15 +124,7 @@ theorem multiplierPair_comm (f fb g gb : Fn r) : fnP f fb * fnP g gb = fnP g gb 
 theorem der_fn (a b : Fn r) (v w : Var r) (f fb : Fn r) :
     mk (mulOp a * euler v) (-(mulOp b * euler w)) * fnP f fb =
       fnP f fb * mk (mulOp a * euler v) (-(mulOp b * euler w)) + fnP (a * euler v f) (b * euler w fb) := by
-  refine Prod.ext ?_ ?_
-  · show mulOp a * euler v * mulOp f = mulOp f * (mulOp a * euler v) + mulOp (a * euler v f)
-    rw [mul_assoc, eulerMul, mul_add, ← mul_assoc, ← mul_assoc, mulOp_mul, mulOp_mul, mulOp_mul, mul_comm a f]
-  · show MulOpposite.op (mulOp fb * -(mulOp b * euler w)) =
-      MulOpposite.op (-(mulOp b * euler w) * mulOp fb + mulOp (b * euler w fb))
-    congr 1
-    rw [neg_mul, mul_assoc, eulerMul, mul_add, ← mul_assoc, mulOp_mul, mulOp_mul, mul_neg, ← mul_assoc, mulOp_mul,
-      mul_comm b fb]
-    abel
+  apply Formalism.FourierDecayAlt.P.Mx4.der_fn <;> assumption
 
 theorem euler_one (v : Var r) : euler v (1 : Fn r) = 0 := by
   have := (eulerCoord r v v 1).2

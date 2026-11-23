@@ -1,12 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LamGApply
-public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeOneIffIntegralAtPadicEmbeddingPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralWeylBasisSpanningAllRingsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemWeylLatticeAddIffDetPowMulStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinIndMapRangeField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemWeylLatticeAddIffDetPowMulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeOneIffIntegralAtPadicEmbeddingPlaceStatement
+import Formalism.GradedWeylDivisibility.FinalD
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.Divisors.SumExpSt
+import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
+import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 
 @[expose] public section
 
@@ -87,8 +129,8 @@ theorem ten_sum {C : Type} [Field C] {ι : Type} [Fintype ι] [DecidableEq ι] {
     (u : ∀ τ, P τ → MvPolynomial (Fin n × Fin n) C) (a : ∀ τ, P τ → C) :
     (ten fun τ => ∑ j, a τ j • u τ j) = ∑ i : ∀ τ, P τ, (∏ τ, a τ (i τ)) • ten fun τ => u τ (i τ) := by
   unfold ten
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul]
+
+  simp only [map_sum, map_smul]
   rw [Finset.prod_univ_sum]
   simp only [Fintype.piFinset_univ, Finset.prod_smul]
 
@@ -174,8 +216,8 @@ theorem mem_localization_standardWeylLattice : ∀ (K : Type) [Field K] [NumberF
     funext τ
     rw [hy, liftPol, map_map_int]
   have hΦv : mulMap (PadicAlgCl l) n lamW (Φ v) = ∑ i, e0 (a i) • ten fun τ => u τ (i τ) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hveq, map_sum, map_sum]
+
+    rw [hveq, map_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smulₛₗ, map_smul, hΦi]
   obtain ⟨r, hr, hrv⟩ := latD_coords lamW F hF u (fun τ x0 hx0 => by
@@ -184,8 +226,8 @@ theorem mem_localization_standardWeylLattice : ∀ (K : Type) [Field K] [NumberF
     rw [hspan τ F.O] at hg
     obtain ⟨d, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun F.O).1 hg
     refine ⟨d, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_mul, map_pow, map_detPol, map_sum, Finset.mul_sum]
+
+    rw [map_mul, map_pow, map_detPol, map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     simp only [u, MvPolynomial.smul_eq_C_mul, map_mul, MvPolynomial.map_C, map_map_int]
     ring) hv

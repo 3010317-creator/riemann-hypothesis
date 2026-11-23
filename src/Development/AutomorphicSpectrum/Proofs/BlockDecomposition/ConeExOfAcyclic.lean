@@ -1,7 +1,47 @@
 module
 
-public import Mathlib
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.HodgeWedgeFields.H1CommutesBaseChange
+public import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -287,8 +327,8 @@ theorem pb_gp (Φ : C' ⥤ C) {F : C ⥤ ModuleCat.{0} R} {G : C' ⥤ ModuleCat.
 
 theorem pb_mdn (Φ : C' ⥤ C) {F : C ⥤ ModuleCat.{0} R} {G : C' ⥤ ModuleCat.{0} R} (α : Φ ⋙ F ⟶ G) (n : ℕ)
     (f : MCn F n) : pb Φ α (n + 1) (mdn F n f) = mdn G n (pb Φ α n f) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [mdn, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, pb_gp]
+
+  simp only [mdn, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, pb_gp]
 
 def pbH (Φ : C' ⥤ C) {F : C ⥤ ModuleCat.{0} R} {G : C' ⥤ ModuleCat.{0} R} (α : Φ ⋙ F ⟶ G) : Hm (cn F) (cn G) where
   f n := pb Φ α n
@@ -441,8 +481,8 @@ theorem CoD.ev_congr (A : CoD H B) {n : ℕ} (φ : MCn H n) {c c' : Fin (n + 1) 
 theorem CoD.ev_mdn (A : CoD H B) {n : ℕ} (f : MCn H n) (c : Fin (n + 2) ⥤ E) {y : E}
     (g : c.obj (Fin.last _) ⟶ y) : A.ev g (mdn H n f c) = ∑ i : Fin (n + 2), ((-1 : R) ^ (i : ℕ)) •
       A.ev (c.map (homOfLE (Fin.le_last (i.succAbove (Fin.last n)))) ≫ g) (f (fc i c)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [mdn_apply, map_sum]
+
+  rw [mdn_apply, map_sum]
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [map_smul]
   congr 1

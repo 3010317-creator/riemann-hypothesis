@@ -1,7 +1,47 @@
 module
 
-public import Mathlib
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CharacterNormMatrixInverse.FmatMulInv
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -176,8 +216,8 @@ theorem hA_incl (x y : Fin I.n → I.E) : hA I (incl I x) (incl I y) =
     Formalism.UG.inclE (F := I.F) (Af I.F) (Formalism.UG.hform (starRingEnd I.E) I.J x y) := by
   have key : ∀ a : I.E, Formalism.UG.sigR I.cm.sig (Af I.F) (Formalism.UG.inclE (F := I.F) (Af I.F) a) =
       Formalism.UG.inclE (F := I.F) (Af I.F) (star a) := sigA_inclE I
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hA, Formalism.UG.hform, incl, Matrix.map_apply, map_sum, map_mul, key, starRingEnd_apply]
+
+  simp only [hA, Formalism.UG.hform, incl, Matrix.map_apply, map_sum, map_mul, key, starRingEnd_apply]
 
 theorem J_conj (i j : Fin I.n) : star (I.J i j) = I.J j i := by
   have hh : Formalism.UG.cT (starRingEnd I.E) I.J = I.J := I.J_herm
@@ -191,49 +231,14 @@ theorem hA_symm (u v : VA I) : hA I v u = sigA I (hA I u v) := by
     intro i j
     rw [← J_conj I i j]
     exact sigA_inclE I _
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hA, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, hs, hJ]
+
+  simp only [hA, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, hs, hJ]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
 
 theorem hA_int {u v : VA I} (hu : u ∈ I.Lf) (hv : v ∈ I.Lf) : hA I u v ∈ IntAf I.F I.E := by
-  have hz : ∀ w : VA I, hA I w 0 = 0 := by
-    intro w
-    simp only [hA, Formalism.UG.hform, Pi.zero_apply, mul_zero, Finset.sum_const_zero]
-  have hz' : ∀ w : VA I, hA I 0 w = 0 := by
-    intro w
-    simp only [hA, Formalism.UG.hform, Pi.zero_apply, map_zero, zero_mul, Finset.sum_const_zero]
-  have hgen : ∀ x ∈ I.L, ∀ w ∈ I.Lf, hA I (incl I x) w ∈ IntAf I.F I.E := by
-    intro x hx w hw
-    have hw2 : w ∈ Submodule.span (IntAf I.F I.E)
-        (Set.range fun y : I.L => fun i => Formalism.UG.inclE (F := I.F) (Af I.F) ((y : Fin I.n → I.E) i)) := hw
-    clear hw
-    induction hw2 using Submodule.span_induction with
-    | mem w hw' =>
-      obtain ⟨⟨y, hy⟩, rfl⟩ := hw'
-      show hA I (incl I x) (incl I y) ∈ _
-      rw [hA_incl]
-      exact inclE_mem I ((I.L_dual y).1 hy x hx)
-    | zero => rw [hz]; exact (IntAf I.F I.E).zero_mem
-    | add a b _ _ ha hb => rw [hA_add_right]; exact add_mem ha hb
-    | smul c w _ hw' =>
-      show hA I _ ((c : I.E ⊗[I.F] Af I.F) • w) ∈ _
-      rw [hA_smul_right]
-      exact mul_mem c.2 hw'
-  have hu2 : u ∈ Submodule.span (IntAf I.F I.E)
-      (Set.range fun y : I.L => fun i => Formalism.UG.inclE (F := I.F) (Af I.F) ((y : Fin I.n → I.E) i)) := hu
-  clear hu
-  induction hu2 using Submodule.span_induction with
-  | mem w hw' =>
-    obtain ⟨⟨y, hy⟩, rfl⟩ := hw'
-    exact hgen y hy v hv
-  | zero => rw [hz']; exact (IntAf I.F I.E).zero_mem
-  | add a b _ _ ha hb => rw [hA_add_left]; exact add_mem ha hb
-  | smul c w _ hw' =>
-    show hA I ((c : I.E ⊗[I.F] Af I.F) • w) _ ∈ _
-    rw [hA_smul_left]
-    exact mul_mem (sigA_mem I c.2) hw'
+  apply PIW.NormChiNBi.hA_int <;> assumption
 
 theorem hA_sub_right (u v w : VA I) : hA I u (v - w) = hA I u v - hA I u w := by
   simp only [hA, Formalism.UG.hform, Pi.sub_apply, mul_sub, Finset.sum_sub_distrib]

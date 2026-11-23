@@ -1,12 +1,47 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.VolPin
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.Vanish
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UpperUnitriangularMul
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 
 @[expose] public section
 
@@ -116,8 +151,8 @@ namespace GlobalTheory.MovedFrames
 theorem map_sum_frame {E V : Type*} [Field E] [AddCommGroup V] [Module E V] {N : ℕ} (ρ : V ≃ₗ[E] V)
     (U W : Matrix (Fin N) (Fin N) E) (f g : Fin N → V) (hF : ∀ a, ρ (f a) = ∑ c, U c a • g c) (b : Fin N) :
     ρ (∑ a, W a b • f a) = ∑ c, (U * W) c b • g c := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [map_smul, hF, Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun a _ => by rw [mul_comm]
@@ -148,7 +183,7 @@ theorem moved_frames : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.w
       rw [LinearEquiv.trans_apply, ht, hF']
     rw [frame_mapLF _ hγ, hx, hW'e]
     have := map_sum_frame (t₀.lin.trans ρ) U' W' _ _ hF2 b
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← this, LinearEquiv.trans_apply, map_sum]
+
+    rw [← this, LinearEquiv.trans_apply, map_sum]
 
 end GlobalTheory.MovedFrames

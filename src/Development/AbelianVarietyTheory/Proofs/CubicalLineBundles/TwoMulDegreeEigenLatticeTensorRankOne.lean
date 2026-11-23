@@ -1,19 +1,61 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SingleMemSpanIffOfSelfDual
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.OneAddZeta21PowSevenAddPowFourteenEqZero
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveLieCharacterOfAdjoinGenerator
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermFormSumSum
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieTensorLine
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsFractionalIdealTraceFormRankOneStatement
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeFormStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegDualLineCmIdealStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermFormSumSum
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraSquaredLengthCompPairingHomStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsFractionalIdealTraceFormRankOneStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieTensorLine
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SingleMemSpanIffOfSelfDual
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegDualLineCmIdealStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -72,8 +114,8 @@ theorem form_eq_of_span {K V L I : Type} [Field K] [AddCommGroup V] [Module K V]
       rw [map_smul, h.smul_right, hu, Finset.mul_sum]
       exact Finset.sum_congr rfl fun i _ => by simp; ring
   refine key z (fun y => ?_) w
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← h.conj_symm, key _ (hf y), map_sum]
+
+  rw [← h.conj_symm, key _ (hf y), map_sum]
   exact Finset.sum_congr rfl fun i _ => by simp [_root_.mul_comm]
 
 theorem exists_eigenline {E K O L V I : Type} [Field E] [NumberField E] [IsCMField E] [Field K] [NumberField K]
@@ -99,8 +141,8 @@ theorem exists_eigenline {E K O L V I : Type} [Field E] [NumberField E] [IsCMFie
   have hexp : ∀ a, ev a = ∑ m, algebraMap (𝓞 K) K (τ₀ (hK a (y m))) • ev (x m) := fun a => by
     funext i
     conv_lhs => rw [hdual a]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hev, map_sum, he, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+
+    simp only [hev, map_sum, he, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   let Φ : (I → K) →ₗ[K] V :=
     { toFun := fun z => ∑ m, (∑ i, z i * dv (y m) i) • c (x m)
       map_add' := fun z z' => by simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib, add_smul]
@@ -109,8 +151,8 @@ theorem exists_eigenline {E K O L V I : Type} [Field E] [NumberField E] [IsCMFie
           RingHom.id_apply] }
   have hΦ : ∀ a, Φ (ev a) = c a := fun a => by
     conv_rhs => rw [hdual a]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, hc]
+
+    simp only [map_sum, hc]
     change ∑ m, (∑ i, ev a i * dv (y m) i) • c (x m) = _
     simp only [← hh']
   let b : (K →+* ℂ) → I → ℝ := fun s i => (s (σ i β)).re * n s
@@ -127,17 +169,17 @@ theorem exists_eigenline {E K O L V I : Type} [Field E] [NumberField E] [IsCMFie
     · simp only [hΦ]
       simp only [map_add (f := _), h.add_right, hev, mul_add, Finset.sum_add_distrib]
       ring
-    set_option synthInstance.maxHeartbeats 100000 in
-      · rw [map_sub, h.conj_symm, map_sum]
-        congr 1
-        exact Finset.sum_congr rfl fun i _ => by simp [_root_.mul_comm]
+
+    · rw [map_sub, h.conj_symm, map_sum]
+      congr 1
+      exact Finset.sum_congr rfl fun i _ => by simp [_root_.mul_comm]
     · simp only [hΦ]
       simp only [hc, h.smul_right, hev, he, mul_sub, Finset.mul_sum, map_mul]
       congr 1
       exact Finset.sum_congr rfl fun i _ => by ring
     · have : ∑ i, b s i * (starRingEnd ℂ (s (ev a i)) * s (ev a i)) = s (τ₀ (hK a a)) * n s := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [hh, map_sum, Finset.sum_mul]
+
+        rw [hh, map_sum, Finset.sum_mul]
         refine Finset.sum_congr rfl fun i _ => ?_
         have := IsCMField.complexEmbedding_complexConj E (s.comp (σ i)) (e a)
         simp only [RingHom.comp_apply] at this

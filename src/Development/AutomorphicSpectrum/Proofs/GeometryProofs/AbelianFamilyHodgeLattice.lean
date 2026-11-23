@@ -1,21 +1,65 @@
 module
 
-public import Mathlib
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
-public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.IsPshLocallyIntegrableStatement
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
-public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyFamilyUnifIffUnifAt
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsEigAtIffOfIsDerivAt0
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsValueBasis
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyExpDerivativeLie
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyExpDerivativeLie
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinearStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPushAlongMap
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangeFree
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
+import Std.Tactic.BVDecide.Normalize.Prop
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsEigAtIffOfIsDerivAt0
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsValueBasis
 
 @[expose] public section
 
@@ -52,8 +96,8 @@ theorem eig_sum_zero {K V O I : Type} [Field K] [AddCommGroup V] [Module K V] [C
       have hg : ∑ u ∈ A, (σ u a - σ t a) • f u = 0 := by
         have e : ∑ u ∈ A, (σ u a - σ t a) • f u =
             ρ a (f t + ∑ u ∈ A, f u) - σ t a • (f t + ∑ u ∈ A, f u) := by
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_add (f := _), map_sum, mem_eig (hf t (Finset.mem_insert_self _ _)) a, smul_add, Finset.smul_sum]
+
+          rw [map_add (f := _), map_sum, mem_eig (hf t (Finset.mem_insert_self _ _)) a, smul_add, Finset.smul_sum]
           simp only [sub_smul, Finset.sum_sub_distrib]
           rw [Finset.sum_congr rfl fun u hu => (mem_eig (hf u (Finset.mem_insert_of_mem hu)) a).symm]
           abel
@@ -115,8 +159,8 @@ theorem exists_model_at {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [Is
       funext c
       simp [Finset.sum_apply, Pi.single_apply]
     conv_rhs => rw [hu]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [Module.Basis.equivFun_symm_apply, map_smulₛₗ, hβ]
   show (MF.pt (β.equivFun.symm _)).left = _
   rw [h, hj]

@@ -1,18 +1,60 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
-public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRatioOfWeightSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusStableGoodOpenOfWeightUnitsStatement
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.HomBaseChangeBijectiveOfLeNilradical
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FlatQuotientIsoOfSameKernel
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.InvariantFunctionsDescend
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRatioOfWeightSumsStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusStableGoodOpenOfWeightUnitsStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -212,12 +254,12 @@ theorem exists_open (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpO
       · rw [map_zero, map_zero]
       · rw [hc Y t g k₁ k₂, appTop_charUnit, ht ψ ⟨U, c, hne, hu, hc⟩, _root_.one_mul]
     have ea : (((t ≫ i) * g).left.appLE U ⊤ k₁).hom (∑ j, a j) = (g.left.appLE U ⊤ k₂).hom (∑ j, a j) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_sum]
+
+      rw [map_sum, map_sum]
       exact Finset.sum_congr rfl fun j _ => key _ _ (hw j).1 (hw j).2.2.1
     have eb : (((t ≫ i) * g).left.appLE U ⊤ k₁).hom (∑ j, b j) = (g.left.appLE U ⊤ k₂).hom (∑ j, b j) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum, map_sum]
+
+      rw [map_sum, map_sum]
       exact Finset.sum_congr rfl fun j _ => key _ _ (hw j).2.1 (hw j).2.2.2
     rw [← e, map_mul, map_mul, eb, appLE_res _ hU k₁ h₁, appLE_res _ hU k₂ h₂] at ea
     exact (hb.map (g.left.appLE U ⊤ k₂).hom).mul_right_cancel ea

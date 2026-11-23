@@ -1,8 +1,54 @@
 module
 
-public import Mathlib
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.RowDictCore
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictPlan
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.RedBasicsPf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictAll
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictGen
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicClassFiniteness.DictLat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -58,8 +104,8 @@ theorem hform_unit [DecidableEq n] (M : Matrix n n A) (hM : Formalism.UG.cT σ M
     simp only [Formalism.UG.hform, dotProduct, mulVec, Finset.mul_sum, mul_assoc]
   have hσ : (fun i => σ ((M *ᵥ x) i)) = M.map σ *ᵥ (fun i => σ (x i)) := by
     funext i
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [mulVec, dotProduct, map_sum, map_mul, Matrix.map_apply]
+
+    simp only [mulVec, dotProduct, map_sum, map_mul, Matrix.map_apply]
   rw [key, key, hσ, dotProduct_comm, dotProduct_mulVec, ← mulVec_transpose, dotProduct_comm,
     mulVec_mulVec, mulVec_mulVec, show (M.map σ)ᵀ * J * M = J from hM]
 
@@ -163,9 +209,9 @@ theorem stepA {w : HeightOneSpectrum (𝓞 I.E)} {p : ℕ} (hp : p.Prime) (hcard
         (∑ k, ((c k : ℤ) : I.E ⊗[I.F] Af I.F) • (fun i => Formalism.UG.inclE (F := I.F) (Af I.F) (b k i))) +
           (fun i => Formalism.UG.inclE (F := I.F) (Af I.F) ((l - ∑ k, (c k : I.E) • b k) i)) := by
       funext i
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.sub_apply, map_sub, map_sum,
-        map_mul, map_intCast]
+
+      simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.sub_apply, map_sub, map_sum,
+      map_mul, map_intCast]
       ring
     rw [hdec, Matrix.mulVec_add, Matrix.mulVec_sum]
     refine add_mem (Submodule.sum_mem _ fun k _ => ?_) ?_
@@ -336,8 +382,8 @@ theorem hhat_Lq {w : HeightOneSpectrum (𝓞 I.E)} {t β : 𝓞 I.E}
     have e : hhat I (fun i => Formalism.UG.inclE (F := I.F) (Af I.F) (x i))
         (fun i => Formalism.UG.inclE (F := I.F) (Af I.F) (y i)) =
         Formalism.UG.inclE (F := I.F) (Af I.F) (Formalism.UG.hform (starRingEnd I.E) I.J x y) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hhat, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, hincl, starRingEnd_apply]
+
+      simp only [hhat, Formalism.UG.hform, map_sum, map_mul, Matrix.map_apply, hincl, starRingEnd_apply]
     refine ⟨iE I g, iE_int I g, ?_⟩
     rw [e, hcv]
     show Formalism.UG.inclE (F := I.F) (Af I.F) (β : I.E) * Formalism.UG.inclE (F := I.F) (Af I.F) (c : I.E) =

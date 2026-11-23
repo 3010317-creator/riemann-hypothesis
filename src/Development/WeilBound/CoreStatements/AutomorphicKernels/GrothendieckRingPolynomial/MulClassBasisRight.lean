@@ -1,8 +1,48 @@
 module
 
+import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.GrothendieckRingPolynomial.MulClassBasisRight
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.ProdList
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasSupportOfIsSubquotientProdIrr
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MultiProdCompCongr
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionTwoBlocksEmptyProductLeftStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -10,7 +50,7 @@ noncomputable section
 
 open GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.JHMult GlobalTheory.ProdReorder
 
-set_option synthInstance.maxHeartbeats 400000
+
 
 namespace PositivityTheory.Groth
 
@@ -72,49 +112,9 @@ open GrothendieckAssociativity
 variable (k)
 
 theorem assoc (h : MulCls k) : Assoc k := by
-  intro x y z
-  have hxy : HasFiniteLength (prod₂ (IrrGL.rep x) (IrrGL.rep y)) :=
-    (h x.1 y.1 _ _ (IrrGL.rep x) (IrrGL.rep y) x.2.rep.hasFiniteLength y.2.rep.hasFiniteLength
-      x.2.rep.smooth y.2.rep.smooth).1
-  have hyz : HasFiniteLength (prod₂ (IrrGL.rep y) (IrrGL.rep z)) :=
-    (h y.1 z.1 _ _ (IrrGL.rep y) (IrrGL.rep z) y.2.rep.hasFiniteLength z.2.rep.hasFiniteLength
-      y.2.rep.smooth z.2.rep.smooth).1
-  have e1 : mulR (mulR (sg x) (sg y)) (sg z) = mulR (cl0 (prod₂ (IrrGL.rep x) (IrrGL.rep y))) (cl0 (IrrGL.rep z)) :=
-    (congrArg (fun a => mulR a (sg z)) (mulR_sg x y)).trans
-      (congrArg (mulR (cl0 (prod₂ (IrrGL.rep x) (IrrGL.rep y)))) (class_of_chosen_rep z).symm)
-  have e2 : mulR (cl0 (prod₂ (IrrGL.rep x) (IrrGL.rep y))) (cl0 (IrrGL.rep z)) =
-      mulR (cl0 (IrrGL.rep x)) (cl0 (prod₂ (IrrGL.rep y) (IrrGL.rep z))) :=
-    assoc_gen h (IrrGL.rep x) (IrrGL.rep y) (IrrGL.rep z) (prod₂ (IrrGL.rep x) (IrrGL.rep y))
-      (prod₂ (IrrGL.rep y) (IrrGL.rep z)) (eqv_refl _) (eqv_refl _) x.2.rep.smooth y.2.rep.smooth
-      z.2.rep.smooth (isSmooth_prod₂ _ _) (isSmooth_prod₂ _ _) x.2.rep.hasFiniteLength
-      z.2.rep.hasFiniteLength hxy hyz
-  have e3 : mulR (cl0 (IrrGL.rep x)) (cl0 (prod₂ (IrrGL.rep y) (IrrGL.rep z))) = mulR (sg x) (mulR (sg y) (sg z)) :=
-    (congrArg (fun a => mulR a (cl0 (prod₂ (IrrGL.rep y) (IrrGL.rep z)))) (class_of_chosen_rep x)).trans
-      (congrArg (mulR (sg x)) (mulR_sg y z).symm)
-  exact e1.trans (e2.trans e3)
+  apply CompanionTheory.Groth.assoc <;> assumption
 
 theorem one : One k := by
-  intro x
-  let c0 : IrrCl (GL (Fin 0) k) := (IrrRep.det (k := k) (Fin 0) 1 isSmoothChar_one).cl
-  let e : (Σ _ : Fin 0, Fin 0) ≃ Fin 0 := Equiv.equivOfIsEmpty _ _
-  let τ : ∀ a : Fin 0, Representation ℂ (GL (Fin ((fun _ : Fin 0 => 0) a)) k) ((fun _ : Fin 0 => ℂ) a) :=
-    fun a => a.elim0
-  have A : Nonempty ((multiProd e τ).Equiv (IrrRep.det (k := k) (Fin 0) 1 isSmoothChar_one).ρ) :=
-    SupportRing.nonempty_equiv_unit e τ
-  have B : Nonempty ((IrrGL.rep (⟨0, c0⟩ : IrrGL (k := k))).Equiv (multiProd e τ)) :=
-    eqv_trans (IrrRep.nonempty_equiv_rep _) (eqv_symm A)
-  have C : Nonempty ((ind₂ (stdSum (Nat.zero_add x.1)) (extTensor (IrrGL.rep (⟨0, c0⟩ : IrrGL (k := k))) (IrrGL.rep x))).Equiv
-      (ind₂ (stdSum (Nat.zero_add x.1)) (extTensor (multiProd e τ) (IrrGL.rep x)))) :=
-    ind₂_congr (k := k) (Nat.zero_add x.1) B (eqv_refl (IrrGL.rep x))
-  have D : Nonempty ((ind₂ (stdSum (Nat.zero_add x.1)) (extTensor (multiProd e τ) (IrrGL.rep x))).Equiv (IrrGL.rep x)) :=
-    GlobalTheory.T.parabolicInductionTwoBlocks_empty_product_left k x.1 0 (Nat.zero_add x.1) _ (IrrGL.rep x) x.2.rep.smooth (fun _ => 0) (fun _ => ℂ) τ e
-  have e1 : mulR (GrothGL.unit k) (sg x) = cl0 (prod₂ (IrrGL.rep (⟨0, c0⟩ : IrrGL (k := k))) (IrrGL.rep x)) :=
-    mulR_sg _ _
-  have e2 : cl0 (prod₂ (IrrGL.rep (⟨0, c0⟩ : IrrGL (k := k))) (IrrGL.rep x)) =
-      cl0 (ind₂ (stdSum (Nat.zero_add x.1)) (extTensor (IrrGL.rep (⟨0, c0⟩ : IrrGL (k := k))) (IrrGL.rep x))) :=
-    (class_induced_cast (Nat.zero_add x.1) _).symm
-  obtain ⟨c⟩ := C
-  obtain ⟨dd⟩ := D
-  exact e1.trans (e2.trans ((class_congr_equiv ⟨c.trans dd⟩).trans (class_of_chosen_rep x)))
+  apply CompanionTheory.Groth.one <;> assumption
 
 end PositivityTheory.Groth

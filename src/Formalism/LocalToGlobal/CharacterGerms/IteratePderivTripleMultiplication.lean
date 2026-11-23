@@ -1,6 +1,56 @@
 module
 
+public import Formalism.LocalToGlobal.CharacterGerms.FirstVanishingAt
+public import Formalism.LocalToGlobal.CharacterGerms.IndexRaiseFirst
+public import Formalism.LocalToGlobal.CharacterGerms.TripleMultiplicationConstantCoeff
 public import Formalism.LocalToGlobal.CharacterGerms.PderivTripleMultiplicationMaximal
+import Formalism.LocalToGlobal.CharacterGerms.RowTiePGmExLem
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Dvd
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -36,8 +86,8 @@ theorem Tk_int {f : PS C 3 dd} (hf : IntS V f) (k : Fin dd) : IntS V (Tk f k) :=
 theorem decomp {f : PS C 3 dd} (h1 : ev (rz 2) f = 1) : f = 1 + ∑ k, X ((0 : Fin 3), k) * Tk f k := by
   classical
   ext p
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_add (f := _), MvPowerSeries.coeff_one, map_sum]
+
+  rw [map_add (f := _), MvPowerSeries.coeff_one, map_sum]
   have hX : ∀ k, coeff p (X ((0 : Fin 3), k) * Tk f k) =
       if Finsupp.single ((0 : Fin 3), k) 1 ≤ p then
         coeff (p - Finsupp.single ((0 : Fin 3), k) 1) (Tk f k) else 0 := by
@@ -373,8 +423,8 @@ theorem phiQ (Y : FBChart C V O dd) (u : Fin dd → C) (hu : ∀ i, V.Ge 0 (u i)
       ∑ k, coeff (ix i V.l γ) (m3 Y.B.G V.l k * ev (![m3 Y.B.G V.l, p3 1, p3 2] : Fin 3 → Pt C 3 dd)
         (Tk Y.B.ph2 k)) := by
     intro i
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_add (f := _), map_sum, MvPowerSeries.coeff_one, if_neg, zero_add]
+
+    rw [map_add (f := _), map_sum, MvPowerSeries.coeff_one, if_neg, zero_add]
     intro h
     have h2 := congrArg (fun p => p ((0 : Fin 3), i)) h
     simp [index_raise_first] at h2

@@ -1,7 +1,47 @@
 module
 
-public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.IntegralFormsEqSpan
+public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.SectionMonomialGenerators
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HasseJidPow
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+public import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -39,8 +79,8 @@ theorem aeval_monomial_eq_smul (m : Fin n →₀ ℕ) (c : K) :
 
 theorem ind_hom_mem (hY : ∀ (m : Fin n →₀ ℕ) i, aeval y (monomial m (1 : K)) * θ i ∈ J m.degree) {a : ℕ}
     {p : MvPolynomial (Fin n) K} (hp : p.IsHomogeneous a) (i : Fin δ) : aeval y p * θ i ∈ J a := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← support_sum_monomial_coeff p, map_sum, Finset.sum_mul]
+
+  rw [← support_sum_monomial_coeff p, map_sum, Finset.sum_mul]
   refine Submodule.sum_mem _ fun m hm => ?_
   have hd : m.degree = a := by
     by_contra h
@@ -54,8 +94,8 @@ theorem ind_der_mem (hy : ∀ l l', Δ l (y l') = if l = l' then 1 else 0) (hθ 
     {p : MvPolynomial (Fin n) K} (hp : p.IsHomogeneous a) (l : Fin n) (i : Fin δ) :
     Δ l (aeval y p * θ i) - aeval y (pderiv l p) * θ i ∈ J a := by
   rw [← support_sum_monomial_coeff p]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
+
+  simp only [map_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
   refine Submodule.sum_mem _ fun m hm => ?_
   have hd : m.degree = a := by
     by_contra h
@@ -115,7 +155,7 @@ theorem ind_claim (hy : ∀ l l', Δ l (y l') = if l = l' then 1 else 0) (hθ : 
       have hlow : (fun i => c i - homogeneousComponent a (c i)) = 0 := by
         apply ih
         · intro i m hm
-          rw [MvPolynomial.mem_support_iff, coeff_sub, coeff_homogeneousComponent] at hm
+          rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, coeff_homogeneousComponent] at hm
           by_cases hd : m.degree = a
           · rw [if_pos hd, sub_self] at hm; exact absurd rfl hm
           · rw [if_neg hd, sub_zero] at hm
@@ -143,8 +183,8 @@ theorem ind_claim (hy : ∀ l l', Δ l (y l') = if l = l' then 1 else 0) (hθ : 
             exact (MvPolynomial.mem_support_iff.mp hm) ((hhom i).pderiv.coeff_eq_zero h)
           omega
         · have h1 := hJ l a _ hmem
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [map_sum] at h1
+
+          rw [map_sum] at h1
           have h2 : ∑ i, (Δ l (aeval y (c i) * θ i) - aeval y (pderiv l (c i)) * θ i) ∈ J a :=
             Submodule.sum_mem _ fun i _ => ind_der_mem y θ J Δ hy hθ hK hY (hhom i) l i
           rw [Finset.sum_sub_distrib] at h2
@@ -234,8 +274,8 @@ theorem dSec_ySec (l l' : Fin (WeightFamilies.dimY D j)) : dSec X la w l (ySec X
   · simp only [if_pos h]
     rw [← section_mul_inverse_eq_one X la w]
     unfold sec
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_mul]
+
+    rw [map_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun κ _ => ?_
     rw [← smul_mul_assoc]
     congr 1
@@ -252,8 +292,8 @@ theorem dSec_emb (l : Fin (WeightFamilies.dimY D j)) (F : X.Forms) :
 theorem dSec_algebraMap_Kp (l : Fin (WeightFamilies.dimY D j)) (c : Kp X la N) :
     ∃ c' : Kp X la N, dSec X la w l (algebraMap (Kp X la N) (Lw X la w) c) = algebraMap (Kp X la N) (Lw X la w) c' := by
   refine ⟨∑ κ, t0 X la κ * pdKp X la N (l.succ, κ) c, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [dSec_apply, map_sum]
+
+  rw [dSec_apply, map_sum]
   refine Finset.sum_congr rfl fun κ _ => ?_
   rw [pdLw_algebraMap_Kp, Algebra.smul_def, map_mul]
 
@@ -334,8 +374,8 @@ theorem frac_phiN (θ : B.Cusp j wF) (p : MvPolynomial (Fin (WeightFamilies.dimY
         aeval (ySec X la w) (∑ m ∈ s, monomial m (f m)) *
           algebraMap (Rp X la N) (Lw X la w) (emb X la N (X.inc wF θ)) := by
     intro s f hs
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Finset.sum_mul]
+
+    simp only [map_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun m hm => ?_
     rw [phiN_monomial, map_smul, frac_gN X la w wF T θ m (hs m hm), aeval_monomial_eq_smul (ySec X la w) m (f m),
       smul_mul_assoc]
@@ -411,15 +451,15 @@ theorem in64 (hB : InBasis G la) : ∀ x ∈ Submodule.span (Kp X la G.N) (secti
     have hlin : ∑ i, b i • tL G la i = 0 := by
       have e : ∑ i, b i • tL G la i = rho0 X la G.w wF
           (∑ i, b i • (⟨emb X la G.N (X.inc wF (G.th' i)), emb_mem_Vw X la G.N wF (G.th' i)⟩ : ↥(Vw X la G.N wF))) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sum]
+
+        rw [map_sum]
         exact Finset.sum_congr rfl fun i _ => by rw [map_smul]; rfl
       rw [e, restriction_apply_eq_reduction, reduction_eq_zero_iff_mem_ideal_smul, ← pow_one (Jid X la G.w), mem_Jid_pow_smul_top, ← mem_JHfr, coe_toHK0]
       have e2 : algebraMap (Rp X la G.N) (Lw X la G.w) ((∑ i, b i • (⟨emb X la G.N (X.inc wF (G.th' i)),
           emb_mem_Vw X la G.N wF (G.th' i)⟩ : ↥(Vw X la G.N wF)) : ↥(Vw X la G.N wF)) : Rp X la G.N) =
           ∑ i, b i • algebraMap (Rp X la G.N) (Lw X la G.w) (emb X la G.N (X.inc wF (G.th' i))) := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [AddSubmonoidClass.coe_finsetSum, map_sum]
+
+        rw [AddSubmonoidClass.coe_finsetSum, map_sum]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [Submodule.coe_smul, Algebra.smul_def, map_mul,
           ← IsScalarTower.algebraMap_apply (Kp X la G.N) (Rp X la G.N) (Lw X la G.w), ← Algebra.smul_def]
@@ -429,8 +469,8 @@ theorem in64 (hB : InBasis G la) : ∀ x ∈ Submodule.span (Kp X la G.N) (secti
     exact Fintype.linearIndependent_iff.mp hB.1 b hlin i
   have hmem : ∑ i, aeval (ySec X la G.w) (c i) *
       algebraMap (Rp X la G.N) (Lw X la G.w) (emb X la G.N (X.inc wF (G.th' i))) ∈ JHfr X la G.w wF (a0 D j T) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [rhoK_apply, toWK_eq_zero_iff, mem_Jid_pow_smul_top, ← mem_JHfr, coe_toHK, hxc, map_sum] at h0
+
+    rw [rhoK_apply, toWK_eq_zero_iff, mem_Jid_pow_smul_top, ← mem_JHfr, coe_toHK, hxc, map_sum] at h0
     have e : ∀ i, frac X la G.w T (phiN X la G.w wF T (G.th' i) (c i)) = aeval (ySec X la G.w) (c i) *
         algebraMap (Rp X la G.N) (Lw X la G.w) (emb X la G.N (X.inc wF (G.th' i))) := fun i =>
       frac_phiN X la G.w wF T (G.th' i) (c i) fun m hm => ((hc i m hm).le.trans (Nat.sub_le _ _))

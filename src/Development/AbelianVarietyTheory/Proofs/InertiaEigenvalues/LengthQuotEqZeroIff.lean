@@ -1,22 +1,63 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LenCob
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LenUnitQuotientPrimePowEqExponent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthGlobalCocyclesLeSumPlacesOverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientCocycleSpanRhoCharLeCocyclesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthHeckeQuotientLeCocycleSpanDeterminantStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthCoboundariesAmongBlockCocyclesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalisedGlobalCocyclesInLocalSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActDEqOfEqOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthEqInfKerAddMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaCocyclesCharBlockOtherTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthInertiaRestrictionCocyclesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthCyclotomicBlockCocyclesLeShaStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ActDEqOfEqOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientCocycleSpanRhoCharLeCocyclesStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IndexDvdClassNumber
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaCocyclesCharBlockOtherTypePrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LenUnitQuotientPrimePowEqExponent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthCoboundariesAmongBlockCocyclesLeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthCocyclesLeCoboundariesAddSelmerStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthCyclotomicBlockCocyclesLeShaStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthEqInfKerAddMap
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthGlobalCocyclesLeSumPlacesOverStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthHeckeQuotientLeCocycleSpanDeterminantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthInertiaRestrictionCocyclesLeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGlobalSelmer
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalisedGlobalCocyclesInLocalSpanStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.OrderOfVanishing.Noetherian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -46,8 +87,8 @@ theorem resIne_eq_bot_of_le {k : ℕ} {A B : Submodule (D.nd.O i) (GE D.nd → K
     {v : HeightOneSpectrum (𝓞 D.host.E)} (hB : resIne i B v = ⊥) : resIne i A v = ⊥ :=
   le_bot_iff.mp (hB ▸ Submodule.map_mono h)
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem lenCob_mono {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i))
     {A B : Submodule (D.nd.O i) (GE D.nd → KOG (D.nd.O i) k)} (h : A ≤ B) : lenCob i M A ≤ lenCob i M B :=
   length_mono (inf_le_inf_right _ h)
@@ -75,8 +116,8 @@ theorem del_ne_zero (hS : GoodCongruenceObjects D.nd r ρ π S) : del51 D.nd S S
   exact zero_ne_one this
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem length_cocRho_le (eρ : ℕ) (hr : GoodR D.nd i r) (hS : GoodCongruenceObjects D.nd r ρ π S) (hπ : π ∈ Xs)
     (hU : UnrOut i r Xs)
     (hL : ∀ w (hw : w ∈ placesOver D.host.E (D.nd.l i)), LocBound i w hw r Xs (WpO D.nd i ρ π) eρ) :
@@ -94,8 +135,8 @@ theorem length_cocRho_le (eρ : ℕ) (hr : GoodR D.nd i r) (hS : GoodCongruenceO
     (GlobalTheory.Proof.LocalGlobalSelmer.main D i r Xs S _ S.ψρ (inR'_one i r S) hU v h1 h2 h3)
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem exists_fin_unr (eχ : ℕ) (hr : GoodR D.nd i r) (hS : GoodCongruenceObjects D.nd r ρ π S) (hπ : π ∈ Xs)
     (hU : UnrOut i r Xs)
     (hSv : ∀ v ∈ D.nd.S i, (QuadAt i r Xs v ∧ IsUnit (D.nd.zeta i v - 1)) ∨ PolyAt i r Xs π v)
@@ -128,8 +169,8 @@ theorem exists_fin_unr (eχ : ℕ) (hr : GoodR D.nd i r) (hS : GoodCongruenceObj
       (GlobalTheory.T.length_inertia_restriction_cocycles_le D i r ρ π Xs S hr hS hπ q (Or.inr hq') (hQ q hq') c)
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem length_cocChi_le (hA : GlobalTheory.Published.GlobalArtinReciprocity) (eχ : ℕ) (hr : GoodR D.nd i r) (hS : GoodCongruenceObjects D.nd r ρ π S) (hπ : π ∈ Xs)
     (hU : UnrOut i r Xs)
     (hSv : ∀ v ∈ D.nd.S i, (QuadAt i r Xs v ∧ IsUnit (D.nd.zeta i v - 1)) ∨ PolyAt i r Xs π v)
@@ -174,8 +215,8 @@ theorem sum_fin_ite {t : ℕ} (ht : 0 < t) (h : ℕ) (g : ℕ → ℕ) :
   exact Finset.sum_congr rfl fun e he => if_neg (Finset.mem_Ioo.mp he).1.ne'
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 1000000 in
+
+
 theorem main : GlobalTheory.Published.GlobalArtinReciprocity → GlobalCore := by
   intro hA D i r ρ π Xs eρ eχ S hr hS hZ hπ hN hU hSv hQ hl hsel hsha
   classical

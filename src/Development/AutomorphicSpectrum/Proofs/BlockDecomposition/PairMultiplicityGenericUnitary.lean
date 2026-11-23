@@ -1,10 +1,50 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InjectiveWedgeHighestCoefficient
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnEqZeroOfDegreeZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CreAnnApply
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BracketLeviModuleBoundaryPart
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CreAnnApply
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Bool
 
 @[expose] public section
 
@@ -33,8 +73,8 @@ theorem adLq_apply (s : Bool) (p q : Fin n) (x : Cq n V) :
 
 theorem lift_adLq (T : V →ₗ[ℂ] W) (s : Bool) (p q : Fin n) (x : Cq n V) :
     liftq n T (adLq s p q x) = adLq s p q (liftq n T x) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [adLq_apply, map_sum, map_smul, lift_cre', lift_ann']
+
+  simp only [adLq_apply, map_sum, map_smul, lift_cre', lift_ann']
 
 section MorLemmas
 
@@ -56,8 +96,8 @@ theorem MorQ.lift_Tl (h : MorQ T E1 E2 F1 F2) (i : Lt n) (y : Cq n V) :
 theorem MorQ.bd (h : MorQ T E1 E2 F1 F2) (x : Cq n V) :
     liftq n T (bdq E1 E2 x) = bdq F1 F2 (liftq n T x) := by
   rw [bd_apply, bd_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_add (f := _), map_smul, map_sum, lift_cre', lift_ann', h.lift_Tl]
+
+  simp only [map_add (f := _), map_smul, map_sum, lift_cre', lift_ann', h.lift_Tl]
 
 theorem MorQ.lF (h : MorQ T E1 E2 F1 F2) (s : Bool) (p q : Fin n) (x : Cq n V) :
     liftq n T (lFq E1 E2 s p q x) = lFq F1 F2 s p q (liftq n T x) := by
@@ -168,8 +208,8 @@ theorem lift_bd_comm {E1 E2 : Fin n → Fin n → Module.End ℂ V} {S : Lt n �
       exact (LinearMap.congr_fun (hT i hi).eq _).symm
     · rw [← lift_ann', ann_zero hx hi]
       simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_add (f := _), map_smul, map_sum, lift_cre', lift_ann' T, hk]
+
+  simp only [map_add (f := _), map_smul, map_sum, lift_cre', lift_ann' T, hk]
 
 theorem single_degree_zero (v : V) : DegQ 0 (Pi.single ∅ v : Cq n V) := by
   intro A hA
@@ -338,8 +378,8 @@ theorem shift_zero {lev : Fin n → ℕ} {a b : FreeAlgebra ℂ (Bool × Fin n �
         split_ifs
         · exact bd_single E1 E2 l _
         · simp
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [t, map_sum, h1]
+
+      simp only [t, map_sum, h1]
       exact (map_sum (AddMonoidHom.single (fun _ : Finset (Lt n) => V) ∅) _ _).symm
     rw [e, ← hw, eq_single hx, lift_single, evC_single, ← Pi.single_sub]
     simp

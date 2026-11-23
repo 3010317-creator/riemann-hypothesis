@@ -1,22 +1,74 @@
 module
 
-public import Mathlib
-public import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
-public import ReciprocityTheory.DualLattices.DetPolyMulCayleyOmegaPow
-public import ReciprocityTheory.DualLattices.VEqZeroOfPowEqOne
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.CalcExp
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreBoundsFactorialMultiIndexCapelliStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DetFrobeniusSubPowSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.WeightNonnegExpOfWeightGeInvPrimeSubOneStatement
 public import Formalism.LocalToGlobal.CharacterGerms.BiadditiveInSingleVariables
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FactorialWeightedPairingDetPowProportionalStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DeterminantPairingQuotientValuationLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ProdIccMulFactorial
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreAndCapelli
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RadiiValuationDifferences
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NewtonBoundPosAndNewtonStep
+public import Mathlib.RingTheory.PowerSeries.Exp
+public import ReciprocityTheory.DualLattices.FischerAdjointStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.BlockValueOnRowsEqStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DetFrobeniusSubPowSupportStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DeterminantPairingQuotientValuationLowerBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FactorialWeightedPairingDetPowProportionalStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreAndCapelli
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreBoundsFactorialMultiIndexCapelliStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NewtonBoundPosAndNewtonStep
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ProdIccMulFactorial
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RadiiValuationDifferences
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.WeightNonnegExpOfWeightGeInvPrimeSubOneStatement
+public import Formalism.FormalGroupLog.FormalGroupLogProofs.ChainRule
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Presheaf
+import ReciprocityTheory.DualLattices.DetPolyMulCayleyOmegaPow
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.CalcExp
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -43,8 +95,8 @@ theorem form_monomial (φ : (σ →₀ ℕ) → C) (A : σ →₀ ℕ) (c : C) :
 theorem form_eq_sum (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
     form φ P = ∑ A ∈ P.support, AddMonoidAlgebra.coeff P A * φ A := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [form_monomial]
 
 theorem form_mul_X (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) (i : σ) :
@@ -320,7 +372,7 @@ end
 
 section
 open ReciprocityTheory.PGsh
-set_option maxHeartbeats 1000000 in
+
 theorem _root_.GlobalTheory.OddBlock.expShift : (∀ (C : Type) [Field C] [CharZero C] (κ κ' : Type) [Fintype κ] [Fintype κ'] [DecidableEq κ] [DecidableEq κ'] (ζ : κ' → MvPolynomial κ C) (F : MvPolynomial κ C) (G : MvPolynomial κ' C) (g : MvPowerSeries (κ ⊕ κ') C),
     (∑ A ∈ ((MvPolynomial.rename Sum.inl F * MvPolynomial.rename Sum.inr G : MvPolynomial (κ ⊕ κ') C)).support, AddMonoidAlgebra.coeff ((MvPolynomial.rename Sum.inl F * MvPolynomial.rename Sum.inr G : MvPolynomial (κ ⊕ κ') C)) A * (A.prod fun _ e => (e.factorial : C)) * MvPowerSeries.coeff A (PowerSeries.subst (((∑ j, MvPolynomial.rename Sum.inl (ζ j) * MvPolynomial.X (Sum.inr j) : MvPolynomial (κ ⊕ κ') C) : MvPowerSeries (κ ⊕ κ') C)) (PowerSeries.exp C) * g)) =
     ∑ m ∈ (MvPolynomial.aeval (fun j => (MvPolynomial.rename Sum.inl (ζ j) + MvPolynomial.X (Sum.inr j) : MvPolynomial (κ ⊕ κ') C)) G).support, AddMonoidAlgebra.coeff (MvPolynomial.aeval (fun j => (MvPolynomial.rename Sum.inl (ζ j) + MvPolynomial.X (Sum.inr j) : MvPolynomial (κ ⊕ κ') C)) G) m * ((Finsupp.sumFinsuppEquivProdFinsupp m).2.prod fun _ e => (e.factorial : C)) *
@@ -361,8 +413,8 @@ theorem act_monomial (g : MvPowerSeries (κ ⊕ κ') C) (m : κ ⊕ κ' →₀ �
 theorem act_eq (g : MvPowerSeries (κ ⊕ κ') C) (P : MvPolynomial (κ ⊕ κ') C) :
     act g P = ∑ m ∈ P.support, AddMonoidAlgebra.coeff P m • actMon g m := by
   conv_lhs => rw [P.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, act_monomial]
+
+  simp only [map_sum, act_monomial]
 
 theorem act_mul (g : MvPowerSeries (κ ⊕ κ') C) (R : MvPolynomial κ C)
     (P : MvPolynomial (κ ⊕ κ') C) :
@@ -603,8 +655,8 @@ theorem main :
     split_ifs with hA
     swap
     · simp
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [act_eq, map_sum]
+
+    rw [act_eq, map_sum]
     refine v.map_le_sum fun m hm => ?_
     rw [hψ, ← map_pow] at hm ⊢
     obtain ⟨a1, a2, a3⟩ := GlobalTheory.T.det_frobenius_sub_pow_support_bounds l i E n s hl hi1 (psi l (l ^ i) E n) rfl m
@@ -658,15 +710,15 @@ theorem main :
     generalize hP : (MvPolynomial.C ((-((l : C) ^ E)⁻¹) ^ n) *
       (ψ + MvPolynomial.rename Sum.inl (cayDet n C ^ l ^ i))) ^ y = P
     refine Eq.trans (b := pair (cayDet n C ^ (l ^ i * y)) (act g P)) ?_ ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      · rw [act_eq, map_sum]
-        refine Finset.sum_congr rfl fun m _ => ?_
-        rw [actMon, LinearMap.map_smul, LinearMap.map_smul, smul_eq_mul, smul_eq_mul, ← mul_assoc,
-          pair_apply]
-        rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hP, mul_pow, ← map_pow, ← pow_mul, MvPolynomial.C_mul', map_smul, map_smul, smul_eq_mul,
-      add_pow, map_sum, map_sum]
+
+    · rw [act_eq, map_sum]
+      refine Finset.sum_congr rfl fun m _ => ?_
+      rw [actMon, LinearMap.map_smul, LinearMap.map_smul, smul_eq_mul, smul_eq_mul, ← mul_assoc,
+        pair_apply]
+      rfl
+
+    rw [← hP, mul_pow, ← map_pow, ← pow_mul, MvPolynomial.C_mul', map_smul, map_smul, smul_eq_mul,
+    add_pow, map_sum, map_sum]
     congr 1
     refine Finset.sum_congr rfl fun s hs => ?_
     have hsy : s ≤ y := Nat.lt_succ_iff.mp (Finset.mem_range.mp hs)
@@ -685,7 +737,7 @@ end
 
 section
 open ReciprocityTheory.PGsh
-set_option maxHeartbeats 1000000 in
+
 theorem _root_.GlobalTheory.OddBlock.expBinomial : (∀ (C : Type) [Field C] [CharZero C] (v : AddValuation C (WithTop ℝ)) (l : ℕ), l.Prime → v (l : C) = 1 → 5 ≤ l → ∀ (i E n₀ : ℕ), Odd i → (E : ℝ) = 1 + ((l : ℝ) ^ i - l) / ((l : ℝ) ^ 2 - 1) → ∀ h₁ : MvPowerSeries ((Fin n₀ × Fin n₀) ⊕ (Fin n₀ × Fin n₀)) C,
     (∀ α, (((1 / (l - 1)) - α.sum (fun j e => Sum.elim (fun _ => 1 / ((l : ℝ) ^ 2 - 1) + 3 / (8 * (l : ℝ) ^ i)) (fun _ => 1 / ((l : ℝ) ^ 2 - 1) + 1 / 2 - 1 / (8 * (l : ℝ) ^ i)) j * (e : ℝ)) : ℝ) : WithTop ℝ) ≤ v (MvPowerSeries.coeff α (h₁))) → (∀ α, MvPowerSeries.coeff α h₁ ≠ 0 → ∃ q, α (Sum.inr q) ≠ 0) →
     ∃ Q : ℕ → MvPolynomial (Fin n₀ × Fin n₀) C, Q 0 = 1 ∧ (∀ s, (Q s).IsHomogeneous (n₀ * (l ^ i * s))) ∧
@@ -768,8 +820,8 @@ theorem hP_eq (l i n : ℕ) (h1 : MvPowerSeries (PVar n) C) :
     hP C l i n h1 = ((∑ q : Fin n × Fin n, MvPolynomial.C (-((l : C) ^ expE l i)⁻¹) *
       MvPolynomial.X (Sum.inl q) ^ (l ^ i) * MvPolynomial.X (Sum.inr q) : MvPolynomial (PVar n) C) :
         MvPowerSeries (PVar n) C) + h1 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hP, ← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_sum, Fintype.sum_prod_type, Finset.smul_sum]
+
+  rw [hP, ← MvPolynomial.coeToMvPowerSeries.ringHom_apply, map_sum, Fintype.sum_prod_type, Finset.smul_sum]
   congr 1
   refine Finset.sum_congr rfl fun b _ => ?_
   rw [Finset.smul_sum]
@@ -784,10 +836,10 @@ theorem constantCoeff_hP (l i n : ℕ) (h1 : MvPowerSeries (PVar n) C) (h : HM2 
     by_contra hc
     have := h 0 (by simpa using hc)
     simp [degR] at this
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hP, map_add (f := _), h0, MvPowerSeries.smul_eq_C_mul, map_mul, map_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum]
+
+  rw [hP, map_add (f := _), h0, MvPowerSeries.smul_eq_C_mul, map_mul, map_sum]
+
+  simp [map_sum]
 
 theorem weight_sum (n : ℕ) (α : PVar n →₀ ℕ) (a b : ℝ) :
     α.sum (fun j e => Sum.elim (fun _ => a) (fun _ => b) j * (e : ℝ)) = (degL α : ℝ) * a + (degR α : ℝ) * b := by
@@ -969,7 +1021,7 @@ end
 
 section
 open Formalism.L2.FormalSeriesBounds
-set_option maxHeartbeats 1000000 in
+
 theorem _root_.GlobalTheory.OddBlock.windowBound : ThmP := by
   exact @GlobalTheory.OddBlock.WindowValuationBound.main
 
@@ -1094,7 +1146,7 @@ end
 
 section
 open Formalism.L2.FormalSeriesBounds
-set_option maxHeartbeats 1000000 in
+
 theorem _root_.GlobalTheory.OddBlock.content_and_window : BiContent ∧ BiWindow := by
   exact @GlobalTheory.OddBlock.BlockContent.biContent_and_biWindow
 

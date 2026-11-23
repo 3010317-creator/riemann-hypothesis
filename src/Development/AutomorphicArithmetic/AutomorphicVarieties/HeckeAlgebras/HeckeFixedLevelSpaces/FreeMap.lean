@@ -1,11 +1,65 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.HeckeFixedLevelSpaces.SpIntMulVec
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.CtrlOrd
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.ContinuousTorusCharacter
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.ClFinMulVec
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.CtrlOrd
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.FnIndep
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.OrdBCMapOrd
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.FnIndep
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UOpNat
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UOpMul
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UOpNat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangeFree
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -311,9 +365,9 @@ private theorem ctrl_UF_eq_U_ctrl {O Ω : Type} [Field Ω] [CommRing O] [IsLocal
       Pi.smul_apply, smul_eq_mul, MonoidHom.inr_apply] at this ⊢
     rw [Prod.snd_mul, map_mul, _root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, this]
     simp [mul_inv_cancel_left₀]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Frame.UF, Frame.U, Iwa.uOp, finsum_eq_sum_of_fintype, LinearMap.smul_apply, map_smul,
-    LinearMap.sum_apply, map_sum, Finset.smul_sum]
+
+  simp only [Frame.UF, Frame.U, Iwa.uOp, finsum_eq_sum_of_fintype, LinearMap.smul_apply, map_smul,
+  LinearMap.sum_apply, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
   rw [key q, smul_smul]
   simp
@@ -376,8 +430,8 @@ private theorem UF_maps_clOrd_of_maps_cl {O Ω : Type} [Field Ω] [CommRing O] [
 private theorem sum_raF_rpF_comm {Ω : Type} [Field Ω] (d : ℕ) {m : ℕ} (τ : X.Ub →* GL (Fin m) Ω)
     (κ : Type) [Fintype κ] (u : κ → X.Ub) (b : Gp) (F : Fin m → X.Fn Ω d) :
     (∑ q, X.raF d τ (u q)) (X.rpF Ω d m b F) = X.rpF Ω d m b ((∑ q, X.raF d τ (u q)) F) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sum_apply, map_sum, raF_rpF_comm]
+
+  simp only [LinearMap.sum_apply, map_sum, raF_rpF_comm]
 
 private theorem raF_mem_pi_AF {Ω : Type} [Field Ω] {d m : ℕ} (τ : X.Ub →* GL (Fin m) Ω)
     (ξ : Gp →* GL (Fin d) Ω) (u : X.Ub) (F : Fin m → X.Fn Ω d)
@@ -585,8 +639,8 @@ theorem absSpec {A O Ω : Type} [CommRing A] [IsCNL A] [CommRing O] [IsDomain O]
   · intro K K' κ _ u hS f hf
     obtain ⟨h1, h2⟩ := hspec K c le_rfl f hf
     refine hsp _ _ ⟨⟨K', c, le_rfl, sum_raF_maps_clOrd_of_maps_fixd X W τ' (U K) (U K') c φ' κ u hS _ h1⟩, ?_⟩
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [LinearMap.sum_apply, map_sum, LinearMap.sum_apply, map_sum]
+
+    rw [LinearMap.sum_apply, map_sum, LinearMap.sum_apply, map_sum]
     simp only [ctrl_raF_comm, h2, mapFn_ra]
     all_goals rfl
 

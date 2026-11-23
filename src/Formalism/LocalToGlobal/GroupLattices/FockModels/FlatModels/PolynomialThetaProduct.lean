@@ -1,6 +1,51 @@
 module
 
 public import Formalism.LocalToGlobal.GroupLattices.FockModels.FlatModels.LetterB
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -25,7 +70,13 @@ theorem lin_comp {R : Type} [CommRing R] {k : ℕ} (M N : Matrix (Fin k) (Fin k)
   simp only [mul_assoc, MvPolynomial.algebraMap_eq]
 
 theorem lin_one {R : Type} [CommRing R] {k : ℕ} (P : MvPolynomial (Fin k) R) : lin (1 : Matrix (Fin k) (Fin k) R) P = P := by
-  simp [lin, Matrix.one_apply]
+  unfold lin
+  calc
+    _ = MvPolynomial.aeval (fun i : Fin k => (X i : MvPolynomial (Fin k) R)) P := by
+      apply congrArg (fun v => MvPolynomial.aeval v P)
+      funext i
+      simp [Matrix.one_apply, apply_ite]
+    _ = P := MvPolynomial.aeval_X_left_apply P
 
 theorem mono_eq {R : Type} [CommRing R] {σ : Type} [Fintype σ] (μ : σ →₀ ℕ) :
     (monomial μ (1 : R)) = ∏ v, X v ^ μ v := by
@@ -39,8 +90,8 @@ theorem scaleHd {R : Type} [CommRing R] {k d : ℕ} (q : MvPolynomial (Fin k) R)
   simp only [Hd, MvPolynomial.mem_restrictSupport_iff] at hP
   conv_lhs => rw [MvPolynomial.as_sum P]
   conv_rhs => rw [MvPolynomial.as_sum P]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.mul_sum]
+
+  rw [map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hd : ∑ c, μ c = d := hP hμ
   rw [MvPolynomial.aeval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
@@ -55,8 +106,8 @@ theorem lin_smul {R : Type} [CommRing R] {k d : ℕ} (a : R) (M : Matrix (Fin k)
   simp only [lin]
   conv_lhs => rw [MvPolynomial.as_sum P]
   conv_rhs => rw [MvPolynomial.as_sum P]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum, Finset.smul_sum]
+
+  rw [map_sum, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hd : ∑ c, μ c = d := hP hμ
   have e : ∀ c, (∑ b, C ((a • M) c b) * X b : MvPolynomial (Fin k) R) = C a * ∑ b, C (M c b) * X b := by
@@ -161,7 +212,13 @@ theorem Lin_comp {R : Type} [CommRing R] {k : ℕ} (M N : S → Matrix (Fin k) (
 
 theorem Lin_one {R : Type} [CommRing R] {k : ℕ} (P : MvPolynomial (S × Fin k) R) :
     Lin (fun _ : S => (1 : Matrix (Fin k) (Fin k) R)) P = P := by
-  simp [Lin, Matrix.one_apply]
+  unfold Lin
+  calc
+    _ = MvPolynomial.aeval (fun v : S × Fin k => (X v : MvPolynomial (S × Fin k) R)) P := by
+      apply congrArg (fun v => MvPolynomial.aeval v P)
+      funext v
+      simp [Matrix.one_apply, apply_ite]
+    _ = P := MvPolynomial.aeval_X_left_apply P
 
 theorem mem_Pol {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} {F : MvPolynomial (S × Fin k) R} :
     F ∈ Pol R k d ↔ ∀ μ ∈ F.support, ∀ i, multideg μ i = d i := by
@@ -255,8 +312,8 @@ theorem scalePol {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} (Q : S → Mv
   rw [mem_Pol] at hF
   conv_lhs => rw [MvPolynomial.as_sum F]
   conv_rhs => rw [MvPolynomial.as_sum F]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.mul_sum]
+
+  rw [map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hd : ∀ s, ∑ c, μ (s, c) = d s := fun s => hF μ hμ s
   rw [MvPolynomial.aeval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _),
@@ -289,8 +346,8 @@ theorem Lin_smul {R : Type} [CommRing R] {k : ℕ} {d : S → ℕ} (a : S → R)
   simp only [Lin]
   conv_lhs => rw [MvPolynomial.as_sum F]
   conv_rhs => rw [MvPolynomial.as_sum F]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum, Finset.smul_sum]
+
+  rw [map_sum, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   have hd : ∀ s, ∑ c, μ (s, c) = d s := fun s => hF μ hμ s
   have e : ∀ v : S × Fin k, (∑ b, C ((a v.1 • M v.1) v.2 b) * X (v.1, b) : MvPolynomial (S × Fin k) R) =

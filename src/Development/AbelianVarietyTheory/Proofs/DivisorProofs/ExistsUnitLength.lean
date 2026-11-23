@@ -1,8 +1,59 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinsumNormNeg
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.FieldTheory.Finite.GaloisField
 
 @[expose] public section
 
@@ -12,55 +63,7 @@ open Polynomial IsLocalRing
 
 theorem ff_norm {k : Type} [Field k] [Finite k] (σ : k →+* k) (hσ : ∀ x, σ (σ x) = x)
     (hne : ∃ x, σ x ≠ x) (u : k) (hu : σ u = u) : ∃ w, w * σ w = u := by
-  classical
-  let F : Subfield k := RingHom.eqLocusField σ (RingHom.id k)
-  have hF : ∀ x : k, x ∈ F ↔ σ x = x := fun x => Iff.rfl
-  let σ' : k ≃ₐ[F] k :=
-    { toFun := σ, invFun := σ, left_inv := hσ, right_inv := hσ, map_mul' := σ.map_mul,
-      map_add' := σ.map_add, commutes' := fun r => (hF r).1 r.2 }
-  have hσ' : ∀ x, σ' x = σ x := fun _ => rfl
-  have h1 : ∀ (τ : k ≃ₐ[F] k) (x : k), τ x = x ∨ τ x = σ x := by
-    intro τ x
-    have hs : τ (x + σ x) = x + σ x :=
-      τ.commutes ⟨x + σ x, (hF _).2 (by rw [map_add (f := _), hσ, add_comm])⟩
-    have hn : τ (x * σ x) = x * σ x :=
-      τ.commutes ⟨x * σ x, (hF _).2 (by rw [map_mul, hσ, mul_comm])⟩
-    rw [map_add (f := _)] at hs
-    rw [map_mul] at hn
-    have : (τ x - x) * (τ x - σ x) = 0 := by
-      linear_combination (τ x) * hs - hn
-    rcases mul_eq_zero.1 this with h | h
-    · exact Or.inl (sub_eq_zero.1 h)
-    · exact Or.inr (sub_eq_zero.1 h)
-  have h2 : ∀ τ : k ≃ₐ[F] k, τ = 1 ∨ τ = σ' := by
-    intro τ
-    by_contra hc
-    push Not at hc
-    obtain ⟨a, ha⟩ : ∃ a, τ a ≠ a := by
-      by_contra h; push Not at h
-      exact hc.1 (AlgEquiv.ext h)
-    obtain ⟨b, hb⟩ : ∃ b, τ b ≠ σ b := by
-      by_contra h; push Not at h
-      exact hc.2 (AlgEquiv.ext h)
-    have ha' := (h1 τ a).resolve_left ha
-    have hb' := (h1 τ b).resolve_right hb
-    rcases h1 τ (a + b) with h | h
-    · rw [map_add (f := _), hb'] at h
-      exact ha (add_right_cancel h)
-    · rw [map_add (f := _), map_add (f := _), ha'] at h
-      exact hb (add_left_cancel h)
-  have h3 : (1 : k ≃ₐ[F] k) ≠ σ' := by
-    obtain ⟨x, hx⟩ := hne
-    intro h
-    apply hx
-    rw [← hσ', ← h]; rfl
-  have h4 : (Finset.univ : Finset (k ≃ₐ[F] k)) = {1, σ'} := by
-    ext τ; simpa using h2 τ
-  obtain ⟨w, hw⟩ := FiniteField.norm_surjective F k ⟨u, (hF u).2 hu⟩
-  refine ⟨w, ?_⟩
-  have := Algebra.norm_eq_prod_automorphisms F w
-  rw [hw, h4, Finset.prod_pair h3] at this
-  exact this.symm
+  apply GlobalTheory.NormGauss.exists_norm_eq <;> assumption
 
 section Local
 
@@ -322,8 +325,8 @@ theorem extend_family [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField 
           simp
       have := hyz _ hz'
       have hvy : ∀ i, h (v i) y = 0 := fun i => by rw [hc, (hφ y).1 hy i, map_zero]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hc, ← hB, map_sub, map_sum] at this
+
+      rw [hc, ← hB, map_sub, map_sum] at this
       simp only [hB, hm, hvy, mul_zero, Finset.sum_const_zero, sub_zero] at this
       rw [hc]
       exact this)

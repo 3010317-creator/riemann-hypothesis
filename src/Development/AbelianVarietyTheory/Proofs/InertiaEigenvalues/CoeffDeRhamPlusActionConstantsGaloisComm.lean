@@ -1,8 +1,48 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZAEqAlgebraMapPt
-public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CanonicalAcrisToBdRPlusUniqueEquivariantApprox
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -61,8 +101,8 @@ theorem eq_of_pow_eq {R : Type} [CommRing R] (I : Ideal R) [IsAdicComplete I R] 
   set S := ∑ i ∈ Finset.range e, x ^ i * y ^ (e - 1 - i) with hSdef
   have hq : Ideal.Quotient.mk I y = Ideal.Quotient.mk I x := (Ideal.Quotient.eq.2 h).symm
   have h1 : Ideal.Quotient.mk I S = Ideal.Quotient.mk I ((e : R) * x ^ (e - 1)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hSdef, map_sum, map_mul, map_natCast, map_pow]
+
+    rw [hSdef, map_sum, map_mul, map_natCast, map_pow]
     simp only [map_mul, map_pow, hq]
     rw [Finset.sum_congr rfl fun i hi => by
       rw [← pow_add, Nat.add_sub_cancel' (by have := Finset.mem_range.1 hi; omega)]]
@@ -247,8 +287,8 @@ theorem galOD_idem {a : ℕ} [NeZero a] (t : Wq l a →ₐ[ℤ_[l]] O) {g : GQ l
 theorem galOD_iD_kLift {a : ℕ} [NeZero a] (t : Wq l a →ₐ[ℤ_[l]] O) {g : GQ l} (hK : ∀ x ∈ Kunr l a, g x = x)
     (hg : g (ϖ.seq 0) = ϖ.seq 0) (c : ZMod a → AdjoinRoot (Polynomial.X ^ e + Polynomial.C (l : K))) :
     galOD O g (ϖ.iD t K (GlobalTheory.BKGal.JumpDR.kLift O c)) = ϖ.iD t K (GlobalTheory.BKGal.JumpDR.kLift O c) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [PiSys.iD, glue_apply, map_sum]
+
+  rw [PiSys.iD, glue_apply, map_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [map_mul, galOD_idem t hK]
   exact congrArg _ (galOD_iHat_C K ϖ hg (c τ))

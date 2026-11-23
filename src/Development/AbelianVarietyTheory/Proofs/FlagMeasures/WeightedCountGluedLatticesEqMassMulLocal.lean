@@ -1,20 +1,58 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGAnalytic
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.DataInst
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.InVolumesAtOfSWS
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GlobSet
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplementUnitaryMulActionLocalInnerDatum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumTransversalEqTsumOrbitQuotientGeneral
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTermsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumInvStabilizerEqTsumMulFiberStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedLatticesLocalDataUnimodularStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalLatticesCountEqProdLocalCountsBadPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumRationalClassesEqProdLocalSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsometryFixingSpanPreservesGluedLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteRationalStabiliserGluedLatticeLocalDataStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalLatticesCountEqProdLocalCountsBadPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedLatticesLocalDataUnimodularStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsometryFixingSpanPreservesGluedLatticesStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumInvStabilizerEqTsumMulFiberStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumRationalClassesEqProdLocalSumsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumTransversalEqTsumOrbitQuotientGeneral
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTermsStatement
+import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGAnalytic
+import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.StepHeightOfNormOne
 
 @[expose] public section
 
@@ -29,8 +67,8 @@ theorem mem_isometriesFixingBothFrames_iff_unitriangular : ∀ (D : D7) {T T' : 
 
   have fwd : ∀ {f h : Fin (D.R.rS + 1) → (VS D).V}, Tri D.host.E f h → (∀ a, g (f a) = f a) → ∀ a, g (h a) = h a := by
     rintro f h ⟨A, -, hC⟩ hf a
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hC a, map_sum]
+
+    rw [hC a, map_sum]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [map_smul, hf b]
   have bwd : ∀ {f h : Fin (D.R.rS + 1) → (VS D).V}, Tri D.host.E f h → (∀ a, g (h a) = h a) → ∀ a, g (f a) = f a := by
@@ -47,8 +85,8 @@ theorem mem_isometriesFixingBothFrames_iff_unitriangular : ∀ (D : D7) {T T' : 
             rw [hlow b a (lt_of_le_of_ne hb (Ne.symm hba)), zero_smul]
         rw [hrest, add_comm]
       have h1 := hh a
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hsplit, map_add (f := _), map_sum] at h1
+
+      rw [hsplit, map_add (f := _), map_sum] at h1
       have h2 : ∑ b ∈ Finset.univ.filter (fun b => b < a), g (A b a • f b) =
           ∑ b ∈ Finset.univ.filter (fun b => b < a), A b a • f b := by
         refine Finset.sum_congr rfl fun b hb => ?_

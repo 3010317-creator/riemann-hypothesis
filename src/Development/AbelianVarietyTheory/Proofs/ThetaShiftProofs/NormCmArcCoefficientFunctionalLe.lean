@@ -1,16 +1,66 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
+public import Formalism.LocalToGlobal.ProjectiveLattices.NormsFree
+public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.MemOfPowEqInt
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcDatumSectionValueCoeffEqFourierJacobi
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfSumSq
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArchBoundFlow
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LetterSquaredLengthLeFlowHeightStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CmMetrisedLineLengthsEqSectionLieNormsStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NormalisedTrivialisationNormOneComplexReadingStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.DegenerationDataBaseChangesExistPid
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfSumSq
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalIffOfIsPullDegTauBimultStatement
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.QuadraticCoefficientForms
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LaurentCoeffSectionValueArcEqFourierJacobi
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LaurentCoeffSectionValueArcEqFourierJacobiStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LetterSquaredLengthLeFlowHeightStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyUnifWitnessDataOfIsUnfStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NormalisedTrivialisationNormOneComplexReadingStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangentStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 public import Formalism.LocalToGlobal.CMDeterminantIdeals.CMIdealValuations.AbsNormSpanGalois
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Algebra.MvPolynomial
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RigidSys
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowCoefficientBounds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.QuadraticCoefficientForms
 
 @[expose] public section
 
@@ -118,8 +168,8 @@ theorem cfOf_le {K₁ : Type} [Field K₁] [Algebra c.F K₁] (d : ArcDatum Xo c
   set P := arcNum (evR Xo c F d.yF) with hP
   let G : MvPolynomial (ArcLt Dw) ℂ := ∑ m ∈ P.support, MvPolynomial.monomial m (em ((P.coeff m).coeff d.jj))
   have hG : ∀ x, MvPolynomial.eval x G = ajAt d em F x := fun x => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [G, map_sum, MvPolynomial.eval_monomial, ajAt, Finsupp.prod, hP]
+
+    simp only [G, map_sum, MvPolynomial.eval_monomial, ajAt, Finsupp.prod, hP]
   have hc : G.coeff d.μ = em (cfOf d.yF d.μ d.jj F) := by
     simp only [G, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial, Finset.sum_ite_eq', cfOf, ← hP]
     split_ifs with hm
@@ -321,8 +371,8 @@ theorem norm_cfOf_le : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMF
           unfold Datum.mult
           split_ifs <;> omega
         exact_mod_cast this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← herm_single Hm, ← hLz, map_sum]
+
+      rw [← herm_single Hm, ← hLz, map_sum]
       have := herm_sum_le hH'.2.1 (fun j => L (x ⟨τ, (i, j)⟩ • z₁ τ j))
         (b := (La * Real.sqrt (max 1 c₁)) ^ 2 / Real.pi) fun j => by
           rw [le_div_iff₀' Real.pi_pos, map_smul, herm_smul, mul_left_comm]

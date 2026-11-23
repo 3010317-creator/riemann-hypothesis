@@ -1,22 +1,56 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDecompletionFrameOfLattice
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodData
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientRingPadicIntegersFinExt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisOfFullLattice
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteJumpsInfFiltration
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamTensorCoordinatesOfBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TmulMemFilV
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDecompletionFrameOfLattice
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralFactorOfIdempotentSubfield
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormCoeAutLeOneIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalKsOfGood
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSymbolBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalKsOfGood
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteJumpsInfFiltration
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientRingPadicIntegersFinExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodData
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormCoeAutLeOneIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TmulMemFilV
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -55,8 +89,8 @@ theorem sep_idem {F K C R : Type} [Field F] [Field K] [Algebra F K] [CommRing C]
   have key : ∀ κ, B κ * E = j κ • E := by
     intro κ
     have := congrArg φ (h1 κ)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, hφ, map_mul] at this
+
+    simp only [map_sum, hφ, map_mul] at this
     rw [hE, Finset.mul_sum, Finset.smul_sum]
     simp only [mul_smul_comm, smul_smul]
     exact this
@@ -64,8 +98,8 @@ theorem sep_idem {F K C R : Type} [Field F] [Field K] [Algebra F K] [CommRing C]
         conv_lhs => rw [hE, Finset.sum_mul]
         simp only [smul_mul_assoc, hE]
     _ = j (∑ i, α i * β i) • E := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [key, smul_smul, map_sum, map_mul, Finset.sum_smul, mul_comm]
+
+        simp only [key, smul_smul, map_sum, map_mul, Finset.sum_smul, mul_comm]
     _ = E := by rw [h2, map_one, one_smul]
 
 def mulMat {F LL V : Type} (C : Type) [Field F] [Field LL] [Algebra F LL] [AddCommGroup V]
@@ -247,8 +281,8 @@ theorem frame_of_dec (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI) (K L
       intro j
       rw [Matrix.mul_smul, hBe, p2, hι, smul_smul, map_mul, mul_comm, toC_apply K (α j)]
     simp only [this]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Finset.sum_smul, ← map_sum, h2, map_one, one_smul]
+
+    rw [← Finset.sum_smul, ← map_sum, h2, map_one, one_smul]
   apply p3
   have : Pr.mulVec (fun a => algebraMap ℚ_[l] (PadicComplex l) (z a)) = Pr.mulVec x := by
     have h3 : ∀ v, Pr.mulVec v = Pr.mulVec (Q.mulVec ((R * Dm⁻¹).mulVec v)) := fun v => by

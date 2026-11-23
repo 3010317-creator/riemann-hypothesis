@@ -1,13 +1,63 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
-public import Formalism.SharpRestriction.CuspSpanNormBounds.PsiEDef
-public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+public import Mathlib.Algebra.Module.Lattice.Full
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsSide
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Module.FinitePresentation
+public import Mathlib.RingTheory.Flat.EquationalCriterion
 
 @[expose] public section
 
@@ -68,12 +118,12 @@ theorem exists_coeffs (Λ : Submodule (𝓞 E) (Fin n → E))
     rw [hb'' i]
     ring
   have h2 := congrArg φ h1
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_smul, map_sum] at h2
+
+  rw [map_smul, map_sum] at h2
   simp only [map_smul, smul_eq_mul] at h2
   have h3 := congrArg (fun t : 𝓞 E => (t : E)) h2
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_mul, map_sum] at h3
+
+  simp only [map_mul, map_sum] at h3
   have hBD : algebraMap (𝓞 E) E (B : 𝓞 E) * algebraMap (𝓞 E) E D ≠ 0 := mul_ne_zero hBE hDE
   apply mul_left_cancel₀ hBD
   refine Eq.trans ?_ h3.symm
@@ -156,8 +206,8 @@ theorem functional_integral (p : HeightOneSpectrum (𝓞 F)) (Λ : Submodule (�
     obtain ⟨y, hy, rfl⟩ := hx
     obtain ⟨o, ho⟩ := hc y hy
     have : ∑ k, (A.loc p).ιE (c k) * A.bc p y k = (A.loc p).ιE (o : E) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [ho, map_sum]
+
+      rw [ho, map_sum]
       simp [Places.bc]
     rw [this]
     exact int_mem A p o
@@ -183,8 +233,8 @@ theorem mem_of_forall_lat (Λ : Submodule (𝓞 E) (Fin n → E)) (h : Submodule
     refine ((PlacesInt.integers_local A).1 _).1 fun p => ?_
     have := functional_integral A p Λ (c i)
       (fun y hy => ⟨φ i ⟨y, hy⟩, (hc i ⟨y, hy⟩).symm⟩) _ (hx p)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simpa [Places.bc] using this
   choose o ho using hint
   obtain ⟨D, hD, hDx⟩ := exists_smul_mem Λ h.span_eq_top x

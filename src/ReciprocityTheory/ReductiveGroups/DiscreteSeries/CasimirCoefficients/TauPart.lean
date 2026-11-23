@@ -1,6 +1,47 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.IsClosedKset
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.CasimirCoefficients.DTauFacts
 
 @[expose] public section
@@ -59,11 +100,11 @@ variable {ε : Fin n → Bool} {Λ : Fin n → ℝ}
 
 lemma dtau_upPart_w (T : KType ε Λ) {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsBlock ε B) :
     T.dτ (upPart B) T.w = 0 := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.matrix_eq_sum_single (upPart B), map_sum, _root_.sum_apply]
+
+  rw [Matrix.matrix_eq_sum_single (upPart B), map_sum, _root_.sum_apply]
   refine Finset.sum_eq_zero (fun a _ => ?_)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, _root_.sum_apply]
+
+  rw [map_sum, _root_.sum_apply]
   refine Finset.sum_eq_zero (fun b _ => ?_)
   rw [single_eq_smul, map_smul, ContinuousLinearMap.smul_apply]
   simp only [upPart, Matrix.of_apply]
@@ -75,11 +116,11 @@ lemma dtau_upPart_w (T : KType ε Λ) {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsB
 
 lemma dtau_diagPart_w (T : KType ε Λ) (B : Matrix (Fin n) (Fin n) ℂ) :
     T.dτ (diagPart B) T.w = (∑ a, ((Λ a : ℝ) : ℂ) * B a a) • T.w := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Matrix.matrix_eq_sum_single (diagPart B), map_sum, _root_.sum_apply, Finset.sum_smul]
+
+  rw [Matrix.matrix_eq_sum_single (diagPart B), map_sum, _root_.sum_apply, Finset.sum_smul]
   refine Finset.sum_congr rfl (fun a _ => ?_)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, _root_.sum_apply, Finset.sum_eq_single a]
+
+  rw [map_sum, _root_.sum_apply, Finset.sum_eq_single a]
   · rw [single_eq_smul, map_smul, ContinuousLinearMap.smul_apply, T.w_wt, smul_smul]
     simp only [diagPart, Matrix.diagonal_apply_eq]
     rw [mul_comm]
@@ -140,8 +181,8 @@ theorem tau_part {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) {B
     rw [Matrix.conjTranspose_apply] at h
     exact h
   have hc : (starRingEnd ℂ) (∑ a, ((Λ a : ℝ) : ℂ) * B a a) = ∑ a, ((Λ a : ℝ) : ℂ) * B a a := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, Complex.conj_ofReal, hBaa]
+
+    simp only [map_sum, map_mul, Complex.conj_ofReal, hBaa]
   have h1 : T.dτ (upPart B) * projW T = 0 := by
     ext v
     rw [ContinuousLinearMap.mul_apply, hP, map_smul, dtau_upPart_w T hB, smul_zero,

@@ -1,11 +1,47 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
-public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ConductorExponents
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinSectionTrivialisesInvertPrimeTensorStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 
 @[expose] public section
 
@@ -41,8 +77,8 @@ theorem taylor_iC (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (g : ↥(GK (�
   refine ⟨Finset.univ.sup N, fun M hM => ?_⟩
   choose z hz using fun τ => hN τ M ((Finset.le_sup (Finset.mem_univ τ)).trans hM)
   refine ⟨∑ τ, idem (constC t) τ * z τ, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [PiSys.iC, glue_apply, map_sum, map_mul, galOCr_idem, Finset.mul_sum]
+
+  simp only [PiSys.iC, glue_apply, map_sum, map_mul, galOCr_idem, Finset.mul_sum]
   rw [Finset.sum_comm, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [mul_left_comm, ← hz τ, mul_sub, Finset.mul_sum]
@@ -124,13 +160,13 @@ theorem toBcris_xiExt (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (P : PhiMo
     apply Subtype.ext
     show P.xiExt W = _
     rw [Submodule.coe_sum]
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [eq_sum_bas W, map_sum]
+
+    conv_lhs => rw [eq_sum_bas W, map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     show _ = (fun τ => W τ j) • P.xi (fun _ => Pi.single j 1)
     rw [PhiMod.xiExt_smul_tot, PhiMod.xi_apply, cst_single]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hsum, map_sum, Finset.sum_apply]
+
+  rw [hsum, map_sum, Finset.sum_apply]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [toBcris_apply, toBcris_apply, ← ϖ.iB_of_mem t K, ← map_mul]
   congr 1
@@ -211,16 +247,16 @@ theorem lpow_galDiff_eq_jB_toOB : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZe
     rw [mul_comm, this, toBcris_xiExt t ϖ D.toPhiMod hWS hWM hxj k]
   have hb : (l ^ n₁) • R.jB (toBcris t ϖ D.toPhiMod σ) = ∑ j, toOB l O (β j) • R.jB (X j) := by
     rw [← map_nsmul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [← LinearEquiv.map_smul, ← map_sum]
+
+    simp only [← LinearEquiv.map_smul, ← map_sum]
     congr 1
     ext k
     simpa only [Pi.smul_apply, Finset.sum_apply, nsmul_eq_mul, Nat.cast_pow,
       smul_eq_mul, mul_comm] using hA k
   have hgb : (l ^ n₁) • (actB (sQ l) T g (R.jB (toBcris t ϖ D.toPhiMod σ)) - R.jB (toBcris t ϖ D.toPhiMod σ)) =
       ∑ j, toOB l O (galOCr O (sQ l g) (β j) - β j) • R.jB (X j) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [nsmul_sub, ← map_nsmul, hb, map_sum, ← Finset.sum_sub_distrib]
+
+    rw [nsmul_sub, ← map_nsmul, hb, map_sum, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [actB_smul, hv, galOB_toOB, map_sub, sub_smul]
 
@@ -255,9 +291,9 @@ theorem lpow_galDiff_eq_jB_toOB : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZe
     have hstar : ∑ j, toOB l O (galOCr O (sQ l g) (β j) - β j) * X j k =
         ∑ i ∈ Finset.range M, toOB l O (ϖ.muDiv a O g' (i + 1)) * Y i k +
           (l : OB l O) ^ (n₁ + n₂) * ∑ j, toOB l O (ε j) * X j k := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [hε, map_add (f := _), map_sum, map_mul, map_pow, map_natCast, add_mul, Finset.sum_add_distrib,
-        Finset.sum_mul]
+
+      simp only [hε, map_add (f := _), map_sum, map_mul, map_pow, map_natCast, add_mul, Finset.sum_add_distrib,
+      Finset.sum_mul]
       congr 1
       · rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun i _ => ?_
@@ -279,8 +315,8 @@ theorem lpow_galDiff_eq_jB_toOB : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZe
       linear_combination toOB l O (ε j) * hG j k
     have hz : toOB l O (z k) = ∑ i ∈ Finset.range M, toOB l O (ϖ.muDiv a O g' (i + 1)) * toOB l O (y i k) +
         (l : OB l O) ^ c * ∑ j, toOB l O (ε j) * toOB l O (u j k) := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [z, map_add (f := _), map_sum, map_mul, map_pow, map_natCast]
+
+      simp only [z, map_add (f := _), map_sum, map_mul, map_pow, map_natCast]
     rw [hstar, hz]
     linear_combination (l : OB l O) ^ n₂ * hF' + (l : OB l O) ^ (n₁ + n₂) * (l : OB l O) ^ c * hG'
   apply cancel (n₁ + n₂)
@@ -290,8 +326,8 @@ theorem lpow_galDiff_eq_jB_toOB : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZe
   rw [e1, smul_smul, show l ^ (n₁ + n₂) * l ^ c = (l ^ n₂ * l ^ c) * l ^ n₁ by ring, ← smul_smul, hgb]
   have eL : (l ^ n₂ * l ^ c) • ∑ j, toOB l O (galOCr O (sQ l g) (β j) - β j) • R.jB (X j) =
       R.jB ((l ^ n₂ * l ^ c) • ∑ j, toOB l O (galOCr O (sQ l g) (β j) - β j) • X j) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_nsmul, map_sum]
+
+    rw [map_nsmul, map_sum]
     simp only [LinearEquiv.map_smul]
   have eR : (l ^ (n₁ + n₂)) • R.jB (fun i => toOB l O (z i)) =
       R.jB ((l ^ (n₁ + n₂)) • fun i => toOB l O (z i)) := (map_nsmul _ _ _).symm

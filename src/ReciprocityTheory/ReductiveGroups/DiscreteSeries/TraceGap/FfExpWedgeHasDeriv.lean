@@ -1,7 +1,63 @@
 module
 
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.AlgebraMapInvFf
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.IsPhysSet
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Star
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TensorRepresentations.HasDerivAtInvExpCurveEntry
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.AdMatConjTranspose
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.TraceGap.AdPhysDiagSingle
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
 
 @[expose] public section
 
@@ -185,10 +241,6 @@ theorem sum_adD_eq_LX {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (w : Fin
   rw [LX_apply]
   obtain ⟨x1, x2⟩ := x
   unfold adD IsPhys
-  have hst : ∀ c d : Fin n, star ((1 : Matrix (Fin n) (Fin n) ℂ) c d) = (1 : Matrix (Fin n) (Fin n) ℂ) c d := by
-    intro c d
-    rw [Matrix.one_apply]
-    split_ifs <;> simp
   by_cases hx : ε x1 = true ∧ ε x2 = false
   · simp only [hx, true_and, if_true]
     rw [Fintype.sum_prod_type]
@@ -219,8 +271,8 @@ theorem wedgeCoord_eq_sum (p : ℕ) (v : Fin p → (Fin n × Fin n → ℂ)) :
     funext i y
     simp [Finset.sum_apply, Pi.single_apply]
   conv_lhs => rw [hv]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [MultilinearMap.map_sum]
+
+  rw [MultilinearMap.map_sum]
   refine Finset.sum_congr rfl fun r _ => ?_
   simp only [MultilinearMap.map_smul_univ, RingHom.id_apply]
 
@@ -261,9 +313,9 @@ theorem ff_exp_wedge_hasDeriv {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) 
   rw [hfun]
   convert h using 1
   all_goals try rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [ContinuousLinearMap.coe_restrictScalars', ContinuousMultilinearMap.linearDeriv_apply, hc0, isDer_sgX,
-    map_sum]
+
+  rw [ContinuousLinearMap.coe_restrictScalars', ContinuousMultilinearMap.linearDeriv_apply, hc0, isDer_sgX,
+  map_sum]
   rfl
 
 theorem ff_exp_hasDeriv {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (f : Fock n) :
@@ -271,8 +323,8 @@ theorem ff_exp_hasDeriv {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (f : F
       ((fockBasis n).equivFun (sgX ε X f)) 0 := by
   have hf : f = ∑ S, (fockBasis n).repr f S • fockBasis n S := ((fockBasis n).sum_repr f).symm
   rw [hf]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul]
+
+  simp only [map_sum, map_smul]
   refine HasDerivAt.fun_sum fun S _ => ?_
   refine HasDerivAt.const_smul ((fockBasis n).repr f S) ?_
   rw [fockBasis_eq]

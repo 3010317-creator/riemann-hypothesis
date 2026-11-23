@@ -1,7 +1,52 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.GradedModulesLength.ToDegInjective
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Formalism.FormalGroupWitt.FormalGroupWittProofs.SolveV
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.GradedModulesLength.ToDegInjective
+import Formalism.SharpRestriction.ValuationFrobeniusEpsilon.LeastPrimeTwists.QuotientShiftIrreducible.NoetherianQuotientCalc.EulerVanishingBelowDimension
 
 @[expose] public section
 
@@ -79,8 +124,8 @@ private theorem ift_expand [Fintype σ] (g : MvPowerSeries σ E) :
     Low 2 (g - (constantCoeff g • 1 + ∑ s, coeff (Finsupp.single s 1) g • X s)) := by
   classical
   refine ift_low_two (by simp [map_sum]) fun i => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [map_sum, ift_coeff_X, coeff_one]
+
+  simp [map_sum, ift_coeff_X, coeff_one]
 
 end SlopeTestRemainingChoices
 
@@ -143,8 +188,8 @@ theorem UpperTheory.V.Alg.M.ift_holds :
     have := hlow _ (ift_expand f) d hd
     rw [map_sub, map_sub, sub_eq_zero] at this
     rw [this]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_add (f := _), map_smul, map_one, map_sum, hX, map_sub, hlow _ (hg _) d hd, sub_zero, smul_eq_mul]
+
+    simp only [map_add (f := _), map_smul, map_one, map_sum, hX, map_sub, hlow _ (hg _) d hd, sub_zero, smul_eq_mul]
   refine ⟨ψ, fun j f hf => ?_, ?_, fun f => ?_, fun f i => ?_⟩
   · rw [hψ]; exact ift_subst_mem hl (ift_lim_mem hG hg hGw hgw) hf
   · refine ift_span (E := E) (κ := {i // wt i = 0}) (by rw [← hcard, Nat.card_eq_fintype_card])
@@ -153,12 +198,12 @@ theorem UpperTheory.V.Alg.M.ift_holds :
     · ext i i'
       have := hc i.1 i.2 i'.1
       rw [ift_coeff_X] at this
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_smul, smul_eq_mul] at this
+
+      simp only [map_sum, map_smul, smul_eq_mul] at this
       simp only [Matrix.mul_apply, Matrix.of_apply, this, Matrix.one_apply, Subtype.ext_iff, eq_comm]
     · have := hX i.1
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [G, g, dif_pos i.2, map_sub, map_sum, map_smul] at this
+
+      simp only [G, g, dif_pos i.2, map_sub, map_sum, map_smul] at this
       simp only [Matrix.of_apply]
       linear_combination this
   · have := key f 0 (by simp)

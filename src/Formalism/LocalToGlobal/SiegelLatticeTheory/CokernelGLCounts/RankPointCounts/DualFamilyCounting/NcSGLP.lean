@@ -1,6 +1,59 @@
 module
 
-public import Mathlib
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 @[expose] public section
 
@@ -16,7 +69,6 @@ private theorem dual_apply_eq_sum_mul_single {a : ℕ} (μ : Module.Dual K (Fin 
     ext j
     first
     | simp [Finset.sum_apply, Pi.single_apply]
-    | simp [Finset.sum_apply, Pi.single_apply, eq_comm]
   calc μ t = μ (∑ i, t i • (Pi.single i 1 : Fin a → K)) := congrArg μ ht
     _ = ∑ i, t i * μ (Pi.single i 1) := by simp [map_sum, map_smul]
 
@@ -59,18 +111,14 @@ theorem trans_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional
   let e2 : CX ≃ₗ[K] CY := by
     first
     | exact LinearEquiv.ofFinrankEq _ _ hdim
-    | exact LinearEquiv.ofFinrankEq hdim
   let P : (Submodule.span K (Set.range x) × CX) ≃ₗ[K] (Submodule.span K (Set.range y) × CY) := by
     first
     | exact LinearEquiv.prodCongr e1 e2
-    | exact LinearEquiv.prod e1 e2
   have hsymm : ∀ j, (Submodule.prodEquivOfIsCompl _ _ hX).symm (x j) = (bx j, 0) := by
     intro j
     rw [LinearEquiv.symm_apply_eq]
     first
     | (rw [Submodule.coe_prodEquivOfIsCompl']; simp [bx, Module.Basis.span_apply])
-    | simp [bx, Module.Basis.span_apply]
-    | simp [bx]
   refine ⟨(Submodule.prodEquivOfIsCompl _ _ hX).symm.trans (P.trans (Submodule.prodEquivOfIsCompl _ _ hY)),
     fun j => ?_⟩
   rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, hsymm j]
@@ -79,13 +127,9 @@ theorem trans_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional
     | (show (e1 (bx j), e2 0) = (bY j, 0)
        rw [map_zero]
        simp [e1, Module.Basis.equiv_apply])
-    | simp [P, e1, Module.Basis.equiv_apply]
-    | simp [P, e1]
   rw [hP]
   first
   | (rw [Submodule.coe_prodEquivOfIsCompl']; simp [bY, Module.Basis.span_apply])
-  | simp [bY, Module.Basis.span_apply]
-  | simp [bY]
 
 private theorem eq_zero_of_mem_of_disjoint {V : Type*} [AddCommGroup V] [Module K V] {S T : Submodule K V}
     (h : Disjoint S T) {v : V} (hS : v ∈ S) (hT : v ∈ T) : v = 0 :=
@@ -137,7 +181,6 @@ private theorem exists_common_complement_of_finrank_eq {V : Type*} [AddCommGroup
       have hm := S.smul_mem c⁻¹ hcv
       first
       | (rwa [smul_smul, inv_mul_cancel₀ hc, one_smul] at hm)
-      | simpa [hc] using hm
     have hinf : ∀ S : Submodule K V, v ∉ S → S ⊓ Submodule.span K {v} = ⊥ := by
       intro S hvS
       rw [eq_bot_iff]
@@ -204,7 +247,6 @@ theorem fix_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K
     have h0 : (t : V) = 0 := eq_zero_of_mem_of_disjoint hTΨ t.2 (LinearMap.mem_ker.mpr ht)
     first
     | exact Subtype.ext h0
-    | simpa using h0
   have hfsurj : Function.Surjective f := by
     first
     | exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hTdim).mp hfinj
@@ -218,7 +260,6 @@ theorem fix_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K
     have h1 : Ψ (s t) = eT (eT.symm t) := by
       first
       | rfl
-      | exact (LinearEquiv.ofBijective_apply f _ (eT.symm t)).symm
     rw [h1, LinearEquiv.apply_symm_apply]
   have hsT : ∀ t, s t ∈ T := fun t => (eT.symm t).2
   let B : V →ₗ[K] V := LinearMap.id + s ∘ₗ (Φ - Ψ)
@@ -226,7 +267,6 @@ theorem fix_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K
     intro v
     first
     | rfl
-    | simp [B]
   have hΨB : ∀ v, Ψ (B v) = Φ v := by
     intro v
     rw [hBv, map_add (f := _), hs]
@@ -246,10 +286,8 @@ theorem fix_tuple {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K
   refine ⟨LinearEquiv.ofInjectiveEndo B hinj, fun j => ?_, fun i v => ?_⟩
   · first
     | exact hBx j
-    | simpa using hBx j
   · first
     | exact congrFun (hΨB v) i
-    | simpa using congrFun (hΨB v) i
 
 theorem glPair {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V] {a : ℕ}
     (x y : Fin a → V) (ξ η : Fin a → Module.Dual K V) (hx : LinearIndependent K x)
@@ -265,7 +303,6 @@ theorem glPair {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     have hgv := LinearMap.congr_fun hg (A0.symm v)
     first
     | simpa using hgv
-    | simpa [LinearMap.sum_apply] using hgv
   obtain ⟨B, hB1, hB2⟩ := fix_tuple x hx ξ
     (fun i => (η i).comp A0.toLinearMap) hξ hψ' (fun i j => by
       show ξ i (x j) = η i (A0 (x j))

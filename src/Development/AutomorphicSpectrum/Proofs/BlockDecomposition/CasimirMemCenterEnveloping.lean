@@ -1,13 +1,48 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspRapidDecaySiegelGL
-public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.CuspFormsHeight
-public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.DecayUniform
-public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStable
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmMemArchSmooth
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QdetTopThreeOrders
 public import Development.AutomorphicSpectrum.Proofs.HermitianForms.CasOfCapelliVec
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOpCommLiB
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import GroundTheory.AutomorphicForms.CuspidalDiscreteness.AltSum
+import GroundTheory.AutomorphicForms.ReductionBlock
+import GroundTheory.GlobalFields.KummerTheory.LocalIndex
 
 @[expose] public section
 
@@ -59,8 +94,8 @@ theorem cas_mem_of_qdet_mem {A : Type} [Ring A] [Algebra ℂ A] (S : Subalgebra 
         have h1 := hf _ (hcap Y)
         rw [hR] at h1
         have e : f 1 = 0 := hf 1 (Subalgebra.one_mem _)
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [map_add (f := _), map_sum, map_smul, smul_eq_mul, add_sub_assoc] at h1
+
+        simp only [map_add (f := _), map_sum, map_smul, smul_eq_mul, add_sub_assoc] at h1
         simp only [e, mul_zero] at h1 ⊢
         exact h1)
   have hT : ∑ i, E i i ∈ S := by
@@ -68,8 +103,8 @@ theorem cas_mem_of_qdet_mem {A : Type} [Ring A] [Algebra ℂ A] (S : Subalgebra 
     have e : f 1 = 0 := hf 1 (Subalgebra.one_mem _)
     have := (core f hf).1
     rw [hρ0, e] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum]
+
+    simp only [map_sum]
     linear_combination this
   have hW : (2 : ℂ) • ∑ i, ∑ j ∈ univ.filter (fun j => i < j), (E i i * E j j - E j i * E i j)
         - ∑ i : Fin n, ((n : ℂ) - 1 - 2 * (i : ℕ)) • E i i ∈ S := by
@@ -78,8 +113,8 @@ theorem cas_mem_of_qdet_mem {A : Type} [Ring A] [Algebra ℂ A] (S : Subalgebra 
     have h2 := (core f hf).2
     rw [e] at h2
     simp only [sum_erase_eq_sub (mem_univ _), hρ0] at h2
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sub f, map_sum, map_smul, smul_eq_mul]
+
+    simp only [map_sub f, map_sum, map_smul, smul_eq_mul]
     have h5 : ∑ i : Fin n, ((n : ℂ) - 1 - 2 * (i : ℕ)) * f (E i i)
         = - (2 * ∑ i, (0 - ρ i) * f (E i i)) := by
       rw [mul_sum, ← sum_neg_distrib]

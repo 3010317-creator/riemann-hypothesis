@@ -1,18 +1,64 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
-public import Formalism.LocalToGlobal.ProjectiveLattices.DepthTie
-public import Development.AbelianVarietyTheory.Definitions.Jets.EmbShortThLeThetaPlain
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MarkedIsometryHalf
+public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DetSubMemOfConj
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsTwistCharacterUnitsModSpecialIdealStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsIsometryAgreeing
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsTwistCharacterUnitsModSpecialIdealStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FunctionFieldAlgClosedLevel
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MarkedIsometryHalf
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionShortThetaSeriesRootOfUnityMul
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicElementLatticeFullAndCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGramStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsComponentWeight
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryOfTraceEq
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOneStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinitePartPreservesFormDetNormOneStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameUniformEmbeddingSecond
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HalvesFreeAndAdjoint
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelAutomorphismPeriodFamily
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 
 @[expose] public section
 
@@ -73,7 +119,7 @@ theorem sub_eq_nsmul_of_split {L A : Type} [AddCommGroup L] [AddCommGroup A] (j 
   abel
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem congOne_det (V : HSp D) (io : Dw.La →ₗ[𝓞 D.host.E] (Fin V.rank → D.host.E)) (hio : LatEmb V io)
     {l l₂ : Level H} {p : ℕ} {I : Ideal (𝓞 D.host.E)} (hM : l₂.M = l.M * p) (hcop : p.Coprime l.M)
     (hMb : l₂.Mb = l.Mb * I) (s : Dw.La →ₗ[𝓞 D.host.E] Dw.La)
@@ -133,8 +179,8 @@ theorem exists_basis_lift {R L : Type} [CommRing R] [AddCommGroup L] [Module R L
   have h0 : y - ∑ i, co i • c • x i ∈ (I • ⊤ : Submodule R L) := by
     rw [← Submodule.Quotient.eq]
     apply e.injective
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← Submodule.mkQ_apply _ (∑ i, _), map_sum, map_sum]
+
+    rw [← Submodule.mkQ_apply _ (∑ i, _), map_sum, map_sum]
     simp only [map_smul, Submodule.mkQ_apply, ← Submodule.Quotient.mk_smul _ c, hv, e.apply_symm_apply]
     funext i
     rw [Finset.sum_apply, Finset.sum_eq_single i]
@@ -148,7 +194,7 @@ theorem exists_basis_lift {R L : Type} [CommRing R] [AddCommGroup L] [Module R L
     (Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)) h0
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_psiTie_of_values (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {n r : ℕ}
     (d : DeltaDat Xo c n) (hr : V.rank = r) (io : Dw.La →ₗ[𝓞 D.host.E] (Fin V.rank → D.host.E))
     (hι : IotaOK Dw V io) (hpq : 1 ≤ Dw.p + Dw.q) (x₀ : (D.host.E →+* ℂ) → Matrix (Fin r) (Fin r) ℂ)
@@ -220,8 +266,8 @@ theorem exists_psiTie_of_values (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c 
       rw [← hrange, ← (GlobalTheory.T.adelicElementLattice_full_and_completion D V 1).2.2.2.2.1]
       exact hlift _ (hv₁ j))
   have hdet := hδ k a fun j => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← hv₂, ← hk, (Submodule.Quotient.eq _).2 (ha₁ j), ← Submodule.mkQ_apply, map_sum]
+
+    rw [← hv₂, ← hk, (Submodule.Quotient.eq _).2 (ha₁ j), ← Submodule.mkQ_apply, map_sum]
     simp only [map_smul, Submodule.mkQ_apply, hv₂]
   have hval' := hχ _ a.det (δ k) (normOne_det V u) (hlM ▸ hcong) hdet ha₂
   refine value_ratio V (U₂ ()) (dict₂ ()) io e₀ F ik φ th x₀ (RingHom.ext fun _ => rfl) hA₂ hpq hU hW hD hι hth

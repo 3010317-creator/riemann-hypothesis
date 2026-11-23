@@ -1,32 +1,45 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TypeIdxUnique
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsStdFr
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PinColL
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TailRd
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.Placed
-public import Formalism.LocalToGlobal.IndefiniteReal.RealRec
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.OnFramesRdApply
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PairForm
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotBadPrimeBase
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationEqZeroOfRootOfSUnitRatio
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.WeilRepresentationUnitaryPair
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsMatrixInFrameOfXZero
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.BaseMatrixGlApply
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryLatticeKernel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResidueEqZeroIff
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValConjSubLt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelTwistPrimesStepZeroCharacterEqOne
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
 
 @[expose] public section
 
@@ -56,11 +69,11 @@ theorem lamJ_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
   subst hfr
   obtain ⟨hh, e⟩ := hres (inclE (F := F) (FiniteAdeleRing (𝓞 F) F) (z : E)) _ (by rw [adAt_inclE]; exact hasRes_coe w z)
   refine ⟨⟨_, hh⟩, rfl, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, TC.GLev0.redM_mat G i h ρ hres hA, Formalism.L2.Forms.lamJ, Finset.range_zero, Finset.prod_empty, mul_one, hz, map_sum ρ]
+
+  rw [e, TC.GLev0.redM_mat G i h ρ hres hA, Formalism.L2.Forms.lamJ, Finset.range_zero, Finset.prod_empty, mul_one, hz, map_sum ρ]
   refine congrArg _ (Finset.sum_congr rfl fun x _ => ?_)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum ρ]
+
+  rw [map_sum ρ]
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [apply_ite ρ, map_zero]
   rfl
@@ -73,14 +86,14 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Form
 open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.StepData GlobalTheory.SymChain GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.MiTop GlobalTheory.Fam GlobalTheory.Mem.Col2 ValuativeRel IsLocalRing
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-set_option maxHeartbeats 2000000
+
 
 namespace GlobalTheory.FamTraceChiCol.ColRead
 
 open GlobalTheory.SymBridge GlobalTheory.RootEx
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_close {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {D : D7} (q : GlobalTheory.FinPl.SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : Formalism.L2.NTheta.IsIdemAt q.e PP)
     (V : HSp D) {n κ τ : ℕ} (hr : V.rank = n) (hn : n = κ) (F : Frame k V.rank (XIx (Fin κ) (Fin τ) 0)) (hF : IsStdFr xPos F)
@@ -115,18 +128,18 @@ theorem exists_close {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] 
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [map_sum]
     refine Finset.sum_congr rfl fun a _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [apply_ite (Ideal.Quotient.mk PP.asIdeal), map_zero, hR]
     exact if_congr (hc a b).symm rfl rfl
   · let φ : 𝓞 D.host.E →+* k := (q.pr.comp (incA D)).comp (algebraMap (𝓞 D.host.E) D.host.E)
     have hφ : ∀ r : 𝓞 D.host.E, (ofSplit q).pr (r : D.host.E) = φ r := fun _ => rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hφ, map_sum φ, ← Finset.sum_sub_distrib]
+
+    rw [hφ, map_sum φ, ← Finset.sum_sub_distrib]
     refine (valuation k).map_sum_lt one_ne_zero fun a _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum φ, ← Finset.sum_sub_distrib]
+
+    rw [map_sum φ, ← Finset.sum_sub_distrib]
     refine (valuation k).map_sum_lt one_ne_zero fun b _ => ?_
     split_ifs
     · rw [hgM, he', he']

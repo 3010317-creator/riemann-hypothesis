@@ -1,13 +1,60 @@
 module
 
-public import Mathlib
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SumMemLoc
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AffineHilbertIdealSheafOfQuotientIdealTop
-public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XBundleOfFamily
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsUniformDenominator
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SumMemLoc
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Objects
 
 @[expose] public section
 
@@ -62,8 +109,8 @@ theorem locFree_comap (R : Subalgebra O Ω) {N : ℕ} (L : AddSubgroup V) (e : V
     rw [hb]
     refine exists_congr fun a => and_congr_right fun _ => ?_
     rw [← e.symm.injective.eq_iff, e.symm_apply_apply]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, Function.comp_apply]
+
+    simp only [map_sum, map_smul, Function.comp_apply]
 
 theorem locFree_prod (R : Subalgebra O Ω) {N N₁ : ℕ} (L : AddSubgroup V) (L₁ : AddSubgroup V₁)
     (h : LocFree R N L) (h₁ : LocFree R N₁ L₁) : LocFree R (N + N₁) (L.prod L₁) := by

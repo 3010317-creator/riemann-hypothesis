@@ -1,7 +1,54 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePCartSelfSt
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieCartTop
+import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieCartAdd
+import Formalism.LocalToGlobal.CharacterGerms.RowTieCartFB
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieGermI
+import Formalism.LocalToGlobal.CharacterGerms.RowTiePAxesSelfSt
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -49,8 +96,8 @@ theorem FBChart.rawCol_sg (v : Fin dd → C) : Y.rawCol.sg v = un1 (Y.sgP v) := 
   show -∑ i, v i * MvPowerSeries.coeff (μ.mapDomain (fun x : Fin dd => ((0 : Fin 2), x)) +
       Finsupp.single ((1 : Fin 2), i) 1) Y.h =
     MvPowerSeries.coeff (μ.mapDomain fun x : Fin dd => ((0 : Fin 1), x)) (Y.sgP v)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [FBChart.sgP, map_neg, map_sum, MvPowerSeries.coeff_C_mul, coeff_eval_second_zero]
+
+  simp only [FBChart.sgP, map_neg, map_sum, MvPowerSeries.coeff_C_mul, coeff_eval_second_zero]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   congr 1
@@ -138,7 +185,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
   · have hμ : (μ.mapDomain Prod.snd).mapDomain (fun x : Fin dd => (c, x)) = μ := by
       rw [← Finsupp.mapDomain_comp]
       conv_rhs => rw [← Finsupp.mapDomain_id (v := μ)]
-      apply Finsupp.mapDomain_congr
+      apply Finsupp.mapDomain_congr rfl
       intro x hx
       exact Prod.ext (hr x (Finsupp.mem_support_iff.1 hx)).symm rfl
     rw [← hμ, coeff_subst_rename_inj _ (col_inj c)]
@@ -185,14 +232,14 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
 theorem FBChart.rawSelf_sg (v : Fin 2 × Fin dd → C) :
     (Y.rawSelf p).sg v = ∑ c, inCol c (Y.rawCol.sg fun i => v (c, i)) := by
   ext μ
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   simp only [coeff_inCol_sg, Finset.sum_neg_distrib]
   show -∑ x, v x * MvPowerSeries.coeff (μ.mapDomain (fun x : Fin 2 × Fin dd => ((0 : Fin 2), x)) +
       Finsupp.single ((1 : Fin 2), x) 1) (∑ col, hCol col Y.h) = _
   congr 1
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Finset.mul_sum]
+
+  simp only [map_sum, Finset.mul_sum]
   exact Finset.sum_comm
 
 theorem addCvSelf_of (hG : GermIAllSt) : AddCvSelfSt := by
@@ -209,8 +256,8 @@ theorem addCvSelf_of (hG : GermIAllSt) : AddCvSelfSt := by
     intro δ hδ f
     have hS := hasSubst_of_constantCoeff_zero fun x => (hδ x).1
     unfold alongCv
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← MvPowerSeries.coe_substAlgHom hS, map_sum, MvPowerSeries.coe_substAlgHom hS]
+
+    rw [← MvPowerSeries.coe_substAlgHom hS, map_sum, MvPowerSeries.coe_substAlgHom hS]
     exact Finset.sum_congr rfl fun c _ => along δ hδ c (f c)
   refine ⟨fun x => G x.1 x.2, hcv, ?_, ?_⟩
   · rintro ⟨c, i⟩

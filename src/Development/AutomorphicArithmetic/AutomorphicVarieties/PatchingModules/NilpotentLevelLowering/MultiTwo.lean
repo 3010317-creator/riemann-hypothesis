@@ -1,9 +1,50 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.NilpotentLevelLowering.ActUVariableEqPow
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDdProps
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDualEx
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDualExp
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.NilpotentLevelLowering.MultiPhi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.NilpotentLevelLowering.MultiPsi
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HkDualEx
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -162,8 +203,8 @@ private theorem esymm_root {O R B : Type} [CommRing O] [CommRing R] [Algebra O R
       MvPolynomial.rename (fun i => (j, i)) (MvPolynomial.map (β.comp (algebraMap O R)) p) := by
     intro p
     simp [emb, MvPolynomial.map_rename, MvPolynomial.map_map]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hE, MvPolynomial.map_esymm, MvPolynomial.esymm, map_sum, map_sum]
+
+  rw [hE, MvPolynomial.map_esymm, MvPolynomial.esymm, map_sum, map_sum]
   simp only [map_prod, MvPolynomial.rename_X]
   have hroot := MSplitAlg.prod_root P n j
   have hc' : ((Finset.univ.val.map (MSplitAlg.root P n j)).map fun t => Polynomial.X - Polynomial.C t).prod.coeff (n - k)
@@ -210,8 +251,8 @@ theorem UpperTheory.V.Pa.Lev.multiTwo :
     rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   have hφψ : ∀ v, φ (ψ v) = act f v := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hψv, map_sum]
+
+    rw [hψv, map_sum]
     have hterm : ∀ i : Fin q → ι, φ (mkq (MvPolynomial.map β (∏ j, emb O R j (a (i j)))) ⊗ₜ[B]
         tr (act (∏ j, emb O R j (c (i j))) v)) =
         (act (∏ j, emb O R j (a (i j))) * (List.ofFn e).prod * act (∏ j, emb O R j (c (i j)))) v := by
@@ -278,8 +319,8 @@ theorem UpperTheory.V.Pa.Lev.multiTwo :
     rw [← hpu]
     apply Finset.prod_congr rfl
     intro j _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← map_sum]
+
+    rw [← map_sum]
     congr 1
     conv_rhs => rw [← (hkDualExp O n ι a c hd (Hk.NN n (Nq j : O))).1]
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -298,9 +339,9 @@ theorem UpperTheory.V.Pa.Lev.multiTwo :
       exact tr_list H (List.nodup_finRange q) (fun j => c (i j)) hvW
     choose bb hbb1 hbb2 using hb
     rw [hψv]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hbb2, ← TensorProduct.smul_tmul, Algebra.smul_def, hbb1, ← map_mul, ← TensorProduct.sum_tmul,
-      ← map_sum]
+
+    simp only [hbb2, ← TensorProduct.smul_tmul, Algebra.smul_def, hbb1, ← map_mul, ← TensorProduct.sum_tmul,
+    ← map_sum]
     rw [hpoly, e1]
   refine ⟨φ, ψ, hφ2, hψ, hφψ, ?_⟩
   intro z

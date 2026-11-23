@@ -1,16 +1,59 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Formalism.SharpRestriction.LevelLetterCocycles.WachCoordinates
-public import Formalism.SharpRestriction.LevelLetterCocycles.PairedCharacterCondition
-public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
-public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsGenerators
-public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CrysOnCond
-public import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasisStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GrowthGaloisInvariantsModPrimePowerLattice
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsSmulMemBis
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
+import Formalism.ConjugateSelfDual.Statement
+import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.LinearAlgebra.Quotient.Pi
+public import Mathlib.RingTheory.Localization.Module
 
 @[expose] public section
 
@@ -22,42 +65,7 @@ namespace GlobalTheory.CompanionTheory.GrowthOfInvariants
 
 theorem card_quot_pow {O : Type} [CommRing O] [IsDomain O] (ϖ : O) (hϖ : ϖ ≠ 0) (n : ℕ) :
     Nat.card (O ⧸ Ideal.span {ϖ ^ n}) = Nat.card (O ⧸ Ideal.span {ϖ}) ^ n := by
-  have key : ∀ a : O, Nat.card (O ⧸ Ideal.span {a}) =
-      (Submodule.toAddSubgroup (Ideal.span {a} : Ideal O)).index := fun a => rfl
-  induction n with
-  | zero =>
-    have : Subsingleton (O ⧸ Ideal.span {ϖ ^ 0}) := by
-      rw [pow_zero, Ideal.span_singleton_one]
-      exact Ideal.Quotient.subsingleton_iff.mpr rfl
-    simp [Nat.card_of_subsingleton (0 : O ⧸ Ideal.span {ϖ ^ 0})]
-  | succ n ih =>
-    let f : O →+ O := AddMonoidHom.mulLeft (ϖ ^ n)
-    have hle : Submodule.toAddSubgroup (Ideal.span {ϖ ^ (n + 1)} : Ideal O) ≤
-        Submodule.toAddSubgroup (Ideal.span {ϖ ^ n} : Ideal O) := by
-      intro x hx
-      have hx' : x ∈ (Ideal.span {ϖ ^ (n + 1)} : Ideal O) := hx
-      change x ∈ (Ideal.span {ϖ ^ n} : Ideal O)
-      rw [Ideal.mem_span_singleton] at hx' ⊢
-      exact (pow_dvd_pow ϖ (Nat.le_succ n)).trans hx'
-    have hrange : f.range = Submodule.toAddSubgroup (Ideal.span {ϖ ^ n} : Ideal O) := by
-      ext x
-      constructor
-      · rintro ⟨y, rfl⟩
-        change ϖ ^ n * y ∈ (Ideal.span {ϖ ^ n} : Ideal O)
-        exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
-      · intro hx
-        have hx' : x ∈ (Ideal.span {ϖ ^ n} : Ideal O) := hx
-        obtain ⟨y, rfl⟩ := Ideal.mem_span_singleton.mp hx'
-        exact ⟨y, rfl⟩
-    have hcomap : (Submodule.toAddSubgroup (Ideal.span {ϖ ^ (n + 1)} : Ideal O)).comap f =
-        Submodule.toAddSubgroup (Ideal.span {ϖ} : Ideal O) := by
-      ext x
-      change ϖ ^ n * x ∈ (Ideal.span {ϖ ^ (n + 1)} : Ideal O) ↔ x ∈ (Ideal.span {ϖ} : Ideal O)
-      rw [Ideal.mem_span_singleton, Ideal.mem_span_singleton, pow_succ]
-      exact mul_dvd_mul_iff_left (pow_ne_zero n hϖ)
-    have h1 := AddSubgroup.relIndex_mul_index hle
-    rw [← hrange, ← AddSubgroup.index_comap, hcomap, hrange, ← key, ← key, ← key, ih] at h1
-    rw [← h1, pow_succ, mul_comm]
+  apply GlobalTheory.GrowthOfInvariants.card_quot_span_pow <;> assumption
 
 theorem card_le_of_fibers {Q R E : Type} [AddCommGroup Q] [AddCommGroup E] [Finite R] [Finite E]
     (g : Q → R) (φ : E →+ Q) (hg : ∀ x y, g x = g y → ∃ e, x - y = φ e) :

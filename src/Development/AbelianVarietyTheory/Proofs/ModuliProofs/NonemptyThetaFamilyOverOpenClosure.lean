@@ -1,28 +1,64 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaObjectNearGoodPrimeStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenericObjectMinimalPrimeModuliChartStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyThetaCoordinateSchemeDataStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescent
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibresStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocallyStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSectionCoordinateVectorOfLocallyOnRingStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIdealOfLocally
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueAffineCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIdealOfLocally
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaObjectNearGoodPrimeStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSectionCoordinateVectorOfLocallyOnRingStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyThetaCoordinateSchemeDataStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocallyStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnitStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibresStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescent
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 
 @[expose] public section
 
@@ -93,7 +129,6 @@ theorem exists_fac_field {R K : Type} [CommRing R] [Field K] (x : Sp R ⟶ S) [I
     have hq : q = p := by
       first
       | exact Subsingleton.elim q p
-      | exact PrimeSpectrum.ext (by rw [Ideal.eq_bot_of_prime (show PrimeSpectrum K from q).asIdeal, Ideal.eq_bot_of_prime (show PrimeSpectrum K from p).asIdeal])
     rw [hq]; exact hp
   obtain ⟨y, hy⟩ := exists_spMap (IsOpenImmersion.lift x z hsub)
   exact ⟨y, by rw [← hy]; exact IsOpenImmersion.lift_fac x z hsub⟩
@@ -121,7 +156,6 @@ theorem exists_fac_away {R T : Type} [CommRing R] [CommRing T] (x : Sp R ⟶ S) 
     first
     | simp [hr]
     | (rw [hr]; simp)
-    | exact hr
   obtain ⟨y, hy⟩ := exists_spMap (IsOpenImmersion.lift x _ hsub)
   exact ⟨y, by rw [← hy]; exact IsOpenImmersion.lift_fac x _ hsub⟩
 
@@ -142,10 +176,6 @@ theorem isNoetherianRing_of_open {R : Type} [CommRing R] [IsNoetherianRing o] {s
   haveI : IsLocallyNoetherian (Sp R) := LocallyOfFiniteType.isLocallyNoetherian (x ≫ i ≫ PSpace.str o N)
   first
   | exact (isLocallyNoetherian_Spec (R := CommRingCat.of R)).1 this
-  | exact isLocallyNoetherian_Spec.1 this
-  | exact (isNoetherian_Spec (R := CommRingCat.of R)).1 inferInstance
-  | exact (isNoetherian_Spec (R := CommRingCat.of R)).1 (IsNoetherian.mk)
-  | exact (isNoetherian_Spec (R := CommRingCat.of R)).1 { }
 
 end General
 
@@ -381,7 +411,6 @@ theorem Covered.dense (h : Covered Mat κ univ) (hG : GenericObj C Y Mat κ) : D
     rw [← hpt]
     first
     | rfl
-    | simp
   refine ⟨(spMap y ≫ x) pt, ?_, ⟨K, inferInstance, spMap y ≫ x, ⟨pt, rfl⟩, hfc2⟩⟩
   rw [e3]; exact hqW
 
@@ -477,7 +506,6 @@ theorem exists_covered (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 �
   have hUι : ∀ q : U.toScheme, U.ι q = q.1 := fun q => by
     first
     | rfl
-    | simp
   have hrange : ∀ {R : Type} [CommRing R] (x : Sp R ⟶ Y.MM) (v : Ix g (N' ^ 2) → R)
       (t : TObj g (N' ^ 2) J b (x ≫ Y.s)), IsChart Y Mat κ x v t → Set.range x ⊆ Set.range U.ι := by
     intro R _ x v t hc q hq
@@ -504,7 +532,6 @@ theorem exists_covered (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 �
     rw [hUι p, ← hr, ← hx' p]
     first
     | simp
-    | rfl
   obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.exists_thetaLevelAbelianScheme_glue_affineCover h₁ h₂ _ _ _ _ b m U.toScheme (U.ι ≫ Y.s) U.toScheme R x' t' hm hd ho
     (fun i => inferInstance) (fun p => ⟨p, hcov p⟩) (fun i i' T _ a a' u ha e hu => by
       haveI := ha
@@ -548,11 +575,9 @@ theorem nonempty_wFam : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Fin
     have hq : q = pt := by
       first
       | exact Subsingleton.elim q pt
-      | exact PrimeSpectrum.ext (by rw [Ideal.eq_bot_of_prime (show PrimeSpectrum K from q).asIdeal, Ideal.eq_bot_of_prime (show PrimeSpectrum K from pt).asIdeal])
     rw [hq]
     first
     | (rw [Scheme.Opens.range_ι]; exact hU)
-    | exact ⟨⟨_, hU⟩, rfl⟩
   refine ⟨IsOpenImmersion.lift U.ι x hrange, IsOpenImmersion.lift_fac _ _ _, ?_⟩
   exact hcov.tmap K _ t' (by rw [← Category.assoc, IsOpenImmersion.lift_fac]) v hsh hth
     (by rw [IsOpenImmersion.lift_fac]; exact hsc)

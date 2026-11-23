@@ -1,10 +1,44 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisOfFullLattice
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -22,25 +56,7 @@ theorem exists_basis_of_full {R F N V ι : Type} [CommRing R] [IsDomain R] [Fiel
     (b : Module.Basis ι R N) :
     ∃ bV : Module.Basis ι F V, (∀ j, bV j = f (b j)) ∧
       ∀ x i, bV.repr (f x) i = algebraMap R F (b.repr x i) := by
-  letI : Module R V := Module.compHom V (algebraMap R F)
-  have hsm : ∀ (c : R) (v : V), c • v = algebraMap R F c • v := fun _ _ => rfl
-  haveI : IsScalarTower R F V := ⟨fun c a v => by rw [hsm, Algebra.smul_def, mul_smul]⟩
-  let f' : N →ₗ[R] V := { toFun := f, map_add' := map_add f, map_smul' := hs }
-  haveI : IsLocalizedModule (nonZeroDivisors R) f' :=
-    { map_units := fun s => by
-        rw [Module.End.isUnit_iff]
-        have h0 : algebraMap R F s ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
-        have : ⇑(algebraMap R (Module.End R V) s) = fun v => algebraMap R F s • v := by
-          ext v; rfl
-        rw [this]
-        exact (MulAction.toPerm (Units.mk0 _ h0) : Equiv.Perm V).bijective
-      surj := fun v => by
-        obtain ⟨c, hc, x, hx⟩ := hfull v
-        exact ⟨(x, ⟨c, mem_nonZeroDivisors_of_ne_zero hc⟩), hx⟩
-      exists_of_eq := fun h => ⟨1, by rw [hf h]⟩ }
-  exact ⟨b.ofIsLocalizedModule F (nonZeroDivisors R) f',
-    fun j => b.ofIsLocalizedModule_apply F _ f' j,
-    fun x i => b.ofIsLocalizedModule_repr_apply F _ f' x i⟩
+  apply GlobalTheory.Cyc.exists_basis_of_fullLattice <;> assumption
 
 section Generic
 

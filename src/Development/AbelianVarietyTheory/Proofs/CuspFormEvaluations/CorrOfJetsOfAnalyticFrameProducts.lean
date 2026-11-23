@@ -1,11 +1,50 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsValueAtJetPointCmFrameSection
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ThConst
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FderivEqOfJetOf
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FderivEqOfJetOf
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -23,27 +62,7 @@ namespace GlobalTheory.AnVal.JetCorr
 
 theorem jet_point_eq {K : Type} [Field K] {J : Type} {m : ℕ} (p : PrimeSpectrum (Jet K J m)) :
     p = IsLocalRing.closedPoint (Jet K J m) := by
-  apply PrimeSpectrum.ext
-  refine le_antisymm (IsLocalRing.le_maximalIdeal p.isPrime.ne_top) fun a ha => ?_
-  have hn : IsNilpotent a := by
-    obtain ⟨q, rfl⟩ := Ideal.Quotient.mk_surjective a
-    have hn := jet_nilpotent_of_orig K J m (sub_const_mem_orig (R := K) q)
-    have h0 : MvPolynomial.constantCoeff q = 0 := by
-      by_contra hne
-      refine (IsLocalRing.mem_maximalIdeal _).mp ha ?_
-      have e : algebraMap K (Jet K J m) (MvPolynomial.constantCoeff q) =
-          Ideal.Quotient.mk (orig K J ^ (m + 1)) (MvPolynomial.C (MvPolynomial.constantCoeff q)) := by
-        rw [← MvPolynomial.algebraMap_eq]; rfl
-      have hsplit : Ideal.Quotient.mk (orig K J ^ (m + 1)) q =
-          algebraMap K (Jet K J m) (MvPolynomial.constantCoeff q) +
-            Ideal.Quotient.mk (orig K J ^ (m + 1)) (q - MvPolynomial.C (MvPolynomial.constantCoeff q)) := by
-        rw [map_sub, e, add_sub_cancel]
-      rw [hsplit]
-      exact IsNilpotent.isUnit_add_left_of_commute hn
-        ((isUnit_iff_ne_zero.mpr hne).map (algebraMap K (Jet K J m))) (Commute.all _ _)
-    rwa [h0, map_zero, sub_zero] at hn
-  obtain ⟨n, hn⟩ := hn
-  exact p.isPrime.mem_of_pow_mem n (hn ▸ p.asIdeal.zero_mem)
+  apply GlobalTheory.JetVal.jet_pt_eq <;> assumption
 
 section JetOf
 

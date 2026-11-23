@@ -1,11 +1,54 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePPTSelfEx
-public import Formalism.LocalToGlobal.CharacterGerms.RowTiePProjFB
-public import Formalism.LocalToGlobal.CharacterGerms.RowTiePLSmallMain
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePOActLog
-public import Formalism.LocalToGlobal.CharacterGerms.RowTiePCartSelfSt
+public import Formalism.LocalToGlobal.CharacterGerms.CoeffSubstEqSum
+import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+public import Formalism.LocalToGlobal.CharacterGerms.EndomorphismLimitIntegral
+import Formalism.LocalToGlobal.CharacterGerms.RowTieCartAdd
+import Formalism.LocalToGlobal.CharacterGerms.RowTieCartFB
 public import Formalism.LocalToGlobal.CharacterGerms.RowTiePAllStart
+public import Formalism.LocalToGlobal.CharacterGerms.RowTiePLSmallMain
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -141,8 +184,8 @@ theorem subst_lg_comp (Y : FBChart C V O dd) (φ : Pt C 1 dd) (hφ0 : ∀ i, MvP
         rw [OActLog.log_endo Y.B.G Y.lg Y.lg_lin Y.lg_add φ hφ0 hhom x]
     _ = ∑ j, OActLog.linM φ x j • MvPowerSeries.subst Q (Y.lg j) := by
         simp only [← MvPowerSeries.smul_eq_C_mul]
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← MvPowerSeries.coe_substAlgHom hQS, map_sum]
+
+        rw [← MvPowerSeries.coe_substAlgHom hQS, map_sum]
         simp only [map_smul]
 
 end StartSelf
@@ -247,8 +290,8 @@ theorem allStartSelf_of (hLie : ProjLieSelfSt) : AllStartSelfSt := by
     rw [h1, StartSelf.subst_lg_comp Y (Φ col) (hΦ0 col) (hΦhom col) Q hQ0 x]
     simp only [h2]
     refine PowerSeries.ext fun n => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_smul, smul_eq_mul, PowerSeries.coeff_mk]
+
+    simp only [map_sum, map_smul, smul_eq_mul, PowerSeries.coeff_mk]
     exact hkey n col x
   let RHS : I0 → PowerSeries C := fun q =>
     (0 : PowerSeries C) - alongCv Γ ((Y.rawSelf p).sg ((Y.rawSelf p).u (1 - g) q)) +

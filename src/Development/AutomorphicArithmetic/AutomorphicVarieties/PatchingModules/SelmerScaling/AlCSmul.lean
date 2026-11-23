@@ -1,14 +1,62 @@
 module
 
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.EpC
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.LinAlg
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.FirstOrderLiftConstantPart
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.SelmerSpannedByKappaLaurent
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.AlSel
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.Claim2
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.DualEx
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.TpDual
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.ExistsSemilinearFunctionalNonzero
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.FirstOrderLiftConstantPart
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.LiftsSub
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.AlSel
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.LinAlg
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.TpDual
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -98,11 +146,11 @@ theorem UpperTheory.V.Pa.pres :
       have ha := congrFun hr a
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at ha ⊢
       have hm : (∑ q, s q * cO q a) ∈ maximalIdeal S.OO := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← residue_eq_zero_iff, map_sum]
+
+        rw [← residue_eq_zero_iff, map_sum]
         simpa [map_mul] using ha
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hker, RingHom.mem_ker, map_sum] at hm
+
+      rw [← hker, RingHom.mem_ker, map_sum] at hm
       simpa [map_mul, hcO] using hm
     show residue S.OO (s p) = 0
     rw [residue_eq_zero_iff, ← hker, RingHom.mem_ker]
@@ -128,8 +176,8 @@ theorem UpperTheory.V.Pa.pres :
         intro k
         rw [hmulT α hα _ _ (hXm k), ← hXv k ⟨α, hα⟩, ← ho k]
         rfl
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sub, map_sum, e2, e1, sub_self]
+
+      simp only [map_sub, map_sum, e2, e1, sub_self]
     rw [← sub_add_cancel b (∑ k, algebraMap S.OO S.Bh (o k) * Xb k)]
     refine Ideal.add_mem _ (Ideal.mem_sup_right hb'J) (Ideal.mem_sup_left ?_)
     exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨k, rfl⟩)
@@ -145,12 +193,12 @@ theorem UpperTheory.V.Pa.pres :
       intro j
       have hj := hαdef j (∑ a, algebraMap S.OO S.Bh (cO (i, j) a) * Xb a)
       rw [hrF _ (hb j), zero_mul, sub_zero] at hj
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← hj, map_sum]
+
+      rw [← hj, map_sum]
       refine Finset.sum_congr rfl fun a _ => ?_
       rw [hmulT _ (α j).2 _ _ (hXm a), hXv a (α j), ← hcO (i, j) a]
       rfl
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp only [e3]
     exact hrelα

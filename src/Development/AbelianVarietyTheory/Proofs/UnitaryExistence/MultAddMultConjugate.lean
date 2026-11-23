@@ -1,10 +1,53 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsTorusOfPeriodHermitian
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
 public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.ReflexNormIndexIdeal
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulMemOfMemSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsCoeEqSpanDetOfIntVecLe
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.GroupWithZero.Torsion
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulMemOfMemSpan
 
 @[expose] public section
 
@@ -141,32 +184,7 @@ theorem isBe_unique {𝔞 : Ideal (𝓞 E)} (h0 : 𝔞 ≠ ⊥) {β β' : c.F} (
 
 theorem mult_add_mult_conjugate (τ : E →+* ℂ) :
     Dw.mult τ + Dw.mult (ComplexEmbedding.conjugate τ) = Dw.p + Dw.q := by
-  have hd : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-  have h1 : τ (H.rt : E) ^ 2 = -(H.d : ℂ) := by
-    have := congrArg (τ.comp (algebraMap (𝓞 E) E)) H.rt_sq
-    rw [map_pow, map_neg, map_natCast] at this
-    exact this
-  have h2 : starRingEnd ℂ (τ (H.rt : E)) = -τ (H.rt : E) := by
-    generalize τ (H.rt : E) = z at h1
-    have hre := congrArg Complex.re h1
-    have him := congrArg Complex.im h1
-    simp only [sq, Complex.mul_re, Complex.mul_im, Complex.neg_re, Complex.neg_im, Complex.natCast_re,
-      Complex.natCast_im, neg_zero] at hre him
-    have h0 : z.re = 0 := by
-      by_contra h
-      have : z.im = 0 := mul_left_cancel₀ h (by linarith)
-      rw [this] at hre
-      nlinarith
-    apply Complex.ext <;> simp [h0]
-  have h3 : H.rt0 ≠ -H.rt0 := fun h => by
-    have h0 : H.rt0 = 0 := by linear_combination h / 2
-    have := H.sqrt_neg_disc_sq
-    rw [h0] at this
-    exact H.d_prime.ne_zero (by simpa using this)
-  simp only [Datum.mult, ComplexEmbedding.conjugate_coe_eq, h2]
-  rcases sq_eq_sq_iff_eq_or_eq_neg.1 (h1.trans H.sqrt_neg_disc_sq.symm) with h | h
-  · rw [h, if_pos rfl, if_neg h3.symm]
-  · rw [h, neg_neg, if_pos rfl, if_neg h3.symm, add_comm]
+  apply GlobalTheory.PeriodTorus.mult_add_mult_conj <;> assumption
 
 theorem norm_reflexNorm (γ : E) (s : c.F →+* ℂ) :
     ‖s (reflexNorm Dw c γ)‖ ^ 2 = |(Algebra.norm ℚ γ : ℝ)| ^ (Dw.p + Dw.q) := by

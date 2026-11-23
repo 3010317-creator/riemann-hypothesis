@@ -1,13 +1,54 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
-public import Development.AbelianVarietyTheory.Definitions.Jets.TwoPlaces
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AdjointEndPairMemGaugedCurveLogarithms
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNotMemForallMem
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesLthPowerOfPderivVanishModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralSmulCurveCoeffSeriesOfChartHOfLinearLogStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupCocycleLthPowerCoboundaryModMaximalStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralSmulCurveCoeffSeriesOfChartHOfLinearLogStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesLthPowerOfPderivVanishModMaximalStatement
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNotMemForallMem
+import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
 
 @[expose] public section
 
@@ -205,8 +246,8 @@ theorem end_entry_int (H : RLaw Y V) {M : Matrix κ κ C}
   have h := matrixEnd_two (w := fun _ => 1) H M (b := (MvPowerSeries.X : κ → MvPowerSeries κ C))
     (fun i => MvPowerSeries.constantCoeff_X i) (fun i => ordGe_X (w := fun _ => 1) i) i (Finsupp.single j 1)
     (by simp [Finsupp.weight_single])
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sub, sub_eq_zero, map_sum] at h
+
+  rw [map_sub, sub_eq_zero, map_sum] at h
   have h2 := hM i (Finsupp.single j 1)
   rw [h] at h2
   simpa [MvPowerSeries.coeff_X, Finsupp.single_left_inj] using h2
@@ -280,8 +321,8 @@ theorem sg_all (H : RLaw Y V) (hP : HasProj Y V) {g : Fin 2} {γ : κ → PowerS
     rw [MvPowerSeries.subst_sub hΓ, MvPowerSeries.subst_comp_subst_apply hS hΓ, hb, sg_sum, subst_sum_smul hΓ]
     simp only [subst_endP H (M g) hγ0, hfixγ]
   beta_reduce at hK
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, map_sub, map_sum] at hK
+
+  rw [e, map_sub, map_sum] at hK
   have := mm_add (mm_l_mul hK) (mm_sum' Finset.univ _ fun c _ => mm_mul (hbi c) (h c))
   convert this using 1
   simp only [PowerSeries.coeff_smul, smul_eq_mul, mul_sub, Finset.mul_sum]
@@ -303,8 +344,8 @@ theorem tangent_mm_of_nonDeg : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [Ne
     simpa using coeff_tyS_pow hl s 0
   have hlow : ∀ i n, 2 ≤ n → n < V.l ^ 2 → PowerSeries.coeff n (alongCv γ (Y.lg i)) = 0 := by
     intro i n hn hn'
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [h1, map_sum]
+
+    rw [h1, map_sum]
     refine Finset.sum_eq_zero fun c _ => ?_
     rw [PowerSeries.coeff_smul]
     by_cases hs : ∃ s, V.l ^ s = n
@@ -320,8 +361,8 @@ theorem tangent_mm_of_nonDeg : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [Ne
   have hq : ∀ q : I (1 - g), V.MM ((V.l : C) * PowerSeries.coeff V.l (alongCv γ (Y.sg (Y.u (1 - g) q)))) := by
     intro q
     have e := congrArg (PowerSeries.coeff V.l) (h2 q)
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [tl, map_add (f := _), map_sub, map_sum, Finset.sum_eq_zero, add_zero] at e
+
+    rw [tl, map_add (f := _), map_sub, map_sum, Finset.sum_eq_zero, add_zero] at e
     · have := mm_sub (mm_l_mul ((hlam q).2 V.l)) (hc0 q)
       convert this using 1
       unfold Cart.c0'
@@ -347,8 +388,8 @@ theorem tangent_mm_of_nonDeg : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [Ne
     have := lg_two (τ := Unit) (w := fun _ => 1) H (b := γ) hγ0 (fun i => ordGe_one_of_const (hγ0 i)) i
       (Finsupp.single () 1) (by simp [Finsupp.weight_single])
     have e : PowerSeries.coeff 1 (alongCv γ (Y.lg i) - γ i) = 0 := this
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, sub_eq_zero, h1, map_sum] at e
+
+    rw [map_sub, sub_eq_zero, h1, map_sum] at e
     rw [← e]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [PowerSeries.coeff_smul, t1, hx0, smul_eq_mul, mul_comm]

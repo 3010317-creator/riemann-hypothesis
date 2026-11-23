@@ -1,10 +1,54 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyClosureHomTiltField
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyClosureHomTiltFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltGaloisActionRootOfUnityCoprimeStatement
-public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.RingTheory.WittVector.FrobeniusFractionField
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -15,25 +59,7 @@ namespace GlobalTheory.MemLoc
 
 theorem exists_pow_eq_one_algClosure_coprime (l : ℕ) [Fact l.Prime] (a : AlgebraicClosure (ZMod l))
     (ha : a ≠ 0) : ∃ m : ℕ, 0 < m ∧ ¬ l ∣ m ∧ a ^ m = 1 := by
-  have hint : IsIntegral (ZMod l) a := Algebra.IsIntegral.isIntegral a
-  let K := IntermediateField.adjoin (ZMod l) ({a} : Set (AlgebraicClosure (ZMod l)))
-  haveI : FiniteDimensional (ZMod l) K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K := Module.finite_of_finite (ZMod l)
-  letI : Fintype K := Fintype.ofFinite K
-  let b : K := ⟨a, IntermediateField.mem_adjoin_simple_self _ a⟩
-  have hb : b ≠ 0 := fun h => ha (congrArg Subtype.val h)
-  have h1 : 1 < Fintype.card K := Fintype.one_lt_card
-  refine ⟨Fintype.card K - 1, by omega, ?_, ?_⟩
-  · intro hd
-    have h0 : ((Fintype.card K - 1 : ℕ) : K) = 0 := by
-      obtain ⟨c, hc⟩ := hd
-      have hl : ((l : ℕ) : K) = 0 := by
-        rw [← map_natCast (algebraMap (ZMod l) K), ZMod.natCast_self, map_zero]
-      rw [hc, Nat.cast_mul, hl, zero_mul]
-    rw [Nat.cast_sub h1.le, FiniteField.cast_card_eq_zero] at h0
-    simp at h0
-  · have := congrArg Subtype.val (FiniteField.pow_card_sub_one_eq_one b hb)
-    simpa [b] using this
+  apply GlobalTheory.Per.exists_pow_eq_one_of_algClosure_zmod <;> assumption
 
 theorem exists_unit_frobenius_eq_mul (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [CharP k l] [IsAlgClosed k]
     (u : WittVector l k) (hu : IsUnit u) :

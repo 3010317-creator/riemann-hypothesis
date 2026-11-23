@@ -1,12 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.PrimAn
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TraceMulConjIntIffMemOfMulDifferentEqOne
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsotropicCoefficientSplitting
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LminorSubmatrixCastSucc
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.OneAddZeta21PowSevenAddPowFourteenEqZero
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsCyclotomicExtensionCyclotomicField28
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.FinrankInt
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TraceMulConjIntIffMemOfMulDifferentEqOne
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramePeriodsAlongIsotropicFlowAndBlockChange
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsotropicIndexSums
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -293,8 +340,8 @@ theorem apply_eq_zero {g g' : ℕ} {M : Type} (ty : Fin g → (E →+* ℂ)) (ty
     exact mul_right_cancel₀ h h3
   have h4 : ∀ w : Fin g → ℂ, π w i = ∑ j, w j * π (Pi.single j 1) i := fun w => by
     conv_lhs => rw [pi_eq_sum_univ' w]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_sum, Finset.sum_apply]
+
+    simp [map_sum, Finset.sum_apply]
   have h5 : π z i = c * π t i := by
     rw [h4, h4 t, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -382,8 +429,8 @@ theorem exists_cmLat (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) {
         · refine Finset.sum_congr rfl fun j _ => ?_
           funext k; simp; ring
       have h6 := congrArg L h5
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_nsmul, hLv, map_add (f := _), map_smul, hL, smul_zero, zero_add, map_sum] at h6
+
+      rw [map_nsmul, hLv, map_add (f := _), map_smul, hL, smul_zero, zero_add, map_sum] at h6
       refine h6.trans (Finset.sum_congr rfl fun j _ => ?_)
       rw [map_nsmul, map_nsmul, hf]
       simp only [LinearEquiv.apply_symm_apply]

@@ -1,13 +1,59 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CovolBRa
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.CovolIdxK
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LeadingMinorIntegrality
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.FinrankSpanLb
+public import Mathlib.Algebra.AffineMonoid.Basic
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.BaseLatticeLe
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.EmbVHomInjective
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LeadingMinorIntegrality
-public import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.TermTiesEmptyOfLargeIndex
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.FinrankSpanLb
+import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DualFamilyCounting.InWLeft
+import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -134,8 +180,8 @@ theorem Lsharp {z : (VS D).V} (hz : z ∈ Wb X) (hd : ∀ y ∈ X.Lb, ∃ o : �
     obtain ⟨α, β, l, hl, rfl⟩ := decomp X hy
     obtain ⟨o, ho⟩ := hd l hl
     have e : (VS D).hT (∑ c, α c • X.eX c + l + ∑ c, β c • X.fY c) z = (VS D).hT l z := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp [map_add (f := _), map_sum, LinearMap.map_smulₛₗ₂, (hzW _).1, (hzW _).2]
+
+      simp [map_add (f := _), map_sum, LinearMap.map_smulₛₗ₂, (hzW _).1, (hzW _).2]
     rw [Submodule.mem_one]
     exact ⟨o, by rw [e]; exact ho⟩
   obtain ⟨α, β, l, hl, hzeq⟩ := decomp X hzL
@@ -144,15 +190,15 @@ theorem Lsharp {z : (VS D).V} (hz : z ∈ Wb X) (hd : ∀ y ∈ X.Lb, ∃ o : �
     intro c
     have := (hzW c).2
     rw [hzeq] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_add (f := _), map_sum, map_smul, Formalism.L2.SG.Pf.NcReal.JX.NOf.Ex.h_fe, X.ff, (hlW c).2, Finset.sum_ite_eq] at this
+
+    simp [map_add (f := _), map_sum, map_smul, Formalism.L2.SG.Pf.NcReal.JX.NOf.Ex.h_fe, X.ff, (hlW c).2, Finset.sum_ite_eq] at this
     exact this
   have hβ : ∀ c, β c = 0 := by
     intro c
     have := (hzW c).1
     rw [hzeq] at this
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp [map_add (f := _), map_sum, map_smul, X.ef, X.ee, (hlW c).1, Finset.sum_ite_eq] at this
+
+    simp [map_add (f := _), map_sum, map_smul, X.ef, X.ee, (hlW c).1, Finset.sum_ite_eq] at this
     exact this
   rw [hzeq]
   simp only [hα, hβ, zero_smul, Finset.sum_const_zero, zero_add, add_zero]
@@ -478,15 +524,15 @@ theorem trB_zsmul_right (z : ℤ) (x y : (VS D).V) :
 theorem trB_sum_left {N : ℕ} (c : Fin N → ℤ) (w : Fin N → (VS D).V) (y : (VS D).V) :
     Algebra.trace ℚ D.host.E ((VS D).hT (∑ i, c i • w i) y) =
       ∑ i, (c i : ℚ) * Algebra.trace ℚ D.host.E ((VS D).hT (w i) y) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, LinearMap.sum_apply, map_sum]
+
+  rw [map_sum, LinearMap.sum_apply, map_sum]
   exact Finset.sum_congr rfl fun i _ => trB_zsmul_left (c i) (w i) y
 
 theorem trB_sum_right {N : ℕ} (c : Fin N → ℤ) (w : Fin N → (VS D).V) (x : (VS D).V) :
     Algebra.trace ℚ D.host.E ((VS D).hT x (∑ i, c i • w i)) =
       ∑ i, (c i : ℚ) * Algebra.trace ℚ D.host.E ((VS D).hT x (w i)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_sum]
+
+  rw [map_sum, map_sum]
   exact Finset.sum_congr rfl fun i _ => trB_zsmul_right (c i) x (w i)
 
 theorem gr_change {N : ℕ} (w w' : Fin N → (VS D).V) (A : Matrix (Fin N) (Fin N) ℤ)

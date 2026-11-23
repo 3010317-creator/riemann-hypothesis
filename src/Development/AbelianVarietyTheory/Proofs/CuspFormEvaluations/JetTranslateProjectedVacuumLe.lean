@@ -1,19 +1,65 @@
 module
 
-public import Mathlib
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.DeterminantBlockProductRenameTorusPolynomial
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.FlatMemLatIffStdLat
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsotropicCoefficientSplitting
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NormalisedThetaValueBound
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NsmulApplyMemOfMemTensorLat
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.DifferentiablePolyDeriv
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsTorusOfSelfD
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.L2OneEqIntegralFundamentalDomainDivVolume
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NormalisedThetaValueBound
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NsmulApplyMemOfMemTensorLat
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ProjAEqSumReps
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockHxDifferentiable
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsRowHighestHarmonicPolyDerivUnitaryAction
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionPreservesThetaAndInnerProduct
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockHxDifferentiable
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionPreservesThetaAndInnerProduct
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PolyDerivMonomialOne
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -52,23 +98,7 @@ theorem sum_norm_coeff_rename {σ κ : Type} {ρ : σ → κ} (hρ : Function.In
 theorem polyDeriv_smul_dir {σ W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] {P : MvPolynomial σ ℂ} {d : ℕ}
     (hP : P.IsHomogeneous d) (c : ℂ) (u : σ → W) (F : W → ℂ) (x : W) :
     I2.polyDeriv P (fun l => c • u l) F x = c ^ d * I2.polyDeriv P u F x := by
-  have h (m) (hm : m ∈ P.support) : (m.prod fun _ e => c ^ e) = c ^ d := by
-    have := hP (MvPolynomial.mem_support_iff.1 hm)
-    rw [Finsupp.prod, Finset.prod_pow_eq_pow_sum, ← this]
-    congr 1
-    simp [Finsupp.weight_apply, Finsupp.sum]
-  unfold I2.polyDeriv
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun m hm => ?_
-  rw [ContinuousMultilinearMap.map_smul_univ, smul_eq_mul, ← h m hm, mul_left_comm]
-  have h1 := (finCongr (Multiset.length_toList (Finsupp.toMultiset m)).symm).prod_comp
-    fun _ => c
-  have h2 : ∏ k, (fun _ => c) ((Finsupp.toMultiset m).toList.get k) =
-      ((Finsupp.toMultiset m).toList.map fun _ => c).prod := by
-    simp [← Fin.prod_univ_fun_getElem]
-  refine congrArg (· * _) ((h1.trans h2).trans ?_)
-  rw [Multiset.prod_map_toList, Finsupp.toMultiset_map, Finsupp.prod_toMultiset,
-    Finsupp.prod_mapDomain_index (fun _ => pow_zero _) fun _ _ _ => pow_add _ _ _]
+  apply GlobalTheory.BlockRen.polyDeriv_scale <;> assumption
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r g n : ℕ} {X : Data E r}
   {bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ}
@@ -117,8 +147,8 @@ theorem map_pv_smul (e : Fin g ≃ I2.Idx dim) (c : ℂ)
     conv_lhs => rw [← Finset.univ_sum_single z]
     have h2 (i) : (Pi.single i (z i) : Fin g → ℂ) = z i • (Pi.single i 1 : Fin g → ℂ) := by
       rw [← Pi.single_smul, smul_eq_mul, _root_.mul_one]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [h2, map_sum, map_smul, (he _).2]
+
+    simp only [h2, map_sum, map_smul, (he _).2]
     simp [Pi.single_apply, _root_.mul_comm]
   ext i
   obtain ⟨j, rfl⟩ := e.surjective i

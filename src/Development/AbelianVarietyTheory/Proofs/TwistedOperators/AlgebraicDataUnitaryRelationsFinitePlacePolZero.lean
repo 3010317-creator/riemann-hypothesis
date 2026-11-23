@@ -1,17 +1,42 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaEqB
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaSubSelf
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HoweDualityUnitary
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HoweDualityReal
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HypothesesAbsDet
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PolMatchLinear
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumPureMemAlgD
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PairsOfSquareTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsLocalIdentity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -108,12 +133,12 @@ theorem polZero_relV : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       · rw [Function.update_of_ne (hvT w hw)]; exact (hφ i).2.2 w (hT₀ w hw)
     · simp only [Fin.append_right]
       exact ⟨neg_mem (hφ i).1, (hφ i).2.1, fun w hw => (hφ i).2.2 w (hT₀ w hw)⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_sum, Fin.sum_univ_add]
-      simp only [Fin.append_left, Fin.append_right, RelV.pure_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg]
-      congr 1
-      refine Finset.sum_congr rfl fun i _ => ?_
-      exact GlobalTheory.ThK.PolMatchStep.pure_update v (om (g, 1)) (f i) (φ i) (hφ i).2.1 (hstd i) (hψ i).2
+
+  · rw [map_sum, Fin.sum_univ_add]
+    simp only [Fin.append_left, Fin.append_right, RelV.pure_neg, Finset.sum_neg_distrib, ← sub_eq_add_neg]
+    congr 1
+    refine Finset.sum_congr rfl fun i _ => ?_
+    exact GlobalTheory.ThK.PolMatchStep.pure_update v (om (g, 1)) (f i) (φ i) (hφ i).2.1 (hstd i) (hψ i).2
   · rw [Fin.sum_univ_add]
     simp only [Fin.append_left, Fin.append_right, map_neg, TensorProduct.neg_tmul, Finset.sum_neg_distrib]
     have e : ∀ i, (fun w : T => Rf.p w (Function.update (φ i) v (ψ i) w)) = fun w : T => Rf.p w (φ i w) := by

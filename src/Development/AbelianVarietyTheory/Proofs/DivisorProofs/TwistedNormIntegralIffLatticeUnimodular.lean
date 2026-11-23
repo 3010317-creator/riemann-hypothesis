@@ -1,27 +1,45 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StrongMultiplicityOne
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.IsTemperedGLOfIsUnitaryLSeg
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GaloisRepOfPolarizedCuspidal
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RadfordShufflePolynomialHolds
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ClozelPurity
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ClozelCohomologicalModel
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.LocalLanglandsGL
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChebotarevDegreeOneIffCheb
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.CuspidalMultiplicityOne
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HeckeLEntireAndNonzeroAtOne
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.BorelCasselman
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.QuadraticClassFieldTheory
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsOrthonormalOfUnimodular
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMat
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -66,16 +84,16 @@ variable {K : GlobalTheory.UnitLemma.UQ} (B : GlobalTheory.UnitLemma.InvAlg K)
 
 theorem herm_sum_smul_left {ι : Type} (s : Finset ι) (a : ι → K.E) (y : ι → B.A) (β z : B.A) :
     B.herm β (∑ i ∈ s, a i • y i) z = ∑ i ∈ s, a i * B.herm β (y i) z := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [GlobalTheory.UnitLemma.InvAlg.herm, Finset.mul_sum, Finset.sum_mul, map_sum, Algebra.smul_def]
+
+  simp only [GlobalTheory.UnitLemma.InvAlg.herm, Finset.mul_sum, Finset.sum_mul, map_sum, Algebra.smul_def]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [show β * (algebraMap K.E B.A (a i) * y i) * B.σ z = a i • (β * y i * B.σ z) by
     rw [Algebra.smul_def]; ring, map_smul, smul_eq_mul]
 
 theorem herm_sum_smul_right {ι : Type} (s : Finset ι) (a : ι → K.E) (z : ι → B.A) (β y : B.A) :
     B.herm β y (∑ i ∈ s, a i • z i) = ∑ i ∈ s, K.c (a i) * B.herm β y (z i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [GlobalTheory.UnitLemma.InvAlg.herm, map_sum, Finset.mul_sum, Algebra.smul_def, map_mul, B.σ_alg]
+
+  simp only [GlobalTheory.UnitLemma.InvAlg.herm, map_sum, Finset.mul_sum, Algebra.smul_def, map_mul, B.σ_alg]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [show β * y * (algebraMap K.E B.A (K.c (a i)) * B.σ (z i)) = K.c (a i) • (β * y * B.σ (z i)) by
     rw [Algebra.smul_def]; ring, map_smul, smul_eq_mul]
@@ -241,10 +259,10 @@ theorem unimodular_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
       congr 2
     rw [h1]
     ext j k
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hHdef, hvdef, Matrix.map_apply, Matrix.of_apply, herm_sum_smul_left, herm_sum_smul_right,
-      map_sum, map_mul, hc, RingEquiv.apply_symm_apply, Matrix.mul_apply, Matrix.transpose_apply, gram,
-      Finset.sum_mul, Finset.mul_sum]
+
+    simp only [hHdef, hvdef, Matrix.map_apply, Matrix.of_apply, herm_sum_smul_left, herm_sum_smul_right,
+    map_sum, map_mul, hc, RingEquiv.apply_symm_apply, Matrix.mul_apply, Matrix.transpose_apply, gram,
+    Finset.sum_mul, Finset.mul_sum]
     congr 1
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun l _ => ?_
     ring

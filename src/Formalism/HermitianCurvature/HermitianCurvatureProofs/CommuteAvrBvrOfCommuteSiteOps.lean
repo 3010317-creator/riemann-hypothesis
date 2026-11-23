@@ -1,7 +1,53 @@
 module
 
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FnComm
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LetterLiftOfParts
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleGD
+public import Formalism.HermitianCurvature.StatementTL
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FnComm
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -153,41 +199,7 @@ theorem cj_add (g gi : A) (h : g * gi = 1) (h' : gi * g = 1) {x a : A} (hx : x *
 
 theorem commute_Avr_Bvr_of_commute_siteOps {L : LevelData A r} {x : A} (hx : ∀ y ∈ siteOps L, Commute x y) (Y : ℂ) :
     Commute x (L.Avr Y) ∧ Commute x (L.Bvr Y) := by
-  have key : ∀ ms : List (Matrix (Fin 2) (Fin 2) A), (∀ M ∈ ms, ∀ i j, Commute x (M i j)) →
-      ∀ i j, Commute x (ms.prod i j) := by
-    intro ms
-    induction ms with
-    | nil =>
-      intro _ i j
-      rw [List.prod_nil, Matrix.one_apply]
-      split_ifs
-      · exact Commute.one_right x
-      · exact Commute.zero_right x
-    | cons M ms ih =>
-      intro hms i j
-      rw [List.prod_cons, Matrix.mul_apply]
-      exact Commute.sum_right _ _ _ (fun k _ =>
-        (hms M (by simp) i k).mul_right (ih (fun N hN => hms N (by simp [hN])) k j))
-  have hpb : ∀ l, Commute x (L.pb l) := fun l => hx _ (by simp [siteOps])
-  have hcb : ∀ l, Commute x (L.cb l) := fun l => hx _ (by simp [siteOps])
-  have hcbi : ∀ l, Commute x (L.cbi l) := fun l => hx _ (by simp [siteOps])
-  have hT : ∀ M ∈ (List.ofFn (L.Tvl Y)).reverse, ∀ i j, Commute x (M i j) := by
-    intro M hM
-    rw [List.mem_reverse, List.mem_ofFn] at hM
-    obtain ⟨l, rfl⟩ := hM
-    intro i j
-    fin_cases i <;> fin_cases j <;> simp [R.LevelData.Tvl] <;>
-      first
-      | exact (Algebra.commute_algebraMap_right Y x).sub_right (hpb l)
-      | exact (hcb l).neg_right
-      | exact hcb l
-      | exact hcbi l
-      | exact Commute.zero_right x
-  refine ⟨?_, ?_⟩
-  · unfold R.LevelData.Avr R.LevelData.Tvprod
-    exact key _ hT 0 0
-  · unfold R.LevelData.Bvr R.LevelData.Tvprod
-    exact key _ hT 1 0
+  apply Formalism.FourierDecayAlt.P.TLA.ColumnLift.comm_TM <;> assumption
 
 end
 

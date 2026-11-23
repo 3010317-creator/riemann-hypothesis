@@ -1,24 +1,60 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExtUHInjective
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StepZeroTwistReferenceTupleEqId
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalLevelVectorLaws
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrimeNotMemOfMemQE
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NarrowJetMoments
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetFramesInvariantRationalUnitary
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedInvMulLe
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NarrowJetMoments
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BcPrVEqOneOfAdAt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpKeepsChart
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNotMemConjMem
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLOneEqDual
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InvMapMulMapMulCancelComplexEmbedding
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepGamMemUJ
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CosetInMvUp
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetFramesInvariantRationalUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLOneEqDual
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNotMemConjMem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InvMapMulMapMulCancelComplexEmbedding
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalDilatedClass
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrimeNotMemOfMemQE
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepGamMemUJ
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpKeepsChart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedInvMulLe
+import Formalism.LocalToGlobal.Columns.CoefColLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -167,7 +203,7 @@ theorem cosetIn_upP (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) (
     (T_notMem_QE I.sel (I.tup a) u l.pr hI.sel_ok (hI.T_mem u)) ((I.stp u a i).rep c) P _ (Quotient.out x).2 (f_out I l u a i P c x hx)
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem exists_level (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) {Ch : Type} {chOf : (I.stp u a i).Cl → Ch}
     {Lb : Ch → Submodule (𝓞 B.host.E) (Fin (B.R.N i) → B.host.E)} {U : Ch → Subgroup (GA B (B.R.N i))} {chi : ∀ β, U β →* ℂˣ}
     {y : (I.stp u a i).Cl → GA B (B.R.N i)} {st : ∀ c, (I.stp u a i).Stab c → GL (Fin (B.R.N i)) B.host.E} {k : Ch → GA B (B.R.N i)}
@@ -211,7 +247,7 @@ theorem exists_level (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) 
   rw [← map_mul, ← map_mul, mul_inv_cancel, map_one, map_one, one_mul]
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem upAt_spec (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) (P : (B.primes X).vT u) (c : (I.stp u a i).Cl)
     (x : ((I.atIn u a).A i).lv P c) (hx : ((I.atIn u a).A i).fv P c x = 1) :
     (upperParabolic I u a i P c x).1.1.deco.1 = ((I.stp u a i).rep c).1.1.deco.1.up P (B.T u : 𝓞 B.fields.E)
@@ -224,7 +260,7 @@ theorem upAt_spec (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) (P 
   exact ⟨h.1, h.2.1⟩
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem isPt_up (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) {Ch : Type} {chOf : (I.stp u a i).Cl → Ch}
     {Lb : Ch → Submodule (𝓞 B.host.E) (Fin (B.R.N i) → B.host.E)} {U : Ch → Subgroup (GA B (B.R.N i))} {chi : ∀ β, U β →* ℂˣ}
     {y : (I.stp u a i).Cl → GA B (B.R.N i)} {st : ∀ c, (I.stp u a i).Stab c → GL (Fin (B.R.N i)) B.host.E} {k : Ch → GA B (B.R.N i)}
@@ -262,7 +298,7 @@ theorem isPt_up (hI : I.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) {Ch :
     exact h2
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem sub_mem (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) (i : ℕ) (hi : i ≤ B.R.m)
     (L : LevelCompatibleLattices (D := (I.rec7 l Z)) (I.fm l u a) (B.T u) (I.resT l u a) i hi fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c))
     (hL : I.IdL l Z u a i hi L) (v : (I.atT l u a).vT) (c : (I.stp u a i).Cl)
@@ -281,7 +317,7 @@ theorem sub_mem (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.c
   exact (congrArg₂ (fun (J : Ideal (𝓞 B.host.E)) (M : Submodule (𝓞 B.host.E) (Sp B.host.E (B.R.N i))) => J • M) e2 e).le h2
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem upNatTie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (i : ℕ) (hi : i ≤ B.R.m) (bad : Set (HeightOneSpectrum (𝓞 B.host.F))) (Ch : Type) (chOf : (I.stp u a i).Cl → Ch) (K : ∀ β : Ch, LevelChart (I.rec7 l Z) (B.T u) bad i hi (fun c : {c // chOf c = β} => (I.chain l u a).stab i c.1) (fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c.1))) (eY : (I.chain l u a).Y i ≃ Formalism.L2.Forms.Fr (I.rec7 l Z) i hi) (eV : (I.atT l u a).vT ≃ {v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F) // (B.T u : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal}) (L : LevelCompatibleLattices (D := (I.rec7 l Z)) (I.fm l u a) (B.T u) (I.resT l u a) i hi fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c)), I.ReadsK l Z u a i hi chOf K → I.IdY l Z u a i hi eY → I.IdV l u a eV → I.IdL l Z u a i hi L → UpNatTieG L eY eV K := by
   intro B X I hI hP l Z u a i hi bad Ch chOf K eY eV L hK hY hV hL
   rintro v _ ⟨c, rfl⟩ z hz

@@ -1,10 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlESymmApply
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCompletionMapsDualLattices
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLatticeBidual
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassLatticeSupPrimeDualLocalizationEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualLatticeBidual
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryCompletionMapsDualLattices
+import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLocBases
+import Formalism.LocalToGlobal.GlobalTheory.GL6.PRLocV
+import Formalism.LocalToGlobal.GlobalTheory.GL6.PSplitT
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Afsplit
+public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.RationalPointsLeHolds
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -48,8 +90,8 @@ theorem unit_fun {A R M n : Type} [CommRing A] [CommRing R] [Algebra R A] [AddCo
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 2000000 in
+
+
 theorem stabFun_gen {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) {L1 L2 : Submodule (𝓞 E) (Fin n → E)}
     {M : Type} [AddCommGroup M] [Module (intV E v) M]
     (Λ : Submodule (intV E v) (Fin n → E ⊗[F] v.adicCompletion F)) (f : Λ →ₗ[intV E v] M)
@@ -141,15 +183,15 @@ theorem exists_mul {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (P Q : Ideal (𝓞
   rw [Matrix.mulVec_smul, hb, mul_smul]
   exact Submodule.smul_mem _ b hax
 
-set_option synthInstance.maxHeartbeats 400000 in
+
 theorem comp_eq {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (y y' : GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (γ : GL (Fin n) E) :
     bc (prV (E := E) v) (y⁻¹ * bc (inclE (F := F) (FiniteAdeleRing (𝓞 F) F)) γ * y') =
       (bc (prV (E := E) v) y)⁻¹ * bc (inclE (F := F) (v.adicCompletion F)) γ * bc (prV (E := E) v) y' := by
   rw [map_mul, map_mul, map_inv]
   rfl
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 2000000 in
+
+
 theorem stabFun_loc {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) {L1 L2 : Submodule (𝓞 E) (Fin n → E)}
     {M : Type} [AddCommGroup M] [Module (intV E v) M]
     (Λ : Submodule (intV E v) (Fin n → E ⊗[F] v.adicCompletion F)) (f : Λ →ₗ[intV E v] M)
@@ -173,8 +215,8 @@ theorem stabFun_loc {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) {L1 L2 : Submodul
   exact ⟨r, hr, n1, n2, hf _ m2 m1 n1 n2⟩
 
 
-set_option synthInstance.maxHeartbeats 400000 in
-set_option maxHeartbeats 4000000 in
+
+
 theorem main : ∀ (D : D7) (u : D.what₂.Word) (A : AtTTied u) (i : ℕ) (hi : i ≤ D.R.m) (P : LvTied u A i hi) (K : ClsTied u i hi) (fMe : ∀ v, K.lev.fM (A.eV v).1 (A.eV v).2 ≃+ (D.mem u).A.Fv v), FvTie P K fMe → cT (sigD D : D.host.E →+* D.host.E) (gramN D i hi) = gramN D i hi → ∀ (v : (D.mem u).A.vT) (c c' : (D.mem u).C.cls i) (γ : GL (Fin (D.R.N i)) D.host.E), γ ∈ UJ (sigD D : D.host.E →+* D.host.E) (gramN D i hi) → (pc P v c').act (glE γ) = pc P v c → mov K (A.eV v).1 c γ c' ∈ K.lev.Uloc (A.eV v).1 := by
   intro D u A i hi P K fMe hT hJ v c c' γ hγ hpc
   have : (A.Pv v).IsPrime := RingHom.ker_isPrime _

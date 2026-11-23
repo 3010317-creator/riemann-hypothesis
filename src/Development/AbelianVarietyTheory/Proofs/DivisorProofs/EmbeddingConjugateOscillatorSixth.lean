@@ -1,17 +1,65 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrAtEmb
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MarkAd
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFormPeriodRelation
-public import Formalism.LocalToGlobal.IndefiniteReal.FWTie
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibExtMarked
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionDeterminantRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelValuesThird
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilGramSignature
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaAtOfIsEtaConj
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterOfUnitaryTensorIdeles
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumeratorIdealOfAntiInvariantDivisorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicCharacterEqProdUnramifiedValueZpowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanDetSetIffAdelicLatticeValuationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelValuesThird
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuationStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormSqOfMulConjEqDifferentIdeal
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeCharEqProdLocalComponentsApproximating
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrAtEmb
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReadingsExistRow
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibExtMarked
 
 @[expose] public section
 
@@ -188,7 +236,7 @@ theorem coefficientField_reading_at_embedding_prod {LL : Type} [Field LL] (f : L
     pow_factor hs (Circle.coe_ne_zero _) _ _ hm, Complex.ofReal_pow]
 
 
-set_option maxHeartbeats 1600000 in
+
 theorem exists_ideal_conj (V : HSp D) (hg : V.gram = 1) (hL : Bridge.hLat V 1 = Formalism.L2.Pj.stdLat D.host.E V.rank) (h : GA D V)
     (e : AE D) (P : Finset (HeightOneSpectrum (𝓞 D.host.E))) (y : (AE D)ˣ) (he : Formalism.IndefR.Datum.IsIdemSum e P)
     (hs : SuppAt e V h) (hy : IsDetAt e V h y) (b : ℕ) (hb : ∀ Q ∈ P, (b : 𝓞 D.host.E) ∉ Q.asIdeal)
@@ -213,16 +261,16 @@ theorem exists_ideal_conj (V : HSp D) (hg : V.gram = 1) (hL : Bridge.hLat V 1 = 
   simp only [← hev] at hid hcj
   obtain ⟨⟨es, hes, hsum⟩, horth⟩ := he
   have e0 : infPart D e = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsum, map_sum]
+
+    rw [hsum, map_sum]
     exact Finset.sum_eq_zero fun Q hQ => (hid _ _ (hes Q hQ)).1
   have e1 : ∀ Q ∈ P, ev Q e = 1 := fun Q hQ => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsum, map_sum, Finset.sum_eq_single Q (fun Q' h' hne => (hid _ _ (hes Q' h')).2.2 Q hne.symm)
-      (fun h' => absurd hQ h'), (hid _ _ (hes Q hQ)).2.1]
+
+    rw [hsum, map_sum, Finset.sum_eq_single Q (fun Q' h' hne => (hid _ _ (hes Q' h')).2.2 Q hne.symm)
+    (fun h' => absurd hQ h'), (hid _ _ (hes Q hQ)).2.1]
   have e2 : ∀ Q, Q ∉ P → ev Q e = 0 := fun Q hQ => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hsum, map_sum]
+
+    rw [hsum, map_sum]
     exact Finset.sum_eq_zero fun Q' h' => (hid _ _ (hes Q' h')).2.2 Q fun hh => hQ (hh ▸ h')
   have hP : ∀ Q ∈ P, GlobalTheory.IdemSupport.cP Q ∉ P := fun Q hQ hQ' => by
     have a := congrArg (ev (GlobalTheory.IdemSupport.cP Q)) horth

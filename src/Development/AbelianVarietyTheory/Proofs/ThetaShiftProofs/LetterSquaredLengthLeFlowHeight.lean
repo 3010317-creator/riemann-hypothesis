@@ -1,19 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsSubspaceIsometric
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.AnVecTorusLetter
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangent
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HermFormRsmulRight
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsLocalRingDual
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsIntegralDiscrMulOfTraceInt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CmMetrisedLineLengthsEqSectionLieNorms
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SplitBaseChange
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsSplit
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalIffOfIsPullDegTauBimult
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieCombBaseChange
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieBasisCoordinatesBijectiveTangent
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieCombBaseChange
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.AnVecTorusLetter
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CmMetrisedLineLengthsEqSectionLieNorms
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.DegenerationDataBaseChangesExistPid
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsSplit
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsSubspaceIsometric
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HermFormRsmulRight
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolArcNilpotent
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsIntegralDiscrMulOfTraceInt
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsLocalRingDual
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalIffOfIsPullDegTauBimult
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SplitBaseChange
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangent
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyCubicalPull
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 
 @[expose] public section
 
@@ -136,16 +176,16 @@ theorem exists_pull_form {g : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ) (hH : Hm.Is
 theorem eq_zero_of_trace {E : Type} [Field E] [NumberField E] {x : E}
     (h : ∀ a : 𝓞 E, Algebra.trace ℚ E ((a : E) * x) = 0) : x = 0 := by
   refine (traceForm_nondegenerate ℚ E).1 x fun y => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← (integralBasis E).sum_repr y, map_sum]
+
+  rw [← (integralBasis E).sum_repr y, map_sum]
   refine Finset.sum_eq_zero fun i _ => ?_
   rw [map_smul, Algebra.traceForm_apply, integralBasis_apply, _root_.mul_comm x]
   exact smul_eq_zero_of_right _ (h _)
 
 theorem herm_swap {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : Data E r) (u v : Fin r → E) :
     herm X.Gm v u = cc (herm X.Gm u v) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [herm, cc, map_sum, map_mul, IsCMField.complexConj_apply_apply]
+
+  simp only [herm, cc, map_sum, map_mul, IsCMField.complexConj_apply_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   rw [← X.Gm_herm a b, cc]

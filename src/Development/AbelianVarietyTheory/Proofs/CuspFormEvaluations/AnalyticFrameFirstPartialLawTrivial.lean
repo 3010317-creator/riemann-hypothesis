@@ -1,16 +1,59 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ThConst
-public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CubicalReadingOneAnalyticFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsHolFamPullbackLiftOfCommonBase
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.JetRdMulInvPow
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CorrOfJetsOfAnalyticFrameProductsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ComposeLinearAction
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AppLESpMapJetPt
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CmFrameJetPointsAreExponentialJets
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CorrOfJetsOfAnalyticFrameProductsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CubicalReadingOneAnalyticFrameStatement
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsHolFamPullbackLiftOfCommonBase
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.JetRdMulInvPow
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.JetReadingLinearSubstitutionPoints
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBIdJet
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDJet
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolJetC
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.TaylorMul
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -26,29 +69,7 @@ open scoped ContDiff
 attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem tay_coord {N : ℕ} (k : Fin N) : tay (fun v : Fin N → ℂ => v k) 0 = MvPowerSeries.X ((0 : Fin 1), k) := by
-  have hc : ContDiffAt ℂ ω (fun v : Fin N → ℂ => v k) 0 := (contDiff_apply ℂ (fun _ => ℂ) k).contDiffAt
-  refine MvPowerSeries.pderiv.ext (fun q => ?_) ?_
-  · obtain ⟨a, j⟩ := q
-    obtain rfl : a = 0 := Subsingleton.elim _ _
-    have hd : MvPowerSeries.pderiv ((0 : Fin 1), j) (tay (fun v : Fin N → ℂ => v k) 0) =
-        tay (fun y : Fin N → ℂ => fderiv ℂ (fun v : Fin N → ℂ => v k) y (Pi.single j 1)) 0 := by
-      ext n
-      rw [MvPowerSeries.coeff_pderiv, coeff_tay, coeff_tay, dirs_add_single, fct_add_single,
-        add_zero, add_zero, TM.mD_cons_deriv hc]
-      push_cast
-      rw [← div_div, div_mul_cancel₀ _ (Nat.cast_add_one_ne_zero _)]
-    rw [hd]
-    have : (fun y : Fin N → ℂ => fderiv ℂ (fun v : Fin N → ℂ => v k) y (Pi.single j 1)) =
-        fun _ => (Pi.single j (1 : ℂ) : Fin N → ℂ) k := by
-      funext y
-      have := (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin N => ℂ) k).fderiv (x := y)
-      change fderiv ℂ (fun v : Fin N → ℂ => v k) y = _ at this
-      rw [this]; rfl
-    rw [this, TM.tay_const, MvPowerSeries.pderiv_X]
-    by_cases h : k = j
-    · subst h; simp
-    · simp [h, Prod.ext_iff]
-  · rw [constantCoeff_tay, TM.mD_zero]; simp
+  apply GlobalTheory.JetLinSub.tay_coord <;> assumption
 
 theorem jetOf_coord {N : ℕ} (m : ℕ) (k : Fin N) :
     jetOf m (fun v : Fin N → ℂ => v k) = Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), k)) := by
@@ -78,8 +99,8 @@ theorem jetN_psum {n g : ℕ} (m : ℕ) (I : Finset (Fin n)) (j : Fin g) :
     funext v
     rw [psumL_apply, Finset.sum_apply]; rfl
   rw [jetN, this, jetOf_sum_coord, renN, GermD.jetMap_mk]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, MvPolynomial.aeval_X, Equiv.symm_apply_apply]
+
+  simp only [map_sum, MvPolynomial.aeval_X, Equiv.symm_apply_apply]
 
 theorem sameSum_of_factor {X Y : Scheme.{0}} {K K' J : Type} [Fintype K] [Fintype K'] [Fintype J] [DecidableEq J]
     (φ : K → (Y ⟶ X)) (ε : K → ℤ) (φ' : K' → (Y ⟶ X)) (ε' : K' → ℤ) (F : J → (Y ⟶ X)) (σ : K → J) (σ' : K' → J)

@@ -1,19 +1,60 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.EigLatBasis
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ArcDictExpZeroSection
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFShiftZeroIff
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsFormalConvergence
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SvalEqSumOfHasVal
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CoordsDetermineFamily
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsEvLePreimage
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SecScalOfIsPullSec
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsFormalConvergence
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueLiftCoordsLocalSubringStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GermMemConvLaurent
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyProjCoordsConvergentCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueLiftCoordsLocalSubringStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SecScalOfIsPullSec
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SvalEqSumOfHasVal
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.DualNumber
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 
 @[expose] public section
 
@@ -121,14 +162,14 @@ theorem exists_deriv_comb {O : Type} [CommRing O] [StarRing O] (A : AnArc O) : �
   have key : (fun v => Conv.ev T w (hT.trans_lt hw) (f v)) =
       fun v => ∑ i, Conv.ev T₁ w hw (r₁ i) * A.Sum j (α i) (th i) w v := by
     funext v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Conv.ev_congr (hT.trans_lt hw) hw (s' := ∑ i, r₁ i * ⟨_, hm i v⟩)
-      (by rw [AddSubmonoidClass.coe_finsetSum]; exact h2 v), map_sum]
+
+    rw [Conv.ev_congr (hT.trans_lt hw) hw (s' := ∑ i, r₁ i * ⟨_, hm i v⟩)
+    (by rw [AddSubmonoidClass.coe_finsetSum]; exact h2 v), map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [map_mul, hv]
   rw [key]
   refine ⟨Differentiable.fun_sum fun i _ => (hd i).const_mul _, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [fderiv_fun_sum fun i _ => ((hd i).const_mul _) 0, map_sum, ContinuousLinearMap.sum_apply]
+
+  rw [fderiv_fun_sum fun i _ => ((hd i).const_mul _) 0, map_sum, ContinuousLinearMap.sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul, hFv, fderiv_const_mul (hd i 0)]
   rfl

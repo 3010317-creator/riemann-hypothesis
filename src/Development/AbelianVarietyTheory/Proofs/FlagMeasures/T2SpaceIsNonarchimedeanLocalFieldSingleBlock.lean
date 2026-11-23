@@ -1,8 +1,67 @@
 module
 
-public import Mathlib
+import Development.WeilBound.CoreStatements.SesquilinearFractions.NIdeal
 public import Formalism.SharpRestriction.CuspSpanNormBounds.PsiEDef
-public import Formalism.LocalRingCardinality.DataSpaces
+public import Mathlib.NumberTheory.Padics.Complex
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
+public import Mathlib.Algebra.Algebra.Hom.Rat
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -34,28 +93,7 @@ theorem tendsto_pow_zero (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace
 
 theorem norm_le_one_of_isIntegral {Ω : Type} [NormedField Ω] [IsUltrametricDist Ω] {x : Ω}
     (hx : IsIntegral ℤ x) : ‖x‖ ≤ 1 := by
-  by_contra h
-  push Not at h
-  obtain ⟨f, hf, hx⟩ := hx
-  rw [Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ] at hx
-  have h1 : f.coeff f.natDegree = 1 := hf
-  rw [h1, map_one, one_mul] at hx
-  have h2 : x ^ f.natDegree = - ∑ i ∈ Finset.range f.natDegree, algebraMap ℤ Ω (f.coeff i) * x ^ i := by
-    linear_combination hx
-  have h3 : ‖∑ i ∈ Finset.range f.natDegree, algebraMap ℤ Ω (f.coeff i) * x ^ i‖ ≤ ‖x‖ ^ f.natDegree / ‖x‖ := by
-    apply IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (by positivity)
-    intro i hi
-    rw [norm_mul, norm_pow, le_div_iff₀ (by linarith)]
-    have h4 : ‖algebraMap ℤ Ω (f.coeff i)‖ ≤ 1 := by
-      simpa using IsUltrametricDist.norm_intCast_le_one Ω (f.coeff i)
-    have h5 : ‖x‖ ^ (i + 1) ≤ ‖x‖ ^ f.natDegree :=
-      pow_le_pow_right₀ h.le (Finset.mem_range.mp hi)
-    calc _ ≤ 1 * ‖x‖ ^ i * ‖x‖ := by gcongr
-      _ = ‖x‖ ^ (i + 1) := by ring
-      _ ≤ _ := h5
-  rw [← norm_neg, ← h2, norm_pow, le_div_iff₀ (by linarith)] at h3
-  have : 0 < ‖x‖ ^ f.natDegree := by positivity
-  nlinarith
+  apply PositivityTheory.Xgf.NI.norm_le_one_of_isIntegral <;> assumption
 
 theorem exists_int_of_norm_le {l : ℕ} [Fact l.Prime] (q : ℚ) (n : ℕ) (m : ℤ)
     (h : q * (l : ℚ) ^ n = m) (hq : ‖(q : ℚ_[l])‖ ≤ 1) : ∃ c : ℤ, q = c := by
@@ -85,8 +123,8 @@ theorem trace_base_change {F E K L : Type} [Field F] [Field E] [Algebra F E] [Fi
   have key : ∀ y : E, g y = ∑ i, f (b.repr y i) • g (b i) := by
     intro y
     conv_lhs => rw [← b.sum_repr y]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Algebra.smul_def, Algebra.smul_def, map_mul, hc]
   have hsp : ⊤ ≤ Submodule.span K (Set.range fun i => g (b i)) := by
@@ -102,9 +140,9 @@ theorem trace_base_change {F E K L : Type} [Field F] [Field E] [Algebra F E] [Fi
     rw [key y]
     simp_rw [← hcb]
     exact congrFun (c.repr_sum_self _) i
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Algebra.trace_eq_matrix_trace c, Algebra.trace_eq_matrix_trace b, Matrix.trace, Matrix.trace,
-    map_sum]
+
+  rw [Algebra.trace_eq_matrix_trace c, Algebra.trace_eq_matrix_trace b, Matrix.trace, Matrix.trace,
+  map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   simp only [Matrix.diag, Algebra.leftMulMatrix_eq_repr_mul]
   rw [hcb, ← map_mul, hr]
@@ -291,8 +329,8 @@ theorem sum_local_trace {l : ℕ} [Fact l.Prime] {F : Type} [Field F] [NumberFie
     ∑ s, Algebra.trace ℚ_[l] (K s) (ι s t) = ((Algebra.trace ℚ F t : ℚ) : ℚ_[l]) := by
   classical
   apply (algebraMap ℚ_[l] (PadicAlgCl l)).injective
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_ratCast]
+
+  rw [map_sum, map_ratCast]
   have e : ((Algebra.trace ℚ F t : ℚ) : PadicAlgCl l) =
       algebraMap ℚ (PadicAlgCl l) (Algebra.trace ℚ F t) := by simp
   rw [e, trace_eq_sum_embeddings]

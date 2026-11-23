@@ -1,11 +1,73 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicValueGermsIndependentOfChart
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HarmonicConnectionValueBaseChangeField
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ShortThetaValueFieldEqMapSubfieldData
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndSt
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHom
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FaithfullyFlatPointsBaseChangeDescent
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InZhGeoInjStable
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsVtOverIsUUOverBaseChange
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsotropicSumIndependentOfChoicesLocal
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RawChartFormalBiextensionBaseChange
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.BiextensionDepthLeOfRelated
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartLawActionEqTransportedOfCoordRel
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.FrameRatioAdjointnessSeries
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicValueGermsIndependentOfChart
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.NabValNTransport
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.SvalValueAt
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartDirectionsAreEigenvectors
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ShortThetaValueFieldEqMapSubfieldData
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndBCNab
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.CIndRelPf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpActOf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpChartOf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ExpUniqChart
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermDVal
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.PrimUniqPf
+import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThetaSwapFirstTwo
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FFVMap
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ExpLaw
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeTrans
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FormalPointSubstitutionSeriesValueAtTwoPoints
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FrameBiextDictionarySecondPartialLaw
 
 @[expose] public section
 
@@ -115,7 +177,7 @@ theorem chartVal_indep_of_harmonic : ∀ (E : Type) [Field E] [NumberField E] [I
     rfl
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem sum_map_of_harmonic {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
     {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} [StarRing (𝓞 E)] (nab : NabV Xo c)
     (hnab : IsNab Xo c nab) {S S' : Type} [CommRing S] [Algebra c.F S] [Algebra ℚ S]
@@ -161,8 +223,8 @@ theorem sum_map_of_harmonic {E : Type} [Field E] [NumberField E] [IsCMField E] {
     exact Finset.prod_congr rfl fun b _ => hpin3 k (F' b) (f3 b) (hf3 b) (colOf m b)
   refine Eq.trans ?_ (hI.trans e3.symm)
   unfold chartVal
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [map_mul, AlgHom.commutes, map_prod]
   congr 1
@@ -210,12 +272,12 @@ theorem exists_pull {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     exact ⟨j, fun u hu => by rw [Category.assoc, hj u hu, MonObj.comp_one]⟩
   · exact (GlobalTheory.VtBaseChange.isVtOver_isUUOver_baseChange E H Dw l Xo N ⊤ _ _ h y.s w.s
       (GlobalTheory.FramedBaseChange.isPullSec ψ hm h rfl) (F q i b) (F' q i b) (hF' q i b)).2 _ _ (hF q i b)
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [map_sum]
-      letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
-      letI : Algebra ℚ T := ((algebraMap c.F T).comp (algebraMap ℚ c.F)).toAlgebra
-      exact Finset.sum_congr rfl fun i _ =>
-        sum_map_of_harmonic nab hnab ψ y w hm h rfl n P hP _ (N ^ 2) (by push_cast; rfl) (F q i) (F' q i) (hF' q i)
+
+  · rw [map_sum]
+    letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+    letI : Algebra ℚ T := ((algebraMap c.F T).comp (algebraMap ℚ c.F)).toAlgebra
+    exact Finset.sum_congr rfl fun i _ =>
+      sum_map_of_harmonic nab hnab ψ y w hm h rfl n P hP _ (N ^ 2) (by push_cast; rfl) (F q i) (F' q i) (hF' q i)
 
 theorem map_shortValAt {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
     {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab : IsNab Xo c nab)

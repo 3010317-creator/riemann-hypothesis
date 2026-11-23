@@ -1,7 +1,49 @@
 module
 
-public import Mathlib
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.OneNotMemOfIsPrime
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.PrimeComplMapLeNonZeroDivisorsQuot
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -59,8 +101,8 @@ theorem coneVarMap_coe (hPW : P ≤ W) (v : ∀ k, ι k) (G : MvPolynomial K (lo
       ∑ e ∈ G.support, ((AddMonoidAlgebra.coeff G e : locRing P W) : FractionRing (MRing ι ⧸ P)) * fracHom P (varMono v e) := by
   rw [coneVarMap, aeval_def, eval₂_eq']
   change (coneLocRing P W hPW).val _ = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun e _ => ?_
   rw [map_mul, map_prod, varMono, map_prod]
   simp only [map_pow]
@@ -108,8 +150,8 @@ theorem coneVarMap_mul_clear (hPW : P ≤ W) (v : ∀ k, ι k) (G : MvPolynomial
         ((AddMonoidAlgebra.coeff G e : locRing P W) : FractionRing (MRing ι ⧸ P)) * fracHom P V = fracHom P (N e)) :
     ((coneVarMap P W hPW v G : coneLocRing P W hPW) : FractionRing (MRing ι ⧸ P)) * fracHom P V =
       fracHom P (∑ e ∈ G.support, N e * varMono v e) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [coneVarMap_coe, Finset.sum_mul, map_sum]
+
+  rw [coneVarMap_coe, Finset.sum_mul, map_sum]
   refine Finset.sum_congr rfl fun e _ => ?_
   rw [map_mul, ← (hN e).2]
   ring

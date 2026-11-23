@@ -1,11 +1,56 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechGluingOfKodairaSpencerRelation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslateUnique
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.HomologyRestrictScalarsBijective
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsUniqueLbIsoPullEqOfCoheightLeOne
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 
 @[expose] public section
 
@@ -104,8 +149,8 @@ theorem ch_d (p : ℕ) (x : Cube.Term (secCube s (LB.triv Y) D) p)
   show ch s _ (∑ i : t.1, cubeSign t.1 i.1 • (SecOnR.restrict s (LB.triv Y)
     (iInf_le_iInf_of_subset D (Finset.erase_subset i.1 t.1)) (x (Cube.eraseIdx t i)) :
       SecOnR s (LB.triv Y) (⨅ j ∈ t.1, D j))) = _
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_zsmul]
   congr 1
@@ -203,8 +248,8 @@ theorem ch_sum_smul {ι : Type} [Fintype ι] (c : ι → K)
   have key : ∀ v : ι → SecOnR s (LB.triv Y) (⨅ j ∈ t.1, D j),
       ch s _ (∑ b, c b • v b) = ∑ b, AbLaw.cst s (⨅ j ∈ t.1, D j) (c b) * ch s _ (v b) := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     exact Finset.sum_congr rfl fun b _ => ch_smul s _ _ _
   exact key fun b => x b t
 
@@ -267,8 +312,8 @@ theorem pair_lt {ι : Type} [Fintype ι] (e : ι → ∀ i i' : κ, Γ(Y, D i �
   have hc : ∀ b, ch s (⨅ j ∈ t.1, D j) (coc s D (e b) t) = resG Y hle (e b i i') :=
     fun b => coc_pair s D (e b) hii t rfl
   simp only [hc] at key
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hh, map_sum, map_mul, map_sub, map_neg, resG_resG, resG_cst]
+
+  simp only [hh, map_sum, map_mul, map_sub, map_neg, resG_resG, resG_cst]
   rw [one_smul, neg_smul, one_smul] at key
   linear_combination -key
 
@@ -289,8 +334,8 @@ theorem exists_comb_coboundary : ∀ (K : Type) [Field K] (Y : Scheme.{0}) (s : 
     omega
   obtain ⟨c, hc, b0, hb0⟩ := Fintype.not_linearIndependent_iff.1 hnli
   have h0 : cechClass A 1 (∑ b, c b • z b) = 0 := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simpa only [map_smul] using hc
   obtain ⟨y, hy⟩ := (cechClass_succ_eq_zero_iff A 0 _).1 h0
   have hy' : Cube.d A (0 + 1) y = ∑ b, c b • coc s D (e b) := by
@@ -320,8 +365,8 @@ theorem exists_comb_coboundary : ∀ (K : Type) [Field K] (Y : Scheme.{0}) (s : 
     apply resG_inj hW inf_le_left
     have P' := congrArg (resG Y (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
       D i ⊓ D i' ⊓ D i ≤ D i' ⊓ D i)) P
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, map_mul, map_sub, resG_cst, resG_resG] at P' ⊢
+
+    simp only [map_sum, map_mul, map_sub, resG_cst, resG_resG] at P' ⊢
     simp only [hanti, mul_neg, Finset.sum_neg_distrib]
     linear_combination -P'
 

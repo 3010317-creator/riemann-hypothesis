@@ -1,6 +1,57 @@
 module
 
-public import Mathlib
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.Algebra.MvPolynomial.CommRing
 
 @[expose] public section
 
@@ -153,8 +204,8 @@ theorem symmetric_le_adjoin (q : Fin n → MvPolynomial (Fin n) ℂ) (hq : ∀ k
       exact TopClose.prod _ _ _ _ fun i _ => (hclose i).pow (c i)
     have hF : aeval psumFin F = ∑ c ∈ F.support, AddMonoidAlgebra.coeff F c • P c := by
       conv_lhs => rw [F.as_sum]
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       refine sum_congr rfl fun c _ => ?_
       rw [aeval_monomial, Algebra.smul_def]
     set S := F.support.filter fun c => psumWt c = d + 1
@@ -164,8 +215,8 @@ theorem symmetric_le_adjoin (q : Fin n → MvPolynomial (Fin n) ℂ) (hq : ∀ k
       simp only [Q, Finsupp.prod]
       exact B.prod_mem fun i _ => B.pow_mem (Algebra.subset_adjoin ⟨i, rfl⟩) _
     have htop : homogeneousComponent (d + 1) (aeval psumFin F) = ∑ c ∈ S, AddMonoidAlgebra.coeff F c • P c := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [hF, map_sum, sum_filter]
+
+      rw [hF, map_sum, sum_filter]
       refine sum_congr rfl fun c _ => ?_
       rw [map_smul, homogeneousComponent_of_mem (hPhom c)]
       by_cases h : psumWt c = d + 1
@@ -175,7 +226,7 @@ theorem symmetric_le_adjoin (q : Fin n → MvPolynomial (Fin n) ℂ) (hq : ∀ k
       set p := aeval psumFin F
       rw [totalDegree, Finset.sup_le_iff]
       intro m hm
-      rw [mem_support_iff, coeff_sub, coeff_homogeneousComponent] at hm
+      rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_homogeneousComponent] at hm
       have hm' : m ∈ p.support := by
         rw [mem_support_iff]; intro h0; rw [h0] at hm; simp at hm
       have h1 := le_totalDegree hm'

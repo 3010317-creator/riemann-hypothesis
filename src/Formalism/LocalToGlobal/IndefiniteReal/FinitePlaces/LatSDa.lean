@@ -1,13 +1,61 @@
 module
 
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatMod
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.VacExApp
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.VacExA
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualB
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ExistsNatSmulSingle
+public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.LatticeVariant
+public import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ExistsNatSmulSingle
+import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
+import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemUniq
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatMod
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualB
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.VacExA
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.VacExApp
+public import Formalism.LocalToGlobal.IndefiniteReal.FockTheta.ConjPurelyImaginaryGenerator
+public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.FDMSubCompact
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -70,13 +118,13 @@ theorem lsd_coordO : ∃ r : 𝓞 D.host.F, r ≠ 0 ∧ ∀ (x : 𝓞 D.host.E) 
       Algebra.smul_def]⟩
   choose y hy using hl
   refine ⟨∑ l, (ω.repr x l : ℤ) • y l, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hx, map_sum, Finsupp.finsetSum_apply, Finset.mul_sum]
+
+  rw [hx, map_sum, Finsupp.finsetSum_apply, Finset.mul_sum]
   have hc : ((∑ l, (ω.repr x l : ℤ) • y l : 𝓞 D.host.F) : D.host.F) =
       ∑ l, (ω.repr x l : ℤ) • ((y l : 𝓞 D.host.F) : D.host.F) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [show ((∑ l, (ω.repr x l : ℤ) • y l : 𝓞 D.host.F) : D.host.F) =
-      algebraMap (𝓞 D.host.F) D.host.F (∑ l, (ω.repr x l : ℤ) • y l) from rfl, map_sum]
+
+    rw [show ((∑ l, (ω.repr x l : ℤ) • y l : 𝓞 D.host.F) : D.host.F) =
+    algebraMap (𝓞 D.host.F) D.host.F (∑ l, (ω.repr x l : ℤ) • y l) from rfl, map_sum]
     exact Finset.sum_congr rfl fun l _ => map_zsmul _ _ _
   rw [hc]
   refine Finset.sum_congr rfl fun l _ => ?_
@@ -119,7 +167,7 @@ theorem lsd_tmul_eq (r : D.host.F) (α : Af D.host.F) (e : D.host.E) :
       pairA D.host.F 0 α ⊗ₜ[D.host.F] (algebraMap D.host.F D.host.E r * e) := by
   rw [← lsd_smul_pairA, TensorProduct.smul_tmul, Algebra.smul_def]
 
-set_option maxHeartbeats 1600000 in
+
 theorem lsd_mem (hΛS : IsSelfDualC S ΛS) (hΛT : IsSelfDualC T ΛT) :
     ∃ R : 𝓞 D.host.F, R ≠ 0 ∧ ∀ (i : Fin T.rank) (j : Fin S.rank) (k : Fin (Module.finrank D.host.F D.host.E))
       (α : Af D.host.F), α ∈ intAf D.host.F →
@@ -209,7 +257,7 @@ theorem lsdE_finPart (i : Fin T.rank) (j : Fin S.rank) (β : Af D.host.F) (e : D
   · exact map_zero _
 
 
-set_option maxHeartbeats 1600000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem latO_isOpen (hΛS : IsSelfDualC S ΛS) (hΛT : IsSelfDualC T ΛT) :
     IsOpen {w : WO S T | ∃ u ∈ latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E))
@@ -264,7 +312,7 @@ theorem lsd_cE_tmul (a : AF D.host.F) (e : D.host.E) (k : Fin (Module.finrank D.
     rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   rw [h, map_smul, Pi.smul_apply, cE_tmul, smul_eq_mul]
 
-set_option maxHeartbeats 800000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem lsd_fst (z : AE D) (k : Fin (Module.finrank D.host.F D.host.E)) :
     fstA D.host.F (cE D.host.F D.host.E z k) =
@@ -279,7 +327,7 @@ theorem lsd_fst (z : AE D) (k : Fin (Module.finrank D.host.F D.host.E)) :
       rw [map_add (f := _)]; rfl
     rw [h1, map_add (f := _), hx, hy, ← Finsupp.add_apply, ← LinearEquiv.map_add (e := _), ← RingHom.map_add (f := _)]
 
-set_option maxHeartbeats 800000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem lsd_snd (z : AE D) (k : Fin (Module.finrank D.host.F D.host.E)) :
     sndA D.host.F (cE D.host.F D.host.E z k) =
@@ -329,7 +377,7 @@ theorem lsd_cE_of_inf (z : AE D) (hz : infPart D z = 0) (k : Fin (Module.finrank
   rfl
 
 
-set_option maxHeartbeats 1600000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem lsd_decomp (Y : WO S T) (hY : ∀ i j, infPart D (Y i j) = 0) :
     Y = ∑ i, ∑ j, ∑ k, lsdE S T i j (sndA D.host.F (cE D.host.F D.host.E (Y i j) k))
@@ -358,7 +406,7 @@ theorem lsdE_nsmul (N : ℕ) (i : Fin T.rank) (j : Fin S.rank) (β : Af D.host.F
   · rw [smul_zero]
 
 
-set_option maxHeartbeats 1600000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem latO_nsmul_mem (hΛS : IsSelfDualC S ΛS) (hΛT : IsSelfDualC T ΛT) :
     ∃ N : ℕ, 0 < N ∧ ∀ Y : WO S T, (∀ i j, finPart D (Y i j) ∈ intAE D) → (∀ i j, infPart D (Y i j) = 0) →
@@ -404,7 +452,7 @@ theorem lsd_fi : ∀ x ∈ latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT :
   | neg x _ hx => intro i j; rw [Matrix.neg_apply, map_neg, hx, neg_zero]
 
 
-set_option maxHeartbeats 1600000 in
+
 open Formalism.IndefR.PHeisFC in
 theorem latO_isCompact (hΛS : IsSelfDualC S ΛS) (hΛT : IsSelfDualC T ΛT) :
     IsCompact ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True :

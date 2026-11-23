@@ -1,5 +1,50 @@
 module
 
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetMeasStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfB
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfH
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfI
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfJ
 
 @[expose] public section
@@ -108,9 +153,6 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
   haveI hfS : FiniteDimensional ℂ (Submodule.span ℂ (Set.range g)) := by
     first
       | exact FiniteDimensional.span_of_finite ℂ (Set.finite_range g)
-      | exact FiniteDimensional.span_of_finite (Set.finite_range g)
-      | exact Module.Finite.iff_fg.mpr (Submodule.fg_span (Set.finite_range g))
-      | exact inferInstance
   have hD2le : D2 ≤ Submodule.span ℂ (Set.range g) := by
     intro h hh
     exact ((hD2i h).1 hh).1
@@ -122,7 +164,6 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
   haveI hfR : FiniteDimensional ℂ (LinearMap.range Φ) := by
     first
       | exact LinearMap.finiteDimensional_range Φ
-      | exact inferInstance
   haveI hfM : FiniteDimensional ℂ M := by
     first
       | exact Submodule.finiteDimensional_of_le hMle
@@ -131,7 +172,6 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
   haveI : CompleteSpace M := by
     first
       | exact FiniteDimensional.complete ℂ M
-      | exact inferInstance
 
   obtain ⟨y, hyM, w, hw, hvyw⟩ : ∃ y ∈ M, ∃ w ∈ M.orthogonal,
       hmemf.toLp _ = y + w := by
@@ -157,11 +197,9 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
     have h0 : ⟪(hmemP F' P' hD').toLp _, w⟫_ℂ = 0 := by
       first
         | exact Submodule.inner_right_of_mem_orthogonal hmem' hw
-        | exact (Submodule.mem_orthogonal M w).1 hw _ hmem'
     have h0' : ⟪w, (hmemP F' P' hD').toLp _⟫_ℂ = 0 := by
       first
         | exact inner_eq_zero_symm.1 h0
-        | exact Submodule.inner_left_of_mem_orthogonal hmem' hw
     rw [hwLp,
       OntoI.inner_toLp (r := r) (X := X) (x0 := x0) (W := W) (FF := FF) hWm hmemf0
         (hmemP F' P' hD')] at h0'
@@ -192,10 +230,8 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
     refine lt_of_le_of_lt key (ENNReal.add_lt_top.2 ⟨?_, ?_⟩)
     · first
         | exact ENNReal.mul_lt_top (by simp) hfF
-        | exact ENNReal.mul_lt_top (by simp) hfF.ne
     · first
         | exact ENNReal.mul_lt_top (by simp) hPF
-        | exact ENNReal.mul_lt_top (by simp) hPF.ne
   have hvan := OntoH.vanish (r := r) (X := X) (x0 := x0) hExG hGrad hKa hPair hBig hConn hExtF
     hx0 hPD hW hWL hbb4 hm hg1 hg1ne hPs hWPs hLev hFF hf0SS hff0 horth
   obtain ⟨hD1, hD2, hD3, hD4⟩ := hD

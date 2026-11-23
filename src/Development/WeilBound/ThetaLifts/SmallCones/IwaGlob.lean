@@ -1,10 +1,56 @@
 module
 
-public import Development.WeilBound.ThetaLifts.SmallCones.ThetaUniq
-public import Development.WeilBound.ThetaLifts.SmallCones.MatCancel
 public import Development.WeilBound.ThetaLifts.TowerModels.ExistsRefl
-public import Development.WeilBound.ThetaLifts.LatticeBasics.EulerProd
 public import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.InertDef
+public import Development.WeilBound.ThetaLifts.LatticeBasics.EulerB
+public import Development.WeilBound.ThetaLifts.LatticeBasics.HodgeTateFromSandwich
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
+public import Development.WeilBound.ThetaLifts.LatticeBasics.EulerProd
+public import Development.WeilBound.ThetaLifts.SmallCones.MatCancel
+import Development.WeilBound.ThetaLifts.TowerModels.LeviAd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.FinSplit
 
 @[expose] public section
 
@@ -80,8 +126,8 @@ theorem exists_arch (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hx : x ≠ 0) (
     (fun h => hx (funext fun i => (B.emb w).1.injective ((congrFun h i).trans (map_zero _).symm)))
     (by
       have e := congrArg (B.emb w).1 h0
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ.2.2.2, map_zero] at e
+
+      simp only [form, dotProduct, Matrix.mulVec, map_sum, map_mul, hσ.2.2.2, map_zero] at e
       exact e)
     (g := (mat g).map (piInf (B.emb w))) (g' := (mat g⁻¹).map (piInf (B.emb w)))
     (by rw [← Matrix.map_mul, show mat g * mat g⁻¹ = 1 from g.1.mul_inv, map_one'])
@@ -152,13 +198,13 @@ theorem glue (hL : X.L.IsLattice E) {z : Fin n → AE F E} (h0 : eInf F • z = 
     funext fun j => Supp.adTens_ext (fun w => ?_) fun v => ?_⟩
   · have e := congrArg (compInf F E w) (congrFun h0 j)
     rw [Pi.smul_apply, compInf_smul, show evInf F w (eInf F) = 1 from rfl, one_smul, Pi.zero_apply, map_zero] at e
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [e, Finset.sum_apply, map_sum]
+
+    rw [e, Finset.sum_apply, map_sum]
     exact Finset.sum_eq_zero fun i _ => by rw [Pi.smul_apply, compInf_smul, show evInf F w (b i) = 0 from rfl, zero_smul]
   · have e := congrArg (compFin F E v) (congrFun (a2 v) j)
     rw [Pi.smul_apply, compFin_smul, ev_self, one_smul] at e
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← e, Finset.sum_apply, Finset.sum_apply, map_sum, map_sum]
+
+    rw [← e, Finset.sum_apply, Finset.sum_apply, map_sum, map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [Pi.smul_apply, Pi.smul_apply, compFin_smul, compFin_smul, hb]
 
 theorem stab_of_int (hL : X.L.IsLattice E) {A : Matrix (Fin n) (Fin n) (AE F E)}

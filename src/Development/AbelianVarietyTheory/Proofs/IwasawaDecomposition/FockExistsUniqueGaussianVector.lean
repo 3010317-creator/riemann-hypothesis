@@ -1,8 +1,52 @@
 module
 
-public import Mathlib
-public import Formalism.LocalRingCardinality.DataTheta
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.OscActMonomialOfUnique
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -116,7 +160,7 @@ theorem DegLt.X_mul {k : ℕ} {f : MvPolynomial σ ℂ} (h : DegLt k f) (l : σ)
 
 omit [DecidableEq σ] in
 theorem DegLt.smul {k : ℕ} {f : MvPolynomial σ ℂ} (h : DegLt k f) (c : ℂ) : DegLt k (c • f) :=
-  fun α hα => by rw [coeff_smul, h α hα, smul_zero]
+  fun α hα => by rw [MvPolynomial.coeff_smul, h α hα, smul_zero]
 
 omit [DecidableEq σ] in
 theorem DegLt.add {k : ℕ} {f g : MvPolynomial σ ℂ} (h : DegLt k f) (h' : DegLt k g) : DegLt k (f + g) :=
@@ -131,8 +175,8 @@ theorem inner_eq_sum (f g : MvPolynomial σ ℂ) :
     inner ℂ (F.ι f) (F.ι g) =
       ∑ α ∈ f.support, (starRingEnd ℂ) (AddMonoidAlgebra.coeff f α) * ((GlobalTheory.FockSeq.mfact α : ℂ) * AddMonoidAlgebra.coeff g α) := by
   conv_lhs => rw [f.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, sum_inner]
+
+  rw [map_sum, sum_inner]
   refine Finset.sum_congr rfl fun α _ => ?_
   have e : (monomial α (AddMonoidAlgebra.coeff f α) : MvPolynomial σ ℂ) = AddMonoidAlgebra.coeff f α • monomial α 1 := by simp [smul_monomial]
   rw [e, map_smul, inner_smul_left, hasCoeff_coe F g α, GlobalTheory.FockSeq.mfact_cast, MvPolynomial.coeff_coe]
@@ -150,14 +194,14 @@ theorem sum_sq_pderiv_le [Fintype σ] {k : ℕ} {f : MvPolynomial σ ℂ} (h : D
     ∑ l, ‖F.ι (pderiv l f)‖ ^ 2 ≤ k * ‖F.ι f‖ ^ 2 := by
   have h1 : ∀ l, ‖F.ι (pderiv l f)‖ ^ 2 =
       ∑ α ∈ f.support, (α l : ℝ) * (GlobalTheory.FockSeq.mfact α * Complex.normSq (AddMonoidAlgebra.coeff f α)) := fun l => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← inner_self_eq_norm_sq (𝕜 := ℂ), GlobalTheory.Oscillator.inner_pderiv (isFockIP F), inner_eq_sum, map_sum]
+
+    rw [← inner_self_eq_norm_sq (𝕜 := ℂ), GlobalTheory.Oscillator.inner_pderiv (isFockIP F), inner_eq_sum, map_sum]
     refine Finset.sum_congr rfl fun α _ => ?_
     rw [coeff_X_mul_pderiv]
     simp [Complex.normSq_apply]; ring
   have h2 : ‖F.ι f‖ ^ 2 = ∑ α ∈ f.support, (GlobalTheory.FockSeq.mfact α * Complex.normSq (AddMonoidAlgebra.coeff f α)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← inner_self_eq_norm_sq (𝕜 := ℂ), inner_eq_sum, map_sum]
+
+    rw [← inner_self_eq_norm_sq (𝕜 := ℂ), inner_eq_sum, map_sum]
     refine Finset.sum_congr rfl fun α _ => ?_
     simp [Complex.normSq_apply]; ring
   simp only [h1, h2]
@@ -202,9 +246,9 @@ def quadDer (f : MvPolynomial (Ix P Q) ℂ) : MvPolynomial (Ix P Q) ℂ :=
 
 theorem inner_quadMul (f g : MvPolynomial (Ix P Q) ℂ) :
     inner ℂ (F.ι (quadMul A f)) (F.ι g) = inner ℂ (F.ι f) (F.ι (quadDer A g)) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [quadMul, quadDer, map_sum, map_smul, sum_inner, inner_sum, inner_smul_left, inner_smul_right,
-    GlobalTheory.Oscillator.inner_X_mul (isFockIP F)]
+
+  simp only [quadMul, quadDer, map_sum, map_smul, sum_inner, inner_sum, inner_smul_left, inner_smul_right,
+  GlobalTheory.Oscillator.inner_X_mul (isFockIP F)]
 
 theorem inner_XX_XX (i k : Fin P) (j l : Fin Q) (f : MvPolynomial (Ix P Q) ℂ) :
     inner ℂ (F.ι (X (Sum.inl i) * (X (Sum.inr j) * f))) (F.ι (X (Sum.inl k) * (X (Sum.inr l) * f))) =
@@ -224,12 +268,12 @@ theorem inner_quadMul_self (f : MvPolynomial (Ix P Q) ℂ) :
       ∑ k, ∑ i, (A * Aᴴ) k i * inner ℂ (F.ι (pderiv (Sum.inl k) f)) (F.ι (pderiv (Sum.inl i) f)) +
       ∑ l, ∑ j, (Aᴴ * A)ᵀ l j * inner ℂ (F.ι (pderiv (Sum.inr l) f)) (F.ι (pderiv (Sum.inr j) f)) +
       ((∑ i, ∑ j, Complex.normSq (A i j) : ℝ) : ℂ) * inner ℂ (F.ι f) (F.ι f) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [quadMul, quadDer, map_sum, map_smul, sum_inner, inner_sum, inner_smul_left, inner_smul_right,
-    inner_XX_XX, mul_add, Finset.sum_add_distrib, Finset.mul_sum, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_ite_irrel, Finset.sum_const_zero, Matrix.mul_apply,
-    Matrix.transpose_apply, Matrix.conjTranspose_apply, Finset.sum_mul, Complex.ofReal_sum, Complex.conj_conj,
-    RCLike.star_def]
+
+  simp only [quadMul, quadDer, map_sum, map_smul, sum_inner, inner_sum, inner_smul_left, inner_smul_right,
+  inner_XX_XX, mul_add, Finset.sum_add_distrib, Finset.mul_sum, mul_ite, mul_zero, Finset.sum_ite_eq,
+  Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_ite_irrel, Finset.sum_const_zero, Matrix.mul_apply,
+  Matrix.transpose_apply, Matrix.conjTranspose_apply, Finset.sum_mul, Complex.ofReal_sum, Complex.conj_conj,
+  RCLike.star_def]
   refine congrArg₂ (· + ·) (congrArg₂ (· + ·) (congrArg₂ (· + ·) ?_ ?_) ?_) ?_
   · simp_rw [← Fintype.sum_prod_type']
     exact Fintype.sum_bijective (fun y => (y.2.2.1, y.2.2.2, y.1, y.2.1))
@@ -320,8 +364,8 @@ theorem summable_pow (h : (1 - Aᴴ * A).PosDef) :
   have b1 := norm_quadMul_le F A hr0.le h1 h2 (n + 1) _ hd
   have b2 : ‖F.ι (∑ l, x l • (X l * gaussPoly A x ^ n))‖ ≤
       C * (√(((2 * (n + 1) : ℕ) : ℝ) + 1) * ‖F.ι (gaussPoly A x ^ n)‖) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, hC, Finset.sum_mul]
+
+    rw [map_sum, hC, Finset.sum_mul]
     refine norm_sum_le_of_le _ fun l _ => ?_
     rw [map_smul, norm_smul]
     exact mul_le_mul_of_nonneg_left (norm_X_mul_le F hd l) (norm_nonneg _)

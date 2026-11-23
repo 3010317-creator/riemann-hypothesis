@@ -1,6 +1,52 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogInv
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -22,8 +68,6 @@ private theorem cc_subst_lemma {σ τ : Type} [Fintype σ] {L : σ → MvPowerSe
     first
       | exact MvPowerSeries.HasSubst.of_constantCoeff_zero hL0
       | exact MvPowerSeries.hasSubst_of_constantCoeff_zero hL0
-      | exact MvPowerSeries.HasSubst.of_constantCoeff_nilpotent (fun p => by rw [hL0 p]; exact IsNilpotent.zero)
-      | exact MvPowerSeries.hasSubst_of_constantCoeff_nilpotent (fun p => by rw [hL0 p]; exact IsNilpotent.zero)
   rw [MvPowerSeries.constantCoeff_subst hL, finsum_eq_single _ 0]
   · simp [MvPowerSeries.coeff_zero_eq_constantCoeff_apply]
   · intro e he
@@ -135,7 +179,6 @@ theorem om_Q (i b : Fin d) : ∑ j, ev (n := 2) ![G.F] (Om G i j) * Ar G j b = e
   rw [Matrix.mul_apply] at h4
   first
     | exact h4
-    | simpa using h4
 
 theorem czSw : CZ (![pt k (n := 2) d 1, pt k d 0] : Fin 2 → Pt k 2 d) := by
   intro j i
@@ -168,7 +211,6 @@ theorem sw_y (h : PS k 1 d) :
   first
     | exact ev_X czSw 1 i
     | (simp only [Matrix.cons_val_zero]; exact ev_X czSw 1 i)
-    | simp [pt, ev_X czSw]
 
 theorem sw_dF (j b : Fin d) :
     ev (n := 2) ![pt k d 1, pt k d 0] (pderiv (R := k) ((1 : Fin 2), b) (G.F j)) = pderiv (R := k) ((0 : Fin 2), b) (G.F j) := by
@@ -177,7 +219,6 @@ theorem sw_dF (j b : Fin d) :
   simp [pt, MvPowerSeries.pderiv_X, Pi.single_apply] at h
   first
     | exact h
-    | simpa using h
 
 theorem om_P (i a : Fin d) :
     ∑ j, ev (n := 2) ![G.F] (Om G i j) * pderiv (R := k) ((0 : Fin 2), a) (G.F j) = ev (n := 2) ![pt k d 0] (Om G i a) := by
@@ -222,10 +263,8 @@ private theorem ev_coordinate_F (i : Fin d) :
     fin_cases j
     · first
         | exact ev_X CZ_pt_vector 1 i'
-        | simp [pt, ev_X CZ_pt_vector]
     · first
         | exact ev_X CZ_pt_vector 0 i'
-        | simp [pt, ev_X CZ_pt_vector]
   rw [e, G.unit i]
 
 theorem ez_F (h : PS k 1 d) : ev (n := 1) ![pt k d 0, 0] (ev (n := 2) ![G.F] h) = h := by
@@ -244,7 +283,6 @@ theorem ez_dx (j a : Fin d) :
   simp [pt, MvPowerSeries.pderiv_X, Pi.single_apply] at h
   first
     | exact h
-    | simpa [eq_comm] using h
 
 theorem ez_dy (c b : Fin d) : ev (n := 1) ![pt k d 0, 0] (pderiv (R := k) ((1 : Fin 2), b) (G.F c)) = Jac G c b := rfl
 
@@ -284,8 +322,8 @@ theorem om_key (i a b : Fin d) :
     rw [pderiv_ev czX, Fintype.sum_prod_type]
     simp [pt, MvPowerSeries.pderiv_X, Pi.single_apply]
   have hP := congrArg (⇑(pderiv (R := k) ((1 : Fin 2), b))) (om_P G i a)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hR, map_sum] at hP
+
+  rw [hR, map_sum] at hP
   simp only [Derivation.leibniz, smul_eq_mul, d_evF] at hP
   have hP2 := congrArg (ev (n := 1) ![pt k d 0, 0]) hP
   simp only [hsE, hz0, ev_mul hE, ev_add hE, ez_F, ez_dx, ez_dy,
@@ -299,8 +337,8 @@ theorem om_key (i a b : Fin d) :
   have hone : pderiv (R := k) ((0 : Fin 1), a) ((1 : Matrix (Fin d) (Fin d) (PS k 1 d)) i b) = 0 := by
     rw [Matrix.one_apply]
     split_ifs <;> simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [hone, map_sum] at hM2
+
+  rw [hone, map_sum] at hM2
   simp only [Derivation.leibniz, smul_eq_mul] at hM2
   rw [Finset.sum_add_distrib] at hM2
   linear_combination hM2 - hP2

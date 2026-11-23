@@ -1,13 +1,55 @@
 module
 
-public import Mathlib
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.Coords
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.Imports
-public import GroundTheory.ArithmeticGeometry.SchemeCohomology.ProperFiniteness
-public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechSeparated
-public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechNaturality.NaturalLeray
-public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSheafSecPresheaf
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechNaturality.CechFunctor
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.ProjectiveCohomology.TwistingSheaf
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.Tactic.ENatToNat
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.CechNaturality.NaturalLeray
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.ProjectiveCohomology.QcohLocal
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.ProperFiniteness
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
 
 @[expose] public section
 
@@ -185,8 +227,8 @@ theorem coc3 (i : Fin 3 → ι) (W : X.Opens) (hW : W ≤ capO U i) (h₁ : W �
       refine Finset.sum_congr rfl fun k' _ => ?_
       rw [V.e_chg 2 1 2 x i k', Finset.mul_sum]
       exact Finset.sum_congr rfl fun k'' _ => mul_assoc _ _ _) v
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_mul, rs_trans, Finset.sum_mul] at key
+
+  simp only [map_sum, map_mul, rs_trans, Finset.sum_mul] at key
   simp only [Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Eq.trans (Finset.sum_congr rfl fun k'' _ => Finset.sum_congr rfl fun k' _ => (mul_assoc _ _ _).symm) key
@@ -322,8 +364,8 @@ theorem finite_H_cx : ∀ {O : Type} [CommRing O] [IsNoetherianRing O] {X : Sche
     funext i
     rw [d_apply]
     change secRes V.g (inter_le_capO U i) (toSec V (n + 1) (K.d n x) i) = _
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Cos.d_apply, map_sum, Finset.sum_apply, map_sum]
+
+    rw [Cos.d_apply, map_sum, Finset.sum_apply, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_zsmul, Pi.smul_apply, map_zsmul, toSec_δ]
     have H := (inter_le_comp (X := X.toTopCat) U i k.succAbove).trans (inter_le_capO U (i ∘ k.succAbove))

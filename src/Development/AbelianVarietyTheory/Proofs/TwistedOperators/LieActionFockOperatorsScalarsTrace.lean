@@ -1,12 +1,68 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MulNonsingInvCancelRightGram
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignaturesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PureTensorOInjective
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasDerivAtPhiCol
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfPderivStable
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCcrOperatorsThetaFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasDerivAtWeilRepRealOneParamAdelicPoint
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLieActionThroughWeylAlgebra
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignaturesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MulNonsingInvCancelRightGram
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 
 @[expose] public section
 
@@ -98,20 +154,20 @@ theorem cc_fockS (Y : Matrix (Fin a) (Fin a) ℂ) :
     MvPolynomial.constantCoeff (fockS τ ε ε' Y (1 : PolF D b a)) = ∑ j, Y j j * (sgn (ε j) * (idx ε' : ℂ) / 2) := by
   classical
   unfold fockS
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.add_apply, map_sum, map_add (f := _)]
+
+  simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.add_apply, map_sum, map_add (f := _)]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Finset.sum_eq_single j]
   · rw [MvPolynomial.smul_eq_C_mul, map_mul, MvPolynomial.constantCoeff_C, ← sum_half]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low, if_true]
+
+    simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low, if_true]
     congr 1
     refine Finset.sum_congr rfl fun i _ => ?_
     simp [MvPolynomial.smul_eq_C_mul]
   · intro k _ hk
     rw [MvPolynomial.smul_eq_C_mul, map_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low]
+
+    simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low]
     simp [Ne.symm hk]
   · simp
 
@@ -119,20 +175,20 @@ theorem cc_fockT (Y : Matrix (Fin b) (Fin b) ℂ) :
     MvPolynomial.constantCoeff (fockT τ ε ε' Y (1 : PolF D b a)) = ∑ i, Y i i * (sgn (ε' i) * (idx ε : ℂ) / 2) := by
   classical
   unfold fockT
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.add_apply, map_sum, map_add (f := _)]
+
+  simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.add_apply, map_sum, map_add (f := _)]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single i]
   · rw [MvPolynomial.smul_eq_C_mul, map_mul, MvPolynomial.constantCoeff_C, ← sum_half]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low, if_true]
+
+    simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low, if_true]
     congr 1
     refine Finset.sum_congr rfl fun j _ => ?_
     simp [MvPolynomial.smul_eq_C_mul, ne_comm, eq_comm]
   · intro k _ hk
     rw [MvPolynomial.smul_eq_C_mul, map_mul]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low]
+
+    simp only [LinearMap.sum_apply, LinearMap.add_apply, map_sum, map_add (f := _), cc_rai_low]
     simp [Ne.symm hk]
   · simp
 

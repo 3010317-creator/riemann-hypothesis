@@ -1,9 +1,54 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemIffConjugateNotMem
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.Algebra.Star.UnitaryStarAlgAut
+public import Mathlib.Analysis.Matrix.Hermitian
 
 @[expose] public section
 
@@ -179,8 +224,8 @@ theorem trace_real_blocks {ι : Type} [Fintype ι] {r : ℕ} (N : ι → Matrix 
       (((toLin' (N τ)).restrictScalars ℝ) ∘ₗ LinearMap.proj τ) := by
     refine LinearMap.ext fun u => funext fun τ => ?_
     simp [hf, Finset.sum_apply, Pi.single_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [this, map_sum]
+
+  rw [this, map_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [LinearMap.trace_comp_comm', LinearMap.comp_assoc, LinearMap.proj_comp_single_same,
     LinearMap.comp_id, trace_real_toLin']
@@ -216,8 +261,8 @@ theorem span_integers_eq_top (Φ : CMType E) :
   let δ : Φ → ℂ := fun τ => f (Pi.single τ 1) - Complex.I * f (Pi.single τ Complex.I)
   have key : ∀ z : Φ → ℂ, f z = ∑ τ, (z τ * δ τ).re := by
     intro z
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [← Finset.univ_sum_single z, map_sum]
+
+    conv_lhs => rw [← Finset.univ_sum_single z, map_sum]
     refine Finset.sum_congr rfl fun τ _ => ?_
     have : (Pi.single τ (z τ) : Φ → ℂ) =
         (z τ).re • (Pi.single τ 1 : Φ → ℂ) + (z τ).im • (Pi.single τ Complex.I : Φ → ℂ) := by
@@ -372,9 +417,9 @@ theorem baseChange_EF (ξ : E) (Gm : Matrix (Fin r) (Fin r) E)
       have h2 : realMap D Φ φ (t ⊗ₜ x) τ ⬝ᵥ (Gm.map τ.1) *ᵥ star (realMap D Φ φ (s ⊗ₜ y) τ) =
           ((t * s : ℝ) : ℂ) * τ.1 (FD.herm Gm (φ x) (φ y)) := by
         rw [← hermC_eq]
-        set_option synthInstance.maxHeartbeats 100000 in
-          simp only [FD.hermC, FD.herm, realMap_tmul, map_sum, map_mul, FD.cc,
-          IsCMField.complexEmbedding_complexConj, Finset.mul_sum, Complex.conj_ofReal]
+
+        simp only [FD.hermC, FD.herm, realMap_tmul, map_sum, map_mul, FD.cc,
+        IsCMField.complexEmbedding_complexConj, Finset.mul_sum, Complex.conj_ofReal]
         refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
         push_cast
         ring

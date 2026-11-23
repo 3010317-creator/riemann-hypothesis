@@ -1,9 +1,48 @@
 module
 
-public import Mathlib
+import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.GrothendieckRingPolynomial.ClassProductIrreducibleFold
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.ProdList
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquivStatement
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivProdIrrZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquivStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -11,7 +50,7 @@ noncomputable section
 
 open GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.JHMult
 
-set_option synthInstance.maxHeartbeats 400000
+
 
 namespace PositivityTheory.Groth
 
@@ -84,27 +123,7 @@ theorem prodIrr_append_one (hM : MulCls k) {h : ℕ} (x₀ : IrrGL (k := k)) (y 
 theorem class_product_irreducible_fold (hM : MulCls k) : ∀ (h N : ℕ) (x : Fin h → IrrGL (k := k)) (hd : ∑ a, (x a).1 = N),
     HasFiniteLength (prodIrr x hd) ∧
       cl0 (prodIrr x hd) = (List.ofFn x).foldr (fun y a => mulR (sg y) a) (GrothGL.unit k) := by
-  intro h
-  induction h with
-  | zero =>
-    intro N x hd
-    obtain ⟨hfl, hc⟩ := prodIrr_zero x hd
-    refine ⟨hfl, ?_⟩
-    rw [hc]
-    rfl
-  | succ h ih =>
-    intro N x hd
-    have hy : ∑ a, (Fin.tail x a).1 = ∑ a, (Fin.tail x a).1 := rfl
-    have happ : ∑ a, (Fin.append (fun _ : Fin 1 => x 0) (Fin.tail x) a).1 = (x 0).1 + ∑ a, (Fin.tail x a).1 := by
-      rw [Fin.sum_univ_add]
-      simp
-    have H2 := ih _ (Fin.tail x) hy
-    have H := prodIrr_append_one hM (x 0) (Fin.tail x) hy H2.1 happ
-    have hcast := prodIrr_cast (Nat.add_comm 1 h) (Fin.append (fun _ : Fin 1 => x 0) (Fin.tail x)) x
-      (fun i => by rw [Fin.append_left_eq_cons, Function.comp_apply, Fin.cons_self_tail]) happ hd
-    refine ⟨hcast.1.1 H.1, hcast.2.symm.trans (H.2.trans ?_)⟩
-    rw [H2.2, List.ofFn_succ, List.foldr_cons]
-    rfl
+  apply CompanionTheory.Groth.class_product_irreducible_fold <;> assumption
 
 
 variable (k) in

@@ -1,12 +1,48 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
-public import Formalism.PairingDivisors.StatementH
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RelIndexNeZeroOfMoves
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteAdeleStrongApproxModAdelicIdeal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRationalPointOfMemMovedThetaLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaLatticePointMemThetaLatticeOfAdelicStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRationalPointOfMemMovedThetaLatticeStatement
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsDual
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -22,48 +58,7 @@ theorem exists_int_mul (D : D7) {N : ℕ} (q : ℕ) (k : GA D N) (h : TrivAt D q
       (∀ i j, (s : AE D) * ((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j ∈ OhE D) ∧
       ∀ i j, (s : AE D) * (((k : GL (Fin N) (AE D))⁻¹ : GL (Fin N) (AE D)) :
         Matrix (Fin N) (Fin N) (AE D)) i j ∈ OhE D := by
-  have h0 : ∀ i j, ∃ m : ℕ, Nat.Coprime m q ∧ (m : AE D) *
-      (((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j -
-        (1 : Matrix (Fin N) (Fin N) (AE D)) i j) ∈ OhE D := by
-    intro i j
-    obtain ⟨m, -, hm, s, hs, he⟩ := h i j 0
-    refine ⟨m, hm, ?_⟩
-    rw [pow_zero, one_mul] at he
-    rw [he]
-    exact hs
-  choose m hm hmS using h0
-  set s : ℕ := ∏ r : Fin N × Fin N, m r.1 r.2 with hs
-  have hint : ∀ i j, (s : AE D) * ((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j ∈ OhE D := by
-    intro i j
-    obtain ⟨c, hc⟩ := Finset.dvd_prod_of_mem (fun r : Fin N × Fin N => m r.1 r.2) (Finset.mem_univ (i, j))
-    have h1 : (1 : Matrix (Fin N) (Fin N) (AE D)) i j ∈ OhE D := by
-      rw [Matrix.one_apply]
-      split_ifs
-      · exact one_mem _
-      · exact zero_mem _
-    have : (s : AE D) * ((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j = (c : AE D) * ((m i j : AE D) *
-        (((k : GL (Fin N) (AE D)) : Matrix (Fin N) (Fin N) (AE D)) i j -
-          (1 : Matrix (Fin N) (Fin N) (AE D)) i j)) + (s : AE D) * (1 : Matrix (Fin N) (Fin N) (AE D)) i j := by
-      rw [hs, hc]; push_cast; ring
-    rw [this]
-    exact add_mem (mul_mem (natCast_mem _ c) (hmS i j)) (mul_mem (natCast_mem _ s) h1)
-  refine ⟨s, Nat.Coprime.prod_left fun r _ => hm r.1 r.2, hint, fun i j => ?_⟩
-  have hinv : (((k : GL (Fin N) (AE D))⁻¹ : GL (Fin N) (AE D)) :
-      Matrix (Fin N) (Fin N) (AE D)) i j =
-      Formalism.UG.sigR (D.host.conj : D.host.E →ₐ[ℚ] D.host.E)
-        (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ) (((k : GL (Fin N) (AE D)) : Matrix _ _ _) j i) := by
-    have hU := k.2
-    change Formalism.UG.cT (Formalism.UG.sigR (D.host.conj : D.host.E →ₐ[ℚ] D.host.E)
-      (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ)) ((k : GL (Fin N) (AE D)) : Matrix _ _ _) *
-      (1 : Matrix (Fin N) (Fin N) D.host.E).map (Formalism.UG.inclE (F := ℚ) (E := D.host.E) (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ)) *
-      ((k : GL (Fin N) (AE D)) : Matrix _ _ _) =
-      (1 : Matrix (Fin N) (Fin N) D.host.E).map (Formalism.UG.inclE (F := ℚ) (E := D.host.E) (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ)) at hU
-    rw [Matrix.map_one _ (map_zero _) (map_one _), Matrix.mul_one] at hU
-    have he := Units.inv_eq_of_mul_eq_one_left hU
-    exact congrFun (congrFun he i) j
-  rw [hinv]
-  have := Formalism.UG.P.csDual_sig_mem (D.host.conj : D.host.E →ₐ[ℚ] D.host.E) (hint j i)
-  rwa [map_mul, map_natCast] at this
+  apply GlobalTheory.InertParity.LengthSign.exists_int_mul <;> assumption
 
 theorem pt_nsmul (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) {N N' : ℕ} (m : ℕ)
     (z : Matrix (Fin N') (Fin N) D.host.E) :

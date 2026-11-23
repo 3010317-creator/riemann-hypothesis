@@ -1,9 +1,54 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConnectionKillsSeries
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeBilinearTermEqNegDoubleSum
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogInv
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GaugeExp
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LogChain
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -22,8 +67,8 @@ variable {k : Type} [CommRing k] {τ : Type} [Fintype τ]
 theorem vf_vf (c c' : τ → MvPowerSeries τ k) (G : MvPowerSeries τ k) :
     vf c (vf c' G) = vf (fun t => vf c (c' t)) G + ∑ s, ∑ t, c s * c' t * pderiv (R := k) s (pderiv (R := k) t G) := by
   unfold vf
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Derivation.leibniz, smul_eq_mul, mul_add, Finset.sum_add_distrib, Finset.sum_mul, Finset.mul_sum]
+
+  simp only [map_sum, Derivation.leibniz, smul_eq_mul, mul_add, Finset.sum_add_distrib, Finset.sum_mul, Finset.mul_sum]
   rw [add_comm]
   congr 1
   · rw [Finset.sum_comm]
@@ -176,10 +221,10 @@ theorem T_eq (b i j : Fin d) :
       ev (n := 1) ![pt k d 0, 0] (pderiv (R := k) ((1 : Fin 2), b) (Ar G j i)) +
       ∑ c, Jac G j c * C (constantCoeff (pderiv (R := k) ((0 : Fin 1), b) (Jac G c i))) := by
   have h := congrArg (fun f => ev (n := 1) ![pt k d 0, 0] (pderiv (R := k) ((1 : Fin 2), b) f)) (jac_F G j i)
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [d_F, map_sum, Derivation.leibniz, smul_eq_mul, ev_sum cz1, ev_add cz1, ev_mul cz1, ezF, ez_dF, d_y,
-    ez_y, ez_Ar, C_cc_jac, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h
+
+  simp only [d_F, map_sum, Derivation.leibniz, smul_eq_mul, ev_sum cz1, ev_add cz1, ev_mul cz1, ezF, ez_dF, d_y,
+  ez_y, ez_Ar, C_cc_jac, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
+  Finset.mem_univ, if_true] at h
   have e : ∑ c, Jac G c b * pderiv (R := k) ((0 : Fin 1), c) (Jac G j i) =
       ∑ c, pderiv (R := k) ((0 : Fin 1), c) (Jac G j i) * Jac G c b :=
     Finset.sum_congr rfl fun _ _ => mul_comm _ _
@@ -213,8 +258,8 @@ theorem vf_co_jac (u : Fin d → k) (j i : Fin d) :
 
 private theorem vf_finset_sum {τ : Type} [Fintype τ] {ι : Type} (s : Finset ι) (c : τ → MvPowerSeries τ k)
     (f : ι → MvPowerSeries τ k) : vf c (∑ i ∈ s, f i) = ∑ i ∈ s, vf c (f i) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [vf, map_sum, Finset.mul_sum]
+
+  simp only [vf, map_sum, Finset.mul_sum]
   rw [Finset.sum_comm]
 
 private theorem sum_mul_sum_symm_swap_of_symmetric {ι : Type} [Fintype ι] (x y : ι → PS k 1 d) (T : ι → ι → PS k 1 d)

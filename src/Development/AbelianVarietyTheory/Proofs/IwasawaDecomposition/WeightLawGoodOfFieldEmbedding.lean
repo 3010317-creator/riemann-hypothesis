@@ -1,15 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
-public import Formalism.LocalToGlobal.Divisibility.FramesLemmas
-public import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HasRatBasisOfAct
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefActionReprMemSubfield
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreserved
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualLatticeIsLatticeAndHermitianDual
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeExtensionAlongFieldEmbeddingDuals
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreserved
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNeZeroSmulMemAlt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefActionReprMemSubfield
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HasRatBasisOfAct
+import Formalism.LocalToGlobal.Columns.CoefficientsModP.PairingNondegenerateHolds
+public import Formalism.LocalToGlobal.Divisibility.ClassSumLemmas
+public import Formalism.LocalToGlobal.Divisibility.FramesLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -49,9 +85,9 @@ def valMat (c : C.Cl) : Matrix C.ιV (Fin C.dim) K :=
 theorem pair_eq (x y : C.V) :
     C.pair x y = ∑ i, ∑ j, star (C.bV.repr x i) * C.gramV i j * C.bV.repr y j := by
   conv_lhs => rw [← C.bV.sum_repr x, ← C.bV.sum_repr y]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, map_smul, smul_eq_mul,
-    starRingEnd_apply, Finset.mul_sum, CSD.gramV, Matrix.of_apply]
+
+  simp only [map_sum, LinearMap.sum_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, map_smul, smul_eq_mul,
+  starRingEnd_apply, Finset.mul_sum, CSD.gramV, Matrix.of_apply]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
@@ -59,9 +95,9 @@ theorem pair_eq (x y : C.V) :
 theorem gram_map (hb : C.HasRatBasis) (φ : K →+* ℂ) :
     C.H.map φ = ∑ c, ((C.wt c : ℕ) : ℂ)⁻¹ • (((valMat C c).map φ)ᴴ * C.gramV.map φ * (valMat C c).map φ) := by
   ext a b
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [Matrix.map_apply, CSD.H, Matrix.of_apply, CSD.csum, map_sum, map_mul, map_inv₀, map_natCast,
-    Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul, pair_eq, Matrix.mul_apply, Matrix.conjTranspose_apply, valMat]
+
+  simp only [Matrix.map_apply, CSD.H, Matrix.of_apply, CSD.csum, map_sum, map_mul, map_inv₀, map_natCast,
+  Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul, pair_eq, Matrix.mul_apply, Matrix.conjTranspose_apply, valMat]
   refine Finset.sum_congr rfl fun c _ => ?_
   congr 1
   rw [Finset.sum_comm]
@@ -84,9 +120,9 @@ theorem exists_val_ne (φ : K →+* ℂ) (x : Fin C.dim → ℂ) (hx : x ≠ 0) 
     ext i
     have h1 := congrFun huv (c, i)
     simp only [Matrix.mulVec, dotProduct, B, valMat, Matrix.of_apply] at h1
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [CSD.I_eq_sum, Finset.sum_apply, Pi.smul_apply, map_sum, map_smul, Finsupp.coe_finsetSum,
-      Finsupp.smul_apply, smul_eq_mul]
+
+    simp only [CSD.I_eq_sum, Finset.sum_apply, Pi.smul_apply, map_sum, map_smul, Finsupp.coe_finsetSum,
+    Finsupp.smul_apply, smul_eq_mul]
     simpa only [mul_comm] using h1
   apply hx
   apply map_mulVec_injective φ B hB

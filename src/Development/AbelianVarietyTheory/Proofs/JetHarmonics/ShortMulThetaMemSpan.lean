@@ -1,24 +1,65 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Jets.EmbShortThLeThetaPlain
-public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.ThetaLeMsupOfSetC
-public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.WeightedPrimeSumBound
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LatOfLamSt
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffMoreColumns
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsBetaUnitBlock
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ShortSeriesBlockProduct
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsSimInducing
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StandardCoverShortValueEqThetaValueStatement
+public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.BlockPolyLevelMove
+public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.BaseClassMove
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.ZeroNotAdmissibleOfRankPos
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevel
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmAMemSpanShort
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqOfForallAlgClosed
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmAMemSpanShort
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLaws
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleMemSec
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffMoreColumns
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsSimInducing
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsBetaUnitBlock
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ShortSeriesBlockProduct
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StandardCoverShortValueEqThetaValueStatement
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TotalDegreeLeOfRowDeg
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -151,8 +192,8 @@ theorem weighted_sum {K S ι Q : Type} [Field K] [CommRing S] [Algebra K S] [Fin
   simp only [finsum_eq_sum_of_fintype, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun q _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [mul_left_comm, ← mul_assoc (algebraMap K S t), ← map_mul, ← hw, map_sum, Finset.sum_mul, Finset.mul_sum]
+
+  rw [mul_left_comm, ← mul_assoc (algebraMap K S t), ← map_mul, ← hw, map_sum, Finset.sum_mul, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul]; ring
 
@@ -172,8 +213,8 @@ theorem shortVal_sum (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
     Λ N hU hT hL a P hP.1 (w i) β).2 S S' φ y y' h2 (u i) _ (hu i)
     ⟨S', _, _, AlgHom.id c.F S', y', z, tp, F, RingHom.FaithfullyFlat.of_bijective Function.bijective_id,
       FramedBaseChange.refl y', h3, h4, h5, h6, rfl⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, map_mul, h7]
+
+  rw [map_sum, map_mul, h7]
   simp only [map_mul φ, AlgHom.commutes, key]
   exact weighted_sum cf w w₀ t hw _ _
 
@@ -240,8 +281,8 @@ theorem sum_data [Fintype (ConjQ Dw l)] {n m : ℕ} (d : DeltaDat Xo c n) (hd : 
   rw [apply_ite d.eF, map_natCast, map_zero] at h2
   unfold blockDat
   refine Eq.trans ?_ (congrArg (fun t => d.eF ζ * (d.w x0 (fun i => q (Fin.castAdd m i)) * t)) (h2.trans (by congr)))
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [h1, hφ, DeltaDat.w, ← map_mul, ← map_sum]
+
+  simp only [h1, hφ, DeltaDat.w, ← map_mul, ← map_sum]
   congr 1
   simp only [Finset.sum_mul, Finset.mul_sum]
   refine Finset.sum_congr rfl fun x' _ => ?_
@@ -328,8 +369,8 @@ theorem mul_mem_span (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
     have hL : ∀ f, L f = evR Xo c f y := fun _ => rfl
     have hm : evR Xo c (g * f) y = evR Xo c g y * evR Xo c f y := evalAt_mul _ _ g f y
     have eu' : ∀ x', evR Xo c (F x') y = evR d.Xo₂ d.c₂ d.cδ y₂ * u x' := eu
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hm, ← hL (∑ x', _), map_sum, e₁, ← e₂]
+
+    rw [hm, ← hL (∑ x', _), map_sum, e₁, ← e₂]
     simp only [map_smul]
     simp only [hL, eu', Algebra.smul_def]
     have n₃ : algebraMap c.F k (betaH (Dw := Dw) c Λ) ≠ 0 := (map_ne_zero _).2 b₁.1

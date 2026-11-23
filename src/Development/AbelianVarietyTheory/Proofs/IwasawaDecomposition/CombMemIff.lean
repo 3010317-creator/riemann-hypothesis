@@ -1,7 +1,50 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IncreasingRowChoicePerColumn
+public import Formalism.GradedWeylDivisibility.StatementE
+public import Formalism.LocalToGlobal.Columns.CoefModB
+public import Formalism.UnipotentAdelicQuotients.WeylLatDual
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualWeylEqSpanColProd
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -52,8 +95,8 @@ theorem coeff_unique (p : ℕ) [Fact p.Prime] (Lt T : Type) [Fintype Lt] [Decida
     apply MvPolynomial.funext
     intro z
     have hz := h (fun τ => Matrix.of fun i j => z (E.symm τ, i, j))
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_zero, map_sum]
+
+    rw [map_zero, map_sum]
     rw [← hz]
     refine Finset.sum_congr rfl fun κ _ => ?_
     rw [smul_eval, hP]
@@ -65,8 +108,8 @@ theorem coeff_unique (p : ℕ) [Fact p.Prime] (Lt T : Type) [Fintype Lt] [Decida
     simp only [Matrix.of_apply, hs]
   funext κ'
   have h1 := congrArg (fockB (ten fun s => map (algebraMap ℚ ℂ_[p]) (b s (κ' s)))) h0
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← fockBL_apply, ← fockBL_apply, map_sum, map_zero] at h1
+
+  rw [← fockBL_apply, ← fockBL_apply, map_sum, map_zero] at h1
   simp only [map_smul, fockBL_apply, hP, fockB_ten_dual ι b g Nc hbg, smul_eq_mul, mul_ite, mul_zero,
     Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
   have hne : ∏ s, (Nc s : ℂ_[p]) ≠ 0 :=
@@ -131,8 +174,8 @@ theorem comb_mem_iff : ∀ (p : ℕ) [Fact p.Prime] (Lt T : Type) [Fintype Lt] [
             ∑ k, ((n s k : ℤ) : ℂ_[p]) * MvPolynomial.eval (fun k : Fin N × Fin N => y (e s) k.1 k.2)
               (MvPolynomial.map (algebraMap ℚ ℂ_[p]) (g s k)) := by
           intro s
-          set_option synthInstance.maxHeartbeats 100000 in
-            rw [← map_intQ, ← hn s, map_sum, map_sum]
+
+          rw [← map_intQ, ← hn s, map_sum, map_sum]
           refine Finset.sum_congr rfl fun k _ => ?_
           rw [map_zsmul, map_zsmul, zsmul_eq_mul]
         simp only [hterm, Fintype.prod_sum, Finset.mul_sum, hG]

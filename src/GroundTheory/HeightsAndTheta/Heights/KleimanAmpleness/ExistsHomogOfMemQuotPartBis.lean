@@ -1,7 +1,55 @@
 module
 
-public import Mathlib
+import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ExistsHomogOfMemQuotPartAlt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.ModelSt
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.CellResMemLocPart
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -94,33 +142,10 @@ variable {Ω : Type} [Field Ω] [Algebra S Ω] (y : (Σ k, ι k) → Ω)
 
 theorem mConeMapOver_homog {g : MRingOver S ι} {d : K → ℕ} (hg : IsMultiHomog g d) :
     mConeMapOver S y g = C (aeval y g) * ∏ k, (X k : MvPolynomial K Ω) ^ d k := by
-  classical
-  conv_lhs => rw [g.as_sum]
-  conv_rhs => rw [g.as_sum]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, Finset.sum_mul]
-  refine Finset.sum_congr rfl fun μ hμ => ?_
-  have hX : ∏ p : Σ k, ι k, (X p.1 : MvPolynomial K Ω) ^ μ p = ∏ k, (X k : MvPolynomial K Ω) ^ d k := by
-    rw [Fintype.prod_sigma]
-    refine Finset.prod_congr rfl fun k _ => ?_
-    show ∏ i, (X k : MvPolynomial K Ω) ^ μ ⟨k, i⟩ = _
-    rw [Finset.prod_pow_eq_pow_sum, hg μ hμ k]
-  rw [mConeMapOver, aeval_monomial, aeval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _),
-    Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
-  simp only [mul_pow, Finset.prod_mul_distrib, MvPolynomial.algebraMap_apply, map_mul, map_prod, map_pow, hX]
-  ring
+  apply GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization.CellLocEval.mConeMapOver_homog <;> assumption
 
 theorem aeval_eq_zero_of_mem {f : MRingOver S ι} (hf : f ∈ mIdealOver S y) : aeval y f = 0 := by
-  have h : (MvPolynomial.eval (fun _ : K => (1 : Ω))).comp (mConeMapOver S y).toRingHom =
-      (aeval y : MRingOver S ι →ₐ[S] Ω).toRingHom := by
-    apply MvPolynomial.ringHom_ext
-    · intro r
-      simp [mConeMapOver, MvPolynomial.algebraMap_apply]
-    · intro p
-      simp [mConeMapOver]
-  have h2 := RingHom.congr_fun h f
-  simp only [RingHom.coe_comp, Function.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe] at h2
-  rw [← h2, show mConeMapOver S y f = 0 from (RingHom.mem_ker).mp hf, map_zero]
+  apply GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization.CellLocEval.aeval_eq_zero_of_mem <;> assumption
 
 theorem mk_eq_zero_of_aeval {g : MRingOver S ι} {d : K → ℕ} (hg : IsMultiHomog g d) (h0 : aeval y g = 0) :
     Ideal.Quotient.mk (mIdealOver S y) g = 0 := by
@@ -216,27 +241,7 @@ variable {V : Ideal (MRingOver S ι)}
 theorem exists_homog_of_mem_quotPart {d : K → ℤ} {m : MRingOver S ι ⧸ V} (hm : m ∈ quotPart S V d) :
     ∃ g : MRingOver S ι, IsMultiHomog g (fun k => (d k).toNat) ∧ ((∀ k, 0 ≤ d k) ∨ g = 0) ∧
       Ideal.Quotient.mk V g = m := by
-  induction hm using Submodule.span_induction with
-  | mem x hx =>
-    obtain ⟨p, ⟨hnn, hp⟩, rfl⟩ := hx
-    exact ⟨p, hp, Or.inl hnn, rfl⟩
-  | zero => exact ⟨0, isMultiHomog_zero _, Or.inr rfl, map_zero _⟩
-  | add x x' _ _ h h' =>
-    obtain ⟨g, hg, hd, rfl⟩ := h
-    obtain ⟨g', hg', hd', rfl⟩ := h'
-    refine ⟨g + g', isMultiHomog_add hg hg', ?_, map_add _ _ _⟩
-    rcases hd with hd | rfl
-    · exact Or.inl hd
-    · rcases hd' with hd' | rfl
-      · exact Or.inl hd'
-      · exact Or.inr (add_zero 0)
-  | smul s x _ h =>
-    obtain ⟨g, hg, hd, rfl⟩ := h
-    refine ⟨s • g, isMultiHomog_smul s hg, ?_, ?_⟩
-    · rcases hd with hd | rfl
-      · exact Or.inl hd
-      · exact Or.inr (smul_zero s)
-    · rw [← Ideal.Quotient.mkₐ_eq_mk S, map_smul]
+  apply GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization.CellLocEval.exists_homog_of_mem_quotPart <;> assumption
 
 theorem exists_rep {T : Submonoid (MRingOver S ι)} {β : K → ℤ}
     {x : LocalizedModule T (MRingOver S ι ⧸ V)} (hx : x ∈ locPart ι (quotPart S V) T β) :
@@ -321,8 +326,8 @@ theorem prod_pow_add (c : ∀ k, ι k) (b b' : K → ℕ) :
 theorem aeval_div_mem_chartRing (c : ∀ k, ι k) {p : MRingOver S ι} {d : K → ℕ} (hp : IsMultiHomog p d) :
     aeval y p / ∏ k, y ⟨k, c k⟩ ^ d k ∈ chartRingOver S y c := by
   classical
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [p.as_sum, map_sum, Finset.sum_div]
+
+  rw [p.as_sum, map_sum, Finset.sum_div]
   refine Subalgebra.sum_mem _ fun μ hμ => ?_
   have hdeg := hp μ hμ
   rw [aeval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]

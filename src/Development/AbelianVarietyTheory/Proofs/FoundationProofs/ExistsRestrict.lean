@@ -1,24 +1,60 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsLamOfLSmulIff
-public import Development.AbelianVarietyTheory.Definitions.Foundations.LiftApplyOfMemAdmissibleSubalgebra
-public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsRootOfIsAlgClosed
-public import GroundTheory.PAdicHodge.AxLemma
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKillsFplusDiscreteFormStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombination
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeLetterPreservesBasisSet
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerBettiModuleFreeFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBSuccCoeffCongStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLinearLimitOfCompatibleFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSpanEigenOfBaseChangeEigenStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBSuccCoeffCongStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerBettiModuleFreeFiniteStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineFunctionalEqPeriodMulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationSubringNonunitsPowModEqZero
-public import Development.AbelianVarietyTheory.Definitions.Foundations.ThNSpec
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFunctionalValueModPrimePowUniqueOddWeightStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSpanEigenOfBaseChangeEigenStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombination
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKillsFplusDiscreteFormStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationSubringNonunitsPowModEqZero
+import GroundTheory.PAdicHodge.GaloisOnCp
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
 
 @[expose] public section
 
@@ -61,12 +97,12 @@ theorem lam_gal {lam : (ℕ → Qbar l) →ₗ[Qbar l] Qbar l} (h : FinSupp lam)
     intro f
     have h0 := hS (f - ∑ s ∈ S, f s • (Pi.single s 1 : ℕ → Qbar l)) (fun s hs => by
       simp [Finset.sum_apply, Pi.single_apply, hs])
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sub, sub_eq_zero, map_sum] at h0
+
+    rw [map_sub, sub_eq_zero, map_sum] at h0
     simpa using h0
   refine ⟨S.image fun s => lam (Pi.single s 1), fun τ hτ f => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [key f, key, map_sum]
+
+  rw [key f, key, map_sum]
   refine Finset.sum_congr rfl fun s hs => ?_
   rw [map_mul, hτ _ (Finset.mem_image_of_mem _ hs)]
 

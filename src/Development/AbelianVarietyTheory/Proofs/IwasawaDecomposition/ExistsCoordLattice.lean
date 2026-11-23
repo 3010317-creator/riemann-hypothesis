@@ -1,9 +1,52 @@
 module
 
-public import Mathlib
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeElementaryDivisors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IrreducibleOfValued
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeElementaryDivisors
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ElementaryDivisorsInvHeckeElementSplitPlace
 
 @[expose] public section
 
@@ -454,25 +497,7 @@ theorem finPart_det {D : D7} (V : HSp D) (α : GA D V) (e u : Formalism.L2.Theta
 theorem divAt_inv {D : D7} (V : HSp D) (e : Formalism.L2.Theta.AE D) (P : HeightOneSpectrum (𝓞 D.host.E))
     (he : Formalism.L2.NTheta.IsIdemAt e P) (ϖ : 𝓞 D.host.E) (hϖ : ϖ ∈ P.asIdeal) (hϖ2 : ϖ ∉ P.asIdeal ^ 2) (k : ℕ)
     (hk : k ≤ V.rank) (α : GA D V) (hα : Formalism.L2.NTheta.IsHeckeElt V e (ϖ : D.host.E) k α) :
-    DivAt V e (ϖ : D.host.E) (splitLab V.rank k) α⁻¹ := by
-  obtain ⟨⟨h1, h0, v, ε, ⟨a, rfl, hv, hw⟩, hs⟩, hP⟩ := he
-  obtain ⟨-, -, hin, hout, u, u', hu, hu', huu, hdet⟩ := hα
-  obtain ⟨L, hL, hfg, hsp⟩ := exists_coord_lattice V
-  refine ⟨by simp [splitLab, hk], ?_⟩
-  have hm : finMat D.sp.cm.sig V.gram α * finMat D.sp.cm.sig V.gram α⁻¹ = 1 := by
-    change (finHom V α).1 * (finHom V α⁻¹).1 = 1
-    rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
-  have hinc : ∀ x, finPart D (incA D x) = inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) x := fun x => rfl
-  have key := exists_divisor_basis D.sp.cm.deg2 D.sp.cm.sig (fun e => star_star e)
-    (fun e he => (D.sp.cm.fixed e).1 he) v (finPart D e) a (by rw [← RingHom.map_mul, h1])
-    (by rw [← finPart_cA, ← RingHom.map_mul, h0, RingHom.map_zero])
-    (by rw [← finPart_cA, ← RingHom.map_add (f := _), hs]; rfl) hv hw P
-    (fun x hx => by rw [hP x hx, RingHom.map_mul, hinc]; rfl) ϖ hϖ hϖ2 hk L hfg hsp _ _ hm
-    (by rw [hL]; exact hin) (by rw [hL]; exact hout) (finPart D u) (finPart D u') hu hu'
-    (by rw [← RingHom.map_mul, ← RingHom.map_mul, huu])
-    (finPart_det V α e u _ k hdet)
-    (fun i => (splitLab V.rank k).getD i.1 0) (fun i => splitLab_getD hk i.2)
-  rw [hL] at key
-  exact key
+    DivAt V e (ϖ : D.host.E) (splitLab V.rank k) α⁻¹ :=
+  GlobalTheory.SplitDivisors.divAt_inv_of_isHeckeElt V P e ϖ k α he hϖ hϖ2 hk hα
 
 end GlobalTheory.SplitHeckeLabel

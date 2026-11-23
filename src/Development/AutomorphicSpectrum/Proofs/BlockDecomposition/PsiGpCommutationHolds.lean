@@ -1,21 +1,63 @@
 module
 
-public import Mathlib
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeOfProductInducedIso
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoFunSmooth
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirProjEqOneOfMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPsiMinus
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantPairingMirabolicVanishing
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeviIntegralFacts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductTwoRepsEquivTwoBlockInduction
-public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeviIntegralFacts
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoFunSmooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactInductionTwistedKernelStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjContinuousStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HGPClosedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemHGPIffParabolicStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjLeviFormulaStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotentStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotentSurjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactInductionTwistedKernelStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HGPClosedStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantPairingMirabolicVanishing
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsOpenFixedOfSubgroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemHGPIffParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPsiMinus
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -115,22 +157,7 @@ theorem det_levi (n : ℕ) (g : GL (Fin n) k) :
   exact GlobalTheory.CompanionTheory.MirPsiPair.det_glEmbMat n _
 
 theorem det_unip (n : ℕ) (v : Multiplicative (Fin n → k)) : GeneralLinearGroup.det (unip k n v) = 1 := by
-  ext
-  show (1 + colMat k n v.toAdd : Matrix (Fin (n + 1)) (Fin (n + 1)) k).det = 1
-  rw [Matrix.det_of_upperTriangular]
-  · refine Finset.prod_eq_one fun i _ => ?_
-    by_cases hi : i = Fin.last n
-    · subst hi
-      simp [colMat]
-    · simp [colMat, hi]
-  · intro a b hab
-    have hb : b ≠ Fin.last n := fun h => by
-      subst h
-      exact absurd (Fin.le_last a) (not_le.2 hab)
-    have hne : a ≠ b := fun h => by
-      subst h
-      exact lt_irrefl _ hab
-    simp [colMat, hb, Matrix.one_apply, hne]
+  apply GlobalTheory.CompanionTheory.BZPsiPG.Norm.det_unip' <;> assumption
 
 theorem dpowM_levi (n : ℕ) (s : ℝ) (g : GL (Fin n) k) :
     dpowM n s (levi k n g) = dpow n s g := by

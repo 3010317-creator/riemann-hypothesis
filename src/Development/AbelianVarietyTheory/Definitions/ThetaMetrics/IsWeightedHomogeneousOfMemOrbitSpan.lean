@@ -1,6 +1,57 @@
 module
 
-public import Mathlib
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.RepresentationTheory.Basic
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Mathlib.Tactic.Continuity
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -276,16 +327,16 @@ omit [Fintype κ] in
 theorem colSubst_xForm (A : T → Matrix κ κ' R) (B : T → Matrix κ' κ R) (t : T) (a : Fin p)
     (ε : κ → R) : colSubst A B (xForm t a ε : Poly R T p q κ) = xForm t a (ε ᵥ* A t) := by
   have : ε ᵥ* A t = ∑ k, ε k • A t k := by ext l; simp [vecMul, dotProduct]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [this, map_sum, xForm_apply, map_sum]
+
+  rw [this, map_sum, xForm_apply, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [← smul_eq_C_mul, map_smul, map_smul, colSubst_X_xVar]
 
 theorem colSubst_yForm (A : T → Matrix κ κ' R) (B : T → Matrix κ' κ R) (t : T) (b : Fin q)
     (φ : κ → R) : colSubst A B (yForm t b φ : Poly R T p q κ) = yForm t b (B t *ᵥ φ) := by
   have : B t *ᵥ φ = ∑ k, φ k • fun l => B t l k := by ext l; simp [mulVec, dotProduct, mul_comm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [this, map_sum, yForm_apply, map_sum]
+
+  rw [this, map_sum, yForm_apply, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [← smul_eq_C_mul, map_smul, map_smul, colSubst_X_yVar]
 
@@ -342,8 +393,8 @@ theorem colSubst_isWeightedHomogeneous {M : Type*} [AddCommMonoid M] (w : T → 
     (A : T → Matrix κ κ' R) (B : T → Matrix κ' κ R) {P : Poly R T p q κ} {m : M}
     (hP : IsWeightedHomogeneous (rowWeight w) P m) :
     IsWeightedHomogeneous (rowWeight w) (colSubst A B P) m := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [P.as_sum, map_sum]
+
+  rw [P.as_sum, map_sum]
   refine IsWeightedHomogeneous.sum _ _ _ fun d hd => ?_
   rw [← hP (mem_support_iff.mp hd), colSubst, aeval_monomial, Finsupp.weight_apply, Finsupp.sum,
     Finsupp.prod]

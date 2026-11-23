@@ -1,8 +1,60 @@
 module
 
 public import Formalism.PieriBlockIdeals.StatementLPR
-public import Formalism.PieriBlockIdeals.PieriColumnMinors.PieriGenerated
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.GradedWeylDivisibility.FinalB
+public import Formalism.PieriBlockIdeals.PieriColumnMinors.DividedPowerZeroZeroVector
 public import Formalism.PieriBlockIdeals.PieriColumnMinors.HighestWeightMemWZero
+public import Formalism.PieriBlockIdeals.PieriColumnMinors.PieriGenerated
+import Formalism.PieriBlockIdeals.PieriColumnMinors.Symmetrization
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.Finsupp.Interval
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -29,8 +81,8 @@ theorem lpr_inv {K A : Type*} [Field K] [AddCommGroup A] [Module K A] (f : Modul
     have h1 : f (x a + ∑ μ ∈ s, x μ) - a • (x a + ∑ μ ∈ s, x μ) ∈ p :=
       p.sub_mem (hp _ hsum) (p.smul_mem a hsum)
     have e : f (x a + ∑ μ ∈ s, x μ) - a • (x a + ∑ μ ∈ s, x μ) = ∑ μ ∈ s, (μ - a) • x μ := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_add (f := _), map_sum, smul_add, Finset.smul_sum, Finset.sum_congr rfl hxs, hxa]
+
+      rw [map_add (f := _), map_sum, smul_add, Finset.smul_sum, Finset.sum_congr rfl hxs, hxa]
       rw [show a • x a + ∑ μ ∈ s, μ • x μ - (a • x a + ∑ μ ∈ s, a • x μ) =
           ∑ μ ∈ s, μ • x μ - ∑ μ ∈ s, a • x μ by abel, ← Finset.sum_sub_distrib]
       exact Finset.sum_congr rfl fun μ _ => (sub_smul μ a (x μ)).symm
@@ -70,8 +122,8 @@ theorem diagonal_transfer : DiagTransfer := by
     exact hw ⟨μ, h⟩
   have hxsum : x = ∑ μ ∈ c.support, W μ := by
     apply hi
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.sum_congr rfl hW]
+
+    rw [map_sum, Finset.sum_congr rfl hW]
     exact hcsum.symm
   rw [hxsum]
   refine Submodule.sum_mem _ fun μ hμ => (le_iSup (fun μ => Module.End.eigenspace g μ) μ) ?_
@@ -132,9 +184,9 @@ theorem euler_diagonal : EulerDiag := by
           tsub_add_cancel_of_le]
         exact Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 (Finsupp.mem_support_iff.1 hi))
       · rw [smul_zero]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [Finset.sum_congr rfl hterm, ← Finset.sum_filter, ← map_sum (monomial m), smul_monomial, smul_monomial,
-      smul_eq_mul, smul_eq_mul]
+
+    rw [Finset.sum_congr rfl hterm, ← Finset.sum_filter, ← map_sum (monomial m), smul_monomial, smul_monomial,
+    smul_eq_mul, smul_eq_mul]
     congr 1
     rw [mul_comm, ← hsum m]
     push_cast

@@ -1,12 +1,52 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DetCharacterMemPrincipalCongruenceFixedVectors
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PadicIntGLSmulMemPrincipalCongruenceFixed
-public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TeichmullerRoots
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCharLab
+public import Mathlib.RepresentationTheory.Coinduced
 public import Development.AbelianVarietyTheory.Counterexamples.DegenerateExamples.NotAdmissibleWithAmbientTop
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TeichmullerRoots
 public import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.FactorSeriesSupport
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DetCharacterMemPrincipalCongruenceFixedVectors
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InjPrimeTo
+public import Formalism.LocalRingCardinality.PrincipalHermitianLattice
 
 @[expose] public section
 
@@ -35,8 +75,8 @@ theorem ConjIn.act_ne {ρ : Representation ℂ G V} {W : Submodule ℂ V} {j : G
   refine ⟨Λ y, (h2 y hy).1, ?_⟩
   have : actK π a' (Λ y) = Λ y := by
     conv_rhs => rw [← hfix]
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, actK, LinearMap.sum_apply]
+
+    rw [map_sum, actK, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun x _ => ?_
     rw [LinearMap.smul_apply, map_smulₛₗ, ha, (h2 y hy).2]
   rwa [this]
@@ -97,8 +137,8 @@ theorem exists_good (D : D7) {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Re
     (hx : x ≠ 0) (he : ρ.asAlgebraHom D.ntypes.e0 x = x) :
     ∃ (t : Tup2 D) (a : MonoidAlgebra ℂ (G0g D.nd)), D.ntypes.goodTuple t ∧ ρ.asAlgebraHom a x ≠ 0 ∧
       ∀ k v, ρ.asAlgebraHom (atPlace D k v (D.ntypes.eSer k (t k v))) (ρ.asAlgebraHom a x) = ρ.asAlgebraHom a x := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [Ten.e0_eq, Ten.eGood, map_sum, LinearMap.sum_apply] at he
+
+  rw [Ten.e0_eq, Ten.eGood, map_sum, LinearMap.sum_apply] at he
   obtain ⟨p, -, hp⟩ := Finset.exists_ne_zero_of_sum_ne_zero (he.trans_ne hx)
   by_cases hg : Ten.goodVec D p
   · rw [if_pos hg] at hp

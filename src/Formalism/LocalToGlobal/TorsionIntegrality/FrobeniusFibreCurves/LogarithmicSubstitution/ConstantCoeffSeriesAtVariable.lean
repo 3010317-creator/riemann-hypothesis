@@ -1,10 +1,54 @@
 module
 
-public import Mathlib
+import Formalism.LocalToGlobal.TorsionIntegrality.RamifiedCurveKernels.PairedSquareJets.InverseEndoIntegralHolds
 public import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.StatementB
 public import Formalism.FormalGroupLog.FormalGroupLogProofs.ConstantCoeffSubstOfZero
-public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.IntegralInverse
+public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -168,24 +212,7 @@ theorem law_coeff_one_subst {K : Type} [Field K] (l D : PowerSeries K)
     (hD : PowerSeries.constantCoeff D = 0) :
     PowerSeries.coeff 1 (PowerSeries.subst D l : PowerSeries K) =
       PowerSeries.coeff 1 l * PowerSeries.coeff 1 D := by
-  have hs : PowerSeries.HasSubst D := PowerSeries.HasSubst.of_constantCoeff_zero' hD
-  have key : ∀ g : PowerSeries K, PowerSeries.coeff 1 g =
-      PowerSeries.constantCoeff (PowerSeries.derivative (R := K) g) := by
-    intro g
-    rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_derivative]
-    simp
-  have hc : ∀ g : PowerSeries K, PowerSeries.constantCoeff (PowerSeries.subst D g : PowerSeries K) =
-      PowerSeries.constantCoeff g := by
-    intro g
-    have e : g = PowerSeries.C (PowerSeries.constantCoeff g) +
-        (g - PowerSeries.C (PowerSeries.constantCoeff g)) := by ring
-    conv_lhs => rw [e]
-    rw [PowerSeries.subst_add hs, map_add (f := _), PowerSeries.subst_C]
-    have := PowerSeries.constantCoeff_subst_eq_zero (a := D) hD
-      (g - PowerSeries.C (PowerSeries.constantCoeff g)) (by simp)
-    erw [this, add_zero]
-    exact MvPowerSeries.constantCoeff_C _
-  rw [key, PowerSeries.derivative_subst hs, map_mul, hc, ← key, ← key]
+  apply Formalism.L2.Th1.G.coeff_one_subst1 <;> assumption
 
 theorem formal_halving_exists : HalfExists := by
   intro K _ _ _ F l h h2

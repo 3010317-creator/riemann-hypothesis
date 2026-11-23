@@ -1,17 +1,53 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BrgStdR
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsDeco
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.TotallyPositiveExponents
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StepZeroTwistReferenceTupleEqId
+public import Formalism.LocalToGlobal.Columns.RowFormsAdelic
+public import Formalism.LocalToGlobal.IndefiniteReal.BridgeColPts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CastGLSymmCastGL
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryFiniteAdelicPointAsMatrixMemFlagIwahori
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RTupQEqOneIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormLevelPrimesIsSplitSet
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InvReductionMulFlagTranslationMemRowLevelGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowLevelCharacterTranslationEqFlagCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivRowStageUnitaryStandardAdelicStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalUnitaryEquivRowStageCompatStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InvReductionMulFlagTranslationMemRowLevelGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemRowLevelOfReductionMemLevelGroupStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RTupQEqOneIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormLevelPrimesIsSplitSet
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowLevelCharacterTranslationEqFlagCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryFiniteAdelicPointAsMatrixMemFlagIwahori
+public import Formalism.LocalToGlobal.Columns.InputsGenus
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 @[expose] public section
 
@@ -65,7 +101,7 @@ theorem formRho_colGl (C : Formalism.L2.Col.CoefPk Xf n (Formalism.L2.Col.DecoSe
 end Generic
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem standard_level_element_hat_eq_one (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (t : TupU I U)
     (k : (levEnv X.toD7.sp.X' L.βX (L.datXt t)).J) :
@@ -78,7 +114,7 @@ theorem standard_level_element_hat_eq_one (X : Stages) (px : PreX X.B.toPre) (I 
   exact (congrArg (Formalism.L2.Col.unipotentGroupBlockEmbedding (X.B.primes px) I.sel t.1 (Formalism.L2.Col.r_le_X' X.B.R)) h2).trans (map_one _)
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem deco_surj (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (hI : I.Ok) (hL : LevOf X I U L) (t : TupU I U) :
     Formalism.L2.Col.DecoPtSurj X.toD7.sp.cm (X.B.R.N X.B.R.m - 1) ∅ (Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1) :=
@@ -87,7 +123,7 @@ theorem deco_surj (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U 
     (Finset.disjoint_empty_left _)
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem lev_iff (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (hI : I.Ok) (hL : LevOf X I U L)
     (hG : IsPlacewiseIdentity X (px := px) eG) (t : TupU I U) (h : Bridge.Gf X.toD7.sp.X') :
@@ -105,7 +141,7 @@ theorem lev_iff (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : 
     exact GlobalTheory.T.mem_rowLevel_of_reduction_mem_levelGroup X px I U L hI hL t h hz hg
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem chi_eq : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r),
     I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG →
@@ -123,7 +159,7 @@ theorem chi_eq : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) 
     (h1.trans (congrArg Units.val ((levEnv X.toD7.sp.X' L.βX (L.datXt t)).ch_J k)))
 
 
-set_option maxHeartbeats 1000000 in
+
 theorem lev_eq_map (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι)
     (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (hI : I.Ok) (hL : LevOf X I U L)
     (hG : IsPlacewiseIdentity X (px := px) eG) (t : TupU I U)
@@ -157,7 +193,7 @@ theorem levE_coe {G G' : Type} [Group G] [Group G'] (e : G ≃* G') (J : Subgrou
     (hJ : J' = J.map e.toMonoidHom) (k : J) : ((levE e J J' hJ k : J') : G') = e k := rfl
 
 
-set_option maxHeartbeats 4000000 in
+
 theorem exists_pres : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → L.βX = 1 → ∀ (cX : CoefA X.toD7.sp.X') (c : VV X.B.fields.K X.B.wts.sgTrue →ₛₗ[X.B.embLL] cX.W), (∀ (γ : GQ X.toD7.sp.X') (γE : GL (Fin X.toD7.sp.X'.rank) X.toD7.host.E) (g : GL (Fin (X.B.R.N X.B.R.m - 1)) X.B.fields.E), Bridge.IsRatMat X.toD7.sp.X' γ γE → MatEq γE g → ∀ v, c (rhoV X.B.fields.emb X.B.wts.sgTrue g v) = cX.coef.ρ γ (c v)) → LinearIndependent ℂ (fun i => c (bVV X.B.fields.K X.B.wts.sgTrue i)) → Submodule.span ℂ (Set.range fun i => c (bVV X.B.fields.K X.B.wts.sgTrue i)) = ⊤ → (∀ x y, inner ℂ (c x) (c y) = X.B.embLL (pairV X.B.fields.emb X.B.wts.sgTrue 1 x y)) → ∀ t, ∃ P : Bridge.ClassPres (Bridge.ratF X.toD7.sp.X') ((famR X I hX U Xg tr).A.MtildeCSD t) X.toD7.what₂.embLL cX.coef.ρ (levEnv X.toD7.sp.X' L.βX (L.datXt t)).J (levEnv X.toD7.sp.X' L.βX (L.datXt t)).χ, (∀ x, P.coef x = c x) ∧ (∀ c', RowAd.decoAd X I t (P.y c') = (Formalism.L2.Col.mtildeKGSD (Pr := X.B.primes px) X.B.wts I.Ch I.sel t.1).outSec.rep c') ∧ ∀ (f : ((famR X I hX U Xg tr).A.MtildeCSD t).Forms) (h : Bridge.Gf X.toD7.sp.X'), P.ext (f : _ → _) h = c ((((Formalism.L2.Col.mtildeKGSD (Pr := X.B.primes px) X.B.wts I.Ch I.sel t.1).res (Formalism.L2.Col.mtildeKOk _ _ _ _ hX)).symm f).1 (RowAd.decoAd X I t h)) := by
   intro X px I hX U Xg tr L eG hI hV hL hG hβ cX c hint hli hspan hpair t
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_equiv_rowStage_unitary_standard_adelic X px I hI

@@ -1,11 +1,61 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingOfBall
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAddFundamentalDomainLatticeDomain
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFundIpow
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsSmulMemOfMemSpanFraction
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -143,8 +193,8 @@ theorem unimod_coords {K W : Type} [Field K] [NumberField K] [StarRing K] [AddCo
     show e.equivFun (e.equivFun.symm y) i = y i
     rw [LinearEquiv.apply_symm_apply]
   have hB2 : ∀ i, HW.B (e i) x = ((Matrix.of fun i j => HW.B (e i) (e j)) *ᵥ fun j => star (y j)) i := fun i => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hxdef, e.equivFun_symm_apply, map_sum]
+
+    rw [hxdef, e.equivFun_symm_apply, map_sum]
     simp only [LinearMap.map_smulₛₗ, starRingEnd_apply, smul_eq_mul, mulVec, dotProduct, Matrix.of_apply]
     exact Finset.sum_congr rfl fun j _ => mul_comm _ _
   have hyL : (∀ i, y i ∈ c i) ↔ x ∈ L := by rw [hL]; simp only [hrx]
@@ -161,8 +211,8 @@ theorem unimod_coords {K W : Type} [Field K] [NumberField K] [StarRing K] [AddCo
     rw [← HW.herm x' x]
     refine star_mem_one ?_
     conv => arg 2; rw [← e.sum_repr x']
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, LinearMap.sum_apply]
+
+    rw [map_sum, LinearMap.sum_apply]
     refine Submodule.sum_mem _ fun i _ => ?_
     rw [map_smul, LinearMap.smul_apply, smul_eq_mul, mul_comm, ← mem_one_iff']
     exact (FractionalIdeal.mem_inv_iff (hc i)).1 (hx i) _ ((hL x').1 hx' i)
@@ -176,8 +226,8 @@ theorem det_gram_ne_zero {K W : Type} [Field K] [StarRing K] [AddCommGroup W] [M
   have hx : ∀ j, HW.B x (e j) = 0 := fun j => by
     have h1 := congrFun hw0 j
     simp only [vecMul, dotProduct, Matrix.of_apply, Pi.zero_apply] at h1
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hxdef, e.equivFun_symm_apply, map_sum, LinearMap.sum_apply]
+
+    rw [hxdef, e.equivFun_symm_apply, map_sum, LinearMap.sum_apply]
     simpa only [map_smul, LinearMap.smul_apply, smul_eq_mul] using h1
   have hB : HW.B x = 0 := e.ext fun j => by rw [hx j, LinearMap.zero_apply]
   have hx0 : x = 0 := HW.nondeg x fun y => by rw [hB, LinearMap.zero_apply]
@@ -284,8 +334,8 @@ theorem unimod_fund : ∀ (K W : Type) [Field K] [NumberField K] [StarRing K] [A
     have h0 : Ψ v x = ∑ i, σ v (e.repr x i) • Ψ v (e i) := by
       conv_lhs => rw [← e.sum_repr x]
       change φ v _ = _
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_sum]
+
+      rw [map_sum]
       exact Finset.sum_congr rfl fun i _ => hsmul v _ _
     rw [Matrix.smul_mulVec, h0]
     congr 1

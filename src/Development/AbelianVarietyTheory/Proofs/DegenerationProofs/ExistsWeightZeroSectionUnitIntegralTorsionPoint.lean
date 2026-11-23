@@ -1,23 +1,69 @@
 module
 
-public import Mathlib
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
-public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitValue
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVecStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.AllDV
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormVal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsThirdToSixthOfLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsCombTranslatesOfNuGe
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRatLog
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusPoint
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsCombTranslatesOfNuGe
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitValue
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UtestGeomNonempty
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsThirdToSixthOfLaws
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightSpaceValuesIntegralTorsionBoundShortestVecStatement
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsBasisOfCoord
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TwistingStatementsOfLaws
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValuationThetaRatioEqBilinear
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsBasisOfCoord
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TwistedPrincipalPolarisationSectionsBaseChange
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPrimGenerator
+import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValuationThetaRatioEqBilinear
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPrimGenerator
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpBijFAndExpandsFLin
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionValueAtTorsionPointEqSumTerms
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TwistedPrincipalPolarisationSectionsBaseChange
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValuationsTorusPointsFramesFamilyTerms
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ThetaGrpActsLinearly
 
 @[expose] public section
 
@@ -70,16 +116,16 @@ theorem value_nonneg_all : LL → TwistBCSpanStatement → TWM.VRatioGtStatement
 theorem comb_of_fixed {K M J : Type} [CommSemiring K] [AddCommMonoid M] [Module K M] [Fintype J] (f : M ≃ₗ[K] M)
     {c : K} {σ : M} {b : J → K} {s : J → M} {r : J → J → K} (h : c • σ = ∑ j, b j • s j) (fix : f σ = σ)
     (hs : ∀ i, f (s i) = ∑ j, r j i • s j) : c • σ = ∑ i, b i • ∑ j, r j i • s j := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← fix, ← map_smul, h, map_sum]
+
+  rw [← fix, ← map_smul, h, map_sum]
   simp only [map_smul, hs]
 
 theorem comb_comb {F K M I J : Type} [CommSemiring F] [CommSemiring K] [AddCommMonoid M] [Module K M] [Fintype I]
     [Fintype J] (κ : F →+* K) {σ : M} {a : I → F} {t : I → M} {s : J → M} {r : I → J → F}
     (h : σ = ∑ i, κ (a i) • t i) (ht : ∀ i, t i = ∑ j, κ (r i j) • s j) : σ = ∑ j, κ (∑ i, a i * r i j) • s j := by
   rw [h]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [ht, Finset.smul_sum, map_sum, Finset.sum_smul, map_mul, mul_smul]
+
+  simp only [ht, Finset.smul_sum, map_sum, Finset.sum_smul, map_mul, mul_smul]
   exact Finset.sum_comm
 
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω}
@@ -167,7 +213,7 @@ theorem exists_rep (hU : UTorsSt) (l : u.Lab) (g : u.Geom) {a : S.Gam} (ha : a �
   exact add_neg_cancel _
 
 
-set_option maxHeartbeats 2000000 in
+
 theorem main : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → (∀ h ∈ l.yy.ker, ∃ i, ‖∑ j, y₀ (algebraMap o S.R (S.proj _ (l.wt 0) j i)) * y₀ ⟨S.ev h j, S.ev_mem h j⟩‖ = S.delta y₀) := by
   intro hL hL2 hU o Ω _ _ _ _ S ρ p _ y₀ u l hy h hh
   have hTB := GlobalTheory.twistBaseChange

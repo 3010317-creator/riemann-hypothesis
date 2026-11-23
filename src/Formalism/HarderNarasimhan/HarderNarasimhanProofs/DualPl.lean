@@ -1,16 +1,83 @@
 module
 
+import Lemmata.FiberEquations.FiberEq
 public import Formalism.HarderNarasimhan.QuotRealize
-public import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.PlaceSplit
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.Duality
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.MuChar
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ExistsSmulMemOfFinrankEq
-public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ShiftInvariance
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DegSupermodZ
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.Duality
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ExistsSmulMemOfFinrankEq
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.MuChar
+import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SatBasic
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.ShiftInvariance
+public import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
+import Formalism.LatticeSlopes.ExistsSaturatedSlopeEqMuMax
+import Formalism.LatticeSlopes.LatticeSlopesProofs.DegQuot
+import Formalism.LatticeSlopes.LatticeSlopesProofs.DiscreteTopologyOfLe
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import Mathlib.NumberTheory.RamificationInertia.Basic
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Tactic.TypeStar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -73,30 +140,7 @@ open Formalism.HN
 
 theorem ident_trace_eq {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (a : K) :
     ((Algebra.trace ℚ K a : ℚ) : ℝ) = ∑ v : InfinitePlace K, 2 * (v.embedding a).re := by
-  classical
-  have h := trace_eq_sum_embeddings (K := ℚ) (L := K) ℂ (x := a)
-  rw [← Fintype.sum_equiv (RingHom.equivRatAlgHom K ℂ) (fun φ => φ a)
-      (fun σ => σ a) (fun _ => by simp [RingHom.equivRatAlgHom_apply])] at h
-  rw [← Finset.sum_fiberwise Finset.univ InfinitePlace.mk (fun φ => φ a)] at h
-  have h2 := congrArg Complex.re h
-  rw [Complex.re_sum] at h2
-  have hq : (algebraMap ℚ ℂ (Algebra.trace ℚ K a)).re = ((Algebra.trace ℚ K a : ℚ) : ℝ) := by
-    simp
-  rw [hq] at h2
-  rw [h2]
-  refine Finset.sum_congr rfl fun w _ => ?_
-  rw [Complex.re_sum]
-  have hfib : ∀ φ ∈ (Finset.univ.filter fun φ : K →+* ℂ => InfinitePlace.mk φ = w),
-      (φ a).re = (w.embedding a).re := by
-    intro φ hφ
-    have hm := (Finset.mem_filter.mp hφ).2
-    rw [← InfinitePlace.mk_embedding w, InfinitePlace.mk_eq_iff] at hm
-    rcases hm with rfl | hc
-    · rfl
-    · rw [← hc, ComplexEmbedding.conjugate_coe_eq, Complex.conj_re]
-  rw [Finset.sum_congr rfl hfib, Finset.sum_const, InfinitePlace.card_filter_mk_eq,
-    (IsTotallyComplex.isComplex w).mult_eq_two]
-  simp
+  apply Bl.FiberEquations.goal1 <;> assumption
 
 section Assumptions
 
@@ -133,8 +177,8 @@ theorem ident_sum_fcoord (b : Basis ι K V) (X : InfinitePlace K → Matrix ι �
   rw [Matrix.mulVec_transpose, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
     Matrix.mul_nonsing_inv _ (hX v), Matrix.one_mulVec]
   conv_rhs => rw [← b.sum_repr x]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [map_sum, map_smul, smul_eq_mul, map_mul, dotProduct, Formalism.HermitianLatticesTheory.vecAt]
+
+  simp only [map_sum, map_smul, smul_eq_mul, map_mul, dotProduct, Formalism.HermitianLatticesTheory.vecAt]
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
 
@@ -244,9 +288,9 @@ theorem dualZ_zl_eq [_root_.NumberField.IsTotallyComplex K] (b : Basis ι K V) (
     let c : s → K := fun j => ∑ k, ((t j k : ℚ)) • ω' k
     have hc : ∀ j l, Algebra.trace ℚ K (integralBasis K l * c j) = (t j l : ℚ) := by
       intro j l
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [c, Finset.mul_sum, mul_smul_comm, map_sum, map_smul, hω, smul_eq_mul, mul_ite,
-        mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+
+      simp only [c, Finset.mul_sum, mul_smul_comm, map_sum, map_smul, hω, smul_eq_mul, mul_ite,
+      mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
     have hsp' : ⊤ ≤ Submodule.span K (Set.range e) := by
       rw [show Set.range e = s from Subtype.range_coe, hspan, hsp]
     let eB : Basis s K V := Basis.mk hli hsp'

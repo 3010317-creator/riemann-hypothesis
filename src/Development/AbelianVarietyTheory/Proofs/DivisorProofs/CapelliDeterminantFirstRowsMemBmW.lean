@@ -1,11 +1,52 @@
 module
 
-public import Mathlib
 public import Formalism.BranchSandwichDivisors.BranchIsometryProofs.BranchMap
-public import Formalism.LocalToGlobal.Columns.PolyFnLemmas
-public import Development.AbelianVarietyTheory.Definitions.Foundations.TracePowApply
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SplitLastBlockActX
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaPhiBranchOperator
+public import Development.AbelianVarietyTheory.Definitions.Foundations.GelfA
+public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+public import Development.AbelianVarietyTheory.Definitions.Foundations.TracePowApply
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -52,8 +93,8 @@ theorem fockB_X_mul {σ : Type} (v : σ) (f g : MvPolynomial σ K) : fockB (X v 
 
 theorem fockB_rowE {r m : ℕ} (a b : Fin r) (f g : MvPolynomial (Fin r × Fin m) K) :
     fockB (rowE K r m a b f) g = fockB f (rowE K r m b a g) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [rowE_apply, rowE_apply, ← fockBL_apply, ← fockBL_apply, map_sum, map_sum, LinearMap.sum_apply]
+
+  rw [rowE_apply, rowE_apply, ← fockBL_apply, ← fockBL_apply, map_sum, map_sum, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [fockBL_apply, fockBL_apply, fockB_X_mul, fockB_symm f, fockB_X_mul, fockB_symm]
 
@@ -94,8 +135,8 @@ theorem capDet_intertwine {M M' : Type} [AddCommGroup M] [Module K M] [AddCommGr
     induction l with
     | nil => simp
     | cons a l ih => simp only [List.map_cons, List.prod_cons, Module.End.mul_apply, ih, h1]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [capDet, bmPi, bmM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_zsmul, List.ofFn_eq_map, h2]
+
+  simp only [capDet, bmPi, bmM, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_zsmul, List.ofFn_eq_map, h2]
 
 theorem capDet_mem {M : Type} [AddCommGroup M] [Module K M] {n : ℕ} (E : Fin n → Fin n → Module.End K M)
     (W : Submodule K M) (h : ∀ i j, ∀ x ∈ W, E i j x ∈ W) (u : ℤ) {x : M} (hx : x ∈ W) : capDet E u x ∈ W := by
@@ -203,14 +244,14 @@ theorem rowWeight_iff [CharZero K] {r m : ℕ} (ρ : Fin r → ℕ) (f : MvPolyn
   constructor
   · intro h a
     ext μ
-    rw [coeff_rowE_self, coeff_smul, smul_eq_mul]
+    rw [coeff_rowE_self, MvPolynomial.coeff_smul, smul_eq_mul]
     by_cases h0 : AddMonoidAlgebra.coeff f μ = 0
     · simp [h0]
     · rw [← bm_weight_rowW, h h0]
   · intro h μ h0
     funext a
     have := congrArg (AddMonoidAlgebra.coeff · μ) (h a)
-    rw [coeff_rowE_self, coeff_smul, smul_eq_mul] at this
+    rw [coeff_rowE_self, MvPolynomial.coeff_smul, smul_eq_mul] at this
     rw [bm_weight_rowW]
     exact_mod_cast mul_right_cancel₀ h0 this
 

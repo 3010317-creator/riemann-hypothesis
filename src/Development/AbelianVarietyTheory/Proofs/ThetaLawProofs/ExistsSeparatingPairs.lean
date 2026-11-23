@@ -1,12 +1,51 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Definitions.KeyFormula.GeomIntSelf
-public import Development.AbelianVarietyTheory.Statements.FundamentalDomains.AtOfNumberField
-public import Development.AbelianVarietyTheory.Statements.ThetaLevelCharacters.MemThetaLevelCharDimZero
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsUniquePointOfRingHom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+import Development.AbelianVarietyTheory.Definitions.KeyFormula.GeomIntSelf
+import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRuleOneOfKeyFormula
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 
 @[expose] public section
 
@@ -25,16 +64,16 @@ theorem exists_separating_pairs {R S : Type} [CommRing R] [CommRing S] (φ : R �
   obtain ⟨t, ht, h1⟩ := (Algebra.FormallyUnramified.iff_exists_tensorProduct (R := R) (S := S)).1 inferInstance
   obtain ⟨s, rfl⟩ := TensorProduct.exists_finset t
   refine ⟨s, ?_, fun e e' hee hne => ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    · simpa [map_sum] using h1
+
+  · simpa [map_sum] using h1
   · letI : Algebra R ℂ := (e.comp φ).toAlgebra
     let a : S →ₐ[R] ℂ := { e with commutes' := fun _ => rfl }
     let a' : S →ₐ[R] ℂ := { e' with commutes' := fun r => (RingHom.congr_fun hee r).symm }
     let F := Algebra.TensorProduct.lift a a' (fun _ _ => Commute.all _ _)
     ext x
     have h2 := congrArg F (ht x)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [F, map_mul, map_sub, map_sum, Algebra.TensorProduct.lift_tmul, map_one, map_zero] at h2
+
+    simp only [F, map_mul, map_sub, map_sum, Algebra.TensorProduct.lift_tmul, map_one, map_zero] at h2
     rcases mul_eq_zero.1 h2 with h3 | h3
     · have h4 := (sub_eq_zero.1 h3).symm
       rw [_root_.one_mul, _root_.mul_one] at h4

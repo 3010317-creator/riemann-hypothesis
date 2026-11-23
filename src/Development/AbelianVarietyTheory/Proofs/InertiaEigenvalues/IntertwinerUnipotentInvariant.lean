@@ -1,15 +1,60 @@
 module
 
-public import Mathlib
-public import Formalism.SharpRestriction.LevelLetterCocycles.ArithmeticCylinders
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCharLab
+public import Mathlib.GroupTheory.Nilpotent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentralStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GroupAlgebraTraceIdempotentAndIrreducibleDegreeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraFrobeniusReciprocityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLnStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesCentralIdempotentLawsStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLnStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelMulOfConstituentStatement
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+public import Mathlib.Data.Matrix.PEquiv
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCharLab
+public import Mathlib.Basic.PEquiv
 
 @[expose] public section
 
@@ -228,8 +273,8 @@ theorem res_eq (σ : Fin k ⊕ Fin l ≃ Fin n) (χ : Gn g n → ℂ) (hχ : IsC
 open MonoidAlgebra in
 theorem map_zOf {G H : Type} [Group G] [Fintype G] [Group H] (i : G →* H) (α : G → ℂ) :
     mapDomainAlgHom ℂ ℂ i (zOf α) = ∑ x, single (i x) (α 1 / (Fintype.card G : ℂ) * α x⁻¹) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp [zOf, map_sum]
+
+  simp [zOf, map_sum]
 
 open MonoidAlgebra in
 theorem commute_map {G H : Type} [Group G] [Group H] (i : G →* H) (e : MonoidAlgebra ℂ H)
@@ -353,16 +398,16 @@ theorem eN_left {W W' : Type} [AddCommGroup W] [Module ℂ W] [AddCommGroup W'] 
     (σ : Fin k ⊕ Fin l ≃ Fin n) (ρ : Representation ℂ (Gn g n) W) (T : W →ₗ[ℂ] W')
     (h : ∀ B, T ∘ₗ ρ (par σ 1 B 1) = T) (w : W) : T (ρ.asAlgebraHom (eN g σ) w) = T w := by
   have h' : ∀ B, T (ρ (par σ 1 B 1) w) = T w := fun B => LinearMap.congr_fun (h B) w
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [eN, map_sum, Representation.asAlgebraHom_single, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, h']
+
+  simp only [eN, map_sum, Representation.asAlgebraHom_single, LinearMap.sum_apply, LinearMap.smul_apply, map_smul, h']
   rw [Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, card_mat, smul_smul, mul_inv_cancel₀ gpow_ne,
     one_smul]
 
 theorem eN_right {W : Type} [AddCommGroup W] [Module ℂ W]
     (σ : Fin k ⊕ Fin l ≃ Fin n) (ρ : Representation ℂ (Gn g n) W) (w : W)
     (h : ∀ B, ρ (par σ 1 B 1) w = w) : ρ.asAlgebraHom (eN g σ) w = w := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [eN, map_sum, Representation.asAlgebraHom_single, LinearMap.sum_apply, LinearMap.smul_apply, h]
+
+  simp only [eN, map_sum, Representation.asAlgebraHom_single, LinearMap.sum_apply, LinearMap.smul_apply, h]
   rw [Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, card_mat, smul_smul, mul_inv_cancel₀ gpow_ne,
     one_smul]
 
@@ -391,29 +436,29 @@ theorem step (L : LabelDatum g) (h5 : 5 ≤ g) (hG : Green) (σ : Fin k ⊕ Fin 
   obtain ⟨S₂, -, h₂⟩ := (GlobalTheory.T.harishChandraSeriesCentralIdempotent_laws g L h5 hG l).2.2.2.2
   have e₁ : ∀ v : W, v = ∑ f₁ ∈ S₁, ρ.asAlgebraHom (mapDomainAlgHom ℂ ℂ (inA σ) (eSerC L k f₁)) v := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₁, map_one, map_one, Module.End.one_apply]
+
+    rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₁, map_one, map_one, Module.End.one_apply]
   have e₂ : ∀ v : W, v = ∑ f₂ ∈ S₂, ρ.asAlgebraHom (mapDomainAlgHom ℂ ℂ (inB σ) (eSerC L l f₂)) v := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₂, map_one, map_one, Module.End.one_apply]
+
+    rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₂, map_one, map_one, Module.End.one_apply]
   have e₃ : ∀ v : W', v = ∑ f₁ ∈ S₁, ρ'.asAlgebraHom (mapDomainAlgHom ℂ ℂ (inA σ) (eSerC L k f₁)) v := by
     intro v
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₁, map_one, map_one, Module.End.one_apply]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e₂ (ρ.asAlgebraHom (eSerC L n f) w), map_sum, map_sum]
+
+    rw [← LinearMap.sum_apply, ← map_sum, ← map_sum, h₁, map_one, map_one, Module.End.one_apply]
+
+  rw [e₂ (ρ.asAlgebraHom (eSerC L n f) w), map_sum, map_sum]
   refine Finset.sum_eq_zero fun f₂ _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e₁ (ρ.asAlgebraHom (mapDomainAlgHom ℂ ℂ (inB σ) (eSerC L l f₂)) _), map_sum, map_sum]
+
+  rw [e₁ (ρ.asAlgebraHom (mapDomainAlgHom ℂ ℂ (inB σ) (eSerC L l f₂)) _), map_sum, map_sum]
   refine Finset.sum_eq_zero fun f₁ _ => ?_
   by_cases h12 : f = f₁ * f₂
   swap
   · rw [← hN, ← Module.End.mul_apply, ← Module.End.mul_apply, ← Module.End.mul_apply, ← map_mul, ← map_mul,
       ← map_mul, ser_vanish L h5 hG σ f f₁ f₂ h12]
     simp
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e₃ (T _), map_sum]
+
+  rw [e₃ (T _), map_sum]
   refine Finset.sum_eq_zero fun f₃ _ => ?_
   by_cases h13 : f₁ = f₃
   swap

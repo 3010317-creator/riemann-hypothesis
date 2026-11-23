@@ -1,14 +1,52 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InterNumDetNonposSplitTorus
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsTangentEquiv
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsCohSubDegEqSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameOfProjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExOfHeadWt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOne
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.GenBridgeB
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameOfProjective
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AffineOpenChartCompStructureEqSpMap
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsCohSubDegEqSum
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.GenBridgeA
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -46,8 +84,8 @@ def spanSub : Sub F where
     refine Twist.sec_ext_of_cover (fun x => W ⊓ U x) (fun _ => inf_le_left)
       (fun x hx' => Opens.mem_iSup.2 ⟨⟨x, hx'⟩, hx', hx _⟩) fun x => ?_
     have := hs x j (W ⊓ U x) inf_le_right (inf_le_left.trans h₂)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, resM_smul, ← dualApp_resM, resM_resM] at this ⊢
+
+    simp only [map_sum, resM_smul, ← dualApp_resM, resM_resM] at this ⊢
     exact this
 
 theorem exists_sub_det {L : LB X} (hL : L.IsLB) (w : ∀ j, Fin r → Γ(F, L.U j)) (l : ∀ j, Fin r → Γ(VB.dual F, L.U j))
@@ -64,14 +102,14 @@ theorem exists_sub_det {L : LB X} (hL : L.IsLB) (w : ∀ j, Fin r → Γ(F, L.U 
   let N := spanSub w l
   have hm (j) (b) : w j b ∈ N.sec (L.U j) := fun j' V h₁ h₂ => by
     have e := congrArg (resM F (le_inf h₂ h₁)) (hB j' j b)
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, resM_smul, resM_resM] at e
+
+    simp only [map_sum, resM_smul, resM_resM] at e
     rw [e]
     simp only [hl']
   have hi (j) {V : X.Opens} (h : V ≤ L.U j) (c : Fin r → Γ(X, V)) :
       N.incl.app V (∑ b, c b • resM _ h (N.mkSec _ (hm j b))) = ∑ b, c b • resM F h (w j b) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [map_sum, Scheme.Modules.Hom.app_smul, app_resM, Sub.incl_app_mkSec]
+
+    simp only [map_sum, Scheme.Modules.Hom.app_smul, app_resM, Sub.incl_app_mkSec]
   have he (j) : IsFrame fun b => N.mkSec _ (hm j b) := isFrame_iff.2 fun V h => by
     refine ⟨Fintype.linearIndependent_iff.2 fun c hc a => ?_, fun s _ =>
       (Submodule.mem_span_range_iff_exists_fun _).2 ⟨fun a => dualApp (l j a) h (resM F le_rfl (N.incl.app V s)),
@@ -162,16 +200,16 @@ theorem exists_step_sub {C : Scheme.{0}} [C.IsSeparated] [PreconnectedSpace C] (
     rw [← e, dualApp_sum, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun s _ => ?_
     have e' : w j a' = ∑ s, F.uAt j.1.2 _ (hin j.2.1.1 j.2.2) σ s (a'.castLE hn) • (hb j).basis le_rfl s := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [w, Frames.vecAt, vec_apply, map_sum, map_smul, IsFrame.basis_apply, resM_self, b,
-        Module.Basis.map_apply]
+
+      simp only [w, Frames.vecAt, vec_apply, map_sum, map_smul, IsFrame.basis_apply, resM_self, b,
+      Module.Basis.map_apply]
     rw [dualApp_smul, LinearMap.smul_apply, IsFrame.dualApp_coord, e', Module.Basis.repr_sum_self, GlobalTheory.LB.resG_self,
       smul_eq_mul]
   have h₂ (j j' : J) (a : Fin n) : resM (Lie t.G) (inf_le_right : j.1.1 ⊓ j'.1.1 ≤ _) (w j' a) =
       ∑ s, B j j' s a • resM (Lie t.G) inf_le_left (w j s) := by
     refine (hres j' (hT j j') inf_le_right _).trans ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [F.vecAt_eq_sum j.1.2 j'.1.2 _ (hin (hT j j').1 (inf_le_left.trans j.2.2)) _ (hh j j'), map_sum]
+
+    rw [F.vecAt_eq_sum j.1.2 j'.1.2 _ (hin (hT j j').1 (inf_le_left.trans j.2.2)) _ (hh j j'), map_sum]
     refine (Finset.sum_of_injOn (Fin.castLE hn) (Fin.castLE_injective hn).injOn (fun _ _ => Finset.mem_univ _)
       (fun s _ h => ?_) fun s _ => ?_).symm
     · have hs : a.castLE hn < s := lt_of_not_ge fun h' => h ⟨⟨s, lt_of_le_of_lt h' a.2⟩, by simp, rfl⟩

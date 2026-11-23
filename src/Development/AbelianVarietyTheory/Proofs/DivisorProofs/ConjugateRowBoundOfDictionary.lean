@@ -1,20 +1,63 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NrmOneNonneg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairIntAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianGrowthConjTorsionTranslatesVacuum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstJetOperatorNormCauchyBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyParameterSizesTestChoices
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatWDualWtOfLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteKernelNodeRankLeTotalRank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbLLMem
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DictAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbeddingsCurveFieldAboveFiniteNonempty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockVacEqJets
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianGrowthConjTorsionTranslatesVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBelow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatWDualWtOfLe
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralJAndAlgebraicData
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntertwinerSelfDualVacuumIsVacuum
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeUnitNormSqNonneg
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineDerivListCompForm
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorCoeffConjugateSeries
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorConjugateTangentSpacePadZeroColumns
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumTranslateConjugateJetBound
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMulOfApprox
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlockActionDiagonalCoefficientSpaceSmul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaJetMapWeightedTableScale
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BlockShape
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.MemAnalyticAtZeroOfEventuallyDifferentiableAt
 
 @[expose] public section
 
@@ -121,9 +164,9 @@ theorem taylor_fnConj_comb (D : D7) (hI : GlobalTheory.NormSum.Inp D) (cc : Idea
   have hF : ∀ i, Differentiable ℂ (U D (tor0 D cc δ) (s i) G) := fun i => GlobalTheory.ConjJet.U_diff D _ _ _ hGT.1
   have hsum : ∀ (c : Fin n → ℂ) (F : Fin n → VC D a b → ℂ), (∀ i, Differentiable ℂ (F i)) →
       TaylorLogMetric.taylor D (fun z => ∑ i, c i * F i z) α = ∑ i, c i * TaylorLogMetric.taylor D (F i) α := fun c F hF => by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [GlobalTheory.ConjSeries.taylor_eq_coeff, taylorDir_sum _ _ fun i _ =>
-      GlobalTheory.ProdThetaConj.an0 ((hF i).const_mul (c i : ℂ)), map_sum]
+
+    rw [GlobalTheory.ConjSeries.taylor_eq_coeff, taylorDir_sum _ _ fun i _ =>
+    GlobalTheory.ProdThetaConj.an0 ((hF i).const_mul (c i : ℂ)), map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← GlobalTheory.ConjSeries.taylor_eq_coeff, GlobalTheory.ProdThetaConj.taylor_const_mul (hF i)]
   have hcj : ∀ x : Qbar, StandardLatticesGL3.cj Qbar ρ x = ρ x := fun x => by simp [StandardLatticesGL3.cj, TaylorLogMetric.liftM]
@@ -131,8 +174,8 @@ theorem taylor_fnConj_comb (D : D7) (hI : GlobalTheory.NormSum.Inp D) (cc : Idea
   have e : (∑ i, ((⟨κ, hκ1⟩ * r i : Qbar) : ℂ) * TaylorLogMetric.taylor D (U D (tor0 D cc δ) (s i) G) α) =
       ((∑ i, (⟨κ, hκ1⟩ * r i) * ⟨_, hAU _ (hq i) α⟩ : Qbar) : ℂ) := by
     push_cast; rfl
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, hcj, map_sum]
+
+  rw [e, hcj, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [(GlobalTheory.ConjSeries.taylor_fnConj D a b Qbar ρ _ (hd i) (h0 i)).1 α, map_mul ρ _ ⟨_, hAU _ (hq i) α⟩,
     ← hcj ⟨_, hAU _ (hq i) α⟩]
@@ -252,7 +295,7 @@ theorem max_pow_le_exp_posLog (A : ℝ) (hA : 0 < A) (d : ℕ) :
     · calc A⁻¹ = Real.exp (Real.log A⁻¹) := (Real.exp_log (inv_pos.2 hA)).symm
         _ ≤ Real.exp (Real.posLog A⁻¹) := by gcongr; unfold Real.posLog; exact le_max_right _ _
   calc max 1 A⁻¹ ^ d ≤ Real.exp (Real.posLog A⁻¹) ^ d := pow_le_pow_left₀ (by positivity) h1 d
-    _ = Real.exp (d * Real.posLog A⁻¹) := (Real.exp_nat_mul _ d).symm
+    _ = Real.exp (d * Real.posLog A⁻¹) := (Real.exp_natCast_mul d _).symm
 
 theorem size_bound (K f N b rd Kx W1 W2 a bb c : ℝ) (g : ℕ) (hK0 : 0 ≤ K) (hc0 : 0 ≤ c) (hcf : c ≤ f) (hb3 : 3 ≤ b) (hN1 : 1 ≤ N) (hNb : N ≤ b)
     (hf1 : 1 ≤ f) (hfb : f ≤ b) (hrd0 : 0 ≤ rd) (hrd : rd ≤ b) (ha0 : 0 ≤ a) (haN : a ≤ N) (hbb0 : 0 ≤ bb)

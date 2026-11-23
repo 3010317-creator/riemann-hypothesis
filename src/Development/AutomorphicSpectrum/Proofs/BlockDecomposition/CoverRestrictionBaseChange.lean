@@ -1,9 +1,51 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.SortSign
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechModulesFunctorShortExactOfAcyclic
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.HigherDirectImagesVanishOfIsAffineHom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.CoeEqAlgebraMapZeroEquiv
 
 @[expose] public section
 
@@ -156,13 +198,13 @@ theorem totalD_total (X : ∀ s, A.obj s) (t : Finset κ) :
     Cube.totalD B (P.total X) t = P.total (Cube.totalD A X) t := by
   rw [Cube.totalD_apply]
   by_cases ht : Set.InjOn τ (t : Set κ)
-  set_option synthInstance.maxHeartbeats 100000 in
-    · rw [total_of_inj _ _ ht, Cube.totalD_apply, Finset.sum_image ht, map_sum, Finset.smul_sum]
-      refine Finset.sum_congr rfl fun i hi => ?_
-      have hs : Set.InjOn τ (t.erase i : Finset κ) := ht.mono (by simp [Finset.erase_subset])
-      rw [total_of_inj _ _ hs, map_zsmul, ← P.app_res (Finset.erase_subset i t), map_zsmul,
-        Cube.res_congr A X (image_erase_of_injOn τ hi ht) _ (Finset.erase_subset _ _),
-        smul_smul, smul_smul, sign_erase τ hi ht]
+
+  · rw [total_of_inj _ _ ht, Cube.totalD_apply, Finset.sum_image ht, map_sum, Finset.smul_sum]
+    refine Finset.sum_congr rfl fun i hi => ?_
+    have hs : Set.InjOn τ (t.erase i : Finset κ) := ht.mono (by simp [Finset.erase_subset])
+    rw [total_of_inj _ _ hs, map_zsmul, ← P.app_res (Finset.erase_subset i t), map_zsmul,
+      Cube.res_congr A X (image_erase_of_injOn τ hi ht) _ (Finset.erase_subset _ _),
+      smul_smul, smul_smul, sign_erase τ hi ht]
   · rw [total_of_not _ _ ht]
     obtain ⟨a, ha, b, hb, hτab, hab⟩ : ∃ a ∈ t, ∃ b ∈ t, τ a = τ b ∧ a ≠ b := by
       simpa [Set.InjOn] using ht

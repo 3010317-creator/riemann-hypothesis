@@ -1,7 +1,55 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfSecAlgTop
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Mathlib.RingTheory.TensorProduct.Maps
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.Topology.Sheaves.Presheaf
 
 @[expose] public section
 
@@ -95,12 +143,12 @@ theorem quotient_basis_baseChange (A B C R : Type) [CommRing A] [CommRing B] [Al
   · rw [Fintype.linearIndependent_iff]
     intro c hc
     have hmem : (∑ k, c k • ((1 : R) ⊗ₜ[A] v k)) ∈ J' := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← Ideal.Quotient.eq_zero_iff_mem, map_sum]
+
+      rw [← Ideal.Quotient.eq_zero_iff_mem, map_sum]
       simpa [mkR] using hc
     have h0 := kill _ hmem
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum] at h0
+
+    rw [map_sum] at h0
     simp only [map_smul, ℓ_tmul, one_smul, Φ_v] at h0
     intro i
     have := congrFun h0 i
@@ -114,18 +162,18 @@ theorem quotient_basis_baseChange (A B C R : Type) [CommRing A] [CommRing B] [Al
       have hx := bas.sum_repr (Ideal.Quotient.mk J x)
       set c := bas.repr (Ideal.Quotient.mk J x)
       have hmem : x - ∑ k, c k • ((1 : C) ⊗ₜ[A] v k) ∈ J := by
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_sum]
+
+        rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_sum]
         simp only [mkC, ← bas_apply]
         rw [hx, sub_self]
       have hmem' : f x - ∑ k, ψ (c k) • ((1 : R) ⊗ₜ[A] v k) ∈ J' := by
         have := Ideal.mem_map_of_mem f hmem
-        set_option synthInstance.maxHeartbeats 100000 in
-          rw [map_sub, map_sum] at this
+
+        rw [map_sub, map_sum] at this
         simpa only [f_smul, f_one] using this
-      set_option synthInstance.maxHeartbeats 100000 in
-        rw [← sub_add_cancel (f x) (∑ k, ψ (c k) • ((1 : R) ⊗ₜ[A] v k)), map_add (f := _),
-        Ideal.Quotient.eq_zero_iff_mem.mpr hmem', zero_add, map_sum]
+
+      rw [← sub_add_cancel (f x) (∑ k, ψ (c k) • ((1 : R) ⊗ₜ[A] v k)), map_add (f := _),
+      Ideal.Quotient.eq_zero_iff_mem.mpr hmem', zero_add, map_sum]
       refine Submodule.sum_mem _ (fun k _ => ?_)
       rw [mkR]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)

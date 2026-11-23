@@ -1,8 +1,51 @@
 module
 
-public import Mathlib
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLLieG
 public import Development.WeilBound.ThetaLifts.Reductions.RealSmulL2Coe
+public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLLieC
+import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.RLLines
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -239,8 +282,8 @@ theorem mid2 (hL : LocalLift) (K : W → Matrix β β ℂ) (hK : ∀ w, (K w)ᴴ
   have hZ : Z ∈ LG K := funext hZw
   have e : ∀ t, (γ t).1 = expU (t • Z) := fun t => Units.ext (funext fun w => (hγ t w).trans (hpi (t • Z) w).symm)
   have b : ζ Z = ∑ w, c w * (Z w).trace := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      conv_lhs => rw [← Finset.univ_sum_single Z, map_sum]
+
+    conv_lhs => rw [← Finset.univ_sum_single Z, map_sum]
     exact Finset.sum_congr rfl fun w _ => hc w _ (hZw w)
   refine ⟨fun t => e t ▸ hS' _ ((LG K).smul_mem t hZ), ?_⟩
   simp only [e, ← b]
@@ -403,8 +446,8 @@ theorem main2 (hLL : LocalLift) (h : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (
     obtain ⟨x, hx, rfl⟩ := hsurj w
     simp only [sympl_e]
     rw [← hE0 x hx, hρ]
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [huv x hx, ← hE0 _ (hu _), ← map_smul, ← map_sum]
+
+    simp only [huv x hx, ← hE0 _ (hu _), ← map_smul, ← map_sum]
     congr 1
     funext w
     simp [Finset.sum_apply]
@@ -414,9 +457,9 @@ theorem main2 (hLL : LocalLift) (h : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (
   refine (this.congr_deriv ?_).congr_of_eventuallyEq (.of_forall fun t => ?_)
   · rw [ContinuousLinearMap.comp_apply, hq]
     congr 1
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.mul_apply, map_add, map_smul, map_sum, hD.P c (hu _), hD.P c (hv _), c.P_P']
+
+    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.mul_apply, map_add, map_smul, map_sum, hD.P c (hu _), hD.P c (hv _), c.P_P']
   · show l (om (γ (Multiplicative.ofAdd t)) _) = T (c.P (A0 ⟨(γ0 t).1, hγ0 t⟩ (c.P' f)))
     rw [← hT, ← hA0 _ _ gf hgf, c.P_P', e0]
     rfl

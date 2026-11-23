@@ -1,10 +1,47 @@
 module
 
-public import Mathlib
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.NnrealEqOneOfMulSelf
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.CjTDefs
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.ProjGen
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.LocallyCompactAdelicUnitary
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FundamentalEquivalence.LevelIntersectParabolic
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -51,14 +88,14 @@ theorem Bf_smul_right (c : A) (u v : Fin M → A ⊗[F] E) : Bf σ J u (c • v)
 theorem Bf_sum_left {k : ℕ} (x : Fin k → Fin M → A ⊗[F] E) (v : Fin M → A ⊗[F] E) :
     Bf σ J (∑ a, x a) v = ∑ a, Bf σ J (x a) v := by
   have h : hR A σ J (∑ a, x a) v = ∑ a, hR A σ J (x a) v := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [hR, Formalism.UG.hform, Finset.sum_apply, _root_.map_sum, Finset.sum_mul]
+
+    simp only [hR, Formalism.UG.hform, Finset.sum_apply, _root_.map_sum, Finset.sum_mul]
     conv_rhs => rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
     exact Finset.sum_comm
   unfold Bf
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h, _root_.map_sum]
+
+  rw [h, _root_.map_sum]
 
 theorem Bf_sum_right {k : ℕ} (u : Fin M → A ⊗[F] E) (y : Fin k → Fin M → A ⊗[F] E) :
     Bf σ J u (∑ a, y a) = ∑ a, Bf σ J u (y a) := by
@@ -68,8 +105,8 @@ theorem Bf_sum_right {k : ℕ} (u : Fin M → A ⊗[F] E) (y : Fin k → Fin M �
     refine Finset.sum_congr rfl fun i _ => ?_
     exact Finset.sum_comm
   unfold Bf
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [h, _root_.map_sum]
+
+  rw [h, _root_.map_sum]
 
 theorem Bf_expand {k : ℕ} (b : Fin k → Fin M → A ⊗[F] E) (x y : Fin k → A) :
     Bf σ J (∑ a, x a • b a) (∑ c, y c • b c) = ∑ a, ∑ c, x a * (Bf σ J (b a) (b c) * y c) := by
@@ -92,9 +129,9 @@ theorem Bf_lin (g : HA A σ J) (u v : Fin M → A ⊗[F] E) :
         Matrix.vecMul (fun i => sigR A σ (x i)) (Formalism.UG.cT (sigR A σ) P) := by
     intro P x
     funext j
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [Matrix.mulVec, Matrix.vecMul, dotProduct, Formalism.UG.cT, Matrix.transpose_apply,
-      Matrix.map_apply, _root_.map_sum, map_mul]
+
+    simp only [Matrix.mulVec, Matrix.vecMul, dotProduct, Formalism.UG.cT, Matrix.transpose_apply,
+    Matrix.map_apply, _root_.map_sum, map_mul]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   have hg : (HA.mat A σ J g) ∈ HR A σ J := (show ↥(HR A σ J) from g).2
   have hg' : Formalism.UG.cT (sigR A σ) ((HA.mat A σ J g : GL (Fin M) (A ⊗[F] E)) : Matrix _ _ _) * JR A J *

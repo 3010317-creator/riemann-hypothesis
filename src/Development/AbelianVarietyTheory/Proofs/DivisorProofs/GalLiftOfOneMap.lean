@@ -1,59 +1,44 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReadingsExistRow
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IpMSelfEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenvalueBarCompatibility
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaValuesCoefficientExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelsEvaluateFirst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelsEvaluateSecond
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfConjOnFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoefAtOfPosDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsEtaConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResEtaHasInfExpOfIsEtaConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HvMemOfInert
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomEqOnAdjoinSimple
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CircleEqOneIffOfConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPsiOfOverK
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelsWeightCompat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatiblePhaseExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjFormsRescale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralShiftExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolShapeOfOverK
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsThetaPForms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftEquivarianceWeilModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjWeil
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JEvExistsAndJEvBar
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicLinearIndependent
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnfoldingConstantTermsAgreeAtGoodEmbeddings
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GamAtOfLawsJ
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.BddSecCuspCongr
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CuspFDOfCuspFiniteClaim
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothReal
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicFormFrameExpansion
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.CuspStatementPf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramSchmidtFlagDomainOrthonormalFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanCharacterDetPower
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterTrivialOnSubgroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LastWeightPositive
-public import Formalism.LocalToGlobal.ProjectiveLattices.ThProps
-public import Formalism.LocalToGlobal.ProjectiveLattices.ExistsParameterConditions
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitDetRoot
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightLabelAtUnfolding
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtremalVectorAnnihilated
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscreteSeriesModelUnitaryIrreducibleOrthonormal
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodEmbeddingLabelIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LUnifOfRhoGeoEquivAll
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -79,11 +64,11 @@ theorem read_sum (σ : L →+* ℂ) (J : Y →ₛₗ[σ] H) (ι : C → Y) (act 
     (h : ∀ g f, J (ι (act g f)) = σ (chi g : L) • ρ g (J (ι f))) (e : G → L) {n : ℕ} (b : Fin n → L) (f : Fin n → C) :
     J (∑ g, (e g * (((chi g)⁻¹ : Lˣ) : L)) • ∑ k, b k • ι (act g (f k))) =
       ∑ g, σ (e g) • ρ g (∑ k, σ (b k) • J (ι (f k))) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum]
+
+  rw [map_sum]
   refine Finset.sum_congr rfl fun g _ => ?_
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_smulₛₗ, map_sum, map_sum, Finset.smul_sum, Finset.smul_sum]
+
+  rw [map_smulₛₗ, map_sum, map_sum, Finset.smul_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_smulₛₗ, h, map_smul, smul_smul, smul_smul, smul_smul, ← map_mul, ← map_mul, ← map_mul]
   congr 2
@@ -93,8 +78,8 @@ theorem read_sum (σ : L →+* ℂ) (J : Y →ₛₗ[σ] H) (ι : C → Y) (act 
 theorem shift_sum (ρ : Representation ℂ G H) (e : G → ℂ) {z₀ z : G} (h₀ : z₀ ∈ Subgroup.center G) (hz : z ∈ Subgroup.center G)
     (α β κ : ℂ) (hβ : β ≠ 0) (S T : H) (hT : κ • T = ∑ g, e g • ρ g (β • ρ z S)) :
     ∑ g, e g • ρ g (α • ρ z₀ S) = (α * β⁻¹ * κ) • ρ (z₀ * z⁻¹) T := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [mul_smul, ← map_smul (ρ (z₀ * z⁻¹)) κ, hT, map_sum, Finset.smul_sum]
+
+  rw [mul_smul, ← map_smul (ρ (z₀ * z⁻¹)) κ, hT, map_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun g _ => ?_
   have h1 : ρ (z₀ * z⁻¹) (ρ g (ρ z S)) = ρ g (ρ z₀ S) := by
     have e1 : z₀ * z⁻¹ * (g * z) = g * z₀ := by
@@ -121,12 +106,12 @@ theorem conj_abstract (σ : L →+* ℂ) (J : Y →ₛₗ[σ] H) (ι : C → Y) 
     J (∑ g, (e g * (((chi g)⁻¹ : Lˣ) : L)) • ∑ k, (ze * a k) • ι (act g (act z₀ (f k)))) =
       (σ ze * σ (chi z₀ : L) * (σ (chi z : L))⁻¹ * κ) • ρ (z₀ * z⁻¹) T := by
   have e1 : ∑ k, σ (a k) • ev (J (ι (act z (f k)))) = ev (σ (chi z : L) • ρ z (∑ k, σ (a k) • J (ι (f k)))) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.smul_sum, map_sum]
+
+    rw [map_sum, Finset.smul_sum, map_sum]
     exact Finset.sum_congr rfl fun k _ => by simp only [h, map_smul]; rw [smul_comm]
   have h3 : ∑ k, σ (ze * a k) • J (ι (act z₀ (f k))) = (σ ze * σ (chi z₀ : L)) • ρ z₀ (∑ k, σ (a k) • J (ι (f k))) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, Finset.smul_sum]
+
+    rw [map_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [h, map_smul, smul_smul, smul_smul, map_mul]
     congr 1
@@ -139,8 +124,8 @@ theorem exists_ev (ev : H →ₗ[ℂ] P) {κ : ℂ} (hκ : ‖κ‖ = 1) {n : �
     (hθ : κ • θ = ∑ k, a k • ev (t k)) : ∃ s, ev s = θ := by
   have hκ0 : κ ≠ 0 := norm_ne_zero_iff.1 (by rw [hκ]; exact one_ne_zero)
   refine ⟨κ⁻¹ • ∑ k, a k • t k, ?_⟩
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_smul, map_sum, ← inv_smul_smul₀ hκ0 θ, hθ]
+
+  rw [map_smul, map_sum, ← inv_smul_smul₀ hκ0 θ, hθ]
   simp only [map_smul]
 
 def evL {I : Type} {M : I → Type} [∀ τ, AddCommGroup (M τ)] [∀ τ, Module ℂ (M τ)] (e : H →ₗ[ℂ] MultilinearMap (RingHom.id ℂ) M P)

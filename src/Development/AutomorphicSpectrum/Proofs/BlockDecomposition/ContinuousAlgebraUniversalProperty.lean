@@ -1,11 +1,55 @@
 module
 
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLimHom
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MulSubEqZeroOfSum
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EpsilonCyclotomicElementPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsContinuousEpsilonPowerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SharpEpsilonRootIdempotentSumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsUniqueForEpsilonRootStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsContinuousEpsilonPower
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLimHom
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsCoarsenToLowerLevelStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsUniqueForEpsilonRootStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SharpEpsilonRootIdempotentSumStatement
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ValuationOfValuationModSquare
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
 
 @[expose] public section
 
@@ -138,13 +182,13 @@ theorem map_unique {A t : PAlg l} (ψ ψ' : A.cont ℤ_[l] ⟶ t)
   obtain ⟨M, hM⟩ := exists_period A f k
   let g : (A.cont ℤ_[l]).A := ∑ c, ind A M c * Hom.f (A.toCont ℤ_[l]) (Hom.f (A.evCont (rep c)) f)
   have hg : Hom.f ψ g = Hom.f ψ' g := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      simp only [g, map_sum, map_mul, h2, hconst]
+
+    simp only [g, map_sum, map_mul, h2, hconst]
   have hfg : f - g ∈ Ideal.span {(A.cont ℤ_[l]).pi ^ k} := by
     refine (mem_span_pi_pow A k _).2 fun z => ?_
     have : Hom.f (A.evCont z) g = Hom.f (A.evCont (rep (PadicInt.toZModPow M z))) f := by
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [g, map_sum, map_mul, ev_toCont, ev_ind]
+
+      simp only [g, map_sum, map_mul, ev_toCont, ev_ind]
       rw [Finset.sum_eq_single (PadicInt.toZModPow M z)]
       · simp
       · intro c _ hc
@@ -191,8 +235,8 @@ theorem formula (ε : Eps l) {ρ : ℕ → ((base l).cont ℤ_[l]).A}
     t.sharp (Hom.f ψ (Hom.f (contMap A.fromBase ℤ_[l]) (ρ m))) =
       ∑ c : ZMod (l ^ m), t.sharp (Hom.f ψ (ind A m c)) * t.sharp (t.s (ε.e m)) ^ c.val := by
   have h := congrArg (mapU (contMap A.fromBase ℤ_[l] ≫ ψ)) (hF m)
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [mapU_sharp, map_sum] at h
+
+  rw [mapU_sharp, map_sum] at h
   refine h.trans (Finset.sum_congr rfl fun c _ => ?_)
   rw [map_mul, map_pow, mapU_sharp, mapU_sharp]
   have h1 : Hom.f (contMap A.fromBase ℤ_[l] ≫ ψ) (ind (base l) m c) = Hom.f ψ (ind A m c) :=

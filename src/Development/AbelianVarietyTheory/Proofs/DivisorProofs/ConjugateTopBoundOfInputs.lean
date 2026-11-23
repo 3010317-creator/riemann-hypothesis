@@ -1,12 +1,63 @@
 module
 
-public import Mathlib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbLLMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairIntAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientModelTopClassesMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianGrowthConjTorsionTranslatesVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstJetOperatorNormCauchyBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyParameterSizesTestChoicesStatement
+public import Mathlib.Analysis.SpecialFunctions.Log.PosLog
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
+import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbLLMem
+import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
+import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt
+import Formalism.LocalRingCardinality.DataTheta
+import Formalism.LocalRingCardinality.SpanPowerMembership.HasStrictFDerivAtExpZero
+import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
+import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
+import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GapAtLeast
+import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 
 @[expose] public section
 
@@ -39,7 +90,7 @@ theorem max_pow_le_exp_posLog (A : ℝ) (hA : 0 < A) (d : ℕ) :
     · calc A⁻¹ = Real.exp (Real.log A⁻¹) := (Real.exp_log (inv_pos.2 hA)).symm
         _ ≤ Real.exp (Real.posLog A⁻¹) := by gcongr; unfold Real.posLog; exact le_max_right _ _
   calc max 1 A⁻¹ ^ d ≤ Real.exp (Real.posLog A⁻¹) ^ d := pow_le_pow_left₀ (by positivity) h1 d
-    _ = Real.exp (d * Real.posLog A⁻¹) := (Real.exp_nat_mul _ d).symm
+    _ = Real.exp (d * Real.posLog A⁻¹) := (Real.exp_natCast_mul d _).symm
 
 theorem size_bound (K f N b rd Kx W1 W2 a bb c : ℝ) (g : ℕ) (hK0 : 0 ≤ K) (hc0 : 0 ≤ c) (hcf : c ≤ f) (hb3 : 3 ≤ b) (hN1 : 1 ≤ N) (hNb : N ≤ b)
     (hf1 : 1 ≤ f) (hfb : f ≤ b) (hrd0 : 0 ≤ rd) (hrd : rd ≤ b) (ha0 : 0 ≤ a) (haN : a ≤ N) (hbb0 : 0 ≤ bb)

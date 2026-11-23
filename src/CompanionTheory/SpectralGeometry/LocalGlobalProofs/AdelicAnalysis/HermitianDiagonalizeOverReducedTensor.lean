@@ -1,9 +1,48 @@
 module
 
-public import Mathlib
-public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneVectorCcOfSiegelWeil
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicUnitaryOrbits.QuadFiniteDimensional
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.Polynomial.Basic
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -153,8 +192,8 @@ theorem cT_apply {l m : Type} (S : Matrix l m A) (i : m) (j : l) : cT s S i j = 
 theorem bf_conj (hs : ∀ z, s (s z) = z) {S : Matrix ι ι A} (hS : cT s S = S) (x y : ι → A) :
     s (bf s S x y) = bf s S y x := by
   have hS' : ∀ i j, s (S i j) = S j i := fun i j => by rw [← cT_apply, hS]
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [bf, dotProduct, mulVec, map_sum, map_mul, hs, hS', Finset.mul_sum]
+
+  simp only [bf, dotProduct, mulVec, map_sum, map_mul, hs, hS', Finset.mul_sum]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
@@ -251,11 +290,11 @@ theorem exists_value_unit [Nonempty ι] [Finite (MaximalSpectrum R)] {S : Matrix
     exists_crt (B := R) fun m => if m = k then 1 else 0
   set x : ι → A := ∑ k, algebraMap R A (c k) • xm k with hx
   have hval : t (bf s S x x) = ∑ k, ∑ l, c k * c l * t (bf s S (xm k) (xm l)) := by
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [hx, bf_sum_left, map_sum]
+
+    rw [hx, bf_sum_left, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [bf_sum_right, map_sum]
+
+    rw [bf_sum_right, map_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [bf_smul_left, bf_smul_right, hR, ← mul_assoc, ← map_mul, ← Algebra.smul_def, map_smul,
       smul_eq_mul]
@@ -267,8 +306,8 @@ theorem exists_value_unit [Nonempty ι] [Finite (MaximalSpectrum R)] {S : Matrix
     have h1 : Ideal.Quotient.mk m.asIdeal (t (bf s S x x))
         = Ideal.Quotient.mk m.asIdeal (t (bf s S (xm m) (xm m))) := by
       rw [hval]
-      set_option synthInstance.maxHeartbeats 100000 in
-        simp only [map_sum, map_mul, hπ]
+
+      simp only [map_sum, map_mul, hπ]
       simp
     rw [Ideal.Quotient.eq_zero_iff_mem.2 hm] at h1
     exact hxm m (Ideal.Quotient.eq_zero_iff_mem.1 h1.symm)

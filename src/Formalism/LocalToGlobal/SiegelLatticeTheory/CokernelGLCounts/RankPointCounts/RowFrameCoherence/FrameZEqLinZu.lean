@@ -1,9 +1,48 @@
 module
 
-public import Mathlib
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RowFrameCoherence.SecondNormalTransport
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RowFrameCoherence.OrthogonalComplementRational
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RowFrameCoherence.SecondNormalTransport
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PairCorankPositivity.FinrankOrthAddLe
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarEquivalenceGeneral.ScalarFactorEqOneOfLe
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarPairOrthogonal.XLeOrthXplus
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
@@ -25,8 +64,8 @@ variable {D : D7} (X : HidaSetting D) (u u' : D.what₂.Word)
 theorem hE_comb (M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) (c : Fin (D.R.rS + 1) → X.B.I.E)
     (a : Fin (D.R.rS + 1)) :
     Formalism.L2.SG.Pf.Level.hE X (famE X u a) (∑ b, c b • (M *ᵥ famE X u' b)) = (ZE X u u' M *ᵥ c) a := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Formalism.L2.SG.Pf.Level.hEl_apply, map_sum]
+
+  rw [← Formalism.L2.SG.Pf.Level.hEl_apply, map_sum]
   simp only [map_smul, Formalism.L2.SG.Pf.Level.hEl_apply, smul_eq_mul, Matrix.mulVec, dotProduct, ZE]
   exact Finset.sum_congr rfl fun b _ => mul_comm _ _
 
@@ -56,8 +95,8 @@ def x2E (M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) X.B.I.E) : Fin X.B.I.n → X.B.I
 theorem hE_sum_left {m : ℕ} (k : Fin m → X.B.I.E) (f : Fin m → Fin X.B.I.n → X.B.I.E) (y : Fin X.B.I.n → X.B.I.E) :
     Formalism.L2.SG.Pf.Level.hE X (∑ a, star (k a) • f a) y = ∑ a, k a * Formalism.L2.SG.Pf.Level.hE X (f a) y := by
   conv_lhs => rw [Formalism.L2.SG.Pf.Level.hE_symm]
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← Formalism.L2.SG.Pf.Level.hEl_apply, map_sum, star_sum]
+
+  rw [← Formalism.L2.SG.Pf.Level.hEl_apply, map_sum, star_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [map_smul, Formalism.L2.SG.Pf.Level.hEl_apply, smul_eq_mul, star_mul', star_star, ← Formalism.L2.SG.Pf.Level.hE_symm]
 
@@ -334,8 +373,8 @@ theorem fixedX (v : (VS D).V) (hv : v ∈ (X.Fu u).X) : v ∈ Submodule.span D.h
 
 theorem symm_frameX {v : (VS D).V} (hv : v ∈ s.frame.fl.X) : s.lin.symm v ∈ Submodule.span D.host.E (Set.range X.eX) := by
   obtain ⟨c, hc⟩ := x_sum _ hv
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [← hc, map_sum]
+
+  rw [← hc, map_sum]
   refine Submodule.sum_mem _ fun i _ => ?_
   rw [map_smul, frame_e, LinearEquiv.symm_apply_apply]
   exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)

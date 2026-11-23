@@ -1,13 +1,47 @@
 module
 
-public import Mathlib
-public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
 public import Formalism.LocalToGlobal.LatticeGeometry.PluckerHadamard.WeylPolynomialAlgebra
+public import Formalism.LocalToGlobal.LatticeGeometry.PluckerHadamard.BlockVandermondeForms
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 
@@ -87,10 +121,10 @@ theorem jPos (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (hj : j ≤ N
     rw [map_natCast]] at hpol
   have hP := congrArg (PhiL j n) hpol
   have hA := congrArg (apolL fib) hpol
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [PhiL_C_mul, map_sum] at hP
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [apolL_C_mul, map_sum] at hA
+
+  rw [PhiL_C_mul, map_sum] at hP
+
+  rw [apolL_C_mul, map_sum] at hA
   simp only [PhiL_C_mul, apolL_C_mul, ← hkdef, hagree] at hP hA
   have hmain : PhiL j n fib = c * apolL fib fib := by
     have e1 : ∑ S ∈ (idxS Ψ N j).powerset, (-1 : ℝ) ^ ((idxS Ψ N j).card - S.card) *
@@ -158,8 +192,8 @@ theorem deg_mu (j n : ℕ) (G : RP Ψ N) :
     rw [← Finset.sum_mul]
     rw [hc] at hd
     linear_combination G * hd
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [e, degFl_eq, degFl_eq, map_add (f := _), map_sum, Finset.sum_eq_zero, add_zero]
+
+  rw [e, degFl_eq, degFl_eq, map_add (f := _), map_sum, Finset.sum_eq_zero, add_zero]
   intro τ _
   exact Formalism.L2.Geo.flag_integral_kills_power_sums Ψ N τ 1 le_rfl _
 
@@ -179,15 +213,15 @@ theorem d_fib (τ : Ψ) (j : ℕ) (S : Finset (Fin N))
 
 theorem d_sum (τ : Ψ) (S T : Finset (Fin N)) :
     dS τ S (∑ σ : Ψ, ∑ i ∈ T, (X (σ, i) : RP Ψ N)) = C (((T.filter (· ∈ S)).card : ℕ) : ℝ) := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    rw [map_sum, Finset.sum_eq_single τ]
+
+  rw [map_sum, Finset.sum_eq_single τ]
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [map_sum]
     simp only [dS_X, true_and]
     rw [Finset.sum_boole, map_natCast]
   · intro σ _ hσ
-    set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum]
+
+    rw [map_sum]
     simp [dS_X, hσ]
   · simp
 

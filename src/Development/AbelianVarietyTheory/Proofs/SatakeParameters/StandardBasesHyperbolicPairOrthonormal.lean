@@ -1,21 +1,58 @@
 module
 
-public import Mathlib
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BeData
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsConstantCoeffOne
-public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingHomRhoK
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobeniusLiftMovesLetterCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OrthonormalLocalBasisCoordinatesDualStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LambdaTauOrthonormalBasisSumCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLocalBasisStandardCoordLeOneInertStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicCoordinatesDualStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicCoordinatesIntegralSigmaSqFixedStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicCoordinatesIsotropicStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicCoordinatesDualStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TraceDualExpansionOrbitLengthStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LambdaTauOrthonormalBasisSumCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LinearFormsHyperbolicCoordinatesEqTargetStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLocalBasisStandardCoordLeOneInertStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OrthonormalLocalBasisCoordinatesDualStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StandardSeriesScaledEqOrthonormalBasisSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TraceDualExpansionOrbitLengthStatement
+import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.RepFrame
+import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.RepTrace
+import Mathlib.Algebra.Order.Floor.Extended
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Combinatorics.Enumerative.DyckWord
+import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.NNRat.Floor
+import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Height.NumberField
+import Mathlib.NumberTheory.Height.Projectivization
+import Mathlib.NumberTheory.LucasLehmer
+import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.Echelon.Zsqrtd
+import Mathlib.Tactic.Inclusion.Extension.Core.Core
+import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
+import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
+import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.IsCoprime
+import Mathlib.Tactic.NormNum.IsSquare
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.ModEq
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NormNum.NatLog
+import Mathlib.Tactic.NormNum.NatSqrt
+import Mathlib.Tactic.NormNum.Ordinal
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.ReduceModChar
+import Mathlib.Topology.Sheaves.Init
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingHomRhoK
 
 @[expose] public section
 
@@ -52,6 +89,6 @@ theorem GlobalTheory.KerStd.hyp_of_stdBases : ∀ (D : D7) (p : ℕ) [Fact p.Pri
     (fun k j => chgB D lam P P' k ((0 : ZMod 1), (tauPl D j.1, j.2))) hO hR (GlobalTheory.T.traceDual_expansion_orbitLength D p σ om oms hTr)
     (fun q z a b₀ => GlobalTheory.T.lambdaTau_orthonormalBasis_sum_coordinates D p lam σ hσ hcl' N N' L L' P P' hP hP' r b hONB q z a b₀)
   refine GlobalTheory.T.standardSeries_scaled_eq_orthonormalBasisSeries D p lam N N' r P P' b _ (fun i => ?_) hlin
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [hypZ, linEv, linOd, map_sum, map_add (f := _), map_mul, MvPowerSeries.constantCoeff_C, MvPowerSeries.constantCoeff_X,
-    mul_zero, apply_ite MvPowerSeries.constantCoeff, map_zero, ite_self, Finset.sum_const_zero, add_zero]
+
+  simp only [hypZ, linEv, linOd, map_sum, map_add (f := _), map_mul, MvPowerSeries.constantCoeff_C, MvPowerSeries.constantCoeff_X,
+  mul_zero, apply_ite MvPowerSeries.constantCoeff, map_zero, ite_self, Finset.sum_const_zero, add_zero]
