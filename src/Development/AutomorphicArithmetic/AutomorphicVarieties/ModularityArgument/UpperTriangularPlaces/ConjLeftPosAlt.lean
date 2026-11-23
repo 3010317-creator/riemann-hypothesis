@@ -166,7 +166,8 @@ private def topBlock {n : ℕ} (M : Γ →* Matrix (Fin (n + 1)) (Fin (n + 1)) E
   map_one' := by rw [map_one, Matrix.submatrix_one _ (Fin.castSucc_injective n)]
   map_mul' g k := by
     ext i j
-    simp [Matrix.mul_apply, Fin.sum_univ_castSucc, h k (Fin.last n) j.castSucc (Fin.castSucc_lt_last j)]
+    simp only [Matrix.submatrix_apply, Matrix.mul_apply, Fin.sum_univ_castSucc,
+      h k (Fin.last n) j.castSucc (Fin.castSucc_lt_last j), mul_zero, add_zero, map_mul]
 
 private def pad (n : ℕ) : (Fin n → E) →ₗ[E] (Fin (n + 1) → E) :=
   LinearMap.pi fun i => Fin.lastCases 0 (fun j => LinearMap.proj j) i
@@ -194,7 +195,7 @@ private theorem tri_apply {n : ℕ} (M : Γ →* Matrix (Fin n) (Fin n) E) (h : 
     · rw [hx k hk, mul_zero]
     · rw [h g j k (hk.trans_lt hj), zero_mul]
   · rw [mrep_apply]
-    refine Finset.sum_eq_single i (fun k _ hk => ?_) (by simp)
+    refine Finset.sum_eq_single i (fun k _ hk => ?_) (fun h => absurd (Finset.mem_univ i) h)
     rcases lt_or_gt_of_ne hk with hk | hk
     · rw [h g i k hk, zero_mul]
     · rw [hx k hk, mul_zero]
@@ -391,8 +392,12 @@ private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {Γ :
       funext j
       induction j using Fin.lastCases with
       | last =>
-        simp [mrep_apply, Fin.sum_univ_castSucc, fun j : Fin n => htri g _ _ (Fin.castSucc_lt_last j)]
-      | cast j => simp [mrep_apply, Fin.sum_univ_castSucc, hM0, topBlock]
+        rw [pad_last, mrep_apply, Fin.sum_univ_castSucc, pad_last, mul_zero, add_zero]
+        exact (Finset.sum_eq_zero fun j _ => by
+          rw [htri g _ _ (Fin.castSucc_lt_last j), zero_mul]).symm
+      | cast j =>
+        rw [pad_cast, mrep_apply, mrep_apply, Fin.sum_univ_castSucc, pad_last, mul_zero, add_zero]
+        simp only [pad_cast, hM0, topBlock, MonoidHom.coe_mk, OneHom.coe_mk, Matrix.submatrix_apply]
     · intro g
       funext j
       induction j using Fin.lastCases with
