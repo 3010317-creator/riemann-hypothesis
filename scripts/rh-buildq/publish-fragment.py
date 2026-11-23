@@ -136,7 +136,7 @@ def regular(path):
 
 
 def cmd_verify(a):
-    stage, work = Path(a.stage), Path(a.work)
+    stage, work = Path(a.stage).absolute(), Path(a.work).absolute()
     work.mkdir(parents=True, exist_ok=True)
     if stage.is_symlink() or not stage.is_dir() or sorted(p.name for p in stage.iterdir()) != ["artifacts", "manifest.json"]:
         raise SystemExit("verify: unexpected stage layout")
