@@ -48,5 +48,4 @@ import Mathlib.Topology.Sheaves.Init
 @[expose] public section
 
 theorem jet_bound_ramified_prime : PI.EntAtD.EntAtD :=
-  PI.EntAtD.W.entAtD_of PI.EntAtD.W.pExpCoeff PI.EntAtD.W.pBridge PI.EntAtD.W.pLapComm
-    PI.EntAtD.W.pMinorAff PI.EntAtD.W.pSDegMul PI.EntAtD.W.pLapForms
+  PI.EntAtD.W.entAtD_of_all_rows PI.EntAtD.W.pExpCoeff PI.EntAtD.W.pBridge PI.EntAtD.W.pLapComm

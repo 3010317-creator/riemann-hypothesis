@@ -95,20 +95,22 @@ theorem minorAff_sumApply {ι : Type} [DecidableEq ι] (s : Finset ι) (D : ι �
 
 end DerDet
 
-theorem pMinorAff : PMinorAff := by
-  intro H N0 N1 t k I b b'
+theorem dRow_dRow_minorXZ_eq_zero (H : Type) (N0 N1 : ℕ) (t : H) (row k : ℕ)
+    (I : Fin k ↪o Fin N1) (b b' : Fin N1) :
+    dRow (N0 := N0) t row b (dRow (N0 := N0) t row b'
+      (minorXZ (Lt := Bool × H) N0 N1 (true, t) k I)) = 0 := by
   classical
   let y : Fin k → PolyXZ H N0 N1 := fun i => ∑ a : Fin N0,
-    (MvPolynomial.X (Sum.inl ((false, t), 0, a)) : PolyXZ H N0 N1) *
+    (MvPolynomial.X (Sum.inl ((false, t), row, a)) : PolyXZ H N0 N1) *
       MvPolynomial.X (Sum.inl ((true, t), (i : ℕ), a))
-  have hD : ∀ (bb : Fin N1) (f : PolyXZ H N0 N1), dRow (N0 := N0) t 0 bb f =
-      ∑ a : Fin N0, (MvPolynomial.X (Sum.inl ((false, t), 0, a)) : PolyXZ H N0 N1) *
+  have hD : ∀ (bb : Fin N1) (f : PolyXZ H N0 N1), dRow (N0 := N0) t row bb f =
+      ∑ a : Fin N0, (MvPolynomial.X (Sum.inl ((false, t), row, a)) : PolyXZ H N0 N1) *
         MvPolynomial.pderiv (R := ℤ) (Sum.inr ((true, t), a, bb)) f := by
     intro bb f
     simp only [dRow]
     rw [minorAff_sumApply]
     simp only [Derivation.smul_apply, smul_eq_mul]
-  have hE : ∀ (bb c : Fin N1) (i : Fin k), dRow (N0 := N0) t 0 bb
+  have hE : ∀ (bb c : Fin N1) (i : Fin k), dRow (N0 := N0) t row bb
       (∑ a : Fin N0, (MvPolynomial.X (Sum.inl ((true, t), (i : ℕ), a)) : PolyXZ H N0 N1) *
         MvPolynomial.X (Sum.inr ((true, t), a, c))) = if c = bb then y i else 0 := by
     intro bb c i
@@ -119,7 +121,7 @@ theorem pMinorAff : PMinorAff := by
       simp [y, map_sum, Derivation.leibniz, MvPolynomial.pderiv_X, Pi.single_apply]
 
     · simp [map_sum, Derivation.leibniz, MvPolynomial.pderiv_X, Pi.single_apply, hc]
-  have hy : ∀ (bb : Fin N1) (i : Fin k), dRow (N0 := N0) t 0 bb (y i) = 0 := by
+  have hy : ∀ (bb : Fin N1) (i : Fin k), dRow (N0 := N0) t row bb (y i) = 0 := by
     intro bb i
     rw [hD]
 
@@ -129,7 +131,7 @@ theorem pMinorAff : PMinorAff := by
   rw [minorAff_derDet, map_sum]
   refine Finset.sum_eq_zero fun c _ => ?_
   by_cases hc : I c = b'
-  · have hcol : (fun r => dRow (N0 := N0) t 0 b' (Matrix.of (fun i k' : Fin k => ∑ a : Fin N0,
+  · have hcol : (fun r => dRow (N0 := N0) t row b' (Matrix.of (fun i k' : Fin k => ∑ a : Fin N0,
         (MvPolynomial.X (Sum.inl ((true, t), (i : ℕ), a)) : PolyXZ H N0 N1) *
           MvPolynomial.X (Sum.inr ((true, t), a, I k'))) r c)) = y := by
       funext r
@@ -149,13 +151,17 @@ theorem pMinorAff : PMinorAff := by
       · apply Matrix.det_eq_zero_of_column_eq_zero l
         intro r
         simp only [Matrix.updateCol_self, Matrix.updateCol_ne hl, Matrix.of_apply, hE, if_neg hIl]
-  · have hcol : (fun r => dRow (N0 := N0) t 0 b' (Matrix.of (fun i k' : Fin k => ∑ a : Fin N0,
+  · have hcol : (fun r => dRow (N0 := N0) t row b' (Matrix.of (fun i k' : Fin k => ∑ a : Fin N0,
         (MvPolynomial.X (Sum.inl ((true, t), (i : ℕ), a)) : PolyXZ H N0 N1) *
           MvPolynomial.X (Sum.inr ((true, t), a, I k'))) r c)) = fun _ => 0 := by
       funext r
       rw [Matrix.of_apply, hE, if_neg hc]
     rw [hcol]
-    convert map_zero (dRow (N0 := N0) t 0 b)
+    convert map_zero (dRow (N0 := N0) t row b)
     exact Matrix.det_eq_zero_of_column_eq_zero c fun r => Matrix.updateCol_self
+
+theorem pMinorAff : PMinorAff := by
+  intro H N0 N1 t k I b b'
+  exact dRow_dRow_minorXZ_eq_zero H N0 N1 t 0 k I b b'
 
 end PI.EntAtD.W

@@ -1,6 +1,9 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.PMinorAff
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.LapForms
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.MinorAff
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.SDegMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,9 +124,18 @@ theorem heart_sdeg_prod (hS : PSDegMul) {A : Type} [CommRing A] {ι : Type} (d :
     exact hS A ι d _ _ _ _ (h i (Finset.mem_insert_self i s))
       (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
 
-theorem lapZero_of (hM : PMinorAff) (hS : PSDegMul) (hF : PLapForms) : PLapZero := by
-  intro H _ inst N0 N1 nu I t n hn
-  clear inst
+private theorem factor_for_lapT (H : Type) [Fintype H] [DecidableEq H] (N0 N1 : ℕ)
+    (nu : Bool × H → YoungDiagram) (I : ColChoice N1 nu) (t : H) :
+    ∃ R : PolyXZ H N0 N1,
+      Gxz N0 N1 nu I =
+        (∏ c : Fin ((nu (false, t)).rowLen 0),
+          minorXZ N0 N1 (false, t) ((nu (false, t)).colLen c) (I (false, t) c)) *
+        ((∏ c : Fin ((nu (true, t)).rowLen 0),
+          minorXZ N0 N1 (true, t) ((nu (true, t)).colLen c) (I (true, t) c)) * R) ∧
+      (∀ a b, pd (Sum.inr ((false, t), a, b))
+        ((∏ c : Fin ((nu (true, t)).rowLen 0),
+          minorXZ N0 N1 (true, t) ((nu (true, t)).colLen c) (I (true, t) c)) * R) = 0) ∧
+      (∀ a b, MvPolynomial.pderiv (R := ℤ) (Sum.inr ((true, t), a, b)) R = 0) := by
   let P : Bool × H → PolyXZ H N0 N1 := fun s => ∏ c : Fin ((nu s).rowLen 0),
     minorXZ (Lt := Bool × H) N0 N1 s ((nu s).colLen c) (I s c)
   let R : PolyXZ H N0 N1 := ∏ s ∈ (Finset.univ.erase (false, t)).erase (true, t), P s
@@ -154,9 +166,16 @@ theorem lapZero_of (hM : PMinorAff) (hS : PSDegMul) (hF : PLapForms) : PLapZero 
     show MvPolynomial.pderiv (R := ℤ) (Sum.inr ((false, t), a, b)) (P (true, t) * R) = 0
     rw [Derivation.leibniz, hnoP (true, t) (false, t) hne a b, hnoR (false, t) (Or.inl rfl) a b,
       smul_zero, smul_zero, add_zero]
+  exact ⟨R, hG, h1, fun a b => hnoR (true, t) (Or.inr rfl) a b⟩
+
+theorem lapZero_of (hM : PMinorAff) (hS : PSDegMul) (hF : PLapForms) : PLapZero := by
+  intro H _ _ N0 N1 nu I t n hn
+  obtain ⟨R, hG, h1, hR⟩ := factor_for_lapT H N0 N1 nu I t
+  let P : Bool × H → PolyXZ H N0 N1 := fun s => ∏ c : Fin ((nu s).rowLen 0),
+    minorXZ N0 N1 s ((nu s).colLen c) (I s c)
   have hR0 : SDegD (fun b : Fin N1 => dRow (N0 := N0) t 0 b) 0 R := by
     intro b
-    exact heart_dRow_zero t 0 b R (fun a => hnoR (true, t) (Or.inr rfl) a b)
+    exact heart_dRow_zero t 0 b R (fun a => hR a b)
   have hmin : ∀ c : Fin ((nu (true, t)).rowLen 0), SDegD (fun b : Fin N1 => dRow (N0 := N0) t 0 b) 1
       (minorXZ (Lt := Bool × H) N0 N1 (true, t) ((nu (true, t)).colLen c) (I (true, t) c)) := by
     intro c j j'
@@ -169,5 +188,30 @@ theorem lapZero_of (hM : PMinorAff) (hS : PSDegMul) (hF : PLapForms) : PLapZero 
   have h2 := hS _ _ _ _ _ _ 0 hPT hR0
   rw [hG]
   exact hF H N0 N1 (nu (false, t)) (I (false, t)) t (P (true, t) * R) ((nu (true, t)).rowLen 0) n h1 h2 hn
+
+/-- Above the row-by-row contraction bound, the local Laplacian kills the product of minors. -/
+theorem lapT_pow_Gxz_eq_zero_of_rowContractionBound
+    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 : ℕ) (nu : Bool × H → YoungDiagram)
+    (I : ColChoice N1 nu) (t : H) (n : ℕ)
+    (hn : rowContractionBound (nu (false, t)) (nu (true, t)) < n) :
+    (lapT N0 N1 t ^ n) (Gxz N0 N1 nu I) = 0 := by
+  obtain ⟨R, hG, h1, hR⟩ := factor_for_lapT H N0 N1 nu I t
+  let P : PolyXZ H N0 N1 := ∏ c : Fin ((nu (true, t)).rowLen 0),
+    minorXZ N0 N1 (true, t) ((nu (true, t)).colLen c) (I (true, t) c)
+  have hdegree (row : ℕ) :
+      SDegD (fun b : Fin N1 => dRow (N0 := N0) t row b) ((nu (true, t)).rowLen 0) (P * R) := by
+    have hR0 : SDegD (fun b : Fin N1 => dRow (N0 := N0) t row b) 0 R := by
+      intro b
+      exact heart_dRow_zero t row b R (fun a => hR a b)
+    have hP := heart_sdeg_prod pSDegMul (fun b : Fin N1 => dRow (N0 := N0) t row b)
+      Finset.univ _ (fun _ => 1)
+      (fun c _ j j' => dRow_dRow_minorXZ_eq_zero H N0 N1 t row _ (I (true, t) c) j' j)
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one] at hP
+    exact pSDegMul _ _ _ P R _ 0 hP hR0
+  rw [hG]
+  exact lap_product_minors_rows_zero t (nu (false, t)) (I (false, t)) (P * R)
+    (fun _ => (nu (true, t)).rowLen 0) (insert 0 ((nu (false, t)).cells.image Prod.fst)) n
+    (fun r c h => Finset.mem_insert_of_mem (Finset.mem_image.2 ⟨(r, c), (YoungDiagram.mem_cells _).2 h, rfl⟩))
+    h1 hdegree hn
 
 end PI.EntAtD.W

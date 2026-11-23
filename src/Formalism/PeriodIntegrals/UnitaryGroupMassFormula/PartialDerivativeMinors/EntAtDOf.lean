@@ -58,4 +58,17 @@ theorem entAtD_of (hX : PExpCoeff) (hB : PBridge) (hC : PLapComm) (hM : PMinorAf
     (hF : PLapForms) : PI.EntAtD.EntAtD :=
   entAtD_of_core (core_of (expand_of hX) (vanish_of hB hC (lapZero_of hM hS hF)))
 
+theorem entAtD_of_all_rows (hX : PExpCoeff) (hB : PBridge) (hC : PLapComm) : PI.EntAtD.EntAtD := by
+  apply entAtD_of_core
+  intro H _ _ N0 N1 p _ nu Th hTh
+  have h := core_of_rowContractionBound (expand_of hX) hB hC H N0 N1 p nu Th hTh
+  have hsum : (∑ t : H, (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ)) ≤
+      ∑ t : H, (cPr (nu (false, t)) (nu (true, t)) : ℝ) :=
+    Finset.sum_le_sum fun t _ => by exact_mod_cast rowContractionBound_le_cPr (nu (false, t)) (nu (true, t))
+  have hp : (1 : ℝ) ≤ p := by exact_mod_cast (Fact.out : p.Prime).one_lt.le
+  intro I m
+  refine (h I m).trans ?_
+  apply Real.rpow_le_rpow_of_exponent_le hp
+  linarith
+
 end PI.EntAtD.W

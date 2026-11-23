@@ -66,6 +66,25 @@ theorem card_cells_eq_sum_rowLen (α : YoungDiagram) (n : ℕ) (h : ∀ r, n ≤
     rw [YoungDiagram.mem_iff_lt_rowLen] at hx'
     omega
 
+theorem rowContractionBound_le_cPr (α β : YoungDiagram) :
+    rowContractionBound α β ≤ cPr α β := by
+  let rows := insert 0 (α.cells.image Prod.fst)
+  have h0 : 0 ∈ rows := Finset.mem_insert_self _ _
+  have hcard : α.cells.card = ∑ r ∈ rows, α.rowLen r := by
+    rw [Finset.card_eq_sum_card_fiberwise (f := Prod.fst) (t := rows)]
+    · refine Finset.sum_congr rfl fun r _ => ?_
+      rw [YoungDiagram.rowLen_eq_card]
+      rfl
+    · intro x hx
+      exact Finset.mem_insert_of_mem (Finset.mem_image_of_mem Prod.fst hx)
+  have hrest : (∑ r ∈ rows.erase 0, min (α.rowLen r) (β.rowLen 0)) ≤
+      ∑ r ∈ rows.erase 0, α.rowLen r :=
+    Finset.sum_le_sum fun _ _ => min_le_left _ _
+  change (∑ r ∈ rows, min (α.rowLen r) (β.rowLen 0)) ≤ cPr α β
+  rw [cPr, hcard, ← Finset.add_sum_erase rows α.rowLen h0,
+    ← Finset.add_sum_erase rows (fun r => min (α.rowLen r) (β.rowLen 0)) h0]
+  omega
+
 theorem cPr_le_ctD (D : D7) (u : D.what₂.Word) (i : ℕ) (nu : Pl D → YoungDiagram)
     (hrow : ∀ z r, (((nu z).rowLen r : ℕ) : ℝ) =
       if r < D.R.N i then DV.nuRow D u (i + 1) (tauPl D z) r else 0)

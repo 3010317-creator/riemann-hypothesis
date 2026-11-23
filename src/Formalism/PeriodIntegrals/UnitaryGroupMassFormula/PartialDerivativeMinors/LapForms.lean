@@ -336,6 +336,131 @@ lemma lap_tm_zero (t : H) (n : ℕ) :
       | smul a x _ hx => rw [map_smul, hx, smul_zero]
     exact key _ (gf_mem t L h k hh hk)
 
+private def rowCount (L : List (ℕ × Fin N1)) (r : ℕ) : ℕ :=
+  (L.map Prod.fst).count r
+
+private theorem rowCount_cons (c : ℕ × Fin N1) (L : List (ℕ × Fin N1)) (r : ℕ) :
+    rowCount (c :: L) r = rowCount L r + if c.1 = r then 1 else 0 := by
+  simp [rowCount, List.count_cons]
+
+private def RowStep (L' : List (ℕ × Fin N1)) (degree' : ℕ → ℕ)
+    (L : List (ℕ × Fin N1)) (degree : ℕ → ℕ) (rows : Finset ℕ) : Prop :=
+  ∃ r ∈ rows, ∀ j,
+    rowCount L' j + (if j = r then 1 else 0) ≤ rowCount L j ∧
+      degree' j + (if j = r then 1 else 0) ≤ degree j
+
+private theorem rowStep_budget_lt {L' L : List (ℕ × Fin N1)} {degree' degree : ℕ → ℕ}
+    {rows : Finset ℕ} (h : RowStep L' degree' L degree rows) :
+    (∑ j ∈ rows, min (rowCount L' j) (degree' j)) <
+      ∑ j ∈ rows, min (rowCount L j) (degree j) := by
+  obtain ⟨r, hr, h⟩ := h
+  refine Finset.sum_lt_sum (fun j _ => ?_) ⟨r, hr, ?_⟩
+  · obtain ⟨hcount, hdegree⟩ := h j
+    omega
+  · obtain ⟨hcount, hdegree⟩ := h r
+    simp at hcount hdegree
+    omega
+
+private def RowGenerators (t : H) (L : List (ℕ × Fin N1)) (degree : ℕ → ℕ)
+    (rows : Finset ℕ) : Set (PolyXZ H N0 N1) :=
+  {Q | ∃ (L' : List (ℕ × Fin N1)) (h' : PolyXZ H N0 N1) (degree' : ℕ → ℕ),
+    Q = tmL t L' h' ∧ (∀ c ∈ L', c.1 ∈ rows) ∧
+    (∀ a b, pderiv (Sum.inr ((false, t), a, b)) h' = 0) ∧
+    (∀ r, SDegD (fun b : Fin N1 => dRow (N0 := N0) t r b) (degree' r) h') ∧
+    RowStep L' degree' L degree rows}
+
+private theorem gf_mem_rows (t : H) (rows : Finset ℕ) (L : List (ℕ × Fin N1)) :
+    ∀ (h : PolyXZ H N0 N1) (degree : ℕ → ℕ), (∀ c ∈ L, c.1 ∈ rows) →
+      (∀ a b, pderiv (Sum.inr ((false, t), a, b)) h = 0) →
+      (∀ r, SDegD (fun b : Fin N1 => dRow (N0 := N0) t r b) (degree r) h) →
+      Gf t (L.map (lfo (N0 := N0) t)).prod h ∈ Submodule.span ℤ (RowGenerators t L degree rows) := by
+  induction L with
+  | nil =>
+    intro h degree _ _ _
+    simp [Gf]
+  | cons c L ih =>
+    intro h degree hrows hh hdegree
+    have hc : c.1 ∈ rows := hrows c (by simp)
+    have hL : ∀ e ∈ L, e.1 ∈ rows := fun e he => hrows e (List.mem_cons_of_mem _ he)
+    rw [List.map_cons, List.prod_cons, Gf_cons]
+    apply add_mem
+    · cases hcap : degree c.1 with
+      | zero =>
+        have hz := hdegree c.1
+        rw [hcap] at hz
+        rw [show dRow (N0 := N0) t c.1 c.2 h = 0 from hz c.2, mul_zero]
+        exact zero_mem _
+      | succ k =>
+        let degree' : ℕ → ℕ := fun r => if r = c.1 then k else degree r
+        apply Submodule.subset_span
+        refine ⟨L, dRow (N0 := N0) t c.1 c.2 h, degree', rfl, hL, zf_dRow t _ _ h hh, ?_, ?_⟩
+        · intro r
+          by_cases hr : r = c.1
+          · subst r
+            have hlocal := hdegree c.1
+            rw [hcap] at hlocal
+            have hself : degree' c.1 = k := by simp [degree']
+            rw [hself]
+            exact hlocal c.2
+          · simpa [degree', hr] using
+              sdeg_comm _ (dRow (N0 := N0) t c.1 c.2) (fun j x => dRow_comm t r j c.1 c.2 x)
+                (map_zero _) (degree r) h (hdegree r)
+        · refine ⟨c.1, hc, fun r => ?_⟩
+          rw [rowCount_cons]
+          by_cases hr : r = c.1
+          · subst r
+            simp [degree', hcap]
+          · have hrc : c.1 ≠ r := Ne.symm hr
+            simp [degree', hr, hrc]
+    · have key : ∀ x ∈ Submodule.span ℤ (RowGenerators (N0 := N0) t L degree rows),
+          lfo t c * x ∈ Submodule.span ℤ (RowGenerators (N0 := N0) t (c :: L) degree rows) := by
+        intro x hx
+        induction hx using Submodule.span_induction with
+        | mem x hx =>
+          obtain ⟨L', h', degree', rfl, hrows', hz, hd, r, hr, hstep⟩ := hx
+          apply Submodule.subset_span
+          refine ⟨c :: L', h', degree', ?_, ?_, hz, hd, r, hr, ?_⟩
+          · simp only [tmL, List.map_cons, List.prod_cons, mul_assoc]
+          · intro e he
+            rcases List.mem_cons.1 he with rfl | he
+            · exact hc
+            · exact hrows' e he
+          · intro j
+            obtain ⟨hcount, hdegree⟩ := hstep j
+            rw [rowCount_cons, rowCount_cons]
+            exact ⟨by omega, hdegree⟩
+        | zero => rw [mul_zero]; exact zero_mem _
+        | add x y _ _ hx hy => rw [mul_add]; exact add_mem hx hy
+        | smul a x _ hx => rw [mul_smul_comm]; exact Submodule.smul_mem _ a hx
+      exact key _ (ih h degree hL hh hdegree)
+
+private theorem lap_tm_rows_zero (t : H) (rows : Finset ℕ) (n : ℕ) :
+    ∀ (L : List (ℕ × Fin N1)) (h : PolyXZ H N0 N1) (degree : ℕ → ℕ),
+      (∀ c ∈ L, c.1 ∈ rows) →
+      (∀ a b, pderiv (Sum.inr ((false, t), a, b)) h = 0) →
+      (∀ r, SDegD (fun b : Fin N1 => dRow (N0 := N0) t r b) (degree r) h) →
+      (∑ r ∈ rows, min (rowCount L r) (degree r)) < n →
+      (lapT N0 N1 t ^ n) (tmL t L h) = 0 := by
+  induction n with
+  | zero => intro L h degree _ _ _ hb; omega
+  | succ n ih =>
+    intro L h degree hrows hh hdegree hb
+    rw [pow_succ, Module.End.mul_apply]
+    have e : lapT N0 N1 t (tmL t L h) = Gf t (L.map (lfo (N0 := N0) t)).prod h :=
+      lap_mul t _ h (pw_prod t L) hh
+    rw [e]
+    have key : ∀ x ∈ Submodule.span ℤ (RowGenerators (N0 := N0) t L degree rows),
+        (lapT N0 N1 t ^ n) x = 0 := by
+      intro x hx
+      induction hx using Submodule.span_induction with
+      | mem x hx =>
+        obtain ⟨L', h', degree', rfl, hrows', hz, hd, hstep⟩ := hx
+        exact ih L' h' degree' hrows' hz hd (by have := rowStep_budget_lt hstep; omega)
+      | zero => exact map_zero _
+      | add x y _ _ hx hy => rw [map_add (f := _), hx, hy, add_zero]
+      | smul a x _ hx => rw [map_smul, hx, smul_zero]
+    exact key _ (gf_mem_rows t rows L h degree hrows hh hdegree)
+
 def MS (t : H) (a b : ℕ) : Submodule ℤ (PolyXZ H N0 N1) :=
   Submodule.span ℤ {Q | ∃ L : List (ℕ × Fin N1), Q = tmL t L 1 ∧ nzc L = a ∧ z0c L = b}
 
@@ -438,6 +563,126 @@ theorem pLapForms : PLapForms := by
     | zero => rw [zero_mul, map_zero]
     | add x y _ _ hx hy => rw [add_mul, map_add (f := _), hx, hy, add_zero]
     | smul r x _ hx => rw [smul_mul_assoc, map_smul, hx, smul_zero]
+  exact key _ hF
+
+private def RowSpan (t : H) (rows : Finset ℕ) (counts : ℕ → ℕ) :
+    Submodule ℤ (PolyXZ H N0 N1) :=
+  Submodule.span ℤ {Q | ∃ L : List (ℕ × Fin N1), Q = tmL t L 1 ∧
+    (∀ c ∈ L, c.1 ∈ rows) ∧ ∀ r, rowCount L r = counts r}
+
+private theorem rowSpan_mul (t : H) (rows : Finset ℕ) {a b : ℕ → ℕ} {P Q : PolyXZ H N0 N1}
+    (hP : P ∈ RowSpan t rows a) (hQ : Q ∈ RowSpan t rows b) :
+    P * Q ∈ RowSpan t rows (fun r => a r + b r) := by
+  induction hP using Submodule.span_induction with
+  | mem P hP =>
+    obtain ⟨L, rfl, hL, eL⟩ := hP
+    induction hQ using Submodule.span_induction with
+    | mem Q hQ =>
+      obtain ⟨M, rfl, hM, eM⟩ := hQ
+      apply Submodule.subset_span
+      refine ⟨L ++ M, by simp [tmL], ?_, ?_⟩
+      · intro c hc
+        exact (List.mem_append.1 hc).elim (hL c) (hM c)
+      · intro r
+        simp only [rowCount, List.map_append, List.count_append]
+        exact congrArg₂ (· + ·) (eL r) (eM r)
+    | zero => rw [mul_zero]; exact zero_mem _
+    | add x y _ _ hx hy => rw [mul_add]; exact add_mem hx hy
+    | smul a x _ hx => rw [mul_smul_comm]; exact Submodule.smul_mem _ a hx
+  | zero => rw [zero_mul]; exact zero_mem _
+  | add x y _ _ hx hy => rw [add_mul]; exact add_mem hx hy
+  | smul a x _ hx => rw [smul_mul_assoc]; exact Submodule.smul_mem _ a hx
+
+private theorem rowSpan_prod (t : H) (rows : Finset ℕ) {ι : Type} (s : Finset ι)
+    (f : ι → PolyXZ H N0 N1) (counts : ι → ℕ → ℕ)
+    (h : ∀ i ∈ s, f i ∈ RowSpan t rows (counts i)) :
+    (∏ i ∈ s, f i) ∈ RowSpan t rows (fun r => ∑ i ∈ s, counts i r) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+    simp only [Finset.prod_empty, Finset.sum_empty]
+    apply Submodule.subset_span
+    exact ⟨[], by simp [tmL], by simp, by simp [rowCount]⟩
+  | insert i s hi ih =>
+    simp only [Finset.prod_insert hi, Finset.sum_insert hi]
+    exact rowSpan_mul t rows (h i (Finset.mem_insert_self i s))
+      (ih (fun j hj => h j (Finset.mem_insert_of_mem hj)))
+
+private theorem rowCount_ofFn {p : ℕ} (g : Fin p → ℕ × Fin N1) (r : ℕ) :
+    rowCount (List.ofFn g) r = ∑ i : Fin p, (if (g i).1 = r then 1 else 0) := by
+  induction p with
+  | zero => simp [rowCount]
+  | succ p ih =>
+    rw [List.ofFn_succ, rowCount_cons, ih, Fin.sum_univ_succ, add_comm]
+
+private theorem minor_mem_rows (t : H) (rows : Finset ℕ) (p : ℕ)
+    (hp : ∀ r < p, r ∈ rows) (I : Fin p ↪o Fin N1) :
+    minorXZ (Lt := Bool × H) N0 N1 (false, t) p I ∈
+      RowSpan t rows (fun r => if r < p then 1 else 0) := by
+  classical
+  unfold minorXZ
+  rw [Matrix.det_apply]
+  apply Submodule.sum_mem
+  intro σ _
+  rw [Units.smul_def]
+  apply Submodule.smul_mem
+  apply Submodule.subset_span
+  refine ⟨List.ofFn fun i : Fin p => (((σ i : Fin p) : ℕ), I i), ?_, ?_, ?_⟩
+  · simp only [tmL, List.map_ofFn, List.prod_ofFn, mul_one, Matrix.of_apply]
+    rfl
+  · intro c hc
+    obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hc
+    exact hp _ (σ i).2
+  · intro r
+    rw [rowCount_ofFn, Equiv.sum_comp σ (fun j : Fin p => if (j : ℕ) = r then 1 else 0)]
+    change (∑ j : Fin p, if (j : ℕ) = r then 1 else 0) = (if r < p then 1 else 0)
+    by_cases hr : r < p
+    · rw [ite_eq_left hr, Finset.sum_eq_single ⟨r, hr⟩]
+      · simp
+      · intro j _ hj
+        exact ite_eq_right (fun e => hj (Fin.ext e))
+      · simp
+    · rw [ite_eq_right hr]
+      apply Finset.sum_eq_zero
+      intro j _
+      exact ite_eq_right (fun e => hr (by simpa only [e] using j.2))
+
+theorem lap_product_minors_rows_zero (t : H) (α : YoungDiagram)
+    (I : ∀ c : Fin (α.rowLen 0), Fin (α.colLen c) ↪o Fin N1)
+    (g : PolyXZ H N0 N1) (degree : ℕ → ℕ) (rows : Finset ℕ) (n : ℕ)
+    (hrows : ∀ r c, (r, c) ∈ α → r ∈ rows)
+    (hg : ∀ a b, pderiv (Sum.inr ((false, t), a, b)) g = 0)
+    (hdegree : ∀ r, SDegD (fun b : Fin N1 => dRow (N0 := N0) t r b) (degree r) g)
+    (hn : (∑ r ∈ rows, min (α.rowLen r) (degree r)) < n) :
+    (lapT N0 N1 t ^ n) ((∏ c : Fin (α.rowLen 0),
+      minorXZ (Lt := Bool × H) N0 N1 (false, t) (α.colLen c) (I c)) * g) = 0 := by
+  classical
+  let counts : ℕ → ℕ := fun r => ∑ c : Fin (α.rowLen 0), if r < α.colLen c then 1 else 0
+  have hF : (∏ c : Fin (α.rowLen 0), minorXZ (Lt := Bool × H) N0 N1 (false, t) (α.colLen c) (I c)) ∈
+      RowSpan t rows counts :=
+    rowSpan_prod t rows Finset.univ _ _ fun c _ =>
+      minor_mem_rows t rows _ (fun r hr => hrows r c (YoungDiagram.mem_iff_lt_colLen.mpr hr)) (I c)
+  have hcounts (r : ℕ) : counts r ≤ α.rowLen r := by
+    unfold counts
+    rw [Finset.sum_boole, ← Finset.card_range (α.rowLen r)]
+    apply Finset.card_le_card_of_injOn (fun c : Fin (α.rowLen 0) => (c : ℕ))
+    · intro c hc
+      have hr := (Finset.mem_filter.1 hc).2
+      exact Finset.mem_range.2 (YoungDiagram.mem_iff_lt_rowLen.1 (YoungDiagram.mem_iff_lt_colLen.2 hr))
+    · intro a _ b _ e
+      exact Fin.ext e
+  have key : ∀ x ∈ RowSpan (N0 := N0) (N1 := N1) t rows counts, (lapT N0 N1 t ^ n) (x * g) = 0 := by
+    intro x hx
+    induction hx using Submodule.span_induction with
+    | mem x hx =>
+      obtain ⟨L, rfl, hL, eL⟩ := hx
+      have e : tmL t L 1 * g = tmL t L g := by simp [tmL]
+      rw [e]
+      refine lap_tm_rows_zero t rows n L g degree hL hg hdegree (lt_of_le_of_lt ?_ hn)
+      exact Finset.sum_le_sum fun r _ => by rw [eL]; exact min_le_min_right _ (hcounts r)
+    | zero => rw [zero_mul, map_zero]
+    | add x y _ _ hx hy => rw [add_mul, map_add (f := _), hx, hy, add_zero]
+    | smul a x _ hx => rw [smul_mul_assoc, map_smul, hx, smul_zero]
   exact key _ hF
 
 end LapFormsSec

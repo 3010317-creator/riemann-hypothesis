@@ -1,6 +1,7 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.PMinorAff
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.Vanish
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,20 +86,42 @@ theorem coreTerm_le {H : Type} [Fintype H] (p : ℕ) [Fact p.Prime] (S : ℂ_[p]
         exact mul_nonneg zero_le_one (Real.rpow_nonneg hp0.le _)
     _ = _ := by ring
 
-theorem core_of (hE : PExpand) (hV : PVanish) : CoreBound := by
-  intro H _ _ N0 N1 p _ nu Th hTh I m
+private theorem core_of_cutoff (hE : PExpand)
+    (cutoff : YoungDiagram → YoungDiagram → ℕ)
+    (hV : ∀ (H : Type) [Fintype H] [DecidableEq H] (N0 N1 : ℕ)
+      (nu : Bool × H → YoungDiagram) (I : ColChoice N1 nu)
+      (m : XV H N0 →₀ ℕ) (κ2 : ZV H N0 N1 →₀ ℕ) (n : H → ℕ) (t : H),
+      cutoff (nu (false, t)) (nu (true, t)) < n t → Acon (Gxz N0 N1 nu I) m κ2 n = 0)
+    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 p : ℕ) [Fact p.Prime]
+    (nu : Bool × H → YoungDiagram) (Th : MvPowerSeries (ZV H N0 N1) ℂ_[p])
+    (hTh : ShapeH H p Th) :
+    KvalGe N0 N1 p nu Th (-((∑ t : H, (cutoff (nu (false, t)) (nu (true, t)) : ℝ)) / 2)) := by
+  intro I m
   obtain ⟨S, hS, ut, hut, sg, hsg, rfl⟩ := hTh
   rw [hE H N0 N1 p S ut sg (Gxz N0 N1 nu I) m, neg_neg]
   have hp0 : (0 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
-  have hB0 : (0 : ℝ) ≤ (p : ℝ) ^ ((∑ t : H, (cPr (nu (false, t)) (nu (true, t)) : ℝ)) / 2) :=
+  have hB0 : (0 : ℝ) ≤ (p : ℝ) ^ ((∑ t : H, (cutoff (nu (false, t)) (nu (true, t)) : ℝ)) / 2) :=
     Real.rpow_nonneg hp0.le _
   refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg hB0 (fun κ2 _ => ?_)
   refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg hB0 (fun n _ => ?_)
-  by_cases hn : ∃ t, cPr (nu (false, t)) (nu (true, t)) < n t
+  by_cases hn : ∃ t, cutoff (nu (false, t)) (nu (true, t)) < n t
   · obtain ⟨t, ht⟩ := hn
     rw [hV H N0 N1 nu I m κ2 n t ht]
     simpa using hB0
   · simp only [not_exists, not_lt] at hn
-    exact coreTerm_le p S ut hS hut _ (hsg κ2) _ n (fun t => cPr (nu (false, t)) (nu (true, t))) hn
+    exact coreTerm_le p S ut hS hut _ (hsg κ2) _ n (fun t => cutoff (nu (false, t)) (nu (true, t))) hn
+
+theorem core_of (hE : PExpand) (hV : PVanish) : CoreBound := by
+  intro H _ _ N0 N1 p _ nu Th hTh
+  exact core_of_cutoff hE cPr hV H N0 N1 p nu Th hTh
+
+/-- The discriminant-place kernel bound using all rows of the diagrams. -/
+theorem core_of_rowContractionBound (hE : PExpand) (hB : PBridge) (hC : PLapComm)
+    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 p : ℕ) [Fact p.Prime]
+    (nu : Bool × H → YoungDiagram) (Th : MvPowerSeries (ZV H N0 N1) ℂ_[p])
+    (hTh : ShapeH H p Th) :
+    KvalGe N0 N1 p nu Th
+      (-((∑ t : H, (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ)) / 2)) :=
+  core_of_cutoff hE rowContractionBound (acon_eq_zero_of_rowContractionBound hB hC) H N0 N1 p nu Th hTh
 
 end PI.EntAtD.W

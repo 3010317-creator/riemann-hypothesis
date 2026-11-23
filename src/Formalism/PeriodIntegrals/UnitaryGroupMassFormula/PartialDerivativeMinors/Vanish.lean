@@ -1,6 +1,7 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.PMinorAff
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PartialDerivativeMinors.HeartPderivMinor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,8 +68,11 @@ theorem list_prod_eq_mul_of_mem {M : Type} [Monoid M] (x : M) :
     · obtain ⟨r, hr⟩ := ih hc' h
       exact ⟨a * r, by rw [List.prod_cons, hr, mul_assoc]⟩
 
-theorem vanish_of (hB : PBridge) (hC : PLapComm) (hZ : PLapZero) : PVanish := by
-  intro H _ _ N0 N1 nu I m κ2 n t ht
+private theorem acon_eq_zero_of_lapT_pow (hB : PBridge) (hC : PLapComm)
+    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 : ℕ) (nu : Bool × H → YoungDiagram)
+    (I : ColChoice N1 nu) (m : XV H N0 →₀ ℕ) (κ2 : ZV H N0 N1 →₀ ℕ) (n : H → ℕ) (t : H)
+    (hZ : (lapT N0 N1 t ^ n t) (Gxz N0 N1 nu I) = 0) :
+    Acon (Gxz N0 N1 nu I) m κ2 n = 0 := by
   have hzero : lapAll N0 N1 n (Gxz N0 N1 nu I) = 0 := by
     obtain ⟨r, hr⟩ := list_prod_eq_mul_of_mem (lapT (H := H) N0 N1 t ^ n t)
       ((Finset.univ : Finset H).toList.map fun t => lapT N0 N1 t ^ n t)
@@ -77,11 +81,24 @@ theorem vanish_of (hB : PBridge) (hC : PLapComm) (hZ : PLapZero) : PVanish := by
         exact (hC H N0 N1 t' t).pow_pow _ _)
       (List.mem_map.2 ⟨t, Finset.mem_toList.2 (Finset.mem_univ t), rfl⟩)
     unfold lapAll
-    rw [hr, mul_apply_eq_comp, hZ H N0 N1 nu I t (n t) ht, map_zero]
+    rw [hr, mul_apply_eq_comp, hZ, map_zero]
   have h := hB H N0 N1 (Gxz N0 N1 nu I) m κ2 n
   rw [hzero, AddMonoidAlgebra.coeff_zero] at h
   rcases mul_eq_zero.1 h with h | h
   · exact absurd h (Finset.prod_ne_zero_iff.2 fun t' _ => by exact_mod_cast (Nat.factorial_ne_zero (n t')))
   · exact h
+
+theorem vanish_of (hB : PBridge) (hC : PLapComm) (hZ : PLapZero) : PVanish := by
+  intro H _ _ N0 N1 nu I m κ2 n t ht
+  exact acon_eq_zero_of_lapT_pow hB hC H N0 N1 nu I m κ2 n t (hZ H N0 N1 nu I t (n t) ht)
+
+/-- Terms beyond the row-by-row contraction bound vanish in the kernel expansion. -/
+theorem acon_eq_zero_of_rowContractionBound (hB : PBridge) (hC : PLapComm)
+    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 : ℕ) (nu : Bool × H → YoungDiagram)
+    (I : ColChoice N1 nu) (m : XV H N0 →₀ ℕ) (κ2 : ZV H N0 N1 →₀ ℕ) (n : H → ℕ) (t : H)
+    (ht : rowContractionBound (nu (false, t)) (nu (true, t)) < n t) :
+    Acon (Gxz N0 N1 nu I) m κ2 n = 0 :=
+  acon_eq_zero_of_lapT_pow hB hC H N0 N1 nu I m κ2 n t
+    (lapT_pow_Gxz_eq_zero_of_rowContractionBound H N0 N1 nu I t (n t) ht)
 
 end PI.EntAtD.W
