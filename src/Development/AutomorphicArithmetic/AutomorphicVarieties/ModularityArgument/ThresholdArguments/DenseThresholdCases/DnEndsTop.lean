@@ -472,7 +472,9 @@ private theorem lie_one (φ : TR.Sm ℚ 2) (h : ∀ v, TR.Eop v 0 0 φ + TR.Eop 
   rw [hX, Fin.sum_univ_two, h1, h1]
   exact h _
 private theorem ev_not_dvd {a : ℕ} (h : a ≠ 0) : ∀ᶠ w : Pl ℚ in Filter.cofinite, ¬ normV w ∣ a := by
-  have h0 : Ideal.span {(a : 𝓞 ℚ)} ≠ 0 := by simpa using h
+  have h0 : Ideal.span {(a : 𝓞 ℚ)} ≠ 0 := by
+    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+    exact_mod_cast h
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors h0).subset fun w hw => ?_)
   obtain ⟨c, rfl⟩ := not_not.1 hw
   refine Ideal.dvd_span_singleton.2 ?_
@@ -964,7 +966,7 @@ private theorem isoOfFrobOne (F Ω : Type) [Field F] [NumberField F] [Field Ω] 
     have h := ((hB A hA).2 σ hσ).trans ((hB' A hA).2 σ hσ).symm
     have h' := Polynomial.map_injective ι.toRingHom ι.injective h
     simp only [h']
-  obtain ⟨P, hP⟩ := Formalism.MainNotions.SumRepresentations.brauerNesbitt_matrix r r' hs hs' (fun g => by simpa using hc g⁻¹)
+  obtain ⟨P, hP⟩ := Formalism.MainNotions.SumRepresentations.brauerNesbitt_matrix r r' hs hs' (fun g => by have := hc g⁻¹; rwa [inv_inv] at this)
   exact ⟨P⁻¹, fun s => by rw [hP s, inv_inv]⟩
 private theorem normV_one {K K' : Type} [Field K] [NumberField K] [Field K'] [NumberField K'] [Algebra K K']
     (w : HeightOneSpectrum (𝓞 K')) (h : w.asIdeal.inertiaDeg ℤ = 1) : normV w = normV (w.under (𝓞 K)) := by
