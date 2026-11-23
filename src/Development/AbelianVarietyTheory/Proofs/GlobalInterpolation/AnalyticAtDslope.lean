@@ -62,14 +62,10 @@ open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology
 namespace GlobalTheory.ExplicitRect
 
 theorem analyticAt_dslope {f : ℂ → ℂ} {p : ℂ} (hf : AnalyticAt ℂ f p) :
-    AnalyticAt ℂ (dslope f p) p := by
-  obtain ⟨q, hq⟩ := hf
-  exact ⟨_, hq.has_fpower_series_dslope_fslope⟩
+    AnalyticAt ℂ (dslope f p) p := hf.dslope p
 
 theorem eq_add_dslope (f : ℂ → ℂ) (p s : ℂ) : f s = f p + (s - p) * dslope f p s := by
-  have h := sub_smul_dslope f p s
-  rw [smul_eq_mul] at h
-  linear_combination -h
+  simpa only [smul_eq_mul, add_comm] using (eq_add_of_sub_eq (sub_smul_dslope f p s).symm)
 
 theorem logDeriv_pole {f : ℂ → ℂ} {p : ℂ} (hf : AnalyticAt ℂ f p)
     (hn : analyticOrderAt f p ≠ ⊤) : ∃ g : ℂ → ℂ, AnalyticAt ℂ g p ∧ ∀ᶠ s in 𝓝[≠] p,
@@ -97,29 +93,18 @@ theorem expand_zero {φ h : ℂ → ℂ} {m : ℂ} {u : ℝ} (hu : 0 < u)
       -(φ s) * (u : ℂ) ^ s / s =
         a / (s - 0) ^ 2 + (-(m * (Real.log u : ℂ) + h 0)) / (s - 0) + G s := by
   have hE : AnalyticAt ℂ (fun s : ℂ => (u : ℂ) ^ s) 0 := analyticAt_cpow hu 0
-  have hD1 := analyticAt_dslope hE
-  have hD2 := analyticAt_dslope hD1
-  have hDh := analyticAt_dslope hh
   have hD10 : dslope (fun s : ℂ => (u : ℂ) ^ s) 0 0 = (Real.log u : ℂ) := by
     rw [dslope_same]
     have hu0 : (u : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hu.ne'
     rw [(hasStrictDerivAt_const_cpow (x := (u : ℂ)) (y := 0) (.inl hu0)).hasDerivAt.deriv,
       Complex.cpow_zero, one_mul, Complex.ofReal_log hu.le]
-  refine ⟨-m, fun s => -(m * dslope (dslope (fun s : ℂ => (u : ℂ) ^ s) 0) 0 s + dslope h 0 s +
-      h s * (Real.log u : ℂ) + h s * s * dslope (dslope (fun s : ℂ => (u : ℂ) ^ s) 0) 0 s),
-    ((((analyticAt_const.mul hD2).add hDh).add (hh.mul analyticAt_const)).add
-      ((hh.mul analyticAt_id).mul hD2)).neg, ?_⟩
+  refine ⟨-m, fun s => -(m * dslope (dslope (fun s : ℂ => (u : ℂ) ^ s) 0) 0 s +
+      dslope (fun s : ℂ => h s * (u : ℂ) ^ s) 0 s),
+    ((analyticAt_const.mul ((hE.dslope 0).dslope 0)).add ((hh.mul hE).dslope 0)).neg, ?_⟩
   filter_upwards [hφ, self_mem_nhdsWithin] with s hs hs0
-  have hs0' : s ≠ 0 := hs0
-  have e1 := eq_add_dslope (fun s : ℂ => (u : ℂ) ^ s) 0 s
-  have e2 := eq_add_dslope (dslope (fun s : ℂ => (u : ℂ) ^ s) 0) 0 s
-  have eh := eq_add_dslope h 0 s
-  simp only [Complex.cpow_zero, sub_zero] at e1 e2 eh
-  rw [hD10] at e2
-  rw [hs, e1, e2]
-  simp only [sub_zero]
-  rw [eh]
-  field_simp
+  rw [hs]
+  simp only [dslope_of_ne _ hs0, slope_def_field, sub_zero, Complex.cpow_zero, hD10, mul_one]
+  field_simp [show s ≠ 0 from hs0]
   ring
 
 theorem analyticOff {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) :

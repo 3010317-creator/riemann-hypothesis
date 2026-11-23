@@ -77,29 +77,17 @@ lemma perron_integrand_residue_at_one {q : ℕ} [NeZero q] {χ : DirichletCharac
     (hy : 0 < y) :
     ∃ A : ℂ → ℂ, DifferentiableAt ℂ A 1 ∧
       ∀ᶠ z in 𝓝[≠] (1 : ℂ), Fchi χ y z - negLD χ 1 * (y : ℂ) / (z - 1) = A z := by
-  have hLd := DirichletCharacter.differentiable_LFunction hχ
+  have hL := (DirichletCharacter.differentiable_LFunction hχ).analyticAt 1
   have hL1 : DirichletCharacter.LFunction χ 1 ≠ 0 := DirichletCharacter.LFunction_apply_one_ne_zero hχ
-  have hy' : (y : ℂ) ≠ 0 := by exact_mod_cast hy.ne'
-  set h : ℂ → ℂ := fun z => negLD χ z * (y : ℂ) ^ z / z with hh
-  have hs : IsOpen {z : ℂ | DirichletCharacter.LFunction χ z ≠ 0 ∧ z ≠ 0} :=
-    (isOpen_ne.preimage hLd.continuous).inter isOpen_ne
-  have h1s : (1 : ℂ) ∈ {z : ℂ | DirichletCharacter.LFunction χ z ≠ 0 ∧ z ≠ 0} := ⟨hL1, one_ne_zero⟩
-  have hdiff : DifferentiableOn ℂ h {z : ℂ | DirichletCharacter.LFunction χ z ≠ 0 ∧ z ≠ 0} := by
-    intro z hz
-    exact (((neg_log_deriv_differentiableAt hχ hz.1).mul
-      (DifferentiableAt.const_cpow (f := fun w => w) differentiableAt_id (Or.inl hy'))).div
-        differentiableAt_id hz.2).differentiableWithinAt
-  refine ⟨dslope h 1,
-    ((Complex.differentiableOn_dslope (hs.mem_nhds h1s)).2 hdiff).differentiableAt (hs.mem_nhds h1s), ?_⟩
-  have hev : ∀ᶠ z in 𝓝[≠] (1 : ℂ), z ≠ 1 ∧ z ≠ 0 := by
-    filter_upwards [self_mem_nhdsWithin,
-      nhdsWithin_le_nhds (isOpen_ne.mem_nhds (one_ne_zero : (1 : ℂ) ≠ 0))] with z hz1 hz0
-    exact ⟨hz1, hz0⟩
-  filter_upwards [hev] with z hz
-  obtain ⟨hz1, hz0⟩ := hz
-  rw [dslope_of_ne _ hz1, slope_def_field]
-  simp only [hh, Fchi, cpow_one, div_one]
-  field_simp [sub_ne_zero.2 hz1]
+  let H : ℂ → ℂ := fun z => negLD χ z * (y : ℂ) ^ z / z
+  have hH : AnalyticAt ℂ H 1 :=
+    (((hL.deriv.div hL hL1).neg).mul
+      (analyticAt_const.cpow analyticAt_id (Complex.ofReal_mem_slitPlane.2 hy))).div
+        analyticAt_id one_ne_zero
+  refine ⟨dslope H 1, (hH.dslope 1).differentiableAt, ?_⟩
+  filter_upwards [self_mem_nhdsWithin] with z hz
+  rw [dslope_of_ne _ hz, slope_def_field]
+  simp only [H, Fchi, cpow_one, div_one, sub_div, div_mul_eq_div_div]
 
 lemma perron_integrand_residue_real_zero {q : ℕ} [NeZero q] {χ : DirichletCharacter ℂ q} (hχ : χ ≠ 1) {y : ℝ}
     (hy : 0 < y) {β : ℂ} (h0 : 0 < β.re) (h1 : β ≠ 1)
