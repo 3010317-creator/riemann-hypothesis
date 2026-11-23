@@ -914,7 +914,7 @@ theorem latV_measurable {F E : Type} [Field F] [NumberField F] [Field E] [Number
     (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n M : ℕ)
     (v : HeightOneSpectrum (𝓞 F)) : MeasurableSet (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
+  haveI := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
   exact (((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M).2.2.2.1 v).2).measurableSet
 
 theorem fam_inf {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
