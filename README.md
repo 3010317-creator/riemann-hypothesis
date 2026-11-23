@@ -6,9 +6,6 @@
 A community-led effort to clean up and maintain a Lean formalization of the Riemann Hypothesis,
 and of GRH for Dirichlet L-functions. The `original` branch contains the first commit as retrieved on 2026-11-20 from <https://alpo.ge/remark.pdf>
 
-Docstrings under `src/` cite published works; the bibliography is
-[`docs/references.bib`](docs/references.bib).
-
 ## Theorem Statements
 
 `src/Main.lean` proves the following theorems (see [`src/Challenge.lean`](src/Challenge.lean)):
