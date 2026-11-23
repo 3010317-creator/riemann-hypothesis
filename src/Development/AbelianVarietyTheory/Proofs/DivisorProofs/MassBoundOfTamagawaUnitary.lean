@@ -1277,7 +1277,7 @@ theorem GlobalTheory.UCls.exists_special_reduction : ∀ (E : Type) [Field E] [N
       rw [Matrix.mul_assoc, hR1, Matrix.mul_one]
     have hXY : (hat (maximalRealSubfield E) (Λi i : Set (Fin r → E)) : Set (Fin r → RA (maximalRealSubfield E) E)) =
         (g i * (k i)⁻¹ * g0⁻¹).mulVec '' (hat (maximalRealSubfield E) (L : Set (Fin r → E)) : Set (Fin r → RA (maximalRealSubfield E) E)) := by
-      rw [hhat, ← isKM_image _ G _ M (isKM_inv _ G _ M hk), Set.image_image, hLhat, Set.image_image]
+      rw [hhat, ← isKM_image _ G _ M (KGrp.isKM_inv _ G _ M hk), Set.image_image, hLhat, Set.image_image]
       simp only [mulVec_mulVec, c0']
     have hsinv : (ratM (maximalRealSubfield E) (((γ i)⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) * g i *
         (k i)⁻¹ * g0⁻¹)⁻¹ = g0 * k i * (g i)⁻¹ * ratM (maximalRealSubfield E) (γ i : Matrix (Fin r) (Fin r) E) := by
@@ -1325,7 +1325,7 @@ theorem GlobalTheory.UCls.exists_special_reduction : ∀ (E : Type) [Field E] [N
       (k i)⁻¹ * (g0⁻¹ * κ * g0) * k j, ?_, ?_⟩
     · rw [ratM_mul, ratM_mul]
       exact isUA_mul _ G (isUA_mul _ G (hRA _ hγjU) hδ.1) (hRA _ (hU hγiU))
-    · exact isKM_mul _ G _ M (isKM_mul _ G _ M (isKM_inv _ G _ M hki) (isKM_conj _ G _ _ M hg0 hLhat hκ)) hkj
+    · exact KGrp.isKM_mul _ G _ M (KGrp.isKM_mul _ G _ M (KGrp.isKM_inv _ G _ M hki) (isKM_conj _ G _ _ M hg0 hLhat hκ)) hkj
     · have hdj : g j = ratM (maximalRealSubfield E) (γ j : Matrix (Fin r) (Fin r) E) *
           (ratM (maximalRealSubfield E) (((γ j)⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) * g j *
             (k j)⁻¹ * g0⁻¹) * g0 * k j := by
