@@ -169,8 +169,14 @@ private theorem exists_over (K : Type) [Field K] [NumberField K] (v : HeightOneS
     ∃ w : HeightOneSpectrum (𝓞 K), w.under (𝓞 ℚ) = v := by
   haveI := v.isMaximal
   have hker : RingHom.ker (algebraMap (𝓞 ℚ) (𝓞 K)) ≤ v.asIdeal := by
-    rw [(RingHom.injective_iff_ker_eq_bot _).1 (FaithfulSMul.algebraMap_injective (𝓞 ℚ) (𝓞 K))]
-    exact bot_le
+    intro x hx
+    have h1 : algebraMap ℚ K (algebraMap (𝓞 ℚ) ℚ x) = 0 := by
+      have := congrArg (algebraMap (𝓞 K) K) (RingHom.mem_ker.1 hx)
+      rw [map_zero] at this
+      exact this
+    have hx0 : x = 0 := RingOfIntegers.coe_eq_zero_iff.1 ((map_eq_zero _).1 h1)
+    rw [hx0]
+    exact zero_mem _
   obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) v.asIdeal hker
   refine ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, ?_⟩
   exact HeightOneSpectrum.ext hc
@@ -200,7 +206,9 @@ private theorem unl_res (r : G ℚ Ω →* GL (Fin n) (Qbar l))
     Unl1 (r.comp (AlgEquiv.restrictScalarsHom ℚ : G K Ω →* G ℚ Ω)) w := by
   intro A hA
   have hl : A.valuation (l : Ω) < 1 := by
-    simpa using (hA ((l : ℕ) : 𝓞 K)).2 hw
+    have h := (hA ((l : ℕ) : 𝓞 K)).2 hw
+    have e : ((((l : ℕ) : 𝓞 K)) : K) = (l : K) := rfl
+    rwa [e, map_natCast] at h
   have hv : ((l : ℕ) : 𝓞 ℚ) ∈ (w.under (𝓞 ℚ)).asIdeal := Ideal.mem_comap.2 (by simpa using hw)
   obtain ⟨κ, ⟨g, hg⟩, hne⟩ := hU (w.under (𝓞 ℚ)) hv A (place_under hA)
   refine ⟨fun i => (κ i).comp (resD A), ⟨g, fun u => hg (resD A u)⟩, fun i j e => hne i j ?_⟩
@@ -310,13 +318,17 @@ private theorem fix_of_dec {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : Valuatio
     have h1 : (1 : _) ≤ A.valuation (l : Ω) := by
       have h3 := (A.valuation_le_one_iff _).2 hli
       rw [map_inv₀] at h3
-      exact (inv_le_one₀ (zero_lt_iff.2 (by simpa using hl0))).1 h3
+      haveI : Nontrivial A.ValueGroup := GroupWithZero.toNontrivial
+      have hne : A.valuation (l : Ω) ≠ 0 := fun h0 =>
+        (Nat.cast_ne_zero (R := Ω)).2 hl0 ((Valuation.zero_iff A.valuation).1 h0)
+      exact (inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 h3
     exact absurd hl (not_lt.2 h1)
   · have hout : (1 - w)⁻¹ ∉ A := fun h => hin (by
       have := (hg _).2 h
       rwa [map_inv₀, hgw'] at this)
     have := Valuation.map_add_lt _ (small w hin) (small _ hout)
-    simp at this
+    rw [add_sub_cancel, map_one] at this
+    exact lt_irrefl _ this
 
 private theorem no_sq_pos {t : ℚ} {q : ℕ} (hq : q.Prime) (h : t * t = -(q : ℚ)) : False := by
   have h1 : (0 : ℚ) < q := by exact_mod_cast hq.pos
