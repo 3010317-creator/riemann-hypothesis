@@ -970,6 +970,9 @@ section -- clump:auto
 
 open GlobalTheory.SplitFlip GlobalTheory.SplitWeil
 attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL Formalism.DoubleCosetMeasures.instMeasMat
+-- Mathlib's `Matrix.instMeasurableSpace` is not reducibly defeq to the project's
+-- `matrixMeasurableSpace`, which `fFun`/`haarVol` are stated with; prefer the latter.
+attribute [local instance 2000] GlobalTheory.SplitWeil.matrixMeasurableSpace
 
 noncomputable section
 
