@@ -1358,7 +1358,7 @@ namespace UpperTheory.V.Z.Sym.Glob
 
 open NumberField IsDedekindDomain Matrix Loc MulAction Fib
 
-private lemma dx_ext {K : Type} [Field K] {Δ : K} {g g' : DX Δ} (h : mt g = mt g') : g = g' :=
+private lemma dx_ext_loc {K : Type} [Field K] {Δ : K} {g g' : DX Δ} (h : mt g = mt g') : g = g' :=
   Subtype.ext (Units.ext h)
 
 private lemma comm_abs {G A : Type} [Group G] [CommGroup A] (d : G →* A) (a b : G) : a * b * a⁻¹ * b⁻¹ ∈ d.ker := by
@@ -1394,7 +1394,7 @@ private lemma conK (bK : BaseK) (fK : FinK) (ok : D.Ok) (ι : DX Δ →* DA Δ) 
     ext γ : 1
     apply Subtype.ext
     funext v
-    apply dx_ext
+    apply dx_ext_loc
     rw [hB.ι γ v, hι γ v]
   have hU := hB.U
   have hΓ := hB.Γ₀
@@ -1416,7 +1416,7 @@ private lemma conK (bK : BaseK) (fK : FinK) (ok : D.Ok) (ι : DX Δ →* DA Δ) 
 
 private lemma bι {V : Type} [AddCommGroup V] [Module ℂ V] (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) (ch : F → ℂ) (x : DA Δ)
     (B : Base (SU Δ) (SA Δ) V) (hB : D.IsBS ch x B) (γ : SU Δ) : ((B.ι γ : SA Δ) : DA Δ) = ι γ := by
-  refine Subtype.ext (funext fun v => dx_ext ?_)
+  refine Subtype.ext (funext fun v => dx_ext_loc ?_)
   rw [hB.ι, hι]
 
 private lemma baseP (bS : BaseS) (ok : D.Ok) (x : DA Δ) : ∃ B : Base (SU Δ) (SA Δ) PUnit, D.IsBS 0 x B := by
