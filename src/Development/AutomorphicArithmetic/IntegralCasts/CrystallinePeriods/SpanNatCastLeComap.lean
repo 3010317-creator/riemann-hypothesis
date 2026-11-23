@@ -124,6 +124,14 @@ variable (U : Type w) [CommRing U] [Fact ¬IsUnit (p : U)]
 
 abbrev Tilt : Type u := PreTilt R p
 
+/-- The period ring `A_{inf} = W(R♭)` associated to the ring `R`.
+
+See [Bhatt–Morrow–Scholze, *Integral p-adic Hodge theory*
+(§3.1, Definition 3.1, p. 244)][bhattMorrowScholze2018]. This generalises a classical definition
+in the case `R = 𝒪_[ℂ_[p]]`, see
+[Fontaine, *Le corps des périodes p-adiques* (§1.3.3, p. 66, with `K = ℚ_[p]`)][fontaine1994].
+
+TODO: Unify this with `GroundTheory.PAdicHodge.AInf`. -/
 abbrev Ainf : Type u := WittVector p (Tilt p R)
 
 abbrev AinfInv : Type u := Localization.Away (p : Ainf p R)
