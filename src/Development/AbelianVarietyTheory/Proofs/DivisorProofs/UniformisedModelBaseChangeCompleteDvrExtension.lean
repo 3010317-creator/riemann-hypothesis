@@ -152,7 +152,7 @@ structure QTateIso (D : Datum H) {P : DegPre R} [Module (𝓞 E) P.X]
   ζ_prim : ∀ n : ℕ+, IsPrimitiveRoot (ζ n) (n : ℕ)
   ζ_pow : ∀ n m : ℕ+, ζ (n * m) ^ (m : ℕ) = ζ n
   ev : ∀ n : ℕ+, D.La → QkPt P k (n : ℕ)
-  add : ∀ n a a', QkAdd (ev n a) (ev n a') (ev n (a + a'))
+  add : ∀ n a a', TorusGraphMaps.QkAdd (ev n a) (ev n a') (ev n (a + a'))
   lin : ∀ n (x : 𝓞 E) a, (letI := hostStar H; QkSmul ac x (ev n a) (ev n (x • a)))
   ker : ∀ n a, QkZero (ev n a) ↔ ∃ a', a = (n : ℕ) • a'
   onto : ∀ (n : ℕ+) (p : QkPt P k (n : ℕ)), ∃ a, QkPt.Equiv P k (ev n a) p
@@ -162,14 +162,14 @@ structure QTateIso (D : Datum H) {P : DegPre R} [Module (𝓞 E) P.X]
 structure QLevel (D : Datum H) (l : Level H) {P : DegPre R} [Module (𝓞 E) P.X]
     (ac : letI := hostStar H; P.OAct (𝓞 E)) (k : Type) [Field k] [Algebra (FractionRing R) k] where
   eta : D.La → QkPt P k l.M
-  eta_add : ∀ a a', QkAdd (eta a) (eta a') (eta (a + a'))
+  eta_add : ∀ a a', TorusGraphMaps.QkAdd (eta a) (eta a') (eta (a + a'))
   eta_lin : ∀ (x : 𝓞 E) a, (letI := hostStar H; QkSmul ac x (eta a) (eta (x • a)))
   eta_ker : ∀ a, QkZero (eta a) ↔ a ∈ l.Mb • (⊤ : Submodule (𝓞 E) D.La)
   eta_onto : ∀ p : QkPt P k l.M,
     (∀ x ∈ l.Mb, ∃ q : QkPt P k l.M, (letI := hostStar H; QkSmul ac x p q) ∧ QkZero q) →
     ∃ a, QkPt.Equiv P k (eta a) p
   etaA : D.La → QkPt P k l.A
-  etaA_add : ∀ a a', QkAdd (etaA a) (etaA a') (etaA (a + a'))
+  etaA_add : ∀ a a', TorusGraphMaps.QkAdd (etaA a) (etaA a') (etaA (a + a'))
   etaA_lin : ∀ (x : 𝓞 E) a, (letI := hostStar H; QkSmul ac x (etaA a) (etaA (x • a)))
   etaA_ker : ∀ a, QkZero (etaA a) ↔ ∃ a', a = l.A • a'
   etaA_onto : ∀ p : QkPt P k l.A, ∃ a, QkPt.Equiv P k (etaA a) p
