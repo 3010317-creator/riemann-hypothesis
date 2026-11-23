@@ -317,12 +317,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.genZk :
   obtain ⟨m, hm, hc⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx E (2 + 2) (by norm_num)).2.1 μ 𝔢.ν
   obtain ⟨e, -, he⟩ := UpperTheory.ConvolutionTheory.Tf.prjFix E (2 + 2) μ m 𝔢.U 𝔢.isOpen
     (UpperTheory.ConvolutionTheory.Tf.ampComm E (2 + 2) μ 𝔢.toAmp fun τ i => (UpperTheory.ConvolutionTheory.Dp.capZc E (2 + 2) τ).1 i).2.2.2.1
-  have h0 : Rop μ (tens (lact (zc y.1 y.2) 𝔢.a₀) e) = 𝔢.toAmp.Z y :=
+  have h0 : Rop μ (UpperTheory.ConvolutionTheory.tens (lact (zc y.1 y.2) 𝔢.a₀) e) = 𝔢.toAmp.Z y :=
     (UpperTheory.ConvolutionTheory.Tf.rrTens E (2 + 2) (by norm_num) μ 𝔢.ν m hc _ e).trans (by rw [he]; rfl)
-  obtain ⟨f, h1, h2⟩ := hf (tens (lact (zc y.1 y.2) 𝔢.a₀) e)
+  obtain ⟨f, h1, h2⟩ := hf (UpperTheory.ConvolutionTheory.tens (lact (zc y.1 y.2) 𝔢.a₀) e)
   have h3 : P ∘L Rop μ 𝔢.a = Rop μ 𝔢.a ∧ Rop μ 𝔢.a ∘L P = Rop μ 𝔢.a := hP 𝔢.a 𝔵.a_hecke
   rw [𝔢.a_op] at h3
-  have h4 : Rop μ f = P ∘L Rop μ (tens (lact (zc y.1 y.2) 𝔢.a₀) e) ∘L P := h2
+  have h4 : Rop μ f = P ∘L Rop μ (UpperTheory.ConvolutionTheory.tens (lact (zc y.1 y.2) 𝔢.a₀) e) ∘L P := h2
   exact ⟨f, h1, by rw [h4, h0]; exact amp_fix 𝔢.toAmp m y P h3.1 h3.2⟩
 end -- clump:auto
 end -- clump:auto
