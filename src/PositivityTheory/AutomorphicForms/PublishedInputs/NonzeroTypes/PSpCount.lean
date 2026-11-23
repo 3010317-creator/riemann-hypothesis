@@ -385,7 +385,4 @@ open P_spCount
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-
-open scoped Classical in
-
 end UpperTheory.TNZ.Grp
