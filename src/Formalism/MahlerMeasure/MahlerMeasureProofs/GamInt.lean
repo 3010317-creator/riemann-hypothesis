@@ -380,7 +380,7 @@ theorem fock_add_left (F F' G : MvPolynomial σ ℚ_[p]) :
 theorem fock_smul_left (c : ℚ_[p]) (F G : MvPolynomial σ ℚ_[p]) :
     Formalism.GM.M.fock p (c • F) G = c * Formalism.GM.M.fock p F G := by
   rw [fock_eq_sum (c • F) G F.support support_smul, fock_def', Finset.mul_sum]
-  exact Finset.sum_congr rfl (fun m _ => by rw [coeff_smul, smul_eq_mul]; ring)
+  exact Finset.sum_congr rfl (fun m _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring)
 
 theorem fock_zero_left (G : MvPolynomial σ ℚ_[p]) : Formalism.GM.M.fock p 0 G = 0 := by
   simp [Formalism.GM.M.fock]
@@ -625,7 +625,7 @@ theorem FT_pow_coeff_norm (hwe : ∀ c, w c ≠ e c) (Tb B : ℕ) (hB : Nat.log 
     intro a ha
     rw [mem_range] at ha
     rw [Module.End.mul_apply, Module.End.mul_apply, Module.End.natCast_apply, map_nsmul, map_nsmul,
-      coeff_smul, nsmul_eq_mul, norm_mul, coeff_Dop_pow _ _ (hwe c), norm_mul, norm_mul]
+      MvPolynomial.coeff_smul, nsmul_eq_mul, norm_mul, coeff_Dop_pow _ _ (hwe c), norm_mul, norm_mul]
     have h1 := ih (b - a) (by omega) (β + a • (Finsupp.single (w c) 1 + Finsupp.single (e c) 1))
     have h2 := norm_desc_le (p := p) (β (w c) + a) a
     have h3 := norm_desc_le (p := p) (β (e c) + a) a
@@ -768,7 +768,7 @@ theorem IsIntP.add {P P' : MvPolynomial σ ℚ_[p]} (h : IsIntP P) (h' : IsIntP 
   intro β; rw [MvPolynomial.coeff_add]; exact (Padic.nonarchimedean _ _).trans (max_le (h β) (h' β))
 
 theorem IsIntP.neg {P : MvPolynomial σ ℚ_[p]} (h : IsIntP P) : IsIntP (-P) := by
-  intro β; rw [coeff_neg, norm_neg]; exact h β
+  intro β; rw [MvPolynomial.coeff_neg, norm_neg]; exact h β
 
 theorem IsIntP.sub {P P' : MvPolynomial σ ℚ_[p]} (h : IsIntP P) (h' : IsIntP P') : IsIntP (P - P') := by
   rw [sub_eq_add_neg]; exact h.add h'.neg

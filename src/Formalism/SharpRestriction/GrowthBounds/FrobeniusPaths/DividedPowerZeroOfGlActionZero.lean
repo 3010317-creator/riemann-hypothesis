@@ -906,7 +906,7 @@ theorem coeff_gl_action_diag (S : Set (Fin N)) (a : Fin n) (m : Fin N × Fin n �
 theorem weight_eq_of_eigen (S : Set (Fin N)) (a : Fin n) (G : MvPolynomial (Fin N × Fin n) ℤ) (lam : ℤ)
     (h : glAct ℤ LL S a a G = lam • G) (m : Fin N × Fin n →₀ ℕ) (hm : m ∈ G.support) : wtS LL S m a = lam := by
   have h1 := coeff_gl_action_diag LL S a m G
-  rw [h, coeff_smul, smul_eq_mul] at h1
+  rw [h, MvPolynomial.coeff_smul, smul_eq_mul] at h1
   exact (mul_right_cancel₀ (mem_support_iff.1 hm) h1).symm
 
 theorem column_operator_diag {P : Type*} [CommRing P] (a : Fin n) (c : ℤ) (K : Finset (Fin n) → P) (J : Finset (Fin n)) :

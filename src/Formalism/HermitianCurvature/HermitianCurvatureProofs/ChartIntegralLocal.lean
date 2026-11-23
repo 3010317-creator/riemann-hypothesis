@@ -166,7 +166,7 @@ theorem int_chart_loc (ψ : α → ℂ) (hψ : ∀ ξ, ‖ψ ξ‖ ≤ 1) (hψm 
     have hF'm : AEStronglyMeasurable (fun ξ => ∑ i, (aC g0 i Y).smulRight
         (ψ ξ • dLR ((i :: w).map Lt) [] (h ξ) (chart g0 Y))) μ := by
       refine Finset.aestronglyMeasurable_fun_sum _ fun i _ => ?_
-      exact (ContinuousLinearMap.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).continuous.comp_aestronglyMeasurable
+      exact (StrongDual.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).continuous.comp_aestronglyMeasurable
         (hmw (i :: w) (by simp; omega) Y hY)
     have hbF' : ∀ ξ, ∀ Y' ∈ Metric.ball (0 : J k r → ℝ) δ, ‖∑ i, (aC g0 i Y').smulRight
         (ψ ξ • dLR ((i :: w).map Lt) [] (h ξ) (chart g0 Y'))‖ ≤ Ba * β ξ := by
@@ -192,10 +192,10 @@ theorem int_chart_loc (ψ : α → ℂ) (hψ : ∀ ξ, ‖ψ ξ‖ ≤ 1) (hψm 
         (Eventually.of_forall fun ξ => hbw (i :: w) (by simp; omega) Y hY ξ)
     have hI : ∀ i, Integrable (fun ξ => (aC g0 i Y).smulRight
         (ψ ξ • dLR ((i :: w).map Lt) [] (h ξ) (chart g0 Y))) μ := fun i =>
-      (ContinuousLinearMap.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).integrable_comp (hint i)
+      (StrongDual.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).integrable_comp (hint i)
     rw [integral_finsetSum _ (fun i _ => hI i)]
     refine Finset.sum_congr rfl fun i _ => ?_
-    exact (ContinuousLinearMap.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).integral_comp_comm (hint i)
+    exact (StrongDual.smulRightL ℝ (J k r → ℝ) E (aC g0 i Y)).integral_comp_comm (hint i)
   have hAL := ALd (𝔤 := J k r → ℝ) (E := E) Metric.isOpen_ball (aC g0) (fun i => (aC_cd hg0 i).mono hΩ) mm L
     hLc hLd
   exact hAL.congr fun Y _ => rfl

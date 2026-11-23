@@ -221,7 +221,7 @@ def geDeg (t : ℕ) : Submodule ℂ (Poly n) where
   carrier := {f | ∀ s : Fin n × Fin n →₀ ℕ, s.degree < t → AddMonoidAlgebra.coeff f s = 0}
   add_mem' {f g} hf hg s hs := by rw [MvPolynomial.coeff_add, hf s hs, hg s hs, add_zero]
   zero_mem' s _ := by simp
-  smul_mem' r f hf s hs := by rw [coeff_smul, hf s hs, smul_zero]
+  smul_mem' r f hf s hs := by rw [MvPolynomial.coeff_smul, hf s hs, smul_zero]
 
 theorem geDeg_anti {t t' : ℕ} (h : t' ≤ t) : (geDeg t : Submodule ℂ (Poly n)) ≤ geDeg t' :=
   fun _ hf s hs => hf s (lt_of_lt_of_le hs h)

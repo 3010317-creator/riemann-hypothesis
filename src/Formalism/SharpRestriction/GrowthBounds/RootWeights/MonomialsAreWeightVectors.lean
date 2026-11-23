@@ -115,7 +115,7 @@ theorem monomials_are_weight_vectors : MonomialsAreWeightVectors := by
       sub_eq_zero] at h
     have h2 := congrArg (AddMonoidAlgebra.coeff · m) h
     change AddMonoidAlgebra.coeff (glAct R LL S a a x) m = _ at h2
-    rw [v2con_coeff_diag, coeff_smul, smul_eq_mul] at h2
+    rw [v2con_coeff_diag, MvPolynomial.coeff_smul, smul_eq_mul] at h2
     have hc : AddMonoidAlgebra.coeff x m ≠ 0 := mem_support_iff.mp hm
     have h3 := mul_right_cancel₀ hc h2
     exact_mod_cast h3

@@ -102,7 +102,7 @@ theorem weight_vector_monomial_weight [CharZero K] (LL : Letters ι) (S : Set ι
     (hF : F ∈ weightSp (glOps K n LL S) mu) (m : ι × Fin n →₀ ℕ) (hm : m ∈ F.support) : wtS LL S m = mu := by
   funext a
   have h := congrArg (AddMonoidAlgebra.coeff · m) ((polynomial_mem_weightSpace_iff LL S mu F).1 hF a)
-  rw [diagonal_derivation_coeff, coeff_smul, smul_eq_mul] at h
+  rw [diagonal_derivation_coeff, MvPolynomial.coeff_smul, smul_eq_mul] at h
   have hc : AddMonoidAlgebra.coeff F m ≠ 0 := mem_support_iff.1 hm
   have h2 := mul_right_cancel₀ hc h
   exact_mod_cast h2

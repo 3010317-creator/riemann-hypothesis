@@ -193,7 +193,7 @@ private lemma coeff_dg_eq_mul_coeff {σ : Type} (f : (σ →₀ ℕ) → K) (F :
       rw [coe_basisMonomials, smul_monomial, smul_eq_mul, mul_one]
     unfold dg
     rw [e, map_smul, Module.Basis.constr_basis, coe_basisMonomials]
-    simp only [coeff_smul, coeff_monomial, smul_eq_mul]
+    simp only [MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · subst h
       ring

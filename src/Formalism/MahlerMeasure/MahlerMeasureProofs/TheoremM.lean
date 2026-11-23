@@ -158,7 +158,7 @@ theorem exists_pow_smul_intPol {σ : Type} (x : MvPolynomial σ ℚ_[p]) :
   have hp : (1 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).one_lt
   obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt (∑ m ∈ x.support, ‖x.coeff m‖) hp
   refine ⟨k, mem_intPol_of_norm _ fun m => ?_⟩
-  rw [coeff_smul, smul_eq_mul, norm_mul, norm_pow, Padic.norm_p]
+  rw [MvPolynomial.coeff_smul, smul_eq_mul, norm_mul, norm_pow, Padic.norm_p]
   by_cases hm : m ∈ x.support
   · have h1 : ‖x.coeff m‖ ≤ ∑ m ∈ x.support, ‖x.coeff m‖ :=
       Finset.single_le_sum (f := fun m => ‖x.coeff m‖) (fun _ _ => norm_nonneg _) hm
@@ -659,7 +659,7 @@ theorem fock_smul_left (c : ℚ_[p]) (F G : MvPolynomial σ ℚ_[p]) : fock p (c
   rw [fock_eq_sum (c • F) G F.support (support_smul), fock_eq_sum F G F.support subset_rfl, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro m _
-  rw [coeff_smul, smul_eq_mul]; ring
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 theorem fock_add_right (F G G' : MvPolynomial σ ℚ_[p]) : fock p F (G + G') = fock p F G + fock p F G' := by
   unfold fock
@@ -673,7 +673,7 @@ theorem fock_smul_right (c : ℚ_[p]) (F G : MvPolynomial σ ℚ_[p]) : fock p F
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro m _
-  rw [coeff_smul, smul_eq_mul]; ring
+  rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 noncomputable def fockBil {N r : ℕ} (LL : Letters N)
     (φ : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p]) :

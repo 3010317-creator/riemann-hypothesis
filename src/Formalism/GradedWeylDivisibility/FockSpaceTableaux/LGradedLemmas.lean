@@ -93,7 +93,7 @@ theorem lgraded_coeff_euler {r n : ℕ} (a : Fin r) (f : MvPolynomial (Fin r × 
     AddMonoidAlgebra.coeff (rowDiv ℚ a a 1 f) m = ((Finsupp.weight (lgraded_wa a) m : ℕ) : ℚ) * AddMonoidAlgebra.coeff f m := by
   induction f using MvPolynomial.induction_on'
   next m' c' =>
-    rw [lgraded_euler_monomial, coeff_smul, coeff_monomial, smul_eq_mul]
+    rw [lgraded_euler_monomial, MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · rw [h]
     · simp
@@ -123,7 +123,7 @@ private lemma exists_mem_coeff_eq_prod_weight_sub_mul_coeff {r n : ℕ} (M : Sub
     intro g hg
     obtain ⟨h, hh, hc⟩ := ih g hg
     refine ⟨rowDiv ℚ a a 1 h - (s : ℚ) • h, M.sub_mem (hM a a 1 h hh) (M.smul_mem _ hh), fun m => ?_⟩
-    rw [coeff_sub, coeff_smul, lgraded_coeff_euler, hc, Finset.prod_insert hs, smul_eq_mul]
+    rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, lgraded_coeff_euler, hc, Finset.prod_insert hs, smul_eq_mul]
     ring
 
 theorem lgraded_sep {r n : ℕ} (M : Submodule ℚ (MvPolynomial (Fin r × Fin n) ℚ)) (hM : RowDivClosed M)
@@ -136,7 +136,7 @@ theorem lgraded_sep {r n : ℕ} (M : Submodule ℚ (MvPolynomial (Fin r × Fin n
   have key : weightedHomogeneousComponent (lgraded_wa a) t f =
       (∏ s ∈ V.erase t, ((t : ℚ) - (s : ℚ)))⁻¹ • h := by
     ext m
-    rw [coeff_weightedHomogeneousComponent, coeff_smul, hc, smul_eq_mul]
+    rw [coeff_weightedHomogeneousComponent, MvPolynomial.coeff_smul, hc, smul_eq_mul]
     by_cases hm : m ∈ f.support
     · have hmV := hV m hm
       split_ifs with hw

@@ -160,7 +160,7 @@ theorem DegLt.X_mul {k : ℕ} {f : MvPolynomial σ ℂ} (h : DegLt k f) (l : σ)
 
 omit [DecidableEq σ] in
 theorem DegLt.smul {k : ℕ} {f : MvPolynomial σ ℂ} (h : DegLt k f) (c : ℂ) : DegLt k (c • f) :=
-  fun α hα => by rw [coeff_smul, h α hα, smul_zero]
+  fun α hα => by rw [MvPolynomial.coeff_smul, h α hα, smul_zero]
 
 omit [DecidableEq σ] in
 theorem DegLt.add {k : ℕ} {f g : MvPolynomial σ ℂ} (h : DegLt k f) (h' : DegLt k g) : DegLt k (f + g) :=

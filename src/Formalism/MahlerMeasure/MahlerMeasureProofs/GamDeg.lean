@@ -195,7 +195,7 @@ theorem fock_smul_left (c : ℚ_[p]) (F G : MvPolynomial σ ℚ_[p]) :
     M.fock p (c • F) G = c * M.fock p F G := by
   rw [fock_eq_sum' p _ G G.support (Finset.Subset.refl _), fock_eq_sum' p F G G.support (Finset.Subset.refl _),
     Finset.mul_sum]
-  exact Finset.sum_congr rfl fun m _ => by rw [coeff_smul, smul_eq_mul]; ring
+  exact Finset.sum_congr rfl fun m _ => by rw [MvPolynomial.coeff_smul, smul_eq_mul]; ring
 
 theorem fock_zero_left (G : MvPolynomial σ ℚ_[p]) : M.fock p 0 G = 0 := by
   rw [fock_eq_sum' p 0 G G.support (Finset.Subset.refl _)]
@@ -444,7 +444,7 @@ theorem eq_zero_of_EW (a b : ℕ) (hab : a < b) (g : MvPolynomial σ k) (h : EW 
     g = 0 := by
   ext s
   have hs := congrArg (AddMonoidAlgebra.coeff · s) h
-  rw [coeff_EW_lemma_5, coeff_smul, smul_eq_mul] at hs
+  rw [coeff_EW_lemma_5, MvPolynomial.coeff_smul, smul_eq_mul] at hs
   have hne : ((∑ c, s (w c) : ℕ) : k) ≠ (a : k) - b := by
     intro heq
     have h2 : ((∑ c, s (w c) + b : ℕ) : k) = ((a : ℕ) : k) := by rw [Nat.cast_add, heq]; ring
@@ -994,7 +994,7 @@ theorem q_isWH (LL : M.Letters (N + 1)) (ρ : Fin r) (e : ℕ) (h : MvPolynomial
     · exact hXX' i c ρ
     · exact hXX' i ρ ρ
     · intro d hd
-      rw [coeff_sub] at hd
+      rw [MvPolynomial.coeff_sub] at hd
       by_cases h1 : AddMonoidAlgebra.coeff (X (Fin.last (N + 1), ρ) * X (Fin.castSucc i, c) :
           MvPolynomial (Fin (N + 1 + 1) × Fin r) ℚ_[p]) d = 0
       · rw [h1, zero_sub, neg_ne_zero] at hd

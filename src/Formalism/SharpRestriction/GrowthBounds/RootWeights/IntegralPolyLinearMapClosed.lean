@@ -96,7 +96,7 @@ theorem fock_lattice_smul_mem {p : ℕ} (hV : ValuationProperties p O) {σ : Typ
   obtain ⟨-, hVmul, -, -, -, hVint⟩ := id hV
   rw [mem_fock_lattice_iff_coeff hV] at hF ⊢
   intro m
-  rw [coeff_smul, Algebra.smul_def, hVmul]
+  rw [MvPolynomial.coeff_smul, Algebra.smul_def, hVmul]
   have ho : 0 ≤ vK p (algebraMap O (KK O) o) := (hVint _).2 ⟨o, rfl⟩
   calc (0 : WithTop ℚ) ≤ vK p (F.coeff m) + halfFactorialValuation p m := hF m
     _ ≤ vK p (algebraMap O (KK O) o) + vK p (F.coeff m) + halfFactorialValuation p m :=

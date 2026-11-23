@@ -131,7 +131,7 @@ theorem Jint_line (cf : ℚ) : Jint Unit 2 1 cf = -cf := by
   rw [dimN_line, pow_one, muPoly_line, fib, vandBlocks_line, mul_one, sum_unit_perm, rhoMono_line]
   simp only [weylSign, Finset.univ_unique, Finset.prod_singleton, Equiv.Perm.sign_one,
     Equiv.Perm.sign_swap (show (0 : Fin 2) ≠ 1 by decide), map_mul, rename_X, rename_C, MvPolynomial.coeff_add,
-    coeff_smul, smul_eq_mul, weylAct]
+    MvPolynomial.coeff_smul, smul_eq_mul, weylAct]
   rw [coeff_X_mul', coeff_X_mul']
   simp [coeff_C, Finsupp.single_apply, Equiv.swap_apply_of_ne_of_ne]
 

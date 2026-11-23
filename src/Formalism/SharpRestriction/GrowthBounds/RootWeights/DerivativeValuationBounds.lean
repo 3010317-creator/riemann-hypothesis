@@ -132,7 +132,7 @@ def flt_lift {B : Type*} [CommRing B] {σ : Type*} (Fl : flt_Fil B) (wt : (σ �
         exact (Fl.F _).add_mem (ha m) (hb m)
       neg_mem' := by
         intro a ha m
-        rw [coeff_neg]
+        rw [MvPolynomial.coeff_neg]
         exact (Fl.F _).neg_mem (ha m) }
   mul_mem := by
     classical
