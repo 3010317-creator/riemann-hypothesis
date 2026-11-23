@@ -225,13 +225,15 @@ open UpperTheory.V UpperTheory.V.Af UpperTheory.V.Base UpperTheory.V.Sd UpperThe
 private theorem val_iff_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] {A : ValuationSubring Ω}
     {v : HeightOneSpectrum (𝓞 F)} (hA : IsPlaceOver A v) (p : ℕ) : A.valuation (p : Ω) < 1 ↔ ((p : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   rw [← hA]
-  simp
+  simp only [map_natCast]
 
 private theorem prime_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : ℕ, p.Prime ∧ ((p : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   haveI := v.isMaximal
   haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  haveI : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.2 v.isPrime.ne_top
+  haveI : NoZeroDivisors (𝓞 F ⧸ v.asIdeal) := inferInstance
   refine ⟨ringChar (𝓞 F ⧸ v.asIdeal), CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) _, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   exact ringChar.Nat.cast_ringChar
@@ -305,7 +307,7 @@ private theorem isUp_mid (a : R) {m t : M2 R} {s s' : R} (hm01 : m 0 1 = 0) (hm1
     IsUp (a • (nA (-s') * tn m t * nA s)) := by
   intro i j hij
   fin_cases i <;> fin_cases j <;>
-    simp [nA, tn, Matrix.mul_apply, Fin.sum_univ_succ, hm01, hm10, ht01, ht10] at hij ⊢ <;>
+    simp [nA, tn, Matrix.mul_apply, Fin.sum_univ_succ, hm01, hm10, ht01, ht10, -smul_eq_zero, -mul_eq_zero] at hij ⊢ <;>
     first
     | linear_combination (a * m 0 0) * hs1
     | linear_combination (-(a * m 0 0)) * hs1
@@ -472,6 +474,7 @@ private theorem inc_mem {c c' : Coef l} (h : c.O ≤ c'.O) {x : c.O}
     (hx : x ∈ maximalIdeal c.O) : inc h x ∈ maximalIdeal c'.O := by
   have hint : (inc h).IsIntegral := by
     intro y
+    haveI : Algebra.IsIntegral ℤ_[l] c'.O := Algebra.IsIntegral.of_finite ℤ_[l] c'.O
     obtain ⟨p, hp, e⟩ : IsIntegral ℤ_[l] y := Algebra.IsIntegral.isIntegral y
     refine ⟨p.map (algebraMap ℤ_[l] c.O), hp.map _, ?_⟩
     rw [Polynomial.eval₂_map]
@@ -1152,7 +1155,7 @@ theorem UpperTheory.V.Cu.pairOf4 : UpperTheory.V.Cu.PairOf4 := by
     rcases d.tau.sgn A with h | h <;> rw [h] <;> ring
   refine ⟨fun g => ?_, ?_, ?_, fun v => ?_, fun v s hs => ?_, fun v s hs i => ?_⟩
   · obtain ⟨h00, h01, h11⟩ := form_eqs _ (d.tau.form (resQ T.F g))
-    have h1 := gsp_map f (gsp_tn (inc d.h (d.δ (resQ T.F g) : d.c.O)) (d.ρ₁ (resQ T.F g)) _ h00 h01 h11)
+    have h1 := SymplecticFlagConjugation.gsp_map f (gsp_tn (inc d.h (d.δ (resQ T.F g) : d.c.O)) (d.ρ₁ (resQ T.F g)) _ h00 h01 h11)
     have key : inc d.h (d.δ (resQ T.F g) : d.c.O) ^ 2 * inc d.h (Phi d.D d.T₀.pr d.k (resQ T.F g) : d.c.O) =
         inc d.h (d.D.th (resQ T.F g) : d.c.O) := by
       rw [← map_pow, ← map_mul, ← Units.val_pow_eq_pow_val, ← Units.val_mul, d.tw.mul]
@@ -1193,14 +1196,14 @@ theorem UpperTheory.V.Cu.pairOf4 : UpperTheory.V.Cu.PairOf4 := by
     fin_cases a <;> fin_cases b <;> simp [tn, hρ.1, hρ.2, hτ.1, hτ.2] at hab ⊢
   · change IsLow ((flg (d.x (T.pl v)) (d.s (T.pl v))).map f)
     refine ⟨?_, fun i => ?_, fun i j hij => ?_⟩
-    · simpa using gsp_map f (isGSp_flg (d.x (T.pl v)) (d.s (T.pl v)))
+    · simpa using SymplecticFlagConjugation.gsp_map f (isGSp_flg (d.x (T.pl v)) (d.s (T.pl v)))
     · rw [flg_eq]
       fin_cases i <;> simp
     · rw [flg_eq]
       fin_cases i <;> fin_cases j <;> first | exact absurd hij (by decide) | simp
   · have hsD := hD _ s hs
     change IsUp (adj ((flg (d.x (T.pl v)) (d.s (T.pl v))).map f) * ((inc d.h (d.δ (resQ T.F s) : d.c.O)) • tn (d.ρ₁ (resQ T.F s)) (d.τ (resQ T.F s))).map f * (flg (d.x (T.pl v)) (d.s (T.pl v))).map f)
-    rw [conj_map, conj_flg _ _ _ _ _ (hsgn _) (d.mod.flag _ (T.ovl v) _ hsD)
+    rw [conj_map, SymplecticFlagConjugation.conj_flg _ _ _ _ _ (hsgn _) (d.mod.flag _ (T.ovl v) _ hsD)
       (d.tau.on _ (d.quad.split _ (T.ovl v) hsD))]
     intro i j hij
     fin_cases i <;> fin_cases j <;> first | exact absurd hij (by decide) | simp
@@ -1223,7 +1226,7 @@ theorem UpperTheory.V.Cu.pairOf4 : UpperTheory.V.Cu.PairOf4 := by
       linear_combination (-(d.τ (resQ T.F s) 0 0 - d.τ (resQ T.F s) 0 1 * d.s (T.pl v))) * ht + h00 +
         (d.τ (resQ T.F s) 1 0 + d.τ (resQ T.F s) 0 1) * hon.2 + (-(d.τ (resQ T.F s) 0 1 ^ 2)) * hss
     change (adj ((flg (d.x (T.pl v)) (d.s (T.pl v))).map f) * ((inc d.h (d.δ (resQ T.F s) : d.c.O)) • tn (d.ρ₁ (resQ T.F s)) (d.τ (resQ T.F s))).map f * (flg (d.x (T.pl v)) (d.s (T.pl v))).map f) i i = 1
-    rw [conj_map, conj_flg _ _ _ _ _ hss (d.mod.flag _ (T.ovl v) _ hsD) hon, hm.1, hm.2, ht, h4, hδ]
+    rw [conj_map, SymplecticFlagConjugation.conj_flg _ _ _ _ _ hss (d.mod.flag _ (T.ovl v) _ hsD) hon, hm.1, hm.2, ht, h4, hδ]
     fin_cases i <;> simp
 
 end
