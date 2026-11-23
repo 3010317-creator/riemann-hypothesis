@@ -1076,8 +1076,8 @@ include hτ hσ
 
 theorem fibInt_add (a b : cIndSpace (HPG k i t) (hRep τ σ)) (g : GL (Fin (i + t)) k) :
     fibInt μ (a + b) g = fibInt μ a g + fibInt μ b g := by
-  obtain ⟨a1, a2⟩ := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ a g
-  obtain ⟨b1, b2⟩ := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ b g
+  obtain ⟨a1, a2⟩ := GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ a g
+  obtain ⟨b1, b2⟩ := GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ b g
   have e : fibV (a + b) g = fibV a g + fibV b g := by
     funext v
     exact map_add (evL (uM k (i + t) (midV k i t v) * levi k (i + t) g)) a b
@@ -1086,7 +1086,7 @@ theorem fibInt_add (a b : cIndSpace (HPG k i t) (hRep τ σ)) (g : GL (Fin (i + 
 
 theorem fibInt_smul (c : ℂ) (a : cIndSpace (HPG k i t) (hRep τ σ)) (g : GL (Fin (i + t)) k) :
     fibInt μ (c • a) g = c • fibInt μ a g := by
-  obtain ⟨a1, a2⟩ := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ a g
+  obtain ⟨a1, a2⟩ := GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ a g
   have e : fibV (c • a) g = ((c • LinearMap.id : V ⊗[ℂ] W →ₗ[ℂ] V ⊗[ℂ] W)) ∘ fibV a g := by
     funext v
     exact map_smul (evL (uM k (i + t) (midV k i t v) * levi k (i + t) g)) c a
