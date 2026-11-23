@@ -84,6 +84,11 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.ExistsNonzeroLowCocycle
 import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.LocFlat
 import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.LocRho
+-- Instance search for `IsLocalRing` of complete local `O`-algebras is slow
+-- in this (large) import closure; try the `IsCO` projection first.
+attribute [local instance 2000] UpperTheory.V.Alg.IsCO.toIsLocalRing
+-- The overlapping-instances linter times out on several statements below.
+set_option linter.overlappingInstances false
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerOrderSkips, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.ExistsFrobeniusCorner, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerConeMap, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerMaximalIdealLe, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerMemCone, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerMiddleTrivial, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerMiddleMem, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerMonomial, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.FrobeniusCornerUnits, Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.QuotientHomNonvanishingBound, Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.PropagationTheoremGL3
@@ -169,6 +174,8 @@ private theorem ordProd_two {H K : Type} [CommRing K] (r : H → Matrix (Fin 2) 
 theorem UpperTheory.V.Fr.exists_frobenius_corner :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] {F : Frame l k} {K : Type} [CommRing K] (ρ : NRep F 3 K), (∀ g i j, Odd (w 3 i - w 3 j) → ρ.r g i j = 0) → CornerUnits ρ → ∃ σ : NRep F 2 K, IsCorner ρ σ := by
   intro l _ k _ F K _ ρ hodd hU
+  have : Nonempty F.G0 := ⟨1⟩
+  have : Nonempty F.Γ := ⟨1⟩
   have hc : ∀ g (i : Fin 3), i ≠ 1 → ρ.r g i 1 = 0 := by
     intro g i hi
     apply hodd
@@ -571,6 +578,7 @@ theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
       show q (χ _) = 1
       rw [e, hI v x hx hΨ, map_one]
   rw [← sub_eq_zero]
+  haveI : IsNoetherianRing D := IsCO.toIsNoetherian O
   have hb := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal D) (maximalIdeal.isMaximal D).ne_top
   rw [← Ideal.mem_bot, ← hb]
   exact Ideal.mem_iInf.2 key
@@ -592,7 +600,7 @@ private theorem aux {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O
     (hres : ∀ g, a g - 1 ∈ maximalIdeal B) (hst : ∀ g, a (F.star g) = a g)
     (hloc : ∀ v g, g ∈ F.Iv v → F.Ψ (F.loc v g) = 1 → a (F.loc0 v g) - 1 ∈ P) (g : F.G0) : a g - 1 ∈ P := by
   haveI : P.IsPrime := hP
-  haveI : Nontrivial (B ⧸ P) := inferInstance
+  haveI : Nontrivial (B ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
   haveI : IsCO O (B ⧸ P) :=
     co_quot O B (B ⧸ P) (Ideal.Quotient.mkₐ O P) (Ideal.Quotient.mkₐ_surjective O P)
   have hm : ∀ x ∈ maximalIdeal B, Ideal.Quotient.mk P x ∈ maximalIdeal (B ⧸ P) := by
@@ -822,7 +830,7 @@ private theorem finite_lambda_surjective_injective_lift :
     rw [Ideal.comap_map_of_surjective _ hp]
     refine sup_eq_left.mpr ?_
     intro y hy
-    exact hker y (by simpa using hy)
+    exact hker y (RingHom.mem_ker.mp hy)
   have hpull : ∀ y, p y ∈ P.map p → y ∈ P := by
     intro y hy
     rw [← hPc]
