@@ -20,8 +20,10 @@ published. Dispatch it from `main`:
 
 Each job runs these steps:
 
-1. `fragment.py restore` keeps one tree per commit, in `$RH_FRAGMENT_ROOT/<sha>/` (default
-   `~/rh-fragments`). The first time, it clones the repository and runs `lake exe cache get` at
+1. `fragment.py restore` keeps one tree per run, in `$RH_FRAGMENT_ROOT/<sha>-<run id>/`
+   (default `~/rh-fragments`). Rerunning the job reuses it. The tree of a successful run is
+   deleted at the end; trees of failed runs are pruned after a week untouched. The first
+   time, it clones the repository and runs `lake exe cache get` at
    the nearest first-parent ancestor that has a published CI record. On every run it then
    merges the public maps (`pool-restore.py`: the `rh-buildq/pool` union, this commit's
    `rh-buildq/maps` entry and the stock revision maps), runs `lake cache add`, and prefetches
@@ -42,7 +44,8 @@ Rerunning a job resumes the work: Lake replays everything already built in the t
 publisher skips input hashes it has already published or that it restored from.
 
 The R2 keys are derived from `R2_ACCOUNT_TOKEN` (environment `ci-cache-publish`, which deploys
-from `main` only). They are written to `$RUNNER_TEMP`, and the publisher reads them from there.
+from `main` only). This happens after the restore, which runs the target's lakefile outside
+any sandbox. The keys are written to `$RUNNER_TEMP`, and the publisher reads them from there.
 When unprivileged bubblewrap works on the host, the build runs in a PID namespace where that
 directory is an empty tmpfs. `result.json` records the outcome as `"sandbox": "bwrap"` or
 `"none"`.
