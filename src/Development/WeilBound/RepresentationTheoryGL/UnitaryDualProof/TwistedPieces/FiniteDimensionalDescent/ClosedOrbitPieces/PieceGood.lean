@@ -201,6 +201,7 @@ theorem pi_ratio {A : Subalgebra k (Matrix (Fin N) (Fin N) k)} (hA : ∀ a ∈ A
     rw [← range_Psi hA he hid, LinearMap.finrank_range_of_inj (Psi_inj hA he)]
   set_option synthInstance.maxHeartbeats 200000 in
   have h1 := GroundTheory.Brauer.finrank_mul_finrank_end k (Fe hA he) (Wd e)
+  have : Module.Free (Fe hA he) (Wd e) := Module.Free.of_divisionRing _ _
   have h2 := Module.finrank_mul_finrank k (Fe hA he) (Wd e)
   have hr : e.rank = Module.finrank k (Wd e) := (Matrix.finrank_range_mulVecLin e).symm
   have hd0 : 0 < Module.finrank k (Fe hA he) := Module.finrank_pos
