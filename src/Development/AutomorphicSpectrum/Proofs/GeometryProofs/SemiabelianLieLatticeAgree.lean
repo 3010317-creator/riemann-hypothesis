@@ -162,7 +162,7 @@ theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) 
     exact Ideal.zero_mem _
   let q : Cpt ξ := ⟨X.fromSpecStalk p.1 P', hgq⟩
   have hs' : q.1 ⤳ p.1 := hs
-  obtain ⟨hdom, hic⟩ := hnorm q.1
+  obtain ⟨hdom, hic⟩ := (_root_.GlobalTheory.isNormalScheme_iff X).1 hnorm q.1
   haveI := hN
   let f : X.presheaf.stalk p.1 →+* X.presheaf.stalk q.1 := (X.presheaf.stalkSpecializes hs').hom
   have hcomap : (IsLocalRing.maximalIdeal (X.presheaf.stalk q.1)).comap f = P'.asIdeal :=
@@ -716,7 +716,7 @@ theorem lat_eq_of_normal : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp 
   obtain ⟨f2, p2, s2⟩ := lat_fin hξ G' M' p
   refine GroundTheory.Heights₂.Heights.Model.LatticesAgree.proof GroundTheory.Heights₂.Heights.Model.HeightOneIntersection.proof (regAt ξ p) Ω E (M.lat p) (M'.lat p) f1 p1 f2 p2 s1 s2 ?_
   intro P hP1
-  obtain ⟨q, hs, hdvr, hu, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne.exists_generisation_of_height_eq_one X Ω ξ hξ hN hnorm p P hP1
+  obtain ⟨q, hs, hdvr, hu, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.HeightOne.exists_generisation_of_height_eq_one X Ω ξ hξ hN (_root_.GlobalTheory.IsNormalScheme.of_pred hnorm) p P hP1
   have hq := _root_.GlobalTheory.CompanionTheory.Ar.DvrExtension.lat_eq_of_dvr X Ω ξ hξ G G' GΩ φ φ' hS hS' hP hP' E M M' hv q hdvr
   ext v
   rw [mem_localizedIn_iff hξ G M hs P hu hd, mem_localizedIn_iff hξ G' M' hs P hu hd, hq]
