@@ -806,7 +806,8 @@ theorem eps_rel (Λ Λ' : CLiftK g D) (v : ∀ c, (g.obj c).Bˣ)
     (hv : ∀ c, Ideal.Quotient.mk (g.obj c).J ((v c : (g.obj c).Bˣ) : (g.obj c).B) =
       ub (Λ.p c) (Λ'.p c) ((Λ.hp c).trans (Λ'.hp c).symm)) {c₀ c₁ c₂ : C} (φ : c₀ ⟶ c₁) (ψ : c₁ ⟶ c₂) (χ : c₀ ⟶ c₂)
     (hχ : χ = φ ≫ ψ) : ((Units.val (eps Λ Λ' v ψ) - 1) - (Units.val (eps Λ Λ' v χ) - 1) + (g.map ψ).φ (Units.val (eps Λ Λ' v φ) - 1)) -
-      ((Units.val (rr Λ' φ ψ χ) - 1) - (Units.val (rr Λ φ ψ χ) - 1)) ∈ pdP (g.obj c₂).δ 2 := by
+      ((Units.val (GlobalTheory.CompanionTheory.ConeZcls.rr Λ' φ ψ χ) - 1) -
+        (Units.val (GlobalTheory.CompanionTheory.ConeZcls.rr Λ φ ψ χ) - 1)) ∈ pdP (g.obj c₂).δ 2 := by
   have e0 := (g.map ψ).hle (eps_sub Λ Λ' v hv φ)
   rw [Ideal.mem_comap, map_sub, map_one] at e0
   have key := rr_eq Λ Λ' v φ ψ χ hχ
