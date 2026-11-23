@@ -957,7 +957,7 @@ theorem step_loc (i : ℕ) (s : ℝ)
     (hstep : ∀ x ∈ (M.lat i).L, ∃ y, M.emb (i + 1) y = C.K i (M.emb i x) ∧ VGe D w (M.lat (i + 1)).L y s)
     (z : (M.lat i).V) (hz : z ∈ locW D.what₂.places w (M.lat i).L) :
     ∃ y, M.emb (i + 1) y = C.K i (M.emb i z) ∧ VGe D w (M.lat (i + 1)).L y s := by
-  unfold locW at hz
+  unfold BasicNotions.locW at hz
   induction hz using Submodule.span_induction with
   | mem x hx => exact hstep x hx
   | zero =>
@@ -1025,7 +1025,7 @@ theorem card_lifts (D : D7) : ((SizeData₂.lifts D).card : ℝ) = (D.R.m : ℝ)
 theorem base_map_mem_local_lattice {D : D7} (T : TwForms D) (u : D.what₂.Word) (μ : D.what₂.Tup) (w : D.what₂.places.Pl)
     (x : ((D.fm u).lat 0).V) (hx : x ∈ locW D.what₂.places w ((D.fm u).lat 0).L) :
     T.e0 u μ x ∈ locW D.what₂.places w ((T.fm u μ).lat 0).L := by
-  unfold locW at hx
+  unfold BasicNotions.locW at hx
   induction hx using Submodule.span_induction with
   | mem x hx => exact Submodule.subset_span ((T.twist_preserves_base_lattice u μ x).1 hx)
   | zero => rw [map_zero]; exact Submodule.zero_mem _
