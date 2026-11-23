@@ -1,7 +1,6 @@
 module
 
 public import Mathlib.Algebra.MvPolynomial.PDeriv
-public import Mathlib.Algebra.Star.Basic
 public import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Tactic.Ring
 
@@ -9,8 +8,7 @@ import Mathlib.Tactic.Ring
 # Coefficient Fock pairing
 
 The factorial-weighted pairing and the multiplication/derivative adjunction
-only use the finite support of each polynomial. A coefficient involution in
-the first slot gives the sesquilinear convention.
+only use the finite support of each polynomial.
 -/
 
 @[expose] public section
@@ -42,8 +40,7 @@ theorem pair_comm (f g : MvPolynomial σ R) : pair f g = pair g f := by
 
 theorem pair_add_right (f g h : MvPolynomial σ R) :
     pair f (g + h) = pair f g + pair f h := by
-  simp only [pair, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, mul_add, add_mul,
-    Finset.sum_add_distrib]
+  simp [pair, mul_add, add_mul, Finset.sum_add_distrib]
 
 theorem pair_add_left (f g h : MvPolynomial σ R) :
     pair (f + g) h = pair f h + pair g h := by
@@ -127,31 +124,5 @@ theorem pair_mul_X (v : σ) (f g : MvPolynomial σ R) :
   rw [addRightEmbedding_apply, MvPolynomial.coeff_mul_X, MvPolynomial.coeff_pderiv,
     weight_add_single, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
   ring
-
-section Star
-
-variable [StarRing R]
-
-/-- The pairing with the coefficient involution in the first slot. -/
-noncomputable def sesq (f g : MvPolynomial σ R) : R := pair (map (starRingEnd R) f) g
-
-theorem sesq_eq_sum (f g : MvPolynomial σ R) (s : Finset (σ →₀ ℕ))
-    (hs : f.support ⊆ s) :
-    sesq f g = ∑ m ∈ s, star (f.coeff m) * g.coeff m * (weight m : R) := by
-  rw [sesq, pair_eq_sum _ _ s ((support_map_subset (starRingEnd R) f).trans hs)]
-  simp only [coeff_map, starRingEnd_apply]
-
-theorem sesq_swap (f g : MvPolynomial σ R) : sesq f g = star (sesq g f) := by
-  change pair (map (starRingEnd R) f) g = starRingEnd R (pair (map (starRingEnd R) g) f)
-  have h : (starRingEnd R).comp (starRingEnd R) = RingHom.id R :=
-    RingHom.ext fun x => starRingEnd_self_apply x
-  rw [← pair_map, MvPolynomial.map_map, h, MvPolynomial.map_id, pair_comm]
-
-theorem sesq_mul_X (v : σ) (f g : MvPolynomial σ R) :
-    sesq (f * X v) g = sesq f (pderiv v g) := by
-  unfold sesq
-  rw [map_mul, map_X, pair_mul_X]
-
-end Star
 
 end Formalism.FockPairing

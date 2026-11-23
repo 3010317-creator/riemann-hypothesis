@@ -99,14 +99,13 @@ lemma fockR_sum_right {ι : Type*} (t : Finset ι) (f : MvPolynomial σ R) (g : 
 
 lemma fockR_monomial [DecidableEq (σ →₀ ℕ)] (m m' : σ →₀ ℕ) (a b : R) :
     fockR (monomial m a) (monomial m' b) =
-      if m = m' then a * b * ((∏ k ∈ m.support, (m k).factorial : ℕ) : R) else 0 :=
-  by
-    classical
-    change FockPairing.pair (monomial m a) (monomial m' b) = _
-    rw [FockPairing.pair_monomial_left, coeff_monomial]
-    by_cases h : m = m'
-    · subst m'; simp [FockPairing.weight]
-    · simp [h, Ne.symm h]
+      if m = m' then a * b * ((∏ k ∈ m.support, (m k).factorial : ℕ) : R) else 0 := by
+  classical
+  change FockPairing.pair (monomial m a) (monomial m' b) = _
+  rw [FockPairing.pair_monomial_left, coeff_monomial]
+  by_cases h : m = m'
+  · subst m'; simp [FockPairing.weight]
+  · simp [h, Ne.symm h]
 
 lemma fockR_map {S : Type*} [CommRing S] (φ : R →+* S) (f g : MvPolynomial σ R) :
     fockR (map φ f) (map φ g) = φ (fockR f g) :=
