@@ -1541,7 +1541,8 @@ theorem unf_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {f : d.G �
   have : lam'.IsAddHaarMeasure := hc'.2.1
   have hψc : Continuous d.B.ψ := d.ok.good.std.1
   obtain ⟨P, hP, -⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.pEquiv_k h
-  obtain ⟨cP, hcP0, hcPt, hPc⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.lam_map_k (lam := lam) (ν := ν) (lam' := lam') P
+  obtain ⟨cP, hcP0, hcPt, hPc⟩ :=
+    @_root_.PositivityTheory.SiegelWeilFormula.Act.C5.lam_map_k F E _ _ _ _ _ σ d L lam hc.2.1 ν hU.2.1 lam' hc'.2.1 P
   obtain ⟨cK, hcK0, hcKt, hκeq⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.kap_eq_k (ν := ν) (κ := κ)
   obtain ⟨𝓐, h𝓐, h𝓐0, h𝓐t⟩ := exists_fd_fA (F := F)
   have : IsFiniteMeasure (ν.restrict 𝓤) := isFiniteMeasure_restrict.2 (by simp [hU.2.2.2])
