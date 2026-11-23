@@ -663,6 +663,7 @@ theorem cond_iff (q : SplitPt D k) {ϖ : k} (hϖ : ∀ x : k, valuation k x < 1 
   refine and_congr_right fun _ => ⟨fun h => ?_, fun h x hx => le_trans ?_ h⟩
   · simpa only [q.pr_sec] using h (q.sec ϖ) (by rw [q.pr_sec])
   · gcongr
+    exact zero_le'
 
 theorem mulVec_sec (q : SplitPt D k) {m n : ℕ} (M : Matrix (Fin m) (Fin n) (AE D)) (y : Fin n → k) :
     M *ᵥ (fun i => q.sec (y i)) = fun i => q.sec ((M.map q.pr *ᵥ y) i) := by
@@ -727,7 +728,7 @@ theorem line_moved (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : F
     mt V t⁻¹ *ᵥ (fun r => a * incA D (u r)) ∈ latV V Λ (· = q.v) ↔ q.pr a / κ ∈ 𝒪[k] ∧ q.pr (cA D a) * κ' ∈ 𝒪[k] := by
   have hI := int_moved q hq V Λ β hβ t G σ hM
   have hae : a = q.sec (q.pr a) + cA D (q.sec (q.pr (cA D a))) := by
-    rw [q.sec_pr, q.sec_pr, RingHom.map_mul, cA_cA, ← add_mul, (idem_iff q a).1 ha]
+    rw [q.sec_pr, q.sec_pr, RingHom.map_mul, SeeSaw.cA_cA, ← add_mul, (idem_iff q a).1 ha]
   have hy : (fun r => a * incA D (u r)) = (fun r => q.sec (q.pr a * q.pr (incA D (u r)))) +
       (fun r => cA D (q.sec (q.pr (cA D a) * q.pr (incA D (star (u r)))))) := by
     funext r
