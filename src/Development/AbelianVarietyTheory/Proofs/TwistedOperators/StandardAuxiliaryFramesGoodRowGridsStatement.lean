@@ -944,7 +944,7 @@ theorem psi_of_shift (hG : GoodAt dV dW x ψ LV LV₀ LW LW₀ v) (hS : StdAt dV
     split_ifs
     · exact hs
     · exact zero_mem _
-  have hN : MxAt (· = v) (u.1 ⬝ (Matrix.single i j s : Mx D ρ ρ)) := mxAt_mul_left _ hE
+  have hN : MxAt (· = v) (u.1 ⬝ (Matrix.single i j s : Mx D ρ ρ)) := GlobalTheory.FinPl.SuppShift.mxAt_mul_left _ hE
   have e : mt W (r * g * κ)⁻¹ ⬝ (x ⬝ (u.1 ⬝ (Matrix.single i j s : Mx D ρ ρ))) =
       mt W κ⁻¹ ⬝ (mt W g⁻¹ ⬝ x ⬝ (Matrix.single i j s : Mx D ρ ρ)) := by
     rw [← Matrix.mul_assoc x, ← hru, ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← mt_mul,
@@ -955,7 +955,7 @@ theorem psi_of_shift (hG : GoodAt dV dW x ψ LV LV₀ LW LW₀ v) (hS : StdAt dV
       · subst hl
         rw [Matrix.mul_single_apply_same, (hU k i).1 (by rw [Fin.le_def] at hkl; rw [Fin.lt_def]; omega), zero_mul]
       · rw [Matrix.mul_single_apply_of_ne _ _ _ _ _ hl]) (by
-      refine (hS.a _ (mxAt_mul_left _ (mxAt_mul_left _ hN))).2 ?_
+      refine (hS.a _ (GlobalTheory.FinPl.SuppShift.mxAt_mul_left _ (GlobalTheory.FinPl.SuppShift.mxAt_mul_left _ hN))).2 ?_
       have h := sandwich_latO hG.sdV hG.sdW (mt W κ⁻¹) (inK_maps (GlobalTheory.AscFin.inK_inv hκ)) 1
         (fun z hz => by rwa [Matrix.one_mulVec]) hu
       rw [e]
@@ -998,7 +998,7 @@ theorem parts {ψ : AddChar (AF D.host.F) ℂ} {V V₀ W W₀ : HSp D} {σ : ℕ
     refine stable_of_prim dV hA.sdV hA.monoV hA.prim i.castSucc i.succ (by simp) fun s' hs' hr' => ?_
     refine psi_of_shift hA hS hr hκ hC i.castSucc i.succ (by simp) _ (Ideal.mul_mem_left _ _ hs') ?_
     refine (GlobalTheory.FinPl.LatMem.mem_latO_iff D _ _ LV LW hA.sdV hA.sdW (· = v) _).2
-      ⟨mxAt_mul_right (mxAt_mul_left _ fun k l => ?_) _, fun y hy => ?_⟩
+      ⟨GlobalTheory.FinPl.SuppShift.mxAt_mul_right (GlobalTheory.FinPl.SuppShift.mxAt_mul_left _ fun k l => ?_) _, fun y hy => ?_⟩
     · rw [Matrix.single_apply]
       split_ifs
       · exact Ideal.mul_mem_left _ _ hs'
