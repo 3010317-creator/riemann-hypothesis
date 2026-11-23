@@ -335,7 +335,7 @@ theorem top_chart : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineS
     have h3 : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1))
         (fun u => ∑ I : Idx (n + 1) (n + 1), E.form σ I.1 (ε ((fun _ => x - x') I)) u) 0 := by
       refine rep_congr h2 fun u => ?_
-      rw [Finset.sum_eq_single (J0 _) (fun I _ hI => absurd (top_index_eq I) hI) (by simp)]
+      rw [Finset.sum_eq_single (J0 _) (fun I _ hI => absurd (top_index_eq I) hI) (fun h => absurd (Finset.mem_univ _) h)]
       have e1 : E.form σ id (ε x) u + (-1 : K) • E.form σ id (ε x') u - E.form σ (J0 (n + 1)).1 (ε (x - x')) u = 0 := by
         change _ - E.form σ id (ε (x - x')) u = 0
         unfold Frame.form
@@ -349,7 +349,7 @@ theorem top_chart : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineS
   have h1 : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1))
       (E.form σ id (ε (y' (J0 _)))) y := by
     refine rep_congr hy' fun u => ?_
-    rw [Finset.sum_eq_single (J0 _) (fun I _ hI => absurd (top_index_eq I) hI) (by simp)]
+    rw [Finset.sum_eq_single (J0 _) (fun I _ hI => absurd (top_index_eq I) hI) (fun h => absurd (Finset.mem_univ _) h)]
     change E.form σ id (ε (y' (J0 _))) u - E.form σ id (ε (y' (J0 _))) u ∈ _
     rw [sub_self]
     exact zero_mem _
