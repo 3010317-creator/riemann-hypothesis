@@ -474,9 +474,9 @@ theorem cols (G : GridData L sc) (j σ : ℕ) (hj : j + 2 * σ + 2 = D.R.m) (v :
       exact ⟨1, rfl, o, (one_mul _).symm⟩) v]
   rw [GlobalTheory.FinPl.latA, l2, col_mem_iff (G.rowDec (j + 1) hjm') _ hqr _ _ D.host.AA {a | a ∈ D.host.AA} (fun x hx => hx)
     (fun x hx => ⟨x, hx, 1, by simp⟩) v]
-  have e3 : D.host.AA * rowId D (j + 1) (Fin.castLE (by omega) i) =
-      FractionalIdeal.spanSingleton _ (D.host.xi0 ^ i.1)⁻¹ * (1 * rowId D j (Fin.castLE (by omega) i)) := by
-    rw [rowId, rowId, tiltSc_even hev, tiltSc_odd hod _ (by simp only [Fin.val_castLE]; omega),
+  have e3 : D.host.AA * GlobalTheory.RowShape.rowId D (j + 1) (Fin.castLE (by omega) i) =
+      FractionalIdeal.spanSingleton _ (D.host.xi0 ^ i.1)⁻¹ * (1 * GlobalTheory.RowShape.rowId D j (Fin.castLE (by omega) i)) := by
+    rw [GlobalTheory.RowShape.rowId, GlobalTheory.RowShape.rowId,tiltSc_even hev, tiltSc_odd hod _ (by simp only [Fin.val_castLE]; omega),
       FractionalIdeal.spanSingleton_one, one_mul, one_mul, stairId, stairId]
     simp only [Fin.val_castLE]
     have h1 : D.R.m - 1 - j - i.1 = (D.R.m - 1 - (j + 1) - i.1) + 1 := by omega
@@ -1023,7 +1023,7 @@ theorem primAt_rowJac {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : Gri
       rw [Ne, FractionalIdeal.spanSingleton_eq_zero_iff]
       unfold tiltSc
       split_ifs <;> simp [cmHost_imaginaryGenerator_ne_zero])
-    (stairId_ne_zero D _ p)
+    (stairId_ne_zero (D := D) _ p)
   rw [key, GlobalTheory.IdealQuot.mul_subset_iff D v _ _ (hne _) (hne _) s hs,
     rowId_ratio hodd _ _ (by simp only [Fin.coe_castLE]; exact hij) (by simp only [Fin.coe_castLE]; have := j.2; omega)]
   exact DiffDual.idV_dI_iff D ψ hψ v s hs
