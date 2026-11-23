@@ -143,9 +143,9 @@ theorem UpperTheory.V.AlgebraTools.Det.signLemma :
     · right; rw [hBc, h, neg_one_smul]
   · have h0 : B = 0 := by
       have h3 : (1 - c * c) • B = 0 := by rw [sub_smul, one_smul, ← h2, sub_self]
-      rcases smul_eq_zero.mp h3 with h | h
-      · exact absurd (sub_eq_zero.mp h).symm hcc
-      · exact h
+      have hne : 1 - c * c ≠ 0 := fun h => hcc (sub_eq_zero.mp h).symm
+      calc B = (1 - c * c)⁻¹ • ((1 - c * c) • B) := by rw [smul_smul, inv_mul_cancel₀ hne, one_smul]
+        _ = 0 := by rw [h3, smul_zero]
     left; rw [h0, transpose_zero]
 end -- clump:auto
 end -- clump:auto
@@ -166,11 +166,13 @@ private theorem zero_of_trace {G K : Type} [Monoid G] [Field K] {n : ℕ} (ρ : 
     have hM : M ∈ Submodule.span K (Set.range ρ) := by rw [h]; trivial
     induction hM using Submodule.span_induction with
     | mem x hx => obtain ⟨t, rfl⟩ := hx; exact hX t
-    | zero => simp
+    | zero => rw [Matrix.zero_mul, Matrix.trace_zero]
     | add x y _ _ hx hy => rw [Matrix.add_mul, Matrix.trace_add, hx, hy, add_zero]
     | smul a x _ hx => rw [Matrix.smul_mul, Matrix.trace_smul, hx, smul_zero]
   ext i j
-  simpa [Matrix.trace_single_mul] using hall (Matrix.single j i 1)
+  have := hall (Matrix.single j i 1)
+  rw [Matrix.trace_single_mul, one_smul] at this
+  rw [this, Matrix.zero_apply]
 
 private theorem span_of_trace {G C K K' : Type} [Monoid G] [CommRing C] [Field K] [Field K'] {n : ℕ}
     (f : C →+* K) (hf : Function.Injective f) (φ : C →+* K') (t : G → C)
@@ -329,6 +331,8 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
+attribute [local instance 2000] UpperTheory.V.Alg.IsCO.toIsLocalRing
+
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
 namespace UpperTheory.V.Fr.PF
@@ -372,6 +376,8 @@ private theorem conn {n : ℕ} (hn : n = 2 ∨ n = 3) (R : Fin n → Fin n → P
       | exact ht 0 2 1 hu (hr _ _ h)
       | exact ht 2 0 1 hd (hr _ _ h)
       | exact ht 1 0 2 (hr _ _ h) hu
+
+set_option linter.overlappingInstances false
 
 variable {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O]
   {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}
@@ -589,6 +595,8 @@ end -- clump:auto
 -- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SeedOf", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SecondThirdPrimeConditionTransferAlt\npublic import Mathlib.FieldTheory.IsAlgClosed.Basic\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.CoQuot\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DGext\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DGmap\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DOfRep\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DToDetOfRep\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.GGram\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.GroupDetExistsSemisimpleRepresentation\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SelfTwistEigenvalues.UnipTorsion\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.IrrOfConn\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.OfTrace\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.PointField\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.ExistsDeterminantPairMapOfAlgHom\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.Integral\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DToDet\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.HomTwo\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.AdicCompletion.Noetherian\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
+
+attribute [local instance 2000] UpperTheory.V.Alg.IsCO.toIsLocalRing UpperTheory.V.Alg.IsCO.isLocalHom
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr UpperTheory.V.W UpperTheory.V.CA
 
@@ -841,6 +849,7 @@ private theorem mem_ker_iff (hn : 1 ≤ n) (g : G.G₀) : g ∈ (unt L r0).ker �
 include h0 hs in
 private theorem tame_ker [CharP (ResidueField O) l] (hj : Function.Injective j) (hn : 1 ≤ n) (u : G.St) (g : G.G₀)
     (hg : g ∈ G.Iu u) (hΨ : F.Ψ (L.π g) = 1) : g ∈ (unt L r0).ker := by
+  haveI : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
   obtain ⟨m, hm, h1, h2⟩ := L.tame u g hg
   have hI : g ^ m ∈ r.Ip u := by
     refine ⟨pow_mem hg m, Subgroup.mem_iInf.2 fun i => ?_⟩
@@ -922,6 +931,7 @@ private theorem desc {M : Type} [Monoid M] (a : G.G₀ →* M) (h : L.π.ker ≤
 
 private theorem chi_ex : ∃ χ : ∀ v, Fin n → F.Gv v →* Cˣ, IsPsi O F n (fun v i g => (χ v i g : C)) ∧
     ∀ v i g, χ (L.e v) i (L.lam v g) * L.κA C (G.φ v g) = p.ψ v i g := by
+  haveI : IsLocalRing C := IsCO.toIsLocalRing O (R := C)
   have key : ∀ v : F.V, ∃ χ : Fin n → F.Gv v →* Cˣ, (∀ i, AdicCont (maximalIdeal C) (fun g => (χ i g : C)) ∧
       ∀ g, res O C (χ i g) = ((F.Ψ (F.loc v g) ^ w n i : (ResidueField O)ˣ) : ResidueField O)) ∧
       ∀ u (h : L.e u = v) i g, χ i (h ▸ L.lam u g) * L.κA C (G.φ u g) = p.ψ u i g := fun v => by
