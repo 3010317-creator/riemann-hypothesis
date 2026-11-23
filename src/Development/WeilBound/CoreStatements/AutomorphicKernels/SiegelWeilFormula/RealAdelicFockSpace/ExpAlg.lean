@@ -220,7 +220,7 @@ theorem B_vline (hT : TAll) (hU : TUnit) (hH : THeis) (hA : AuxiliaryPrimeFuncti
       ∫ u, star (b u) * hg R νf (d.T Φ) g u := by
     simp only [B, hTv]
     exact integral_jnp R hνf hTΦ hg' hb hb1
-  rw [e1]
+  refine e1.trans ?_
   have key : ∀ u, star (b u) * hg R νf (d.T Φ) g u =
       ((Real.exp (-(1 / (16 * Real.pi) * ‖z‖ ^ 2 * ‖(-(4 * Real.pi)) • w‖ ^ 2)) : ℝ) : ℂ) *
         Complex.exp (-(z ^ 2 * (‖(-(4 * Real.pi)) • w‖ ^ 2 : ℝ) / (16 * Real.pi))) *
