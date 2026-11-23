@@ -193,7 +193,7 @@ theorem eq_zero_of_fixes_primitiveRoot : ∀ (F Ω : Type) [Field F] [NumberFiel
   intro F Ω _ _ _ _ _ A v hA φ hφ N hN ξ hξ' a t i haN hi hfix
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  have hq := one_lt_normV v
+  have hq := GlobalTheory.WeilDeligne.one_lt_normV v
   obtain ⟨n, hn⟩ : ∃ n, normV v ^ N = n + 1 :=
     ⟨_, (Nat.sub_add_cancel (Nat.one_le_pow _ _ (by omega))).symm⟩
   have hn0 : n ≠ 0 := by
