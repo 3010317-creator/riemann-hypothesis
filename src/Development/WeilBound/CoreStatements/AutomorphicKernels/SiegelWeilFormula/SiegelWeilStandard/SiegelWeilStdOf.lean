@@ -660,7 +660,7 @@ theorem thetaCoef_at (hS : GlobalTheory.Published.SiegelSetUnitary) (hB : TBij) 
   have hO : ∀ X, ∫ β in 𝓖, e β X * χ β ∂lam = if G X = (-2 : ℤ) • T.1.1 then 1 else 0 := fun X => by
     obtain ⟨hm, S₀, hS₀⟩ := gram_mem d X T
     simp only [he, hχ, chr_comb]
-    rw [orth d hc _ hm ⟨S₀, hS₀⟩]
+    refine (orth d hc _ hm ⟨S₀, hS₀⟩).trans ?_
     simp only [half_eq_iff]
     rfl
 
@@ -966,7 +966,7 @@ theorem unfoldCore (B : Base F E) (hB : B.IsGood σ) (hb : IsFrame2 σ Y b) {nb 
       exact (Subtype.ext (big_inj hb hw hnb hP)).symm
     have hAq₀ : ∀ β, A q₀ β = φ (w * nb β * x) := fun β => by
       rw [hAmk, mul_assoc]
-    have hI := abs_integrable lam (nF σ Y b) 𝓖 h𝓖 act hact0 hact A hA hAact C hC hcov u hu hAu q₀ hinj
+    have hI := @abs_integrable _ _ _ _ _ _ _ lam hHaar (nF σ Y b) _ 𝓖 h𝓖 _ _ act hact0 hact A hA hAact C hC hcov u hu hAu q₀ hinj
     refine ⟨hI.congr (Filter.Eventually.of_forall hAq₀), fun T hT => ?_⟩
 
     let χ₀ : nA σ Y b → ℂ := fun β => B.ψ (-(Algebra.trace (AF F) (AE F E) (T.1.1 * β.1).trace))
@@ -996,7 +996,7 @@ theorem unfoldCore (B : Base F E) (hB : B.IsGood σ) (hb : IsFrame2 σ Y b) {nb 
           rw [show β + β₀ + ν.1 = β₀ + (β + ν.1) by abel, nb_add hnb]
           group
         rw [e, hone _ t hpar hdet]
-    obtain ⟨-, -, heq⟩ := abs_unfold lam (nF σ Y b) 𝓖 h𝓖 act hact0 hact A hA hAact χ₀ hχc hχadd hχΛ C hC hcov u hu hAu
+    obtain ⟨-, -, heq⟩ := @abs_unfold _ _ _ _ _ _ _ lam hHaar (nF σ Y b) _ 𝓖 h𝓖 _ _ act hact0 hact A hA hAact χ₀ hχc hχadd hχΛ C hC hcov u hu hAu
       q₀ hinj hsmall
     show ∫ β in 𝓖, GlobalTheory.Eis.cosetSum (par2 σ Y) (rat2 σ Y) φ (nb β * x) * χ₀ β ∂lam = ∫ β, φ (w * nb β * x) * χ₀ β ∂lam
     have e2 : ∫ β, φ (w * nb β * x) * χ₀ β ∂lam = ∫ β, A q₀ β * χ₀ β ∂lam :=
