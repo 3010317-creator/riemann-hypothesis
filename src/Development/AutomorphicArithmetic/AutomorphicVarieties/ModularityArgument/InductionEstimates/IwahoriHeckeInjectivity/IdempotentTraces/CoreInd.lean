@@ -591,7 +591,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
           ∀ (L : GM.Loc σ n q w₀) (νE : Measure (archGroup E n)) (aE : TI E n) (ν : Fin n → ℤ) (𝔢 : Side θ 2), GM.IsSideE L νE aE ν 𝔢 →
           (∀ v, L.φ v = (L.UE v : Set (GL (Fin n) (CompletionsOver E v))).indicator 1) →
           ∃ (𝔢' : Side θ 2) (φ : TF E n) (w₁ : PlacesOver E q), 𝔢'.toAmp = 𝔢.toAmp ∧ 𝔢'.g = 𝔢.g ∧ 𝔢'.Uq 0 = 𝔢.Uq 0 ∧ 𝔢'.Uq 1 = Uiw μ w₁.1 ν ∧
-            (∀ x, φ x = (𝔢.U : Set (FA E n)).indicator 1 x) ∧ 𝔢'.g = tens 𝔢'.a₀ φ ∧ ∃ c : ℂ, c ≠ 0 ∧ 𝔢'.a = c • 𝔢'.g := by
+            (∀ x, φ x = (𝔢.U : Set (FA E n)).indicator 1 x) ∧ 𝔢'.g = UpperTheory.ConvolutionTheory.tens 𝔢'.a₀ φ ∧ ∃ c : ℂ, c ≠ 0 ∧ 𝔢'.a = c • 𝔢'.g := by
   intro F E _ _ _ _ _ _ _ _ σ hfr hσ n hn μ _ θ hθ q w₀ hsplit L νE aE ν 𝔢 hside hφ
   classical
   obtain ⟨hν, ha, hS, hU, hg, hq0⟩ := hside
@@ -641,7 +641,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
   have hφx : ∀ x, φ x = (𝔢.U : Set (FA E n)).indicator 1 x := fun _ => rfl
   have hoff : ∀ v ∉ insert q L.S, (L.UE v : Set (GL (Fin n) (CompletionsOver E v))) = unitSet E n v := fun v hv =>
     (L.off v (fun h => hv (Finset.mem_insert_of_mem h)) (fun h => hv (Finset.mem_insert.2 (Or.inl h)))).2.2.1
-  have hgt : 𝔢.g = tens 𝔢.a₀ φ := by
+  have hgt : 𝔢.g = UpperTheory.ConvolutionTheory.tens 𝔢.a₀ φ := by
     ext x
     rw [hg x, ha]
     refine (UpperTheory.ConvolutionTheory.Tf.avgTens E n hn aE φ _ fun g => ?_).1 x
@@ -658,7 +658,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
   have hRop : Rop μ 𝔢.g = (c : ℂ) • 𝔢.toAmp.A := by
     rw [hgt]
     exact hop
-  have hsm' : (c : ℂ)⁻¹ • 𝔢.g = tens 𝔢.a₀ ((c : ℂ)⁻¹ • φ) := by
+  have hsm' : (c : ℂ)⁻¹ • 𝔢.g = UpperTheory.ConvolutionTheory.tens 𝔢.a₀ ((c : ℂ)⁻¹ • φ) := by
     rw [hgt]
     exact (((UpperTheory.ConvolutionTheory.Tf.tensApply E n hn 𝔢.a₀ φ).2.2.2.2 _).2).symm
   have haop : Rop μ ((c : ℂ)⁻¹ • 𝔢.g) = 𝔢.toAmp.A := by
