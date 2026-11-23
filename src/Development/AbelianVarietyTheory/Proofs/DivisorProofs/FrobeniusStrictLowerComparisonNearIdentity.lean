@@ -64,7 +64,7 @@ theorem frobCmp_le {r : ℕ} (A B : Matrix (Fin r) (Fin r) ℂ)
     rw [frobCmp_normSq, frobCmp_normSq]
     gcongr with i _ j _
     exact h i j
-  nlinarith [norm_nonneg A, norm_nonneg B]
+  exact (sq_le_sq₀ (norm_nonneg A) (norm_nonneg B)).mp hsq
 
 theorem frobCmp_le_const {r : ℕ} (A : Matrix (Fin r) (Fin r) ℂ) (ε : ℝ) (hε : 0 ≤ ε)
     (h : ∀ i j, ‖A i j‖ ≤ ε) : ‖A‖ ≤ r * ε := by
@@ -76,14 +76,14 @@ theorem frobCmp_le_const {r : ℕ} (A : Matrix (Fin r) (Fin r) ℂ) (ε : ℝ) (
       _ = ((r : ℝ) * ε) ^ 2 := by
           simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
   have : 0 ≤ (r : ℝ) * ε := by positivity
-  nlinarith [norm_nonneg A]
+  exact (sq_le_sq₀ (norm_nonneg A) this).mp hsq
 
 theorem frobenius_lower_comparison : ∀ (r : ℕ) (g n b B W H : Matrix (Fin r) (Fin r) ℂ) (δ : ℝ), 0 ≤ δ → (r : ℝ) * δ ≤ 1 / 100 → (∀ a c : Fin r, a < c → n a c = 0) → (∀ a : Fin r, n a a = 1) → (∀ a c : Fin r, c < a → ‖n a c‖ ≤ δ) → (∀ a c : Fin r, c < a → b a c = 0) → (∀ a : Fin r, |‖b a a‖ ^ 2 - 1| ≤ 6 * δ) → (∀ a c : Fin r, a < c → ‖b a c‖ ≤ 6 * δ) → (∀ a c : Fin r, c < a → B a c = 0) → (∀ a c : Fin r, a ≤ c → W a c = 0) → (∀ a c : Fin r, a ≤ c → H a c = 0) → g * n = b → g * W = H * b + B → ∑ a, ∑ c, ‖W a c‖ ^ 2 ≤ 2 * ∑ a, ∑ c, ‖H a c‖ ^ 2 := by
   intro r g n b B W H δ hδ hrδ hn_up hn_diag hn_low hb_low hb_diag hb_up hB hW hH hgn hgW
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · simp
   have hr1 : (1 : ℝ) ≤ r := by exact_mod_cast hr
-  have hδ1 : δ ≤ 1 / 100 := by nlinarith
+  have hδ1 : δ ≤ 1 / 100 := (le_mul_of_one_le_left hδ hr1).trans hrδ
 
   have hnT : n.BlockTriangular OrderDual.toDual := fun i j hij => hn_up i j (by simpa using hij)
   have hdet : n.det = 1 := by
@@ -114,11 +114,11 @@ theorem frobenius_lower_comparison : ∀ (r : ℕ) (g n b B W H : Matrix (Fin r)
   have hdlow : ∀ a, (0.969 : ℝ) ≤ ‖b a a‖ := by
     intro a
     have h1 := (abs_le.mp (hb_diag a)).1
-    nlinarith [norm_nonneg (b a a)]
+    exact (sq_le_sq₀ (by norm_num) (norm_nonneg (b a a))).mp (by linarith)
   have hdup : ∀ a, ‖b a a‖ ≤ (1.03 : ℝ) := by
     intro a
     have h1 := (abs_le.mp (hb_diag a)).2
-    nlinarith [norm_nonneg (b a a)]
+    exact (sq_le_sq₀ (norm_nonneg (b a a)) (by norm_num)).mp (by linarith)
   have hunorm : ‖u‖ ≤ 6 / 100 := by
     have h := frobCmp_le_const u (6 * δ) (by positivity) (by
       intro a c
@@ -128,7 +128,8 @@ theorem frobenius_lower_comparison : ∀ (r : ℕ) (g n b B W H : Matrix (Fin r)
       · simp; positivity
       · rw [Matrix.diagonal_apply_ne _ (ne_of_gt hac), sub_zero, hb_low a c hac, norm_zero]
         positivity)
-    nlinarith
+    have hid : (r : ℝ) * (6 * δ) = 6 * ((r : ℝ) * δ) := by ring
+    linarith
   have hn1 : ‖n - 1‖ ≤ 1 / 100 := by
     have h := frobCmp_le_const (n - 1) δ hδ (by
       intro a c
@@ -172,14 +173,18 @@ theorem frobenius_lower_comparison : ∀ (r : ℕ) (g n b B W H : Matrix (Fin r)
   have hHn := norm_nonneg H
   have hYn := norm_nonneg Y
   have hun := norm_nonneg u
-  have hY12 : ‖Y‖ ≤ 1.2 * ‖H‖ := by nlinarith
+  have hY12 : ‖Y‖ ≤ 1.2 * ‖H‖ := by
+    linarith [mul_le_mul_of_nonneg_left hunorm hHn, mul_le_mul_of_nonneg_right hunorm hYn]
   have hWY : ‖W‖ ≤ (1.01 : ℝ) * ‖Y‖ := by
     have e : W = Y + (n - 1) * Y := by rw [hWnY, Matrix.sub_mul, Matrix.one_mul]; abel
     have h1 : ‖W‖ ≤ ‖Y‖ + ‖n - 1‖ * ‖Y‖ := by
       rw [e]; exact (norm_add_le _ _).trans (by gcongr; exact Matrix.frobenius_norm_mul _ _)
-    nlinarith [norm_nonneg (n - 1)]
+    linarith [mul_le_mul_of_nonneg_right hn1 hYn]
   have hWn := norm_nonneg W
   rw [← frobCmp_normSq, ← frobCmp_normSq]
-  nlinarith
+  have hWH : ‖W‖ ≤ (1.212 : ℝ) * ‖H‖ := by linarith
+  have hWH2 : ‖W‖ ^ 2 ≤ ((1.212 : ℝ) * ‖H‖) ^ 2 := pow_le_pow_left₀ hWn hWH 2
+  have hid : ((1.212 : ℝ) * ‖H‖) ^ 2 = (1.212 : ℝ) ^ 2 * ‖H‖ ^ 2 := by ring
+  linarith [sq_nonneg ‖H‖]
 
 end GlobalTheory

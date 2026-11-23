@@ -55,13 +55,17 @@ theorem slab_arith_lower {a s r t η u v : ℝ} (ha : 0 ≤ a) (hs : 0 ≤ s) (h
     (h2 : a ≤ u + a ^ 2) (h3 : u ≤ v + a * s) (h4 : v ≤ r) : a ≤ (1 + η) * r := by
 
   have hs24 : s < 1 / 24 := lt_of_lt_of_le hst ht
-  have hA : a < 4 / 23 := by nlinarith [mul_nonneg ha (sub_nonneg.2 hs24.le)]
-  have hkey : a * (1 - s - a) ≤ r := by nlinarith
+  have hA : a < 4 / 23 := by linarith [mul_le_mul_of_nonneg_left hs24.le ha]
+  have hkey : a * (1 - s - a) ≤ r := by
+    have e : a * (1 - s - a) = a - a * s - a ^ 2 := by ring
+    linarith
   have hgap : 433 / 552 ≤ 1 - s - a := by linarith
-  have hat : a * (433 / 552) < t := by nlinarith [mul_le_mul_of_nonneg_left hgap ha]
+  have hat : a * (433 / 552) < t := by linarith [mul_le_mul_of_nonneg_left hgap ha]
   have hsum : (1 + η) * (s + a) ≤ η := by
-    nlinarith [mul_le_mul_of_nonneg_left (show s + a ≤ 3 * t by linarith) (show (0 : ℝ) ≤ 1 + η by linarith)]
-  nlinarith [mul_le_mul_of_nonneg_left hkey (show (0 : ℝ) ≤ 1 + η by linarith),
+    have e : (1 + η) * (3 * t) = 3 * t * (1 + η) := by ring
+    linarith [mul_le_mul_of_nonneg_left (show s + a ≤ 3 * t by linarith) (show (0 : ℝ) ≤ 1 + η by linarith)]
+  have hid : (1 + η) * (a * (1 - s - a)) + a * ((1 + η) * (s + a)) = a + a * η := by ring
+  linarith [mul_le_mul_of_nonneg_left hkey (show (0 : ℝ) ≤ 1 + η by linarith),
     mul_le_mul_of_nonneg_left hsum ha]
 
 theorem slab_squeeze : ∀ (n : ℕ) (ε : Fin n → Bool) (S : Set (Formalism.REAL.UJ ε)) (d : ℕ)
@@ -88,7 +92,9 @@ theorem slab_squeeze : ∀ (n : ℕ) (ε : Fin n → Bool) (S : Set (Formalism.R
   have hXY : nrm ((uMat l - 1) * (uMat k - 1)) ≤ nrm (uMat l - 1) * nrm (uMat k - 1) := nrm_mul_le _ _
   have ha0 := nrm_nonneg (uMat l - 1)
   have hs0 := nrm_nonneg (uMat k - 1)
-  have htle : t ≤ η := by nlinarith
+  have htle : t ≤ η := by
+    have e : 3 * t * (1 + η) = 3 * t + 3 * (t * η) := by ring
+    linarith [mul_nonneg ht0.le hη.le]
   constructor
   · intro hlB
     have ha : nrm (uMat l - 1) ≤ r / (1 + η) := hlB
@@ -98,10 +104,12 @@ theorem slab_squeeze : ∀ (n : ℕ) (ε : Fin n → Bool) (S : Set (Formalism.R
       have h1 : nrm (uMat (l * k) - 1) ≤ nrm (uMat l - 1) + nrm (uMat k - 1) + nrm ((uMat l - 1) * (uMat k - 1)) := by
         rw [hmul]
         exact le_trans (nrm_add_le _ _) (by linarith [nrm_add_le (uMat l - 1) (uMat k - 1)])
-      have hat : nrm (uMat l - 1) < t := by nlinarith
+      have hat : nrm (uMat l - 1) < t := by
+        have e : nrm (uMat l - 1) * (1 + η) = nrm (uMat l - 1) + nrm (uMat l - 1) * η := by ring
+        linarith [mul_nonneg ha0 hη.le]
       have hprod : nrm (uMat l - 1) * nrm (uMat k - 1) ≤ t * t := by
         exact mul_le_mul hat.le hk.le hs0 ht0.le
-      nlinarith
+      linarith [mul_le_mul_of_nonneg_left ht24 ht0.le]
     ·
       have hc : crd E (uMat (l * k) - 1) = crd E (uMat l - 1) + crd E ((uMat l - 1) * (uMat k - 1)) := by
         rw [hmul, crd_add, crd_add, hk0, add_zero]
@@ -112,7 +120,8 @@ theorem slab_squeeze : ∀ (n : ℕ) (ε : Fin n → Bool) (S : Set (Formalism.R
       have hsη : nrm (uMat l - 1) * nrm (uMat k - 1) ≤ nrm (uMat l - 1) * η :=
         mul_le_mul_of_nonneg_left (by linarith) ha0
       show len (crd E (uMat (l * k) - 1)) ≤ r
-      nlinarith
+      have e : nrm (uMat l - 1) * (1 + η) = nrm (uMat l - 1) + nrm (uMat l - 1) * η := by ring
+      linarith
   · intro hslab
     obtain ⟨hZ, hv⟩ := hslab
     show nrm (uMat l - 1) ≤ (1 + η) * r

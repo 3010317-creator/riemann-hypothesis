@@ -64,10 +64,10 @@ private theorem UpperTheory.V.KT.orbit_number_power_bound (D d N p : ℕ) (hD : 
     omega
   have hDB : D ≤ B := by
     rw [hBdef]
-    nlinarith
+    exact le_trans (Nat.le_mul_of_pos_left D (by omega : 0 < 2)) (Nat.le_mul_of_pos_right (2 * D) (by omega : 0 < d))
   have hdB : d ≤ B := by
     rw [hBdef]
-    nlinarith
+    exact Nat.le_mul_of_pos_left d (Nat.mul_pos (by omega) (by omega))
   have hNB : N ≤ B := le_trans hd hdB
   have hX : D ^ N * d ^ d ≤ B ^ (2 * d) := by
     have a : D ^ N ≤ B ^ d :=
@@ -88,7 +88,7 @@ private theorem UpperTheory.V.KT.orbit_number_power_bound (D d N p : ℕ) (hD : 
       (Nat.mul_ne_zero (by omega) (pow_ne_zero _ (by omega)))
     have hY : N ^ N * (D ^ N * d ^ d) ^ 2 ≤ B ^ d * (B ^ (2 * d)) ^ 2 :=
       Nat.mul_le_mul hNN (Nat.pow_le_pow_left hX 2)
-    have h4 : 4 ≤ B ^ 2 := by nlinarith
+    have h4 : 4 ≤ B ^ 2 := Nat.pow_le_pow_left hB2 2
     calc 2 * (N ^ N * (D ^ N * d ^ d) ^ 2) + 1 ≤ 4 * (N ^ N * (D ^ N * d ^ d) ^ 2) := by omega
       _ ≤ B ^ 2 * (B ^ d * (B ^ (2 * d)) ^ 2) := Nat.mul_le_mul h4 hY
       _ = B ^ (5 * d + 2) := by ring
@@ -107,18 +107,24 @@ private theorem UpperTheory.V.KT.orbit_number_power_bound (D d N p : ℕ) (hD : 
   have hexp : 2 * d * (1 + d * N) + ((5 * d + 2) * d + 1) * (d * N * (p + 1)) ≤
       12 * (p + 1) * d ^ 3 * N := by
     have e1 : d ≤ d ^ 3 * N * (p + 1) := by
-      have : 1 ≤ d ^ 2 * N * (p + 1) := Nat.one_le_iff_ne_zero.mpr (by positivity)
-      nlinarith
+      have h1 : 1 ≤ d ^ 2 * N * (p + 1) := Nat.one_le_iff_ne_zero.mpr (by positivity)
+      have hmul := Nat.mul_le_mul_left d h1
+      rw [mul_one] at hmul; exact hmul.trans_eq (by ring)
     have e2 : d ^ 2 * N ≤ d ^ 3 * N * (p + 1) := by
-      have : 1 ≤ d * (p + 1) := Nat.one_le_iff_ne_zero.mpr (by positivity)
-      nlinarith
+      have h1 : 1 ≤ d * (p + 1) := Nat.one_le_iff_ne_zero.mpr (by positivity)
+      have hmul := Nat.mul_le_mul_left (d ^ 2 * N) h1
+      rw [mul_one] at hmul; exact hmul.trans_eq (by ring)
     have e3 : d * N * (p + 1) ≤ d ^ 3 * N * (p + 1) := by
-      have : 1 ≤ d ^ 2 := Nat.one_le_pow _ _ (by omega)
-      nlinarith
+      have h1 : 1 ≤ d ^ 2 := Nat.one_le_pow _ _ (by omega)
+      have hmul := Nat.mul_le_mul_left (d * N * (p + 1)) h1
+      rw [mul_one] at hmul; exact hmul.trans_eq (by ring)
     have e4 : d ^ 2 * N * (p + 1) ≤ d ^ 3 * N * (p + 1) := by
-      have : d ^ 2 * N * (p + 1) * 1 ≤ d ^ 2 * N * (p + 1) * d := Nat.mul_le_mul_left _ hd1
-      nlinarith
-    nlinarith
+      have hmul : d ^ 2 * N * (p + 1) * 1 ≤ d ^ 2 * N * (p + 1) * d := Nat.mul_le_mul_left _ hd1
+      rw [mul_one] at hmul; exact hmul.trans_eq (by ring)
+    have hid1 : 2 * d * (1 + d * N) + ((5 * d + 2) * d + 1) * (d * N * (p + 1)) =
+        2 * d + 2 * (d ^ 2 * N) + 5 * (d ^ 3 * N * (p + 1)) + 2 * (d ^ 2 * N * (p + 1)) + d * N * (p + 1) := by ring
+    have hid2 : 12 * (p + 1) * d ^ 3 * N = 12 * (d ^ 3 * N * (p + 1)) := by ring
+    rw [hid1, hid2]; omega
   calc (D ^ N * d ^ d) ^ (1 + d * N) *
         ((2 * (N ^ N * (D ^ N * d ^ d) ^ 2) + 1) ^ d + 1) ^ (d * N * (p + 1))
       ≤ B ^ (2 * d * (1 + d * N)) * B ^ (((5 * d + 2) * d + 1) * (d * N * (p + 1))) :=
@@ -136,6 +142,6 @@ theorem UpperTheory.V.KT.orbnum :
   have hd : N ≤ dd L N := by
     simp only [dd]
     have : 1 ≤ Module.finrank ℚ L := Module.finrank_pos
-    nlinarith
+    linarith [Nat.mul_le_mul_left N this, Nat.mul_le_mul_right N this]
   have := orbit_number_power_bound (absD L) (dd L N) N p hD hN hd
   simpa only [orbBound, I0, RR] using this

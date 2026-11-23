@@ -111,11 +111,15 @@ theorem brun_titchmarsh_const : ∃ C : ℝ, 0 < C ∧ ∀ (q a : ℕ) (x y : �
   obtain ⟨Q, hQ⟩ : ∃ Q, Q = s + 1 := ⟨_, rfl⟩
   have hQ2 : (2 : ℝ) ≤ Q := by exact_mod_cast (by omega : 2 ≤ Q)
   have hQz : (Q : ℝ) ^ 2 ≤ 4 * z := by
-    have : Q ^ 2 ≤ 4 * ⌊z⌋₊ := by rw [hQ]; nlinarith
+    have : Q ^ 2 ≤ 4 * ⌊z⌋₊ := by
+      rw [hQ]
+      have h1 : s ≤ s * s := Nat.le_mul_self s
+      have h2 : (s + 1) ^ 2 = s * s + 2 * s + 1 := by ring
+      omega
     have : (Q : ℝ) ^ 2 ≤ 4 * ⌊z⌋₊ := by exact_mod_cast this
     linarith
   have hzQ : z ≤ (Q : ℝ) ^ 2 := by
-    have : ⌊z⌋₊ + 1 ≤ Q ^ 2 := by rw [hQ]; nlinarith
+    have : ⌊z⌋₊ + 1 ≤ Q ^ 2 := by rw [hQ, sq]; omega
     have : (⌊z⌋₊ : ℝ) + 1 ≤ (Q : ℝ) ^ 2 := by exact_mod_cast this
     linarith
   have hlz : 0 < Real.log z := Real.log_pos (by linarith)
@@ -134,11 +138,14 @@ theorem brun_titchmarsh_const : ∃ C : ℝ, 0 < C ∧ ∀ (q a : ℕ) (x y : �
     simp only [hP, primesIoc, Finset.mem_filter, Finset.mem_Ioc] at hp
     obtain ⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, h5⟩ := hp
     refine ⟨h3, h4, h5, (Nat.mul_div_le _ _).trans h1.le, ?_⟩
-    have h6 : (p : ℝ) ≤ x + y := (Nat.le_floor_iff (by nlinarith)).1 h2
+    have h6 : (p : ℝ) ≤ x + y := (Nat.le_floor_iff (by linarith)).1 h2
     have h7 : x < ⌊x⌋₊ + 1 := Nat.lt_floor_add_one x
     have h8 : ⌊x⌋₊ + 1 ≤ q * (⌊x⌋₊ / q + 1) := Nat.lt_mul_div_succ _ hq
     have h9 : (⌊x⌋₊ : ℝ) + 1 ≤ q * (((⌊x⌋₊ / q : ℕ) : ℝ) + 1) := by exact_mod_cast h8
-    have h10 : (p : ℝ) < q * (((⌊x⌋₊ / q : ℕ) : ℝ) + (⌊z⌋₊ + 2)) := by nlinarith
+    have h10 : (p : ℝ) < q * (((⌊x⌋₊ / q : ℕ) : ℝ) + (⌊z⌋₊ + 2)) := by
+      have hy' : y < q * ((⌊z⌋₊ : ℝ) + 1) := by rw [hyz]; exact mul_lt_mul_of_pos_left hzfl hq0
+      have hid : (q : ℝ) * (((⌊x⌋₊ / q : ℕ) : ℝ) + (⌊z⌋₊ + 2)) = q * (((⌊x⌋₊ / q : ℕ) : ℝ) + 1) + q * ((⌊z⌋₊ : ℝ) + 1) := by ring
+      linarith
     exact_mod_cast h10)
   have hsmall : (P.filter fun p => ¬ Q < p).card ≤ Q := by
     calc _ ≤ (Finset.Icc 1 Q).card := Finset.card_le_card fun p hp => by
@@ -154,7 +161,8 @@ theorem brun_titchmarsh_const : ∃ C : ℝ, 0 < C ∧ ∀ (q a : ℕ) (x y : �
   push_cast at hbig
   have hpi := Real.pi_lt_four
   have hpi0 := Real.pi_pos
-  have h1 : B * ((q.totient : ℝ) / q * Real.log Q) ≤ 20 * z := by nlinarith
+  have h1 : B * ((q.totient : ℝ) / q * Real.log Q) ≤ 20 * z := by
+    linarith [mul_le_mul (show 2 * Real.pi ≤ 8 by linarith) (show (⌊z⌋₊ : ℝ) + 2 ≤ 2 * z by linarith) (by positivity) (by norm_num)]
   have h2 : B * (q.totient * Real.log Q) ≤ 20 * y := by
     have := mul_le_mul_of_nonneg_left h1 hq0.le
     rw [hyz]
@@ -162,14 +170,22 @@ theorem brun_titchmarsh_const : ∃ C : ℝ, 0 < C ∧ ∀ (q a : ℕ) (x y : �
       _ ≤ _ := by linarith
   have h3 : B * (q.totient * Real.log z) ≤ 40 * y := by
     have := mul_le_mul_of_nonneg_left hlog (mul_nonneg hB0 hφ0.le)
-    nlinarith
-  have h4 : (Q : ℝ) * Real.log z ≤ 8 * z := by nlinarith
+    have hid1 : B * (q.totient * Real.log z) = (B * q.totient) * Real.log z := by ring
+    have hid2 : (B * q.totient) * (2 * Real.log Q) = 2 * (B * (q.totient * Real.log Q)) := by ring
+    linarith
+  have h4 : (Q : ℝ) * Real.log z ≤ 8 * z := by
+    have e1 : (Q : ℝ) * Real.log z ≤ Q * (2 * Q) := mul_le_mul_of_nonneg_left (by linarith) (by linarith)
+    have e2 : (Q : ℝ) * (2 * Q) = 2 * (Q : ℝ) ^ 2 := by ring
+    linarith
   have h5 : (Q : ℝ) * (q.totient * Real.log z) ≤ 8 * y := by
     have : (q.totient : ℝ) * (Q * Real.log z) ≤ q * (8 * z) :=
       mul_le_mul hφq h4 (by positivity) hq0.le
-    rw [hyz]; nlinarith
+    rw [hyz]
+    have e1 : (Q : ℝ) * (q.totient * Real.log z) = q.totient * (Q * Real.log z) := by ring
+    linarith
   rw [le_div_iff₀ (by positivity)]
   have := mul_le_mul_of_nonneg_right hcard (by positivity : (0 : ℝ) ≤ q.totient * Real.log z)
-  nlinarith
+  rw [add_mul] at this
+  linarith
 
 end GlobalTheory.Lin
