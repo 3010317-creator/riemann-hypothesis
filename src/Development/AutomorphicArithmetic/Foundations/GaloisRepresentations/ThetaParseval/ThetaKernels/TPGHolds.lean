@@ -1048,7 +1048,7 @@ theorem exists_beta_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {
   have hL := hX.lat
   obtain ⟨K, _, ρ, r1, r2, r3⟩ := _root_.GlobalTheory.ThK.Dbl.Vf2.exists_res_k hB v
   obtain ⟨P, p1, p2⟩ := Frames.exists_rational_frame X.L v
-  obtain ⟨G', hG', g1, g2⟩ := Hgt.gram_loc (v := v) (herm_det hX).ne_zero hL.fg (I := IsIntegral ℤ) (fun z hz b => hz.mul b.2) hX.dual
+  obtain ⟨G', hG', g1, g2⟩ := Hgt.gram_loc (v := v) (herm_det hX) hL.fg (I := IsIntegral ℤ) (fun z hz b => hz.mul b.2) hX.dual
     isIntegral_one (fun z hz => ⟨1, (Ideal.ne_top_iff_one _).1 v.isPrime.ne_top, ⟨z, hz⟩, by simp; rfl⟩) P p1 p2
   simp only [inv_one, one_mul] at g1 g2
   have ha := fr_iff (Frames.frame_of_rational P p1 p2)
