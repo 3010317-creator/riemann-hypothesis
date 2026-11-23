@@ -55,6 +55,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Link
 
 theorem prov_an : Prov.An :=
   ⟨GlobalTheory.CompanionTheory.Ar.Giv.tailBound_holds, GlobalTheory.T.convergence_statement_holds, _root_.GlobalTheory.CompanionTheory.Ar.Giv.SignedConv.convergenceSigned, _root_.GlobalTheory.CompanionTheory.Ar.Giv.convergenceRate_holds, _root_.GlobalTheory.CompanionTheory.Ar.Giv.unifInt_holds,
-    _root_.GlobalTheory.CompanionTheory.Ar.Giv.pullbackStatement, GlobalTheory.T.global_regularization_statement_holds⟩
+    _root_.GlobalTheory.CompanionTheory.Ar.Giv.pullbackStatement, _root_.GlobalTheory.CompanionTheory.Ar.Giv.regGlobalStatement_holds⟩
 
 end GlobalTheory.CompanionTheory.Ar.Link
