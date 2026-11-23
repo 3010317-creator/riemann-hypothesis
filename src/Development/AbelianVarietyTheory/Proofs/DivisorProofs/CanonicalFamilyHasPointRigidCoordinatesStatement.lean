@@ -371,7 +371,8 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.IndefiniteRowSideFullHecke.UniformizationBaseChange
 
-open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.IndefiniteRowSideFullHecke.RigidPullbackIdentification
+open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out
+open GlobalTheory.IndefiniteRowSideFullHecke.RigidPullbackIdentification hiding specOf
 
 section Carries
 
