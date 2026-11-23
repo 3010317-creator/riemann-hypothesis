@@ -334,7 +334,8 @@ theorem isDomain_tensor_of_reg (k K S : Type) [Field k] [Field K] [Algebra k K]
       simp at h2
       exact subsingleton_of_zero_eq_one h2.symm
     · have h2 := congrArg (fun z => (f z).1) h
-      simp at h2
+      rw [RingEquiv.apply_symm_apply, map_one, Prod.fst_one] at h2
+      exact absurd h2 (@zero_ne_one _ _ _ (@NeZero.one _ _ hdom.toNontrivial))
   exact Function.Injective.isDomain ((RingHom.fst _ _).comp f.toRingHom) (by
     intro x y hxy
     apply f.injective
