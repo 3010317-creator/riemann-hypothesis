@@ -28,8 +28,8 @@ def runner(identifier):
 def imports(path):
     if path.stat().st_size > 4 * 1024**2: raise ValueError('source/header exceeds quick-check limit')
     result = []; depth = 0
-    # Only parse the import header: bodies can be megabytes long.
-    with path.open() as source:
+    # Lean only accepts imports in the header, so stop at the first other command.
+    with path.open(encoding='utf-8') as source:
         for raw_line in source:
             cleaned = []; i = 0
             while i < len(raw_line):
@@ -44,7 +44,7 @@ def imports(path):
             if match: result.append(match[1]); continue
             if re.match(r'(?:public\s+|meta\s+)*import\b', line): raise ValueError('unsupported import header')
             return result
-    if depth: raise ValueError('unterminated header/source comment')
+    if depth: raise ValueError('unterminated header comment')
     return result
 
 def dependency_closure(project, targets, maximum=MAX_CLOSURE):
