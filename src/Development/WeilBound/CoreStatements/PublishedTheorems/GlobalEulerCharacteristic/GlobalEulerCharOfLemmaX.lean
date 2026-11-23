@@ -1150,6 +1150,8 @@ noncomputable def gsIso (S : Set (HeightOneSpectrum (𝓞 F))) :
   have hq : Continuous q := continuous_coinduced_dom.2 hφc
   have : CompactSpace (G F Ω) := inferInstance
   have : CompactSpace (GS Ω S) := Quotient.compactSpace
+  have : Algebra.IsIntegral F E := inferInstance
+  have : T2Space Gal(E/F) := krullTopology_t2
   exact { q with
     continuous_toFun := hq
     continuous_invFun := Continuous.continuous_symm_of_equiv_compact_to_t2 (f := q.toEquiv) hq }
