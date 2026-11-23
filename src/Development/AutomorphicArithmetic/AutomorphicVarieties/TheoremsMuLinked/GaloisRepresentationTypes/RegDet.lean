@@ -218,7 +218,8 @@ theorem UpperTheory.V.AlgebraTools.cocycle_trace_zero :
     ∑ s, (Matrix.traceLinearMap (d s) K K) ∘ₗ LinearMap.proj s
   have hT : ∀ x, T x = ∑ s, (x s).trace := by
     intro x
-    simp [T, LinearMap.sum_apply]
+    simp only [T, LinearMap.sum_apply, LinearMap.comp_apply, LinearMap.proj_apply,
+      Matrix.traceLinearMap_apply]
   have hnd : ∀ x, (∀ y, T (x * y) = 0) → x = 0 := by
     intro x hx
     funext s
@@ -229,7 +230,7 @@ theorem UpperTheory.V.AlgebraTools.cocycle_trace_zero :
     · simpa using this
     · intro t _ ht
       simp [Pi.single_eq_of_ne ht]
-    · simp
+    · exact fun h => absurd (Finset.mem_univ _) h
   have hkey : ∀ g h, T (m g * r h) = - T (r g * m h) := by
     intro g h
     have : T (m (g * h)) = 0 := by rw [hT]; exact htr _
@@ -538,8 +539,11 @@ private theorem cf_entries {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topolo
     simp only [B, Matrix.fromBlocks_multiply, map_mul]
     congr 1
     · simp
-    · ext i j
-      simp [hc, Matrix.mul_apply, Matrix.mulVec, dotProduct, add_comm]
+    · rw [Matrix.mul_one, hc]
+      refine Matrix.ext fun i j => ?_
+      simp only [Matrix.add_apply, Matrix.replicateCol_apply, Matrix.mul_apply, Matrix.mulVec,
+        dotProduct, Pi.add_apply]
+      rw [add_comm]
     · simp
     · simp
   let f : G →* Matrix (Fin (m + 1)) (Fin (m + 1)) (PadicAlgCl l) :=
@@ -622,7 +626,8 @@ private theorem mem_smul_top_pi {R : Type} [CommRing R] (J : Ideal R) {r : ℕ} 
   · intro hx
     have hsum : x = ∑ i, x i • (Pi.single i (1 : R) : Fin r → R) := by
       ext j
-      simp [Finset.sum_apply, Pi.single_apply]
+      simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [hsum]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem_smul (hx i) Submodule.mem_top
 
@@ -641,6 +646,7 @@ private theorem lc_iff {R G : Type} [CommRing R] [TopologicalSpace G] (J : Ideal
   · intro h x
     exact Filter.eventually_all.mpr fun i => h i x
 
+set_option linter.overlappingInstances false in
 private theorem cocycles_finitely_generated (l : ℕ) [Fact l.Prime] {R G M : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
     [IsNoetherianRing R] [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
@@ -834,7 +840,9 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing Polynomial Matrix UpperTheory.V UpperTheory.V.HV UpperTheory.V.Alg GlobalTheory.GalOfCusp
 
 private theorem zc_norm {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) : ‖(x : PadicAlgCl l)‖ ≤ 1 := by
-  have hi : IsIntegral ℤ_[l] (x : PadicAlgCl l) := (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) x).map c.O.val
+  have hi : IsIntegral ℤ_[l] (x : PadicAlgCl l) := by
+    haveI := c.fin
+    exact (IsIntegral.of_finite ℤ_[l] x).map c.O.val
   have h0 : ‖(x : PadicAlgCl l)‖ = spectralValue (minpoly ℚ_[l] (x : PadicAlgCl l)) := rfl
   rw [h0, spectralValue_le_one_iff (minpoly.monic (Algebra.IsIntegral.isIntegral _))]
   intro n
@@ -872,6 +880,7 @@ private theorem zc_split {l : ℕ} [hl : Fact l.Prime] (c c' : Coef l) (hcc : c.
   haveI : IsScalarTower ℤ_[l] c.O c'.O := IsScalarTower.of_algebraMap_eq fun _ => rfl
   haveI : Module.Finite c.O c'.O := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
   haveI : FaithfulSMul c.O c'.O := (faithfulSMul_iff_algebraMap_injective _ _).2 (Subalgebra.inclusion_injective hcc)
+  haveI : Module.IsTorsionFree c.O c'.O := FaithfulSMul.to_isTorsionFree c.O c'.O
   set_option synthInstance.maxHeartbeats 200000 in
   haveI : Module.Free c.O c'.O := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis c.O c'.O
@@ -1041,6 +1050,7 @@ theorem UpperTheory.V.Th.Det.finite_cocycles_matrixRepresentation_of_phiCond :
     funext g
     have e := congrFun (congrArg Subtype.val hxy) g
     exact (matrixFlattenLinearEquiv (Qbar l) n).injective e
+  haveI : IsNoetherian (Qbar l) (Z1 (UpperTheory.V.Loc.colRep σ)) := IsNoetherian.iff_fg.mpr hfin
   exact Module.Finite.of_injective (Φ.restrict hmem) hinj
 end -- clump:auto
 end -- clump:auto
