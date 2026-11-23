@@ -342,7 +342,8 @@ theorem existsUnique_hom_extension_of_dvr
       refine hom_eq_of_torsion (IsSemiAbelian.pullback τ G hG) (IsSemiAbelian.pullback τ G' hG')
         F₁' F₂' fun y n hn hy ↦ ?_
       let e := TorsionLift.ptsEquiv τ G (𝟙_ (Over (Sp Ω))) τ (Category.id_comp _)
-      have hx : (e y) ^ n = 1 := by rw [← map_pow, hy, map_one]
+      have hx : (e y) ^ n = 1 := by
+        set_option synthInstance.maxHeartbeats 100000 in rw [← map_pow, hy, map_one]
       have hxl : (e y).left = y.left ≫ pullback.fst G.hom τ := TorsionLift.ptsEquiv_left ..
       have hqf : ∀ z : Sp Ω ⟶ Γ, z ≫ p = (e y).left →
           Set.range z ⊆ Set.range p.quasiFiniteLocus.ι := by
