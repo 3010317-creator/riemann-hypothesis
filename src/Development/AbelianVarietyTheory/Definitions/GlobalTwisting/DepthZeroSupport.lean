@@ -458,7 +458,7 @@ def DbarCompleteKaehler : Prop :=
     IsForm A la v → IsDbarClosed A v →
     ∫⁻ y, ENNReal.ofReal (formNsq A H la v y * Real.exp (-ps y)) ∂A.mu < ⊤ →
     ∃ u : ι → Y → ℂ, A.IsSSec (A.kap + la) u ∧
-      (∀ i y, y ∈ (A.chart i).source → dbar A u i y = v i y) ∧
+      (∀ i y, y ∈ (A.chart i).source → GlobalTheory.L2Kaehler.dbar A u i y = v i y) ∧
       ∫⁻ y, ENNReal.ofReal (A.nsq (A.kap + la) u y * Real.exp (-ps y)) ∂A.mu ≤
         ENNReal.ofReal ε⁻¹ *
           ∫⁻ y, ENNReal.ofReal (formNsq A H la v y * Real.exp (-ps y)) ∂A.mu
